@@ -1,0 +1,196 @@
+<section ng-controller="MilestonesController">
+
+	<div class= "content">
+		<h2>Update your Goal</h2>
+		<body>
+			Monitor and update your progress on your goal now!
+		</body>
+		<hr/>		
+
+			<aside>
+			<div class="col-md-4">
+			<div ng-show="readonly" class="ng-show">
+				<h4 align="center">Goal Details</h4>
+
+				<div class="row">
+				<div class="col-xs-5">
+					<label for="text">Title:</label> 
+				</div>
+				<div class="col-xs-7">
+					<input type="text" id="goalTitle" ng-model="user.mileStones[user.updateMilestonePos].goalTitle"  class ="form-control" readonly="true"/>
+				</div>
+				</div>
+				<br/>
+				
+				<div class="row">
+				<div class="col-xs-5">
+					<label for="text">Goal Type:</label> 
+				</div>
+				<div class="col-xs-7">
+					<input type="text" ng-model="user.mileStones[user.updateMilestonePos].goalType"  class ="form-control" readonly="true"/>
+				</div>
+				</div>
+				<br/>
+				
+				<div class="row">
+				<div class="col-xs-5">
+					<label for="text">Start Date:</label> 
+				</div>
+				<div class="col-xs-7">
+					<input type="text" ng-model="user.mileStones[user.updateMilestonePos].startDateFormatted"  class ="form-control" readonly="true"/>
+				</div>
+				</div>
+				<br/>
+				
+				<div class="row">
+				<div class="col-xs-5">
+					<label for="text">Completion Date:</label> 
+				</div>
+				<div class="col-xs-7">
+					<input type="text" ng-model="user.mileStones[user.updateMilestonePos].targetDateFormatted"  class ="form-control" readonly="true"/>
+				</div>
+				</div>
+				<br/>
+				
+				<div class="row">
+				<div class="col-xs-5">
+					<label for="text">Target Amount:</label> 
+				</div>
+				<div class="col-xs-7">
+					<input type="number" step="any" ng-model="user.mileStones[user.updateMilestonePos].targetAmount"  class ="form-control" readonly="true"/>
+				</div>
+				</div>
+				
+				<div class="row">
+				<br/>
+				<div class="col-xs-offset-5 col-xs-7">
+					<button class="btn btn-medium btn-primary" ng-click="editMilestone()" style="width:200px">Edit</button>
+				</div>																
+				</div>
+			</div>
+			<form name="updateMilestoneForm" data-ng-submit="updateMilestone()">
+			<fieldset>
+				<div ng-hide="readonly" class="ng-hide">
+					<h4 align="center">Goal Details</h4>
+
+					<div class="row">
+					<div class="col-xs-5">
+						<label for="text">Title:</label> 
+					</div>
+					<div class="col-xs-7">
+						<input type="text" name="title" id="title" ng-model="userCopy.mileStones[userCopy.updateMilestonePos].goalTitle" class ="form-control"/>
+					</div>
+					</div>
+					<br/>
+					
+					<div class="row">
+					<div class="col-xs-5">
+						<label for="text">Goal Type:</label> 
+					</div>
+					<div class="col-xs-7">
+						<input type="text" name="goalType" id="goalType" ng-model="userCopy.mileStones[userCopy.updateMilestonePos].goalType"  class ="form-control" />
+					</div>
+					</div>
+					<br/>
+					
+					<div class="row">
+					<div class="col-xs-5">
+						<label for="text">Start Date:</label> 
+					</div>
+					<div class="col-xs-7">
+						<input type="date" class="form-control" ng-model="userCopy.mileStones[userCopy.updateMilestonePos].startDate" id="startDate" datepicker-popup="{{format}}" is-open="opened" datepicker-options="dateOptions" data-date-format="mm/dd/yyyy" ng-required="true" close-text="Close" />
+					</div>
+					</div>
+					<br/>
+					
+					<div class="row">
+					<div class="col-xs-5">
+						<label for="text">Completion Date:</label> 
+					</div>
+					<div class="col-xs-7">					
+						<input type="date" class="form-control" name="startDate" id="startDate" datepicker-popup="{{format}}" data-ng-model="userCopy.mileStones[userCopy.updateMilestonePos].targetDate" is-open="opened" min-date="minDate" datepicker-options="dateOptions" data-date-format="mm/dd/yyyy" ng-required="true" close-text="Close" />
+					</div>
+					</div>
+					<br/>
+					
+					<div class="row">
+					<div class="col-xs-5">
+						<label for="text">Target Amount:</label> 
+					</div>
+					<div class="col-xs-7">
+						<input type="number" step="any" name="targetAmount" id="targetAmount" ng-model="userCopy.mileStones[userCopy.updateMilestonePos].targetAmount"  class ="form-control"/>
+					</div>
+					</div>
+
+					<br/>	
+					<div class="row">												
+						<div class="col-xs-offset-5 col-xs-7">
+							<div class="form-group">
+
+								<button type="submit" class="btn btn-medium btn-primary">Update</button>
+								<a ng-click="uneditMilestone()">Cancel</a>
+							</div>						
+						</div>
+						
+							
+						
+					</div>
+					
+				</div>
+			</fieldset>
+			</form>
+			</div>
+			</aside>			
+			<div class="col-md-8">				
+				You have saved <b>${{user.mileStones[user.updateMilestonePos].currentAmount}}</b> so far! <br/>
+				<div class="progress">
+
+  					<div class="progress-bar" role="progressbar" aria-valuenow="{{user.mileStones[user.updateMilestonePos].progress}}" aria-valuemin="0" aria-valuemax="100" style="width:{{user.mileStones[user.updateMilestonePos].progress}}%">
+					    	{{user.mileStones[user.updateMilestonePos].progress}}%
+  					</div>
+				</div>
+
+				<div>
+					<li>You have <b>{{user.mileStones[user.updateMilestonePos].monthsLeft}}</b> months to achieve your goal of ${{user.mileStones[user.updateMilestonePos].targetAmount}}.</li>
+					<br/>
+					<li><b><i>I-Wealth</i></b> estimates that you need to save approximately <b>${{user.mileStones[user.updateMilestonePos].paymentAmountAdj}}/month</b> to achieve your goal!</li>
+					<br/>
+				</div>
+
+
+
+				<form name="contributeForm" data-ng-submit="makeContribution()">
+					<fieldset>
+					<label for="text">Make a Contribution to Your Goal:</label>
+					<div class="row">
+						<div class="col-xs-6 col-xs-4">													
+							<input type="number" step="any" ng-model="contribution" name="contribution" id="contribution" placeholder="Enter an amount! $$$"  class ="form-control" ng-required="true"/>
+							<button type="submit" class="btn btn-medium btn-primary" style="width:100px">Contribute!</button>			
+						</div>																			
+					</div>
+					</fieldset>
+				</form>				
+				<br/>
+				<div class = "row">
+				<div class="col-xs-6">
+					<b>Done with your goal? </b></li>
+					<i>Mark it as complete now.</i>				
+					
+					<button ng-click="markComplete()" class="btn btn-medium btn-success" style="width:100px">Complete!</button>			
+				</div>
+				</div>
+								
+				<div class = "row">
+				<div class="col-md-4"></div>
+  				<div class="col-md-4 col-md-offset-4">
+				<a class="btn btn-warning" type="button" href="./#!/milestones" style="float: right;width:180px">Return</a>		
+				</div>
+				</div>
+			</div>
+			
+			
+
+			
+		
+	</div>
+</section>

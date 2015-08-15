@@ -1,0 +1,104 @@
+<section class="content" data-ng-controller="SettingsController">
+	<div class="row">
+		<div class="col-md-8">
+			<h3>Getting Started <span style="font-weight:normal;">|</span> <small> Credit Profile</small></h3>
+
+
+			<div ng-controller="QuestionnaireController">
+			  	<accordion class="accordion" close-others="oneAtATime">
+
+				    <accordion-group is-open="status.open" ng-click="clearSuccessMessage()">
+				        <accordion-heading>
+				             <i class="pull-left glyphicon" ng-class="{'glyphicon-minus': status.open, 'glyphicon-plus': !status.open}"></i>&nbsp;Personal information 
+				             <p class="pull-right" ng-hide="user.completePersonalQns">Not completed</p>
+				             <p class="pull-right" ng-show="user.completePersonalQns">Completed</p>
+				        </accordion-heading>
+						<form name="qnsPersonalForm" data-ng-submit="updateUserQns(qnsPersonalForm.$valid)">
+							<fieldset>
+								
+							    <div ng-repeat="qns in qnsPersonal"> 
+							       	<div class="form-group">
+							       		<label for="'{{qns.qnID}}'">{{qns.content}}</label></br>
+							        	<div ng-repeat="option in qns.options">
+							        	<input type="radio" value="{{qns.rating[option]}}" id="'{{qns.qnID}}'" dynamic-model="qns.qnModel"/> {{option}} 
+							       	 	</div>
+							        </div>
+								</div>	
+					        	<div class="form-group">
+									<button type="submit" class="btn btn-large btn-primary">Save Profile</button>
+								</div>
+								<div data-ng-show="success" class="text-success">
+									<strong>Profile Saved Successfully</strong>
+								</div>
+								<div data-ng-show="error" class="text-danger">
+									<strong data-ng-bind="error"></strong>
+								</div>
+							</fieldset>
+						</form>
+				    </accordion-group>
+
+				    <accordion-group is-open="status1.open" ng-click="clearSuccessMessage()">
+				        <accordion-heading>
+				             <i class="pull-left glyphicon" ng-class="{'glyphicon-minus': status1.open, 'glyphicon-plus': !status1.open}"></i>&nbsp;Employment information
+				             <p class="pull-right" ng-hide="user.completeJobQns">Not completed</p>
+				             <p class="pull-right" ng-show="user.completeJobQns">Completed</p>
+				        </accordion-heading>
+						<form name="qnsJobForm" data-ng-submit="updateUserQns(qnsJobForm.$valid)">
+							<fieldset>
+								
+							    <div ng-repeat="qns in qnsJob"> 
+							       	<div class="form-group">
+							       		<label for="'{{qns.qnID}}'">{{qns.content}}</label></br>
+							        	<div ng-repeat="option in qns.options">
+							        	<input type="radio" value="{{qns.rating[option]}}" id="'{{qns.qnID}}'" dynamic-model="qns.qnModel"/> {{option}} 
+							       	 	</div>
+							        </div>
+								</div>	
+					        	<div class="form-group">
+									<button type="submit" class="btn btn-large btn-primary">Save Profile</button>
+								</div>
+								<div data-ng-show="success" class="text-success">
+									<strong>Profile Saved Successfully</strong>
+								</div>
+								<div data-ng-show="error" class="text-danger">
+									<strong data-ng-bind="error"></strong>
+								</div>
+							</fieldset>
+						</form>
+				    </accordion-group>
+
+				   	<accordion-group is-open="status2.open" ng-click="clearSuccessMessage()">
+				        <accordion-heading>
+				             <i class="pull-left glyphicon" ng-class="{'glyphicon-minus': status2.open, 'glyphicon-plus': !status2.open}"></i>&nbsp;Financial information
+				             <p class="pull-right" ng-hide="user.completeFinanceQns">Not completed</p>
+				             <p class="pull-right" ng-show="user.completeFinanceQns">Completed</p>
+				        </accordion-heading>
+				        <form name="qnsFinanceForm" data-ng-submit="updateUserQns(qnsFinanceForm.$valid)">
+							<fieldset>
+								
+							    <div ng-repeat="qns in qnsFinance"> 
+							       	<div class="form-group">
+							       		<label for="'{{qns.qnID}}'">{{qns.content}}</label></br>
+							        	<div ng-repeat="option in qns.options">
+							        	 <input type="radio" value="{{qns.rating[option]}}" id="'{{qns.qnID}}'" dynamic-model="qns.qnModel"/> {{option}}
+							       	 	</div>
+							        </div>
+								</div>	
+					        	<div class="form-group">
+									<button type="submit" class="btn btn-large btn-primary">Save Profile</button>
+								</div>
+								<div data-ng-show="success" class="text-success">
+									<strong>Profile Saved Successfully</strong>
+								</div>
+								<div data-ng-show="error" class="text-danger">
+									<strong data-ng-bind="error"></strong>
+								</div>
+							</fieldset>
+						</form>
+				    </accordion-group>
+			  	</accordion>
+			</div>
+			<a href="/#!/home" class="btn btn-primary" role="button">Proceed to Home</a>
+		</div>
+	</div>		
+</section>

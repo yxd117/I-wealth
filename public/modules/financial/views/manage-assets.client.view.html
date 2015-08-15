@@ -1,0 +1,188 @@
+<section ng-controller="AssetsController" class="content"> 
+	<ul class="nav nav-tabs">
+	  <li role="presentation"><a href="/#!/financialrecord">Overview</a></li>
+	  <li role="presentation" class="active"><a href="/#!/financialrecord/assets">Assets</a></li>
+	  <li role="presentation"><a href="/#!/financialrecord/liabilities">Liabilities</a></li>
+	  <li role="presentation"><a href="/#!/financialrecord/incomeExpense">Income & Expense</a></li>
+	  <li role="presentation"><a href="/#!/financialrecord/debts">Debt</a></li>
+	</ul>
+	<div class="row">
+		<div class="col-sm-7">
+			<h3> Displaying Records for: <em>{{monthDisplay}}, {{year}} </em></h3>
+		</div>		
+		<div class="col-sm-5">
+			<h3> Total: $ {{displayAssetsRecords.totalAmt}}</h3>
+		</div>
+	</div>	
+    <div class="row">
+    	<div class="col-sm-5">
+    		<form name"dateForm" data-ng-submit="updateView()">
+			    <div class="form-group">
+			      <label for="date" class="control-label col-sm-4">Select Date:</label>
+			      <div class="col-sm-8">
+			        <input type="date" class="form-control" datepicker-popup ng-model="dt" is-open="opened" datepicker-options="dateOptions"  ng-required="true" close-text="Close" />
+			      </div>
+			    </div>
+			</form>
+		</div>
+	</div>
+	</br>
+	<div class="row">
+	    <div class="col-md-6">
+		  	<accordion class="accordion" close-others="oneAtATime">
+			    <accordion-group is-open="status.open" ng-click="clearSuccessMessage()">
+			        <accordion-heading>
+			            <i class="pull-left glyphicon" ng-class="{'glyphicon-minus': status.open, 'glyphicon-plus': !status.open}"></i> &nbsp;Cash & Cash Equivalents 
+			            <p class="pull-right">Total: $ {{displayAssetsRecords.cashEquivalentsAmt}}</p>
+			        </accordion-heading>
+					<form name="cashEquivalentsForm" data-ng-submit="updateUserFinances(cashEquivalentsForm.$valid)">
+						<fieldset>
+							<table class="form-group table table-striped">
+								<tr>
+									<th>Type</th>
+									<th>Amount</th>
+								</tr>
+								<tr ng-repeat="item in displayAssetsRecords.cashEquivalents | toArray | orderBy:'order'">
+									<td><label for="'{{item.description}}'">{{item.description}}</label> </td>
+									<td>$ <input type="number" step="any" id="'{{item.description}}'" ng-model="item.value"/></td>
+								</tr>
+							</table>
+				        	<div class="form-group">
+								<button type="submit" class="btn btn-large btn-primary">Save Profile</button>
+							</div>
+							<div data-ng-show="success" class="text-success">
+								<strong>Assets updated Successfully</strong>
+							</div>
+							<div data-ng-show="error" class="text-danger">
+								<strong data-ng-bind="error"></strong>
+							</div>
+						</fieldset>
+					</form>
+			    </accordion-group>
+
+			    <accordion-group is-open="status1.open" ng-click="clearSuccessMessage()">
+			        <accordion-heading>
+			             <i class="pull-left glyphicon" ng-class="{'glyphicon-minus': status1.open, 'glyphicon-plus': !status1.open}"></i>&nbsp;Personal Use Assets
+			            <p class="pull-right">Total: $ {{displayAssetsRecords.personalUseAssetsAmt}}</p>
+			        </accordion-heading>
+					<form name="personalUseAssetsForm" data-ng-submit="updateUserFinances(personalUseAssetsForm.$valid)">
+						<fieldset>
+							<table class="form-group table table-striped">
+								<tr>
+									<th>Type</th>
+									<th>Amount</th>
+								</tr>
+								<tr ng-repeat="item in displayAssetsRecords.personalUseAssets | toArray | orderBy:'order'">
+									<td><label for="'{{item.description}}'">{{item.description}}</label> </td>
+									<td>$ <input type="number" step="any" id="'{{item.description}}'" ng-model="item.value"/></td>
+								</tr>
+							</table>
+				        	<div class="form-group">
+								<button type="submit" class="btn btn-large btn-primary">Save Profile</button>
+							</div>
+							<div data-ng-show="success" class="text-success">
+								<strong>Profile Saved Successfully</strong>
+							</div>
+							<div data-ng-show="error" class="text-danger">
+								<strong data-ng-bind="error"></strong>
+							</div>
+						</fieldset>
+					</form>
+			    </accordion-group>
+
+			   	<accordion-group is-open="status2.open" ng-click="clearSuccessMessage()">
+			        <accordion-heading>
+			             <i class="pull-left glyphicon" ng-class="{'glyphicon-minus': status2.open, 'glyphicon-plus': !status2.open}"></i>&nbsp;Invested Assets
+			            <p class="pull-right">Total: $ {{displayAssetsRecords.investedAssetsAmt}}</p>
+			        </accordion-heading>
+			        <form name="investedAssetsForm" data-ng-submit="updateUserFinances(investedAssetsForm.$valid)">
+						<fieldset>
+							<table class="form-group table table-striped">
+								<tr>
+									<th>Type</th>
+									<th>Amount</th>
+								</tr>
+								<tr ng-repeat="item in displayAssetsRecords.investedAssets | toArray | orderBy:'order'">
+									<td><label for="'{{item.description}}'">{{item.description}}</label> </td>
+									<td>$ <input type="number" step="any" id="'{{item.description}}'" ng-model="item.value"/></td>
+								</tr>
+							</table>
+				        	<div class="form-group">
+								<button type="submit" class="btn btn-large btn-primary">Save Profile</button>
+							</div>
+							<div data-ng-show="success" class="text-success">
+								<strong>Profile Saved Successfully</strong>
+							</div>
+							<div data-ng-show="error" class="text-danger">
+								<strong data-ng-bind="error"></strong>
+							</div>
+						</fieldset>
+					</form>
+			    </accordion-group>
+
+			   	<accordion-group is-open="status3.open" ng-click="clearSuccessMessage()">
+			        <accordion-heading>
+			             <i class="pull-left glyphicon" ng-class="{'glyphicon-minus': status3.open, 'glyphicon-plus': !status3.open}"></i>&nbsp;CPF Savings
+			            <p class="pull-right">Total: $ {{displayAssetsRecords.cpfSavingsAmt}}</p>
+			        </accordion-heading>
+			        <form name="cpfSavingsForm" data-ng-submit="updateUserFinances(cpfSavingsForm.$valid)">
+						<fieldset>
+							<table class="form-group table table-striped">
+								<tr>
+									<th>Type</th>
+									<th>Amount</th>
+								</tr>
+								<tr ng-repeat="item in displayAssetsRecords.cpfSavings | toArray | orderBy:'order'">
+									<td><label for="'{{item.description}}'">{{item.description}}</label> </td>
+									<td>$ <input type="number" step="any" id="'{{item.description}}'" ng-model="item.value"/></td>
+								</tr>
+							</table>
+				        	<div class="form-group">
+								<button type="submit" class="btn btn-large btn-primary">Save Profile</button>
+							</div>
+							<div data-ng-show="success" class="text-success">
+								<strong>Profile Saved Successfully</strong>
+							</div>
+							<div data-ng-show="error" class="text-danger">
+								<strong data-ng-bind="error"></strong>
+							</div>
+						</fieldset>
+					</form>
+			    </accordion-group>
+			   	<accordion-group is-open="status4.open" ng-click="clearSuccessMessage()">
+			        <accordion-heading>
+			            <i class="pull-left glyphicon" ng-class="{'glyphicon-minus': status4.open, 'glyphicon-plus': !status4.open}"></i>&nbsp;Other Assets 
+			            <p class="pull-right">Total: $ {{displayAssetsRecords.otherAssetsAmt}}</p>
+			        </accordion-heading>
+			        <form name="otherAssetsForm" data-ng-submit="updateUserFinances(otherAssetsForm.$valid)">
+						<fieldset>
+							<table class="form-group table table-striped">
+								<tr>
+									<th>Type</th>
+									<th>Amount</th>
+								</tr>
+								<tr ng-repeat="item in displayAssetsRecords.otherAssets | toArray | orderBy:'order'">
+									<td><label for="'{{item.description}}'">{{item.description}}</label> </td>
+									<td>$ <input type="number" step="any" id="'{{item.description}}'" ng-model="item.value"/></td>
+								</tr>
+							</table>
+				        	<div class="form-group">
+								<button type="submit" class="btn btn-large btn-primary">Save Profile</button>
+							</div>
+							<div data-ng-show="success" class="text-success">
+								<strong>Profile Saved Successfully</strong>
+							</div>
+							<div data-ng-show="error" class="text-danger">
+								<strong data-ng-bind="error"></strong>
+							</div>
+						</fieldset>
+					</form>
+			    </accordion-group>
+		  	</accordion>
+		</div>
+	  	<div class="col-md-6" ng-show="assetChartDisplay">
+	  		<canvas id="assetsDoughnut" class="chart chart-doughnut" data="assetsDoughnutData" labels="assetsDoughnutLabels" legend="true"></canvas> 
+	  	</div>
+	  	
+	</div>
+</section>

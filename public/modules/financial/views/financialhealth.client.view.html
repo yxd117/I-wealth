@@ -1,0 +1,117 @@
+<section data-ng-controller="FinancesController" class="content">
+	<div class="row">
+		<div class="col-sm-4">
+			<h4> Your Financial Ratios </h4>
+			Displaying Records for: <em>{{monthDisplay}}, {{year}} </em>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-4">
+				<form name="dateForm">
+				    <div class="form-group">
+				      <label for="date" class="control-label col-sm-4">Select Date:</label>
+				      <div class="col-sm-8">
+				        <input type="date" class="form-control" datepicker-popup ng-model="dt" is-open="opened" datepicker-options="dateOptions"  ng-required="true" close-text="Close" />
+				      </div>
+				    </div>
+				</form>
+				<div class="col-sm-12">
+					<b>Liquidity Ratios</b>	
+				</div>
+				<table class="table table-striped col-sm-12">
+
+					<tr tooltips tooltip-html="{{tips.tipLiquidity}}" tooltip-size="medium" tooltip-side="right">
+						<th class="col-sm-9">Liquidity Ratio: </th>
+						<td class="col-sm-2"> {{displayOverview.ratioLiquidity}}</td>
+						<td class="col-sm-1"><input type="checkbox" ng-model="checkRatio.liquidity"></td>
+					</tr>					
+				</table>
+				<div class="col-sm-12">	
+					<b>Debt Ratios</b>
+				</div>								
+				<table class="table table-striped col-sm-12">
+
+					<tr tooltips tooltip-html="{{tips.tipAssetDebt}}" tooltip-size="medium" tooltip-side="right"> 
+						<th class="col-sm-9">Asset to Debt Ratio: </th>
+						<td class="col-sm-2"> {{displayOverview.ratioAssetDebt}}</td>
+						<td class="col-sm-1"><input type="checkbox" ng-model="checkRatio.assetDebt"></td>
+					</tr>
+					<tr tooltips tooltip-html="{{tips.tipDebtService}}" tooltip-size="medium" tooltip-side="right">
+						<th class="col-sm-9">Debt Service Ratio: </th>
+						<td class="col-sm-2"> {{displayOverview.ratioDebtService}}</td>
+						<td class="col-sm-1"><input type="checkbox" ng-model="checkRatio.debtService"></td>
+					</tr>
+					<tr tooltips tooltip-html="{{tips.tipHouseExpense}}" tooltip-size="medium" tooltip-side="right">
+						<th class="col-sm-9">Housing Expense Ratio: </th>
+						<td class="col-sm-2"> {{displayOverview.ratioHouseExpense}}</td>
+						<td class="col-sm-1"><input type="checkbox" ng-model="checkRatio.houseExpense"></td>
+					</tr>
+					<tr tooltips tooltip-html="{{tips.tipDebtIncome}}" tooltip-size="medium" tooltip-side="right">
+						<th class="col-sm-9">Debt to Income Ratio: </th>
+						<td class="col-sm-2"> {{displayOverview.ratioDebtIncome}}</td>
+						<td class="col-sm-1"><input type="checkbox" ng-model="checkRatio.debtIncome"></td>
+					</tr>
+					<tr tooltips tooltip-html="{{tips.tipConsumerDebt}}" tooltip-size="medium" tooltip-side="right">
+						<th class="col-sm-9">Consumer Debt Ratio: </th>
+						<td class="col-sm-2"> {{displayOverview.ratioConsumerDebt}}</td>
+						<td class="col-sm-1"><input type="checkbox" ng-model="checkRatio.consumerDebt"></td>
+					</tr>				
+				</table>
+				<div class="col-sm-12">
+					<b>Net Worth and Other Ratios</b>
+				</div>	
+				<table class="table table-striped col-sm-12">
+					<tr tooltips tooltip-html="{{tips.tipNetWorthBenchmark}}" tooltip-size="medium" tooltip-side="right">
+						<th class="col-sm-9">Net Worth Benchmark: </th>
+						<td class="col-sm-2"> {{displayOverview.ratioNetWorthBenchmark}}</td>
+						<td class="col-sm-1"><input type="checkbox" ng-model="checkRatio.netWorthBenchmark"></td>
+					</tr>
+					<tr tooltips tooltip-html="{{tips.tipSaving}}" tooltip-size="medium" tooltip-side="right">
+						<th class="col-sm-9">Saving Ratio: </th>
+						<td class="col-sm-2"> {{displayOverview.ratioSaving}}</td>
+						<td class="col-sm-1"><input type="checkbox" ng-model="checkRatio.saving"></td>
+					</tr>
+					<tr tooltips tooltip-html="{{tips.tipSolvency}}" tooltip-size="medium" tooltip-side="right">
+						<th class="col-sm-9">Solvency Ratio: </th>
+						<td class="col-sm-2"> {{displayOverview.ratioSolvency}}</td>
+						<td class="col-sm-1"><input type="checkbox" ng-model="checkRatio.solvency"></td>
+					</tr>
+					<tr tooltips tooltip-html="{{tips.tipInvestment}}" tooltip-size="medium" tooltip-side="right">
+						<th class="col-sm-9">Investment Ratio: </th>
+						<td class="col-sm-2"> {{displayOverview.ratioInvestment}}</td>
+						<td class="col-sm-1"><input type="checkbox" ng-model="checkRatio.investment"></td>
+					</tr>
+				</table>
+		</div>	
+		<div class="col-sm-8">
+			<div class="form-group pull-right col-sm-5">
+  				<label for="ratioOptions" class="col-sm-4">Displaying for:</label>
+	  			<div class="col-sm-8">
+					<select ng-model="selectedChartOption" class="form-control col-sm-2">
+						<option value="0">Past 3 months</option>
+						<option value="1">Past 6 months</option>
+						<option value="2">Past 12 months</option>
+					</select>
+				</div>
+			</div>
+			<canvas id="ratioChart" class="chart chart-line" data="data" labels="labels" legend="true" series="series"></canvas> 
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12 well">
+			<h4>Your Financial Health Analysis</h4>
+			<ul>
+				<li><em>Liquidity Ratio</em>: </br>{{displayAnalysis.liquidity}}</li></br>
+				<li><em>Asset to Debt Ratio</em>: </br>{{displayAnalysis.assetDebt}}</li></br>
+				<li><em>Debt Service Ratio</em>: </br>{{displayAnalysis.debtService}}</li></br>
+				<li><em>Housing Expense Ratio</em>: </br>{{displayAnalysis.houseExpense}}</li></br>
+				<li><em>Debt to Income Ratio</em>: </br>{{displayAnalysis.debtIncome}}</li></br>
+				<li><em>Consumer Debt Ratio</em>: </br>{{displayAnalysis.consumerDebt}}</li></br>
+				<li><em>Net Worth Benchmark</em>: </br>{{displayAnalysis.netWorthBenchmark}}</li></br>
+				<li><em>Saving Ratio</em>: </br>{{displayAnalysis.saving}}</li></br>
+				<li><em>Solvency Ratio</em>: </br>{{displayAnalysis.solvency}}</li></br>
+				<li><em>Investment Ratio</em>: </br>{{displayAnalysis.investment}}</li></br>
+			</ul>
+		</div>
+	</div>	
+</section>

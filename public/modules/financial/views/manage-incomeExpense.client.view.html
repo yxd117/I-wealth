@@ -1,0 +1,267 @@
+<section data-ng-controller="IncomeExpenseController" class="content">
+	<ul class="nav nav-tabs">
+	  <li role="presentation"><a href="/#!/financialrecord">Overview</a></li>
+	  <li role="presentation"><a href="/#!/financialrecord/assets">Assets</a></li>
+	  <li role="presentation"><a href="/#!/financialrecord/liabilities">Liabilities</a></li>
+	  <li role="presentation" class="active"><a href="/#!/financialrecord/incomeExpense">Income & Expense</a></li>
+	  <li role="presentation"><a href="/#!/financialrecord/debts">Debt</a></li>
+	</ul>
+	<div class="row">
+		<div class="col-sm-7">
+			<h3> Displaying Records for: <em>{{monthDisplay}}, {{year}} </em></h3>
+		</div>		
+		<div class="col-sm-5">
+			<h3> Net Gross Income: $ {{displayIncomeExpenseRecords.netCashFlow}}</h3>
+		</div>
+	</div>	
+    <div class="row">
+    	<div class="col-sm-5">
+    		<form name"dateForm" data-ng-submit="updateView()">
+			    <div class="form-group">
+			      <label for="date" class="control-label col-sm-4">Select Date:</label>
+			      <div class="col-sm-8">
+			        <input type="date" class="form-control" datepicker-popup ng-model="dt" is-open="opened" datepicker-options="dateOptions"  ng-required="true" close-text="Close" />
+			      </div>
+			    </div>
+<!-- 		    <button type="submit" class="btn btn-large btn-primary">Update View</button> -->
+			</form>
+		</div>
+	</div>
+
+	<div class="row">	
+		<div class="col-md-6">				
+			<div class="col-md-7">
+				<h4>Monthly Income</h4>
+			</div>		
+			<div class="col-md-5">
+				<h4> Total: $ {{displayIncomeExpenseRecords.monthlyIncomeAmt}}</h4>
+			</div>		
+			<div class="col-md-12">
+			  	<accordion class="accordion" close-others="oneAtATime">
+				    <accordion-group is-open="status.open" ng-click="clearSuccessMessage()">
+				        <accordion-heading>
+				           <i class="pull-left glyphicon" ng-class="{'glyphicon-minus': status.open, 'glyphicon-plus': !status.open}"></i>&nbsp;Employment Income 
+				            <p class="pull-right">Total: $ {{displayIncomeExpenseRecords.incomeNormalAmt}}</p>
+				        </accordion-heading>
+						<form name="incomeNormalForm" data-ng-submit="updateUserFinances(incomeNormalForm.$valid)">
+							<fieldset>
+								<table class="form-group table table-striped">
+									<tr>
+										<th>Type</th>
+										<th>Amount</th>
+									</tr>
+									<tr ng-repeat="item in displayIncomeExpenseRecords.monthlyIncome.incomeNormal | toArray | orderBy:'order'">
+										<td><label for="'{{item.description}}'">{{item.description}}</label> </td>
+										<td>$ <input type="number" step="any" id="'{{item.description}}'" ng-model="item.value"/></td>
+									</tr>
+								</table>
+					        	<div class="form-group">
+									<button type="submit" class="btn btn-large btn-primary">Save Profile</button>
+								</div>
+								<div data-ng-show="success" class="text-success">
+									<strong>Income Updated Successfully</strong>
+								</div>
+								<div data-ng-show="error" class="text-danger">
+									<strong data-ng-bind="error"></strong>
+								</div>
+							</fieldset>
+						</form>
+				    </accordion-group>
+
+				    <accordion-group is-open="status1.open" ng-click="clearSuccessMessage()">
+				        <accordion-heading>
+				            <i class="pull-left glyphicon" ng-class="{'glyphicon-minus': status1.open, 'glyphicon-plus': !status1.open}"></i>&nbsp;Other Income
+				            <p class="pull-right">Total: $ {{displayIncomeExpenseRecords.otherIncomeAmt}}</p>
+				        </accordion-heading>
+						<form name="householdExpenseForm" data-ng-submit="updateUserFinances(householdExpenseForm.$valid)">
+							<fieldset>
+								<table class="form-group table table-striped">
+									<tr>
+										<th>Type</th>
+										<th>Amount</th>
+									</tr>
+									<tr ng-repeat="item in displayIncomeExpenseRecords.monthlyIncome.otherIncome | toArray | orderBy:'order'">
+										<td><label for="'{{item.description}}'">{{item.description}}</label> </td>
+										<td>$ <input type="number" step="any" id="'{{item.description}}'" ng-model="item.value"/></td>
+									</tr>
+								</table>
+					        	<div class="form-group">
+									<button type="submit" class="btn btn-large btn-primary">Save Profile</button>
+								</div>
+								<div data-ng-show="success" class="text-success">
+									<strong>Income Updated Successfully</strong>
+								</div>
+								<div data-ng-show="error" class="text-danger">
+									<strong data-ng-bind="error"></strong>
+								</div>
+							</fieldset>
+						</form>
+				    </accordion-group>
+				</accordion>	
+		  	</div>	
+		  	<div class="col-md-7">
+				<h4>Monthly Expense</h4>
+			</div>		
+			<div class="col-md-5">
+				<h4> Total: $ {{displayIncomeExpenseRecords.monthlyExpenseAmt}}</h4>
+			</div>		
+			<div class="col-md-12">
+			  	<accordion class="accordion" close-others="oneAtATime">
+				    <accordion-group is-open="status2.open" ng-click="clearSuccessMessage()">
+				        <accordion-heading>
+				           <i class="pull-left glyphicon" ng-class="{'glyphicon-minus': status2.open, 'glyphicon-plus': !status2.open}"></i>&nbsp;Fixed Expense 
+				            <p class="pull-right">Total: $ {{displayIncomeExpenseRecords.fixedExpenseAmt}}</p>
+				        </accordion-heading>
+						<form name="fixedExpenseForm" data-ng-submit="updateUserFinances(fixedExpenseForm.$valid)">
+							<fieldset>
+								<table class="form-group table table-striped">
+									<tr>
+										<th>Type</th>
+										<th>Amount</th>
+									</tr>
+									<tr ng-repeat="item in displayIncomeExpenseRecords.monthlyExpense.fixedExpense | toArray | orderBy:'order'">
+										<td><label for="'{{item.description}}'">{{item.description}}</label> </td>
+										<td>$ <input type="number" step="any" id="'{{item.description}}'" ng-model="item.value"/></td>
+									</tr>
+								</table>
+					        	<div class="form-group">
+									<button type="submit" class="btn btn-large btn-primary">Save Profile</button>
+								</div>
+								<div data-ng-show="success" class="text-success">
+									<strong>Expense Updated Successfully</strong>
+								</div>
+								<div data-ng-show="error" class="text-danger">
+									<strong data-ng-bind="error"></strong>
+								</div>
+							</fieldset>
+						</form>
+				    </accordion-group>
+
+				    <accordion-group is-open="status3.open" ng-click="clearSuccessMessage()">
+				        <accordion-heading>
+				            <i class="pull-left glyphicon" ng-class="{'glyphicon-minus': status3.open, 'glyphicon-plus': !status3.open}"></i>&nbsp;Transport
+				            <p class="pull-right">Total: $ {{displayIncomeExpenseRecords.transportAmt}}</p>
+				        </accordion-heading>
+						<form name="transportForm" data-ng-submit="updateUserFinances(transportForm.$valid)">
+							<fieldset>
+								<table class="form-group table table-striped">
+									<tr>
+										<th>Type</th>
+										<th>Amount</th>
+									</tr>
+									<tr ng-repeat="item in displayIncomeExpenseRecords.monthlyExpense.transport | toArray | orderBy:'order'">
+										<td><label for="'{{item.description}}'">{{item.description}}</label> </td>
+										<td>$ <input type="number" step="any" id="'{{item.description}}'" ng-model="item.value"/></td>
+									</tr>
+								</table>
+					        	<div class="form-group">
+									<button type="submit" class="btn btn-large btn-primary">Save Profile</button>
+								</div>
+								<div data-ng-show="success" class="text-success">
+									<strong>Expense Updated Successfully</strong>
+								</div>
+								<div data-ng-show="error" class="text-danger">
+									<strong data-ng-bind="error"></strong>
+								</div>
+							</fieldset>
+						</form>
+				    </accordion-group>
+
+				    <accordion-group is-open="status4.open" ng-click="clearSuccessMessage()">
+				        <accordion-heading>
+				           <i class="pull-left glyphicon" ng-class="{'glyphicon-minus': status4.open, 'glyphicon-plus': !status4.open}"></i>&nbsp;Utilities & Household Maintenance 
+				            <p class="pull-right">Total: $ {{displayIncomeExpenseRecords.utilityHouseholdAmt}}</p>
+				        </accordion-heading>
+						<form name="utilityHouseholdForm" data-ng-submit="updateUserFinances(utilityHouseholdForm.$valid)">
+							<fieldset>
+								<table class="form-group table table-striped">
+									<tr>
+										<th>Type</th>
+										<th>Amount</th>
+									</tr>
+									<tr ng-repeat="item in displayIncomeExpenseRecords.monthlyExpense.utilityHousehold | toArray | orderBy:'order'">
+										<td><label for="'{{item.description}}'">{{item.description}}</label> </td>
+										<td>$ <input type="number" step="any" id="'{{item.description}}'" ng-model="item.value"/></td>
+									</tr>
+								</table>
+					        	<div class="form-group">
+									<button type="submit" class="btn btn-large btn-primary">Save Profile</button>
+								</div>
+								<div data-ng-show="success" class="text-success">
+									<strong>Expense Updated Successfully</strong>
+								</div>
+								<div data-ng-show="error" class="text-danger">
+									<strong data-ng-bind="error"></strong>
+								</div>
+							</fieldset>
+						</form>
+				    </accordion-group>
+
+				    <accordion-group is-open="status5.open" ng-click="clearSuccessMessage()">
+				        <accordion-heading>
+				            <i class="pull-left glyphicon" ng-class="{'glyphicon-minus': status5.open, 'glyphicon-plus': !status5.open}"></i>&nbsp;Food & Necessities
+				            <p class="pull-right">Total: $ {{displayIncomeExpenseRecords.foodNecessitiesAmt}}</p>
+				        </accordion-heading>
+						<form name="foodNecessitiesForm" data-ng-submit="updateUserFinances(foodNecessitiesForm.$valid)">
+							<fieldset>
+								<table class="form-group table table-striped">
+									<tr>
+										<th>Type</th>
+										<th>Amount</th>
+									</tr>
+									<tr ng-repeat="item in displayIncomeExpenseRecords.monthlyExpense.foodNecessities | toArray | orderBy:'order'">
+										<td><label for="'{{item.description}}'">{{item.description}}</label> </td>
+										<td>$ <input type="number" step="any" id="'{{item.description}}'" ng-model="item.value"/></td>
+									</tr>
+								</table>
+					        	<div class="form-group">
+									<button type="submit" class="btn btn-large btn-primary">Save Profile</button>
+								</div>
+								<div data-ng-show="success" class="text-success">
+									<strong>Expense Updated Successfully</strong>
+								</div>
+								<div data-ng-show="error" class="text-danger">
+									<strong data-ng-bind="error"></strong>
+								</div>
+							</fieldset>
+						</form>
+				    </accordion-group>
+
+				    <accordion-group is-open="status6.open" ng-click="clearSuccessMessage()">
+				        <accordion-heading>
+				            <i class="pull-left glyphicon" ng-class="{'glyphicon-minus': status6.open, 'glyphicon-plus': !status6.open}"></i>&nbsp;Miscellaneous
+				            <p class="pull-right">Total: $ {{displayIncomeExpenseRecords.miscAmt}}</p>
+				        </accordion-heading>
+						<form name="miscForm" data-ng-submit="updateUserFinances(miscForm.$valid)">
+							<fieldset>
+								<table class="form-group table table-striped">
+									<tr>
+										<th>Type</th>
+										<th>Amount</th>
+									</tr>
+									<tr ng-repeat="item in displayIncomeExpenseRecords.monthlyExpense.misc | toArray | orderBy:'order'">
+										<td><label for="'{{item.description}}'">{{item.description}}</label> </td>
+										<td>$ <input type="number" step="any" id="'{{item.description}}'" ng-model="item.value"/></td>
+									</tr>
+								</table>
+					        	<div class="form-group">
+									<button type="submit" class="btn btn-large btn-primary">Save Profile</button>
+								</div>
+								<div data-ng-show="success" class="text-success">
+									<strong>Expense Updated Successfully</strong>
+								</div>
+								<div data-ng-show="error" class="text-danger">
+									<strong data-ng-bind="error"></strong>
+								</div>
+							</fieldset>
+						</form>
+				    </accordion-group>
+				</accordion>	
+		  	</div>
+  		</div>
+		<div class="col-md-6" ng-show="incomeExpenseChartDisplay">
+	  		<canvas id="incomeExpenseDoughnut" class="chart chart-doughnut" data="incomeExpenseDoughnutData" labels="incomeExpenseDoughnutLabels" legend="true"></canvas> 
+	  	</div>
+
+	</div>
+</section>

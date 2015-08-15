@@ -1,0 +1,298 @@
+<section data-ng-controller="SettingsController" class="content">
+    <tabset>
+      <tab heading="Personal Details" ng-click="reset()">
+        <h4><u>Edit Personal Details</u></h4>
+        <!-- Insert upload profile image here -->
+      <div class="col-sm-3">
+        <img style="border:1px solid gray;width:200px;"  id="preview" ng-src="{{decachedImageUrl}}" />
+        </br>
+        <input type="file" ngf-select ng-model="file"/>
+        </br>
+        <button class="btn btn-large btn-primary" ng-click="upload(file)">Update Profile Picture</button>
+      </div>
+      <div class="col-sm-7">
+        <form name="personalDetailsForm" data-ng-submit="updateUserProfile(personalDetailsForm.$valid)" class="form-horizontal" autocomplete="off">
+          <fieldset>
+            <div class="form-group">
+              <label for="firstName" class="control-label col-sm-4">First Name</label>
+              <div class="col-sm-8">
+                <input type="text" id="firstName" name="firstName" class="form-control" data-ng-model="user.firstName" placeholder="First Name">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="lastName" class="control-label col-sm-4">Last Name</label>
+              <div class="col-sm-8">
+                <input type="text" id="lastName" name="lastName" class="form-control" data-ng-model="user.lastName" placeholder="Last Name">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="gender" class="control-label col-sm-4">Gender</label>
+              <div class="col-sm-8 controls">
+                <!-- <p class="form-control-static">{{user.gender}}</p> -->
+                <select id="gender" name="gender" class="form-control" data-ng-model="user.gender">
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="dob" class="control-label col-sm-4">Date of Birth</label> <!-- Consider change to DOB -->
+              <div class="col-sm-8">
+<!--                 <input type="text" id="age" name="age" class="form-control" data-ng-model="user.age" placeholder="Please Specify"> -->
+                <input type="date" class="form-control" datepicker-popup ng-model="user.dateOfBirth"/>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="maritalStatus" class="control-label col-sm-4">Marital Status</label> <!-- Consider change to DOB -->
+              <div class="col-sm-8">
+                <select id="maritalStatus" name="maritalStatus" class="form-control" data-ng-model="user.maritalStatus">
+                  <option value="Married">Married</option>
+                  <option value="Single">Single</option>
+                  <option value="Divorced">Divorced</option>
+                  <option value="Widowed">Widowed</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="noOfDependents" class="control-label col-sm-4">No of Dependents</label> <!-- Consider change to DOB -->
+              <div class="col-sm-8">
+                <input type="number" id="noOfDependents" name="noOfDependents" class="form-control" data-ng-model="user.noOfDependents" placeholder="Please Specify">
+              </div>
+            </div>
+            <div class="text-center form-group">
+              <button type="submit" class="btn btn-large btn-primary">Save Profile</button>
+            </div>
+            <div data-ng-show="success" class="text-center text-success">
+              <strong>Profile Saved Successfully</strong>
+            </div>
+            <div data-ng-show="error" class="text-center text-danger">
+              <strong data-ng-bind="error"></strong>
+            </div>
+          </fieldset>
+        </form>
+
+      </div>
+      </tab>
+
+
+      <tab heading="Education/Work" ng-click="reset()">
+          <h4><u>Edit your Education/Work  Details</u></h4>
+          <form name="workDetailsForm" id="workDetailsForm" data-ng-submit="updateUserProfile(workDetailsForm.$valid)" class="form-horizontal" autocomplete="off">
+            <fieldset>
+
+              <div class="form-group">
+                <label for="educationLevel" class="control-label col-sm-2">Education Level</label> 
+                <div class="col-sm-4">
+                  <select id="educationLevel" name="educationLevel" class="form-control" ng-model="user.educationLevel">
+                    <option value="PhD">PhD</option>
+                    <option value="Masters">Masters</option>
+                    <option value="Graduate">Graduate</option>
+                    <option value="Undergraduate">Undergraduate</option>
+                    <option value="A/O/N Levels">A/O/N Levels</option>
+                    <option value="PSLE">PSLE</option>
+                  </select>
+                </div>
+              </div>
+              
+              <div class="form-group col-sm-12"><hr></hr></div> 
+
+              <div class="form-group">
+                <label for="currentOccupation" class="control-label col-sm-2">Current Employment</label> 
+                <div class="col-sm-4">
+                  <select id="currentOccupation" name="currentOccupation" class="form-control" data-ng-model="user.currentOccupation">
+                    <option value="Salaried Employee">Salaried Employee</option>
+                    <option value="Businessman/Self-employed">Businessman/Self-employed</option>
+                    <option value="Student">Student</option>
+                    <option value="Unemployed">Unemployed</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="industry" class="control-label col-sm-2">Industry</label> 
+                <div class="col-sm-4">
+                  <select id="industry" name="industry" class="form-control" data-ng-model="user.industry">
+                    <option value="accounting">Accounting</option>
+                    <option value="consulting">Consulting</option>
+                    <option value="engineering">Engineering</option>
+                    <option value="infocommMedia">Infocomm & Media</option>
+                    <option value="researchAcademia">Research & Academia</option>
+                    <option value="biomedical">Biomedical Sciences</option>
+                    <option value="consumerBusiness">Consumer Business</option>
+                    <option value="financial">Financial Services</option>
+                    <option value="legal">Legal</option>
+                    <option value="chemicals">Chemicals/ Oil & Gas</option>
+                    <option value="electronics">Electronics</option>
+                    <option value="healthcare">Healthcare Services</option>
+                    <option value="civil">civil/ Public Service</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="jobRank" class="control-label col-sm-2">Job Position</label> 
+                <div class="col-sm-4">
+                  <select id="jobRank" name="jobRank" class="form-control" data-ng-model="user.jobRank">
+                    <option value="temp">Temporary / Contract</option>
+                    <option value="employee">Employee / Analyst / Associate</option>
+                    <option value="consultant">Consultant / Junior supervisor / Assistant Manager / Junior Director</option>
+                    <option value="seniorConsultant">Senior Consultant / Vice President / Manager / Supervisor</option>
+                    <option value="svp">SVP / Director</option>
+                    <option value="principal">Principal / Partner / Vice Chairman / General Manager</option>
+                    <option value="president">C-Level officer / President / Chairman / Managing Director</option>
+                  </select>
+                </div>
+              </div>  
+            
+            <div class="text-center form-group">
+                <button type="submit" name="submitBtn" class="btn btn-large btn-primary">Update</button>
+                <button name="cancelBtn" type="reset" class="btn btn-large btn-primary" ng-click="cancel()">Reset</button>
+<!--                 <a class="btn btn-large btn-primary" ng-click="cancel()">Cancel</a> -->
+            </div>
+            
+            <div data-ng-show="success" class="text-center text-success">
+                <strong>Information Updated Successfully</strong>
+            </div>
+
+            <div data-ng-show="error" class="text-center text-danger">
+                <strong data-ng-bind="error"></strong>
+            </div>
+            </fieldset>
+        </form>
+      </tab>
+
+      <tab heading="Privacy" ng-click="reset()">
+          <h4><u>Edit your Privacy Settings</u></h4>
+          <form name="privacySettingForm" data-ng-submit="updateUserProfile(privacySettingForm.$valid)" class="form-horizontal" autocomplete="off">
+            <fieldset>
+              <div class="form-group">
+                <label for="privacy" class="control-label col-sm-2">Privacy</label>
+                <div class="col-sm-4">
+                  <input type="radio" id="privacy" name="privacy" value="public" data-ng-model="user.privacy"> Public <br/>
+                  <input type="radio" id="privacy" name="privacy" value="friends"  data-ng-model="user.privacy"> Friends Only <br/>
+                  <input type="radio" id="privacy" name="privacy" value="private" data-ng-model="user.privacy"> Private <br/>  
+                </div>
+              </div>
+
+            <div class="text-center form-group">
+                <button type="submit" name="submitBtn" class="btn btn-large btn-primary">Update</button>
+                <button type="reset" name="cancelBtn" class="btn btn-large btn-primary">Reset</button>
+
+            </div>
+            
+            <div data-ng-show="success" class="text-center text-success">
+                <strong>Privacy Settings Updated Successfully</strong>
+            </div>
+
+            <div data-ng-show="error" class="text-center text-danger">
+                <strong data-ng-bind="error"></strong>
+            </div>
+            </fieldset>
+        </form>
+      </tab>
+
+      <tab heading="Credit Profile" ng-click="reset()">
+        <div class="col-md-8" data-ng-controller="SettingsController">
+          <h4><u>Credit Profile</u></h4>
+
+
+          <div ng-controller="QuestionnaireController">
+              <accordion class="accordion" close-others="oneAtATime">
+
+                <accordion-group is-open="status.open" ng-click="clearSuccessMessage()">
+                    <accordion-heading>
+                         <i class="pull-left glyphicon" ng-class="{'glyphicon-minus': status.open, 'glyphicon-plus': !status.open}"></i>&nbsp;Personal information 
+                         <p class="pull-right" ng-hide="user.completePersonalQns">Not completed</p>
+                         <p class="pull-right" ng-show="user.completePersonalQns">Completed</p>
+                    </accordion-heading>
+                <form name="qnsPersonalForm" data-ng-submit="updateUserQns(qnsPersonalForm.$valid)">
+                  <fieldset>
+                    
+                      <div ng-repeat="qns in qnsPersonal"> 
+                          <div class="form-group">
+                            <label for="'{{qns.qnID}}'">{{qns.content}}</label></br>
+                            <div ng-repeat="option in qns.options">
+                            <input type="radio" value="{{qns.rating[option]}}" id="'{{qns.qnID}}'" dynamic-model="qns.qnModel"/> {{option}} 
+                            </div>
+                          </div>
+                    </div>  
+                        <div class="form-group">
+                      <button type="submit" class="btn btn-large btn-primary">Save Profile</button>
+                    </div>
+                    <div data-ng-show="success" class="text-success">
+                      <strong>Profile Saved Successfully</strong>
+                    </div>
+                    <div data-ng-show="error" class="text-danger">
+                      <strong data-ng-bind="error"></strong>
+                    </div>
+                  </fieldset>
+                </form>
+                </accordion-group>
+
+                <accordion-group is-open="status1.open" ng-click="clearSuccessMessage()">
+                    <accordion-heading>
+                         <i class="pull-left glyphicon" ng-class="{'glyphicon-minus': status1.open, 'glyphicon-plus': !status1.open}"></i>&nbsp;Employment information
+                         <p class="pull-right" ng-hide="user.completeJobQns">Not completed</p>
+                         <p class="pull-right" ng-show="user.completeJobQns">Completed</p>
+                    </accordion-heading>
+                <form name="qnsJobForm" data-ng-submit="updateUserQns(qnsJobForm.$valid)">
+                  <fieldset>
+                    
+                      <div ng-repeat="qns in qnsJob"> 
+                          <div class="form-group">
+                            <label for="'{{qns.qnID}}'">{{qns.content}}</label></br>
+                            <div ng-repeat="option in qns.options">
+                            <input type="radio" value="{{qns.rating[option]}}" id="'{{qns.qnID}}'" dynamic-model="qns.qnModel"/> {{option}} 
+                            </div>
+                          </div>
+                    </div>  
+                        <div class="form-group">
+                      <button type="submit" class="btn btn-large btn-primary">Save Profile</button>
+                    </div>
+                    <div data-ng-show="success" class="text-success">
+                      <strong>Profile Saved Successfully</strong>
+                    </div>
+                    <div data-ng-show="error" class="text-danger">
+                      <strong data-ng-bind="error"></strong>
+                    </div>
+                  </fieldset>
+                </form>
+                </accordion-group>
+
+                <accordion-group is-open="status2.open" ng-click="clearSuccessMessage()">
+                    <accordion-heading>
+                         <i class="pull-left glyphicon" ng-class="{'glyphicon-minus': status2.open, 'glyphicon-plus': !status2.open}"></i>&nbsp;Financial information
+                         <p class="pull-right" ng-hide="user.completeFinanceQns">Not completed</p>
+                         <p class="pull-right" ng-show="user.completeFinanceQns">Completed</p>
+                    </accordion-heading>
+                    <form name="qnsFinanceForm" data-ng-submit="updateUserQns(qnsFinanceForm.$valid)">
+                  <fieldset>
+                    
+                      <div ng-repeat="qns in qnsFinance"> 
+                          <div class="form-group">
+                            <label for="'{{qns.qnID}}'">{{qns.content}}</label></br>
+                            <div ng-repeat="option in qns.options">
+                             <input type="radio" value="{{qns.rating[option]}}" id="'{{qns.qnID}}'" dynamic-model="qns.qnModel"/> {{option}}
+                            </div>
+                          </div>
+                    </div>  
+                        <div class="form-group">
+                      <button type="submit" class="btn btn-large btn-primary">Save Profile</button>
+                    </div>
+                    <div data-ng-show="success" class="text-success">
+                      <strong>Profile Saved Successfully</strong>
+                    </div>
+                    <div data-ng-show="error" class="text-danger">
+                      <strong data-ng-bind="error"></strong>
+                    </div>
+                  </fieldset>
+                </form>
+                </accordion-group>
+              </accordion>
+          </div>
+          <!-- <a href="/#!/home" class="btn btn-primary" role="button">Proceed to Home</a> -->
+        </div>
+      </tab>
+
+  </tabset>
+</section>  

@@ -1,0 +1,74 @@
+<section data-ng-controller="FinancesController" class="content">
+		<ul class="nav nav-tabs">
+		  <li role="presentation" class="active"><a href="/#!/financialrecord">Overview</a></li>
+		  <li role="presentation"><a href="/#!/financialrecord/assets">Assets</a></li>
+		  <li role="presentation"><a href="/#!/financialrecord/liabilities">Liabilities</a></li>
+		  <li role="presentation"><a href="/#!/financialrecord/incomeExpense">Income & Expense</a></li>
+		  <li role="presentation"><a href="/#!/financialrecord/debts">Debt</a></li>
+		</ul>
+
+
+	<div class="row">
+		<div class="col-sm-4">
+			<h3> Financial Health Summary </h3>
+			Displaying Records for: <em>{{monthDisplay}}, {{year}} </em>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-4">
+			<form name"dateForm" data-ng-submit="updateView()">
+			    <div class="form-group">
+			      <label for="date" class="control-label col-sm-4">Select Date:</label>
+			      <div class="col-sm-8">
+			        <input type="date" class="form-control" datepicker-popup ng-model="dt" is-open="opened" datepicker-options="dateOptions"  ng-required="true" close-text="Close" />
+			      </div>
+			    </div>
+			</form>
+			<div class="col-sm-12">
+				</br>
+			</div>
+			<div class="col-sm-12">
+				<table class="table table-striped">
+					<tr>
+						<th class="col-sm-8">Total Assets: </th>
+						<td class="col-sm-3"> $ {{displayOverview.totalAssets}}</td>
+						<td class="col-sm-1"><input type="checkbox" ng-model="checkTotal.assets"></td>
+					</tr>
+					<tr>
+						<th class="col-sm-8">Total Liabilities: </th>
+						<td class="col-sm-3"> $ {{displayOverview.totalLiabilities}}</td>
+						<td class="col-sm-1"><input type="checkbox" ng-model="checkTotal.liabilities"></td>
+					</tr>
+					<tr>
+						<th class="col-sm-8">Monthly Income: </th>
+						<td class="col-sm-3"> $ {{displayOverview.monthlyIncome}}</td>
+						<td class="col-sm-1"><input type="checkbox" ng-model="checkTotal.monthlyIncome"></td>
+					</tr>
+					<tr>
+						<th class="col-sm-8">Monthly Expense: </th>
+						<td class="col-sm-3"> $ {{displayOverview.monthlyExpense}}</td>
+						<td class="col-sm-1"><input type="checkbox" ng-model="checkTotal.monthlyExpense"></td>
+					</tr>
+					<tr>
+						<th class="col-sm-8">Total Net Gross Income: </th>
+						<td class="col-sm-3"> $ {{displayOverview.totalNetGrossIncome}}</td>
+						<td class="col-sm-1"><input type="checkbox" ng-model="checkTotal.netGrossIncome"></td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		<div class="col-sm-8">
+			<div class="form-group pull-right col-sm-5">
+  				<label for="ratioOptions" class="col-sm-4">Displaying for:</label>
+	  			<div class="col-sm-8">
+					<select ng-model="selectedChartOption" class="form-control col-sm-2">
+						<option value="0">Past 3 months</option>
+						<option value="1">Past 6 months</option>
+						<option value="2">Past 12 months</option>
+					</select>
+				</div>
+			</div>
+				<canvas id="ratioChart" class="chart chart-line" data="dataOverview" labels="labelsOverview" legend="true" series="seriesOverview"></canvas> 
+		</div>
+	</div>	
+</section>
