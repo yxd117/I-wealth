@@ -11,7 +11,7 @@ angular.module('users').controller('SettingsController', ['$scope', '$http','$st
 
 		$scope.decachedImageUrl = '/img/default_avatar.jpg';
 		if($scope.user.profilePic){
-			var imageUrl = 'https://nodeup.s3.amazonaws.com/' + Authentication.user.profilePic;
+			var imageUrl = 'https://hexapic.s3.amazonaws.com/' + Authentication.user.profilePic;
 			$scope.decachedImageUrl = imageUrl + '?decache=' + Math.random();
 		}
 		$scope.stuff ='';
@@ -143,7 +143,7 @@ angular.module('users').controller('SettingsController', ['$scope', '$http','$st
 
 		var get_signed_request = function(file){
 		    //var xhr = new XMLHttpRequest();
-		    var url = 'https://nodeup.s3.amazonaws.com/sign_s3?file_name='+$scope.user.profilePic+'&file_type='+file.type;
+		    var url = 'https://hexapic.s3.amazonaws.com/sign_s3?file_name='+$scope.user.profilePic+'&file_type='+file.type;
 		    console.log(file);
 		    $http.get('/signaws', file).success(function(response) {
 				// If successful 
