@@ -18,6 +18,8 @@ angular.module('core').run(['Menus',
 		// Menus.addSubMenuItem('topbar', 'milestones', 'Short Term', 'milestones/shortterm');
 		// Menus.addSubMenuItem('topbar', 'milestones', 'Long Term', 'milestones/longterm');
 
+		Menus.addMenuItem('topbar', 'Financial Tools', 'financialtools', '/financialtools');
+
 		Menus.addMenuItem('topbar', 'Social', 'social', '/social');
 		// Menus.addSubMenuItem('topbar', 'social', 'Manage Friends', 'social/managefriends');
 		// Menus.addSubMenuItem('topbar', 'social', 'Forum', 'social/forum');

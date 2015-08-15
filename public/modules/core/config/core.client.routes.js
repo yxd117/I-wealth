@@ -44,6 +44,21 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
 			url: '/financialrecord/debts',
 			templateUrl: 'modules/financial/views/manage-debts.client.view.html'
 		}).
+
+		//Financial Tools
+		state('repaymentTool', {
+			url: '/financialtools',
+			templateUrl: 'modules/financialtools/views/repaymentCalculator.client.view.html'
+		}).		
+		state('amtBorrow', {
+			url: '/financialtools/amtborrow',
+			templateUrl: 'modules/financialtools/views/amtToBorrowCalculator.client.view.html'
+		}).
+		state('timeRepay', {
+			url: '/financialtools/timetorepay',
+			templateUrl: 'modules/financialtools/views/timeToRepayCalculator.client.view.html'
+		}).
+
 		//Milestones
 		state('milestones', {
 			url: '/milestones',
@@ -54,6 +69,8 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
 			url:'/milestones/updatemilestone',
 			templateUrl: 'modules/milestones/views/update-Milestone.client.view.html'
 		}).
+
+
 		// state('milestones', {
 		// 	url: '/milestones',
 		// 	templateUrl: 'modules/milestones/views/milestones.client.view.html'

@@ -1,0 +1,58 @@
+<section data-ng-controller="LoanCalculatorController" class="content">
+  <ul class="nav nav-tabs">
+    <li role="presentation" class="active"><a href="/#!/financialtools">How much will my repayments be?</a></li>
+    <li role="presentation"><a href="/#!/financialtools/amtborrow">How much can I borrow?</a></li>
+    <li role="presentation"><a href="/#!/financialtools/timetorepay">How can I repay my loan sooner?</a></li>
+  </ul>
+  <div class="row">
+    <div class="col-md-12">
+      <h4>Personal Loan Calculator</h4>
+    </div>    
+  </div>
+  <div class="col-md-6">
+    <form name='CalculatorForm' class="form-horizontal" novalidate role='form'>
+      <fieldset>
+          <div class='form-group'>
+            <label for='amtBorrowed' class="col-md-6">Amount Borrowed: $</label>
+            <div class="col-md-6">
+              <input class='form-control' ng-model='calculator.amtBorrowed' name='amtBorrowed' type='number' min="1" required>
+            <span class='help-block' ng-show='CalculatorForm.amtBorrowed.$error.required'>Amount Borrowed is required</span>  
+            </div>      
+            
+          </div>
+          <div class='form-group'>
+            <label for='loanTermYears' class="col-md-6">Loan Term in Years: $</label>
+            <div class="col-md-6">
+               <input class='form-control' ng-model='calculator.loanTermYears' name='loanTermYears' type='number' min="0.1" required>
+              <span class='help-block' ng-show='CalculatorForm.loanTermYears.$error.required'>Loan Term in Years is required</span>              
+            </div>
+          </div>
+          <div class='form-group'>
+            <label for='interestRate' class="col-md-6">Applied Interest Rate (per annum): $</label>
+            <div class="col-md-6">
+                <input class='form-control' ng-model='calculator.interestRate' name='interestRate' type='number' min="0.01" required>
+              <span class='help-block' ng-show='CalculatorForm.interestRate.$error.required'>Applied Interest Rate is required</span>              
+            </div>
+          </div>
+          <div class='form-group'>
+            <label for='fees' class="col-md-6">Processing fee: $</label>
+            <div class="col-md-6">
+              <input class='form-control' ng-model='calculator.fees' name='fees' type='number' min="0" required>
+              <span class='help-block' ng-show='CalculatorForm.fees.$error.required'>Processing fee is required</span>              
+            </div>
+          </div>                
+          <button class='btn btn-primary' ng-click='calculateMonthyRepaymentSum()' ng-disabled='CalculatorForm.$invalid'> Submit
+          </button>
+      </fieldset>
+    </form>
+    <div>
+      <h4>Monthly Repayment Sum: {{monthlyRepaymentSum | currency}}</h4>
+      <h4>Total Cost of Loan: {{totalCostLoan | currency}}</h4>
+      <h4>Note: Additional amount payable: {{results | currency}}</h4>    
+    </div>
+  </div>
+  <div class="col-md-6">
+        <canvas id="calculatorBarChart" class="chart chart-bar" data="barData" labels="barLabels" legend="true" series="barSeries" ></canvas> 
+  </div>
+
+</section>

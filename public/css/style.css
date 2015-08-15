@@ -26,8 +26,7 @@ h6 {
     padding-bottom: 50px;
     text-align: center;
     color: #ad9634;
-    /*background: url(/img/bg/city2.jpg) no-repeat center center;*/
-    background: url(https://nodeup.s3.amazonaws.com/landingBG) no-repeat center center;
+    background: url(/img/bg/city2.jpg) no-repeat center center;
     background-size: cover;
 }
 
