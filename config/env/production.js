@@ -2,7 +2,8 @@
 
 module.exports = {
 	db: {
-		uri: process.env.MONGOHQ_URL || process.env.MONGOLAB_URI || 'mongodb://' + (process.env.DB_1_PORT_27017_TCP_ADDR || 'localhost') + '/mean',
+		//uri: process.env.MONGOHQ_URL || process.env.MONGOLAB_URI || 'mongodb://' + (process.env.DB_1_PORT_27017_TCP_ADDR || 'localhost') + '/mean',
+		uri: 'mongodb://admin:poppop123@ds031893.mongolab.com:31893/hexastg',
 		options: {
 			user: '',
 			pass: ''
@@ -32,8 +33,20 @@ module.exports = {
 				'public/lib/angular-bootstrap/ui-bootstrap-tpls.min.js'
 			]
 		},
-		css: 'public/dist/application.min.css',
-		js: 'public/dist/application.min.js'
+		// css: 'public/dist/application.min.css',
+		// js: 'public/dist/application.min.js'
+		css: [
+			'public/css/style.css',
+			'public/lib/angular-chart.js/dist/angular-chart.css',
+			'public/lib/font-awesome/css/font-awesome.min.css',
+			'public/lib/angular-tooltips/src/css/angular-tooltips.css'
+		],
+		js: [
+			'public/config.js',
+			'public/application.js',
+			'public/modules/*/*.js',
+			'public/modules/*/*[!tests]*/*.js'
+		],
 	},
 	facebook: {
 		clientID: process.env.FACEBOOK_ID || 'APP_ID',
