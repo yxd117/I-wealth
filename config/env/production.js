@@ -30,7 +30,15 @@ module.exports = {
 				'public/lib/angular-animate/angular-animate.min.js',
 				'public/lib/angular-ui-router/release/angular-ui-router.min.js',
 				'public/lib/angular-ui-utils/ui-utils.min.js',
-				'public/lib/angular-bootstrap/ui-bootstrap-tpls.min.js'
+				'public/lib/angular-bootstrap/ui-bootstrap-tpls.min.js',
+				'public/lib/ng-file-upload-shim/ng-file-upload-shim.min.js',
+				'public/lib/ng-file-upload-shim/ng-file-upload.min.js',
+				'public/lib/angular-date-dropdowns/directive.js',
+				'public/lib/Chart.js/Chart.min.js',
+				'public/lib/angular-chart.js/dist/angular-chart.js',
+				'public/lib/angular-toArrayFilter/toArrayFilter.js',
+				'public/lib/angular-tooltips/src/js/angular-tooltips.js',
+				'public/lib/angular-route/angular-route.js'
 			]
 		},
 		// css: 'public/dist/application.min.css',
@@ -46,11 +54,11 @@ module.exports = {
 			'public/application.js',
 			'public/modules/*/*.js',
 			'public/modules/*/*[!tests]*/*.js'
-		],
+		]
 	},
 	facebook: {
-		clientID: process.env.FACEBOOK_ID || 'APP_ID',
-		clientSecret: process.env.FACEBOOK_SECRET || 'APP_SECRET',
+		clientID: process.env.FACEBOOK_ID || '1464075907220309',
+		clientSecret: process.env.FACEBOOK_SECRET || '2be347071da8cc9fcec4555e148d8354',
 		callbackURL: '/auth/facebook/callback'
 	},
 	twitter: {
@@ -64,8 +72,8 @@ module.exports = {
 		callbackURL: '/auth/google/callback'
 	},
 	linkedin: {
-		clientID: process.env.LINKEDIN_ID || 'APP_ID',
-		clientSecret: process.env.LINKEDIN_SECRET || 'APP_SECRET',
+		clientID: process.env.LINKEDIN_ID || '75kvrgrxscckmu',
+		clientSecret: process.env.LINKEDIN_SECRET || 'PveCzY2Hu1bWvjoO',
 		callbackURL: '/auth/linkedin/callback'
 	},
 	github: {
@@ -74,12 +82,12 @@ module.exports = {
 		callbackURL: '/auth/github/callback'
 	},
 	mailer: {
-		from: process.env.MAILER_FROM || 'MAILER_FROM',
+		from: process.env.MAILER_FROM || 'Team Hexa',
 		options: {
-			service: process.env.MAILER_SERVICE_PROVIDER || 'MAILER_SERVICE_PROVIDER',
+			service: process.env.MAILER_SERVICE_PROVIDER || 'Mailgun',
 			auth: {
-				user: process.env.MAILER_EMAIL_ID || 'MAILER_EMAIL_ID',
-				pass: process.env.MAILER_PASSWORD || 'MAILER_PASSWORD'
+				user: process.env.MAILER_EMAIL_ID || 'postmaster@sandboxdad2828e8f974d8d81e5c44e1e625e8b.mailgun.org',
+				pass: process.env.MAILER_PASSWORD || 'f2272633e6dce022d863e5dc992fbc5a'
 			}
 		}
 	}
