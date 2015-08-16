@@ -14,8 +14,11 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$http
 
 				// And redirect to the index page
 				$location.path('/settings/questionnaire');
+
 			}).error(function(response) {
+				
 				$scope.error = response.message;
+				
 			});
 		};
 
@@ -37,7 +40,9 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$http
 
 
 			}).error(function(response) {
+				
 				$scope.error = response.message;
+				
 			});
 		};
 	}

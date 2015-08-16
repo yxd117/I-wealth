@@ -47,7 +47,7 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
 
 		//Financial Tools
 		state('repaymentTool', {
-			url: '/financialtools',
+			url: '/financialtools/loancalculator',
 			templateUrl: 'modules/financialtools/views/repaymentCalculator.client.view.html'
 		}).		
 		state('amtBorrow', {

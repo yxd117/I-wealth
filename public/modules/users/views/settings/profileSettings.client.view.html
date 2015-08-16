@@ -11,7 +11,7 @@
         <button class="btn btn-large btn-primary" ng-click="upload(file)">Update Profile Picture</button>
       </div>
       <div class="col-sm-7">
-        <form name="personalDetailsForm" data-ng-submit="updateUserProfile(personalDetailsForm.$valid)" class="form-horizontal" autocomplete="off">
+        <form name="personalDetailsForm" data-ng-submit="updateUserProfilePersonal(personalDetailsForm.$valid)" class="form-horizontal" autocomplete="off">
           <fieldset>
             <div class="form-group">
               <label for="firstName" class="control-label col-sm-4">First Name</label>
@@ -77,7 +77,7 @@
 
       <tab heading="Education/Work" ng-click="reset()">
           <h4><u>Edit your Education/Work  Details</u></h4>
-          <form name="workDetailsForm" id="workDetailsForm" data-ng-submit="updateUserProfile(workDetailsForm.$valid)" class="form-horizontal" autocomplete="off">
+          <form name="workDetailsForm" id="workDetailsForm" data-ng-submit="updateUserProfileWork(workDetailsForm.$valid)" class="form-horizontal" autocomplete="off">
             <fieldset>
 
               <div class="form-group">
@@ -163,7 +163,7 @@
 
       <tab heading="Privacy" ng-click="reset()">
           <h4><u>Edit your Privacy Settings</u></h4>
-          <form name="privacySettingForm" data-ng-submit="updateUserProfile(privacySettingForm.$valid)" class="form-horizontal" autocomplete="off">
+          <form name="privacySettingForm" data-ng-submit="updateUserProfilePrivacy(privacySettingForm.$valid)" class="form-horizontal" autocomplete="off">
             <fieldset>
               <div class="form-group">
                 <label for="privacy" class="control-label col-sm-2">Privacy</label>

@@ -58,7 +58,7 @@ angular.module('users').controller('SettingsController', ['$scope', '$http','$st
 		};
 
 		// Update a user profile
-		$scope.updateUserProfile = function(isValid) {
+		$scope.updateUserProfilePersonal = function(isValid) {
 			if (isValid) {
 				$scope.success = $scope.error = null;
 				$scope.user.updatedProfileSettings = true;
@@ -95,6 +95,45 @@ angular.module('users').controller('SettingsController', ['$scope', '$http','$st
 			}
 		};
 
+		$scope.updateUserProfileWork = function(isValid) {
+			if (isValid) {
+				$scope.success = $scope.error = null;
+				$scope.user.updatedProfileSettings = true;
+
+				var user = new Users($scope.user);
+				
+				user.$update(function(response) {
+					$scope.success = true;
+					Authentication.user = response;
+					$scope.user = Authentication.user;
+				}, function(response) {
+					$scope.error = response.data.message;
+				});
+				console.log(user);
+			} else {
+				$scope.submitted = true;
+			}
+		};
+
+		$scope.updateUserProfilePrivacy = function(isValid) {
+			if (isValid) {
+				$scope.success = $scope.error = null;
+				$scope.user.updatedProfileSettings = true;
+
+				var user = new Users($scope.user);
+				
+				user.$update(function(response) {
+					$scope.success = true;
+					Authentication.user = response;
+					$scope.user = Authentication.user;
+				}, function(response) {
+					$scope.error = response.data.message;
+				});
+				console.log(user);
+			} else {
+				$scope.submitted = true;
+			}
+		};
 		// Change user password
 		$scope.changeUserPassword = function() {
 			$scope.success = $scope.error = null;

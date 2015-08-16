@@ -56,6 +56,11 @@ module.exports = {
 				user: process.env.MAILER_EMAIL_ID || 'postmaster@sandboxdad2828e8f974d8d81e5c44e1e625e8b.mailgun.org',
 				pass: process.env.MAILER_PASSWORD || 'f2272633e6dce022d863e5dc992fbc5a'
 			}
+			// service: process.env.MAILER_SERVICE_PROVIDER || 'yahoo',
+			// auth: {
+			// 	user: process.env.MAILER_EMAIL_ID || 'teamhexa@yahoo.com.sg',
+			// 	pass: process.env.MAILER_PASSWORD || 'hexah3x@9'			
+			// }
 		}
 	}
 };
