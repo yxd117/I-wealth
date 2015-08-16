@@ -5,38 +5,57 @@
     <li role="presentation" class="active"><a href="/#!/financialtools/timetorepay">How can I repay my loan sooner?</a></li>
   </ul>
 
-	<div id="TimeToRepayCalculator" class="row">
-    <div class="col-sm-4">
-      <form name='CalculatorForm3' novalidate role='form'>
+ <div class="row">
+    <div class="col-md-6">
+      <h3>Ideal Monthly Repayment Amount</h3>
+      <p>This calculator calculates the number of months and interest you need to repay the lender to clear the debt according to your monthly repayment amount. If you are paying the minimum repayment sum, you should compare how much interest you will be saving from increasing your monthly repayment sum.</p>
+    </div>    
+  </div>
+  <hr>
+  <br/>
+  <div class="col-md-6">
+      <form name='CalculatorForm3' class="form-horizontal" novalidate role='form'>
         <fieldset>
-          <legend>Personal Loan Calculator</legend>
-            <div class='form-group'>
-              <label for='amtOwing'>Amount Owing: </label>
-              <input class='form-control' ng-model='calculator.amtOwing' name='amtOwing' type='number' min="1" required>
-              <span class='help-block' ng-show='CalculatorForm3.amtOwing.$error.required'>Amount Owing is required</span>
+          <div class='form-group'>
+            <label for='amtOwing' class="col-md-4" style="text-align:right">Amount Owing: </label>
+            <div class="col-md-8">
+               <input class='form-control' ng-model='calculator.amtOwing' name='amtOwing' type='number' min='1' required>
+                <span class='help-block' ng-show='CalculatorForm3.amtOwing.$error.required'>Amount Owing is required</span>
             </div>
-            <div class='form-group'>
-              <label for='monthlyRepayment'>Monthly Repayment: </label>
-              <input class='form-control' ng-model='calculator.monthlyRepayment' name='monthlyRepayment' type='number' min="1" required>
-              <span class='help-block' ng-show='CalculatorForm3.monthlyRepayment.$error.required'>Monthly Repayment is required</span>
+          </div>
+          <div class='form-group'>
+            <label for='monthlyRepayment' class="col-md-4" style="text-align:right">Monthly Repayment: </label>
+            <div class="col-md-8">
+                <input class='form-control' ng-model='calculator.monthlyRepayment' name='monthlyRepayment' type='number' min='1' required>
+                <span class='help-block' ng-show='CalculatorForm3.monthlyRepayment.$error.required'>Monthly Repayment is required</span>
             </div>
-            <div class='form-group'>
-              <label for='interestRate3'>Applied Interest Rate (per annum): </label>
-              <input class='form-control' ng-model='calculator.interestRate3' name='interestRate3' type='number' min="0.01" required>
-              <span class='help-block' ng-show='CalculatorForm3.interestRate3.$error.required'>Applied Interest Rate is required</span>
-            </div>        
-
-            <h4>Results - Time to repay: {{timeToRepay}}</h4>
-                   
-            <button class='btn btn-primary' ng-click='calculateTimeToRepay()' ng-disabled='CalculatorForm3.$invalid'> Submit
+          </div>
+          <div class='form-group'>
+            <label for='interestRate3' class="col-md-4" style="text-align:right">Applied Interest Rate (per annum): </label>
+            <div class="col-md-8">
+                <input class='form-control' ng-model='calculator.interestRate3' name='interestRate3' type='number' min='0.01' required>
+               <span class='help-block' ng-show='CalculatorForm3.interestRate3.$error.required'>Applied Interest Rate is required</span>
+            </div>
+          </div>        
+          <div class="col-md-4 pull-right">
+            <button class='btn btn-primary btn-lg btn-block' ng-click='calculateTimeToRepay()' ng-disabled='CalculatorForm3.$invalid'> Submit
             </button>
+          </div>
         </fieldset>
       </form>
-     </div>
-
-     <div>
-      <canvas id="calculatorBarChart3" class="chart chart-bar" data="barData3" labels="barLabels3" legend="true" series="barSeries3"></canvas> 
-     </div>    
-</div>
+    <br/><br/>
+  </div>
+       
+       
+  <div class="col-md-6">
+    <div class="bg-info" style="padding:20px">
+      <div class="row">
+        <div class="col-md-12">     
+          <h4>You will take {{timeToRepay}} to repay your loan</h4> 
+        </div>
+      </div>
+    </div> 
+      <!--<canvas id="calculatorBarChart3" class="chart chart-bar" data="barData3" labels="barLabels3" legend="true" series="barSeries3"></canvas>--> 
+  </div>  
 
 </section> 
