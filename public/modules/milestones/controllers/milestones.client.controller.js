@@ -182,7 +182,7 @@ angular.module('milestones').controller('MilestonesController', ['$scope', '$sta
 					$scope.targetAmount = '';	
 					
 					alert('Milestone Added!');
-					
+					$scope.user.updatedMilestones = true;
 					$scope.afterClick = true;					
 					$scope.addNewMilestone=false;
 					
