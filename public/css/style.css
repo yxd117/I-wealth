@@ -27,7 +27,7 @@ h6 {
     text-align: center;
     color: #ad9634;
     /*background: url(/img/bg/city2.jpg) no-repeat center center;*/
-    background: url('https://s3-ap-southeast-1.amazonaws.com/hexapic/city2.jpg?X-Amz-Date=20150820T075004Z&X-Amz-Expires=300&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Signature=2584401a11ea3d0acefc022a009a563f427590eddc198571b6a021dd748724b8&X-Amz-Credential=ASIAIMYOILZUTFUPZVFA/20150820/ap-southeast-1/s3/aws4_request&X-Amz-SignedHeaders=Host&x-amz-security-token=AQoDYXdzEIX//////////wEakALLbqCnB%2BwmJvGP0fx5Vi7HnewaUlxargFtLUxyHJKBkBc1ov5J7ZIwGwLBMvbNt07VQHDEd3uO9HEYG66RYeK3KlKgpFNFOs7M60fvkhbIrKUw/tJskojq522z6ZpaQcWK6QAqR8y4onqbeqn/GOqxPRVLk9VWhhNLFDZHZ98w1B1/qH/DUmxIjfVTo3PZieqaMti%2B6owPOzYOENlrbN3Xqyif1Zyig3T8VbWclgvMlJs52fOX0thDzP82JAXmkd2ZyFlwgX5tl/crf8EUoKqpclnaqBHYTzrX5FHQeQAMn1fP6m/TlCzswn3/97bop3Hm41PoAIXU6DA51WzXGmJjB3s9dt6AXh/mnfi%2BQvQAEyDWq9WuBQ%3D%3D')no-repeat center center;
+    background: url('https://s3-ap-southeast-1.amazonaws.com/hexapic/city2.jpg')no-repeat center center;
     background-size: cover;
 }
 
