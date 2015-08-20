@@ -41,20 +41,27 @@ module.exports = {
 				'public/lib/angular-route/angular-route.js'
 			]
 		},
-		// css: 'public/dist/application.min.css',
-		// js: 'public/dist/application.min.js'
 		css: [
+			'public/dist/application.min.css',
+			'https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic',
 			'public/css/style.css',
 			'public/lib/angular-chart.js/dist/angular-chart.css',
 			'public/lib/font-awesome/css/font-awesome.min.css',
-			'public/lib/angular-tooltips/src/css/angular-tooltips.css'
+			'public/lib/angular-tooltips/src/css/angular-tooltips.css'			
 		],
-		js: [
-			'public/config.js',
-			'public/application.js',
-			'public/modules/*/*.js',
-			'public/modules/*/*[!tests]*/*.js'
-		]
+		js: 'public/dist/application.min.js'
+		// css: [
+		// 	'public/css/style.css',
+		// 	'public/lib/angular-chart.js/dist/angular-chart.css',
+		// 	'public/lib/font-awesome/css/font-awesome.min.css',
+		// 	'public/lib/angular-tooltips/src/css/angular-tooltips.css'
+		// ],
+		// js: [
+		// 	'public/config.js',
+		// 	'public/application.js',
+		// 	'public/modules/*/*.js',
+		// 	'public/modules/*/*[!tests]*/*.js'
+		// ]
 	},
 	facebook: {
 		clientID: process.env.FACEBOOK_ID || '1464075907220309',

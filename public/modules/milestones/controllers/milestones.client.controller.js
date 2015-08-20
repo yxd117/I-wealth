@@ -113,7 +113,18 @@ angular.module('milestones').controller('MilestonesController', ['$scope', '$sta
 	    			var targetDateFormatted = $scope.user.mileStones[i].targetDateFormatted;
 	    			var progress = $scope.user.mileStones[i].progress;
 
-		    		$scope.user.mileStones[i] = {goalTitle,goalType,currentAmount,targetAmount,startDate,startDateFormatted,targetDate,targetDateFormatted,progress,paymentAmountAdj,monthsLeft};				
+		    		$scope.user.mileStones[i] = {
+		    			goalTitle: goalTitle,
+		    			goalType: goalType,
+		    			currentAmount: currentAmount,
+		    			targetAmount: targetAmount,
+		    			startDate: startDate,
+		    			startDateFormatted: startDateFormatted,
+		    			targetDate: targetDate,
+		    			targetDateFormatted: targetDateFormatted,
+		    			progress: progress,
+		    			paymentAmountAdj: paymentAmountAdj,
+		    			monthsLeft: monthsLeft};				
 				}
 
 				$scope.success = $scope.error = null;			
@@ -169,7 +180,16 @@ angular.module('milestones').controller('MilestonesController', ['$scope', '$sta
 					//var startDate1 = new Date(startDateYr+'-'+(startDate.getMonth()+1)+'-'+startDateD);
 					//console.log(startDate1);
 
-					var goalObj = {goalTitle,goalType,currentAmount,targetAmount,startDate,startDateFormatted,targetDate,targetDateFormatted,progress};
+					var goalObj = {
+						goalTitle: goalTitle,
+						goalType: goalType,
+						currentAmount: currentAmount,
+						targetAmount: targetAmount,
+						startDate: startDate,
+						startDateFormatted: startDateFormatted,
+						targetDate: targetDate,
+						targetDateFormatted: targetDateFormatted,
+						progress: progress};
 
 					
 					$scope.user.mileStones.push(goalObj);
@@ -248,7 +268,16 @@ angular.module('milestones').controller('MilestonesController', ['$scope', '$sta
 				var targetDateYr = targetDate.getFullYear();
 				var targetDateFormatted = targetDateD+'/'+(targetDate.getMonth()+1)+'/'+targetDateYr;				
 				
-				$scope.user.mileStones[$scope.user.updateMilestonePos] = {goalTitle,goalType,currentAmount,targetAmount,startDate,startDateFormatted,targetDate,targetDateFormatted,progress};
+				$scope.user.mileStones[$scope.user.updateMilestonePos] = {
+					goalTitle: goalTitle,
+					goalType: goalType,
+					currentAmount: currentAmount,
+					targetAmount: targetAmount,
+					startDate: startDate,
+					startDateFormatted: startDateFormatted,
+					targetDate: targetDate,
+					targetDateFormatted: targetDateFormatted,
+					progress: progress};
 
 				$scope.success = $scope.error = null;
 				alert('Milestone Updated!');			

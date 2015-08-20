@@ -125,8 +125,8 @@ angular.module('users').controller('QuestionnaireController', ['$scope', '$state
 			user.completePersonalQns = completePersonalQns;
 			user.personalRating = personalScore;
 			return {
-				completePersonalQns,
-				personalScore
+				completePersonalQns: completePersonalQns,
+				personalScore: personalScore
 			};
 		};
 
@@ -153,8 +153,8 @@ angular.module('users').controller('QuestionnaireController', ['$scope', '$state
 			user.completeJobQns = completeJobQns;
 			user.jobRating = jobScore;
 			return {
-				completeJobQns,
-				jobScore
+				completeJobQns: completeJobQns,
+				jobScore: jobScore
 			};
 		};
 
@@ -177,8 +177,8 @@ angular.module('users').controller('QuestionnaireController', ['$scope', '$state
 			user.completeFinanceQns = completeFinanceQns;
 			user.financeRating = financeScore;
 			return {
-				completeFinanceQns,
-				financeScore
+				completeFinanceQns: completeFinanceQns,
+				financeScore: financeScore
 			};
 		};
 		
