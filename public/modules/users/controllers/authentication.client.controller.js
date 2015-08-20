@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('users').controller('AuthenticationController', ['$scope', '$http', '$location', 'Authentication',
-	function($scope, $http, $location, Authentication) {
+angular.module('users').controller('AuthenticationController', ['$scope', '$http', '$location', 'Authentication', '$timeout',
+	function($scope, $http, $location, Authentication, $timeout) {
 		$scope.authentication = Authentication;
 
 		// If user is signed in then redirect back home
@@ -44,6 +44,12 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$http
 				$scope.error = response.message;
 				
 			});
+		};
+
+		$scope.initRedirectLogin = function() {
+			$timeout(function() {
+				$location.path('/signin');
+			}, 5000);
 		};
 	}
 ]);
