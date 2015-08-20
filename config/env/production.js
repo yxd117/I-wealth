@@ -44,7 +44,6 @@ module.exports = {
 		css: [
 			'public/dist/application.min.css',
 			'https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic',
-			'public/css/style.css',
 			'public/lib/angular-chart.js/dist/angular-chart.css',
 			'public/lib/font-awesome/css/font-awesome.min.css',
 			'public/lib/angular-tooltips/src/css/angular-tooltips.css'			

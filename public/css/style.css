@@ -26,7 +26,8 @@ h6 {
     padding-bottom: 50px;
     text-align: center;
     color: #ad9634;
-    background: url(/img/bg/city2.jpg) no-repeat center center;
+    /*background: url(/img/bg/city2.jpg) no-repeat center center;*/
+    background: url('https://s3-ap-southeast-1.amazonaws.com/hexapic/city2.jpg?X-Amz-Date=20150820T075004Z&X-Amz-Expires=300&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Signature=2584401a11ea3d0acefc022a009a563f427590eddc198571b6a021dd748724b8&X-Amz-Credential=ASIAIMYOILZUTFUPZVFA/20150820/ap-southeast-1/s3/aws4_request&X-Amz-SignedHeaders=Host&x-amz-security-token=AQoDYXdzEIX//////////wEakALLbqCnB%2BwmJvGP0fx5Vi7HnewaUlxargFtLUxyHJKBkBc1ov5J7ZIwGwLBMvbNt07VQHDEd3uO9HEYG66RYeK3KlKgpFNFOs7M60fvkhbIrKUw/tJskojq522z6ZpaQcWK6QAqR8y4onqbeqn/GOqxPRVLk9VWhhNLFDZHZ98w1B1/qH/DUmxIjfVTo3PZieqaMti%2B6owPOzYOENlrbN3Xqyif1Zyig3T8VbWclgvMlJs52fOX0thDzP82JAXmkd2ZyFlwgX5tl/crf8EUoKqpclnaqBHYTzrX5FHQeQAMn1fP6m/TlCzswn3/97bop3Hm41PoAIXU6DA51WzXGmJjB3s9dt6AXh/mnfi%2BQvQAEyDWq9WuBQ%3D%3D')no-repeat center center;
     background-size: cover;
 }
 
@@ -42,12 +43,14 @@ h6 {
 
 .intro-message > h1 {
     margin: 0;
+    text-shadow: 1px 1px 1px #666666;
     text-shadow: 1px 1px 1px rgba(0,0,0,0.6);
     font-size: 5em;
 }
 
 .intro-message > h4 {
     margin: 0;
+    text-shadow: 1px 1px 2px #666666;
     text-shadow: 1px 1px 2px rgba(0,0,0,0.6);
 }
 
@@ -58,15 +61,19 @@ h6 {
 .intro-divider {
     width: 400px;
     border-top: 1px solid #f8f8f8;
+    border-bottom: 1px solid #E5E5E5;
     border-bottom: 1px solid rgba(0,0,0,0.2);
 }
 
 .intro-divider2 {
     width: 350px;
+    border-top: 1px solid #E5E5E5;
     border-top: 1px solid rgba(0,0,0,0.2);
+    border-bottom: 1px solid #E5E5E5;
     border-bottom: 1px solid rgba(0,0,0,0.2);
 }
 .intro-message > h3 {
+    text-shadow: 1px 1px 1px #666666;
     text-shadow: 1px 1px 1px rgba(0,0,0,0.6);
 }
 
@@ -147,6 +154,7 @@ h6 {
     }
     .navbar-collapse {
         border-top: 1px solid transparent;
+        box-shadow: inset 0 1px 0 #ffffff;
         box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
     }
     .navbar-collapse.collapse {
