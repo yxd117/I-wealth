@@ -3890,6 +3890,10 @@ angular.module('users').config(['$stateProvider',
 			url: '/signin',
 			templateUrl: 'modules/users/views/authentication/signin.client.view.html'
 		}).
+		state('errorsignin', {
+			url: '/errorsignin',
+			templateUrl: 'modules/users/views/authentication/errorsignin.client.view.html'
+		}).
 		state('forgot', {
 			url: '/password/forgot',
 			templateUrl: 'modules/users/views/password/forgot-password.client.view.html'
@@ -3934,8 +3938,8 @@ angular.module('users').directive('dynamicModel', ['$compile', function ($compil
 }]);
 'use strict';
 
-angular.module('users').controller('AuthenticationController', ['$scope', '$http', '$location', 'Authentication',
-	function($scope, $http, $location, Authentication) {
+angular.module('users').controller('AuthenticationController', ['$scope', '$http', '$location', 'Authentication', '$timeout',
+	function($scope, $http, $location, Authentication, $timeout) {
 		$scope.authentication = Authentication;
 
 		// If user is signed in then redirect back home
@@ -3978,6 +3982,12 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$http
 				$scope.error = response.message;
 				
 			});
+		};
+
+		$scope.initRedirectLogin = function() {
+			$timeout(function() {
+				$location.path('/signin');
+			}, 5000);
 		};
 	}
 ]);
