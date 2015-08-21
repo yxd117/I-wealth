@@ -4286,23 +4286,32 @@ angular.module('users').controller('SettingsController', ['$scope', '$http','$st
 				$scope.success = $scope.error = null;
 				$scope.user.updatedProfileSettings = true;
 
-				var birthYear = $scope.user.dateOfBirth.getFullYear();
-				var birthMonth = $scope.user.dateOfBirth.getMonth();
-				var birthDate = $scope.user.dateOfBirth.getDate();
-				var currDate = new Date();
-				var currYear = currDate.getFullYear();
-				var currMonth = currDate.getMonth();
-				var currDay = currDate.getDate();
-				if(birthMonth < currMonth || birthMonth === currMonth && birthDate <= currDay){
-					$scope.user.age = currYear -birthYear;
-				}else {
-					$scope.user.age = currYear - birthYear - 1;
+				try{
+					var birthYear = $scope.user.dateOfBirth.getFullYear();
+					var birthMonth = $scope.user.dateOfBirth.getMonth();
+					var birthDate = $scope.user.dateOfBirth.getDate();
+					var currDate = new Date();
+					var currYear = currDate.getFullYear();
+					var currMonth = currDate.getMonth();
+					var currDay = currDate.getDate();
+
+					if(birthMonth < currMonth || birthMonth === currMonth && birthDate <= currDay){
+						$scope.user.age = currYear -birthYear;
+					}else {
+						$scope.user.age = currYear - birthYear - 1;
+					}					
+				}catch(e){
+					console.log('no change in date');
 				}
+
+
+
 				if($scope.user.gender === 'Male'){
 					$scope.user.sGender = 1;
 				} else {
 					$scope.user.sGender = 0;
 				}
+
 				var user = new Users($scope.user);
 				
 				user.$update(function(response) {
