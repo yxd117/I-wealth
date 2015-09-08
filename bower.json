@@ -22,6 +22,7 @@
 		"angular-tooltips": "*",
 		"angular-route": "*",
 		"angular-nvd3": "*",
-		"n3-line-chart":"*"
+		"n3-line-chart":"*",
+		"jquery": "1.11.3"
 	}
 }

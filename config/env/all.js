@@ -64,7 +64,10 @@ module.exports = {
 				'public/lib/angular-chart.js/dist/angular-chart.js',
 				'public/lib/angular-toArrayFilter/toArrayFilter.js',
 				'public/lib/angular-tooltips/src/js/angular-tooltips.js',
-				'public/lib/angular-route/angular-route.js'
+				'public/lib/angular-route/angular-route.js',
+				'public/lib/jquery/dist/jquery.min.js',
+				'public/lib/bootstrap/dist/js/bootstrap.min.js'
+				
 			]
 		},
 		css: [
