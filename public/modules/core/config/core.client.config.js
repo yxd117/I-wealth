@@ -9,21 +9,23 @@ angular.module('core').run(['Menus',
 		Menus.addMenuItem('topbar', 'Financial Health', 'financialhealth', '/financialhealth');
 
 		Menus.addMenuItem('topbar', 'Manage Finances', 'financialrecord','/financialrecord');
+
+		Menus.addMenuItem('topbar', 'Budget', 'budget', '/budget');
 		// Menus.addSubMenuItem('topbar', 'financial', 'Manage Debt', 'financial/debt');
 		// Menus.addSubMenuItem('topbar', 'financial', 'Manage Insurance', 'financial/insurance');
 		// Menus.addSubMenuItem('topbar', 'financial', 'Manage Investment', 'financial/investment');
 		// Menus.addSubMenuItem('topbar', 'financial', 'Manage Cashflow', 'financial/cashflow');
 
 		Menus.addMenuItem('topbar', 'Milestones', 'milestones', '/milestones');
-		// Menus.addSubMenuItem('topbar', 'milestones', 'Short Term', 'milestones/shortterm');
-		// Menus.addSubMenuItem('topbar', 'milestones', 'Long Term', 'milestones/longterm');
+
 
 		Menus.addMenuItem('topbar', 'Financial Tools', 'financialtools', 'dropdown', '/financialtools');
 		Menus.addSubMenuItem('topbar', 'financialtools', 'Loan Calculator', 'financialtools/loancalculator');
 
-		Menus.addMenuItem('topbar', 'Social', 'social', '/social');
-		// Menus.addSubMenuItem('topbar', 'social', 'Manage Friends', 'social/managefriends');
-		// Menus.addSubMenuItem('topbar', 'social', 'Forum', 'social/forum');
+		Menus.addMenuItem('topbar', 'Social', 'social', 'dropdown','/social');
+		Menus.addSubMenuItem('topbar', 'social', 'View Posts', 'social/posts');
+		Menus.addSubMenuItem('topbar', 'social', 'Manage Friends', 'social/friends');
+		Menus.addSubMenuItem('topbar', 'social', 'Find Users', 'social/users');
 
 	}
 ]);

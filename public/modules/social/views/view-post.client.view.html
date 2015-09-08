@@ -1,0 +1,124 @@
+<section data-ng-controller="PostsController" data-ng-init="findOne()" class="content">
+
+  <div class="row">
+    <div class="col-md-offset-1 col-md-10 panel panel-default">
+      <div class="row" style="margin-top:5px;">
+        <div class=" col-md-6">
+          <div class="inline">
+            <img style="border:1px solid gray;width:50px; height:50px; max-width:100%; max-height:100%;"  id="preview" ng-src="{{imageUrl}}{{post.user.profilePic}}" />              
+          </div>
+          <div class="inline text-muted">
+            <a data-ui-sref="viewProfile({profileId: post.user._id})">
+               <medium>
+                <b><span data-ng-bind="post.user.firstName"></span></b>
+                <b><span data-ng-bind="post.user.lastName"></span></b>
+              </medium>              
+            </a>
+
+            </br>    
+            <small class="list-group-item-text">
+              Posted on
+              <i><span data-ng-bind="post.created | date:'short'"></span></i>  
+              <span data-ng-if="post.privacy === 'public'">(Public)</span> 
+              <span data-ng-if="post.privacy === 'friends'">(Friends Only)</span> 
+              <span data-ng-if="post.privacy === 'private'">(Private)</span> 
+            </small>            
+          </div>              
+        </div>
+        <div class="col-md-6" style="margin-top:5px;">
+          <div class="pull-right" data-ng-show="user._id == post.user._id">
+            <a class="btn btn-primary" data-ui-sref="postEdit({postId: post._id})">
+              <i class="glyphicon glyphicon-edit"></i>
+            </a>
+            <a class="btn btn-danger" data-ng-click="remove()">
+              <i class="glyphicon glyphicon-trash"></i>
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="row">
+        <div class=" col-md-12">
+          <h3 data-ng-bind="post.title"></h3>
+          <p data-ng-bind="post.content"></p>
+        </div>
+      </div>
+      
+      <hr style=" margin-bottom:0px;" >
+
+      <div class="row">
+        <div class=" col-md-12">
+          <h4>Comments ({{post.comments.length}})</h4>
+          <div class="list-group" ng-if="post.comments.length != 0">
+            <div class="list-group-item" data-ng-repeat="comment in post.comments | orderBy:'-created'" ng-init="editCmt = false">
+
+              <img style="border:1px solid gray;width:25px; height:25px; max-width:100%; max-height:100%;"  id="preview" ng-src="{{imageUrl}}{{comment.userId.profilePic}}" /> 
+              
+              <small>
+                <a data-ui-sref="viewProfile({profileId: comment.userId._id})">  
+                {{comment.userId.firstName}}
+                {{comment.userId.lastName}}
+                </a>
+                | {{comment.created | date:'short'}} 
+
+                <div class="pull-right" data-ng-show="user._id == comment.userId._id">
+                  <a class="btn btn-primary btn-xs" data-ng-click="editCmt = !editCmt">
+                    <i class="glyphicon glyphicon-edit"></i>
+                  </a>
+                  <a class="btn btn-danger btn-xs" data-ng-click="removeComment(comment)">
+                    <i class="glyphicon glyphicon-trash"></i>
+                  </a>
+                </div>                           
+              </small>
+
+              </br>
+              <span ng-if="!editCmt">{{comment.comment}}</span>
+              </br>
+
+              <div ng-if="editCmt === true" ng-init="commentContent = comment.comment">
+                <div class="row">
+                  <div class="col-md-12">
+                    <textarea type="text" data-ng-model="commentContent" rows="2" class="form-control"></textarea>
+                  </div>
+                </div>
+                <div class="row" style="margin-top:5px;">
+                  <div class="col-md-12">
+                    <a role="button" class="btn btn-primary btn-sm"  data-ng-click="editComment(commentContent, comment)" class="form-control">Edit</a> 
+                  </div>                 
+                </div>       
+              </div>
+
+            </div>
+          </div>
+          <!-- Add Comments -->
+        </div>
+      </div>
+
+      <div class="row">
+        <div class=" col-md-12">          
+          <form name="commentForm" data-ng-submit="addComment(commentForm.$valid)" class="form-horizontal" autocomplete="off">
+            <fieldset>
+              <div class="form-group"> <!-- Consider change to Description -->
+                <div class="col-md-12">
+                  <textarea type="text" id="comment" name="comment" class="form-control" data-ng-model="comment" placeholder="Add Comment" rows="2"></textarea>
+                </div>  
+              </div>
+              <div class="col-sm-6 form-group">
+                <button type="submit" name="submitBtn" class="btn btn-large btn-primary">Comment</button>
+                <a class="btn btn-default" role="button" onclick="history.back()">Back</a>     
+                <div data-ng-show="success" class=" text-center text-success">
+                    <strong>Comment Added Successfully</strong>
+                </div>
+                <div data-ng-show="error" class="text-center text-danger">
+                    <strong data-ng-bind="error"></strong>
+                </div>
+              </div>
+            </fieldset>
+          </form>
+        </div>
+      </div>      
+    
+    </div>
+  </div>
+</section>

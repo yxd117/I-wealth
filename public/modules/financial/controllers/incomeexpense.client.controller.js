@@ -122,6 +122,7 @@ angular.module('financial').controller('IncomeExpenseController', ['$scope', '$r
                 $scope.success = $scope.error = null;
                 //ONLY when they update
                 if (!$scope.user.incomeExpenseRecordsPeriod) {
+                    console.log('Hello??');
                     //If there is no existing record
                     $scope.user.incomeExpenseRecordsPeriod = {};
                     $scope.user.incomeExpenseRecordsPeriod.minMonth = $scope.month;
@@ -163,6 +164,7 @@ angular.module('financial').controller('IncomeExpenseController', ['$scope', '$r
 
                 }
 
+                var errorCheck = 0;
                 //Income
                 var incomeNormalArr = $scope.displayIncomeExpenseRecords.monthlyIncome.incomeNormal;
                 var incomeNormalTotal = 0;
@@ -179,31 +181,56 @@ angular.module('financial').controller('IncomeExpenseController', ['$scope', '$r
                 //Expense
                 var fixedExpenseArr = $scope.displayIncomeExpenseRecords.monthlyExpense.fixedExpense;
                 var fixedExpenseTotal = 0;
-                angular.forEach(fixedExpenseArr, function(value, key){
+                angular.forEach(fixedExpenseArr, function(value, key){ 
+                    if (value.value<value.recordsTotal) {
+                        value.value = value.recordsTotal;
+                        alert('Minimum Expense for '+value.description+' is: $'+value.value);
+                        errorCheck += 1;
+                    }
                     fixedExpenseTotal = fixedExpenseTotal + Number(value.value);
                 });
 
                 var transportArr = $scope.displayIncomeExpenseRecords.monthlyExpense.transport;
                 var transportTotal = 0;
                 angular.forEach(transportArr, function(value, key){
+                    if (value.value<value.recordsTotal) {
+                        value.value = value.recordsTotal;
+                        alert('Minimum Expense for '+value.description+' is: $'+value.value);
+                        errorCheck += 1;
+                    }
                     transportTotal = transportTotal + Number(value.value);
                 });
 
                 var utilityHouseholdArr = $scope.displayIncomeExpenseRecords.monthlyExpense.utilityHousehold;
                 var utilityHouseholdTotal = 0;
                 angular.forEach(utilityHouseholdArr, function(value, key){
+                    if (value.value<value.recordsTotal) {
+                        value.value = value.recordsTotal;
+                        alert('Minimum Expense for '+value.description+' is: $'+value.value);
+                        errorCheck += 1;
+                    }
                     utilityHouseholdTotal = utilityHouseholdTotal + Number(value.value);
                 });
 
                 var foodNecessitiesArr = $scope.displayIncomeExpenseRecords.monthlyExpense.foodNecessities;
                 var foodNecessitiesTotal = 0;
                 angular.forEach(foodNecessitiesArr, function(value, key){
+                    if (value.value<value.recordsTotal) {
+                        value.value = value.recordsTotal;
+                        alert('Minimum Expense for '+value.description+' is: $'+value.value);
+                        errorCheck += 1;
+                    }
                     foodNecessitiesTotal = foodNecessitiesTotal + Number(value.value);
                 });
 
                 var miscArr = $scope.displayIncomeExpenseRecords.monthlyExpense.misc;
                 var miscTotal = 0;
                 angular.forEach(miscArr, function(value, key){
+                    if (value.value<value.recordsTotal) {
+                        value.value = value.recordsTotal;
+                        alert('Minimum Expense for '+value.description+' is: $'+value.value);
+                        errorCheck += 1;
+                    }
                     miscTotal = miscTotal + Number(value.value);
                 });
 
@@ -248,17 +275,18 @@ angular.module('financial').controller('IncomeExpenseController', ['$scope', '$r
                         $scope.user.incomeExpenseRecords.push(toInsertArr);
                     }
                 }
+                if (errorCheck===0) {
+                    $scope.user.updatedIncomeExpense = true;
+                    var user = new Users($scope.user);
+                    user.$update(function(response) {
+                        $scope.success = true;
 
-                $scope.user.updatedIncomeExpense = true;
-                var user = new Users($scope.user);
-                user.$update(function(response) {
-                    $scope.success = true;
-
-                    Authentication.user = response;
-                    $scope.user = Authentication.user;
-                }, function(response) {
-                    $scope.error = response.data.message;
-                });
+                        Authentication.user = response;
+                        $scope.user = Authentication.user;
+                    }, function(response) {
+                        $scope.error = response.data.message;
+                    });
+                }
             } else {
                 $scope.submitted = true;
             }

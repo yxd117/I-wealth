@@ -1,0 +1,94 @@
+<section data-ng-controller="HomeController" class="content">
+	<div class="row">
+	  	<div class="col-xs-12 col-md-12">	
+
+	  		<div class="col-xs-12 col-md-4">
+	  			<div class="well" style="background: #FFFFFF;">
+		  			<div class="row">
+		  				<div class="col-md-12">
+		  					<h3>Profile</h3>
+		  				</div>
+		  				
+		  			</div>			
+					<div class="row">
+						<div class="col-md-12">
+							<progressbar value="completeBar">{{completeBar}}%</progressbar>
+						</div>
+					</div>
+					<div class="row" ng-hide="profileCompleteness">	
+						<div class="col-md-12">						
+							<b>To complete your Profile: </b>	
+							<li ng-hide="user.completeQns"><em>Update your </em><a href="#!/settings/questionnaire">Credit Profile</a></li>
+							<li ng-hide="user.updatedAssets"><em>Update your </em><a href="#!/financialrecord/assets">Assets records</a></li>
+							<li ng-hide="user.updatedLiabilities"><em>Update your </em><a href="#!/financialrecord/liabilities">Liabilities records</a></li>
+							<li ng-hide="user.updatedIncomeExpense"><em>Update your </em><a href="#!/financialrecord/incomeExpense">Income & Expense records</a></li>
+							<li ng-hide="user.updatedManageDebt"><em>Update your </em><a href="#!/financialrecord/debts">Debt Management record</a></li>
+							<li ng-hide="user.updatedMilestones"><em>Update your </em><a href="#!/milestones">Milestones records</a></li>				
+							<li ng-hide="user.updatedProfileSettings"><em>Update your </em><a href="#!/settings/profile">Profile Settings</a></li>
+			<!-- 			<li ng-hide="user.updatedBudget"> Budget record not updated</li>
+							<li ng-hide="user.updatedAddFriend"> Add Frienc record not updated</li> -->
+						</div>
+					</div>	
+					<div class="row" ng-show="profileCompleteness">	
+						<div class="col-md-12">	
+							<b>Next Steps: </b><em>Expand your network!</em> </br>
+							Feature available soon
+								
+						</div>
+					</div>
+				</div>
+	  		</div>
+
+	  		<div class="col-xs-12 col-md-4">
+	  			<div class="well" style="background: #FFFFFF;">
+			  		<div class="row text-center">
+			  			<h3>Credit Worthiness</h3>
+			  		</div>
+			  		<div class="row">
+			  			<img src="{{rankIcon}}" style="max-width:100px; height:auto;" class="img-responsive center-block">
+			  		</div>
+			  		<div class="row text-center">
+						Credit Rating: <em> {{user.currentCreditRating}} </em><br>
+						Credit Grade: <em>{{creditGrade[0]}} </em><br>
+						Credit Analysis: </br>
+						<em>{{creditGrade[1]}} </em><br>
+					</div>
+				</div>
+	  		</div>
+
+	  		<div class="col-xs-12 col-md-4" data-ng-controller="FinancesController" >
+	  			<div class="well" style="background: #FFFFFF;">
+		  			<div class="row text-center">
+						<h3>Financial Health</h3>
+					</div>
+					<div class="row">
+						<div class="col-md-12">
+						 <progress><bar ng-repeat="bar in homeHealth track by $index" value="bar.value" type="{{bar.type}}"></bar></progress>
+						</div>
+					</div>
+					<div class="row">
+						 <span ng-hide="homeHealthDisplay">No data available</span>
+						 <span ng-show="homeHealthDisplay">
+						 	<div class="col-md-6">
+						 		<h4>Healthy Ratios</h4>
+								<div ng-repeat="item in homeHealthyRatioArr">							
+									<li><em>{{item}}</em></li>
+								</div>
+							</div>
+						 	<div class="col-md-6">
+						 		<h4>Unhealthy Ratios</h4>
+								<div ng-repeat="item in homeUnHealthyRatioArr">							
+									<li><em>{{item}}</em></li>
+								</div>
+							</div>
+						 </span>					
+					</div>
+				</div>
+			</div>
+	  	</div>
+<!--   		<div class="col-xs-6 col-md-2 advertisement">
+  			<h3>Advertisement here</h3>
+  		</div> -->
+	</div>
+
+</section>

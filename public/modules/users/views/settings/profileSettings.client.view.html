@@ -112,27 +112,27 @@
                 <label for="industry" class="control-label col-sm-2">Industry</label> 
                 <div class="col-sm-4">
                   <select id="industry" name="industry" class="form-control" data-ng-model="user.industry">
-                    <option value="accounting">Accounting</option>
-                    <option value="consulting">Consulting</option>
-                    <option value="engineering">Engineering</option>
-                    <option value="infocommMedia">Infocomm & Media</option>
-                    <option value="researchAcademia">Research & Academia</option>
-                    <option value="biomedical">Biomedical Sciences</option>
-                    <option value="consumerBusiness">Consumer Business</option>
-                    <option value="financial">Financial Services</option>
-                    <option value="legal">Legal</option>
-                    <option value="chemicals">Chemicals/ Oil & Gas</option>
-                    <option value="electronics">Electronics</option>
-                    <option value="healthcare">Healthcare Services</option>
-                    <option value="civil">civil/ Public Service</option>
+                    <option value="Accounting">Accounting</option>
+                    <option value="Consulting">Consulting</option>
+                    <option value="Engineering">Engineering</option>
+                    <option value="Infocomm & Media">Infocomm & Media</option>
+                    <option value="Research & Academia">Research & Academia</option>
+                    <option value="Biomedical Sciences">Biomedical Sciences</option>
+                    <option value="Consumer Business">Consumer Business</option>
+                    <option value="Financial Services">Financial Services</option>
+                    <option value="Legal">Legal</option>
+                    <option value="Chemicals/ Oil & Gas">Chemicals/ Oil & Gas</option>
+                    <option value="Electronics">Electronics</option>
+                    <option value="Healthcare Services">Healthcare Services</option>
+                    <option value="Civil/ Public Service">Civil/ Public Service</option>
                   </select>
                 </div>
               </div>
 
               <div class="form-group">
-                <label for="jobRank" class="control-label col-sm-2">Job Position</label> 
+                <label for="jobPosition" class="control-label col-sm-2">Job Position</label> 
                 <div class="col-sm-4">
-                  <select id="jobRank" name="jobRank" class="form-control" data-ng-model="user.jobRank">
+<!--                   <select id="jobPosition" name="jobPosition" class="form-control" data-ng-model="user.jobPosition">
                     <option value="temp">Temporary / Contract</option>
                     <option value="employee">Employee / Analyst / Associate</option>
                     <option value="consultant">Consultant / Junior supervisor / Assistant Manager / Junior Director</option>
@@ -140,53 +140,119 @@
                     <option value="svp">SVP / Director</option>
                     <option value="principal">Principal / Partner / Vice Chairman / General Manager</option>
                     <option value="president">C-Level officer / President / Chairman / Managing Director</option>
-                  </select>
+                  </select> -->
+                    <input type="text" id="jobPosition" name="jobPosition" class="form-control" data-ng-model="user.jobPosition" placeholder="Job Position">
                 </div>
               </div>  
             
-            <div class="text-center form-group">
+            <div class="col-sm-6  text-center form-group">
                 <button type="submit" name="submitBtn" class="btn btn-large btn-primary">Update</button>
                 <button name="cancelBtn" type="reset" class="btn btn-large btn-primary" ng-click="cancel()">Reset</button>
-<!--                 <a class="btn btn-large btn-primary" ng-click="cancel()">Cancel</a> -->
+                <div data-ng-show="success" class="  text-center text-success">
+                    <strong>Information Updated Successfully</strong>
+                </div>      
+                <div data-ng-show="error" class=" text-center text-danger">
+                    <strong data-ng-bind="error"></strong>
+                </div>                      
             </div>
             
-            <div data-ng-show="success" class="text-center text-success">
-                <strong>Information Updated Successfully</strong>
-            </div>
 
-            <div data-ng-show="error" class="text-center text-danger">
-                <strong data-ng-bind="error"></strong>
-            </div>
+
+
             </fieldset>
         </form>
       </tab>
 
-      <tab heading="Privacy" ng-click="reset()">
-          <h4><u>Edit your Privacy Settings</u></h4>
+      <tab heading="Social" ng-click="reset()">
           <form name="privacySettingForm" data-ng-submit="updateUserProfilePrivacy(privacySettingForm.$valid)" class="form-horizontal" autocomplete="off">
             <fieldset>
+              <div class="form-group"> <!-- Consider change to Description -->
+                <div class="col-sm-6">
+                  <h4><u>About Me</u></h4>
+                  <textarea type="text" id="description" name="description" class="form-control" data-ng-model="user.description" placeholder="Brief Description about Yourself" rows="3"></textarea>
+                </div>
+              </div>
               <div class="form-group">
-                <label for="privacy" class="control-label col-sm-2">Privacy</label>
-                <div class="col-sm-4">
+                <div class="col-sm-6">
+                  <h4><u>Who can find me?</u></h4>
                   <input type="radio" id="privacy" name="privacy" value="public" data-ng-model="user.privacy"> Public <br/>
-                  <input type="radio" id="privacy" name="privacy" value="friends"  data-ng-model="user.privacy"> Friends Only <br/>
+                  <input type="radio" id="privacy" name="privacy" value="friends"  data-ng-model="user.privacy"> Friends Of Friends <br/>
                   <input type="radio" id="privacy" name="privacy" value="private" data-ng-model="user.privacy"> Private <br/>  
                 </div>
               </div>
+              <div class="form-group">
+                <div class="col-sm-6">
+                  <h4><u>Where to find me?</u></h4>
+                </div>                   
+              </div>
 
-            <div class="text-center form-group">
+              <div class="form-group">
+                <div class="col-sm-6">
+                  <label for="mobile" class="control-label col-sm-3">Mobile Number</label>
+                  <div class="col-sm-9">
+                    <input type="text" id="mobile" name="mobile" class="form-control" data-ng-model="user.contact.mobile" placeholder="Mobile Number">
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <div class="col-sm-6">
+                  <label for="office" class="control-label col-sm-3">Office Number</label>
+                  <div class="col-sm-9">
+                    <input type="text" id="office" name="office" class="form-control" data-ng-model="user.contact.office" placeholder="Office Number">
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <div class="col-sm-6">
+                  <label for="linkedin" class="control-label col-sm-3">LinkedIn</label>
+                  <div class="col-sm-9">
+                    <input type="text" id="linkedin" name="linkedin" class="form-control" data-ng-model="user.contact.linkedin" placeholder="LinkedIn URL">
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <div class="col-sm-6">
+                  <label for="facebook" class="control-label col-sm-3">Facebook</label>
+                  <div class="col-sm-9">
+                    <input type="text" id="facebook" name="facebook" class="form-control" data-ng-model="user.contact.facebook" placeholder="Facebook URL">
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-6">
+                  <label for="twitter" class="control-label col-sm-3">Twitter</label>
+                  <div class="col-sm-9">
+                    <input type="text" id="twitter" name="twitter" class="form-control" data-ng-model="user.contact.twitter" placeholder="Twitter URL">
+                  </div>
+                </div>
+              </div>
+              <div class="form-group">
+                <div class="col-sm-6">
+                  <label for="website" class="control-label col-sm-3">Website</label>
+                  <div class="col-sm-9">
+                    <input type="text" id="website" name="website" class="form-control" data-ng-model="user.contact.website" placeholder="Website URL">
+                  </div>
+                </div>
+              </div>
+
+
+            <div class="col-sm-6 text-center form-group">
                 <button type="submit" name="submitBtn" class="btn btn-large btn-primary">Update</button>
                 <button type="reset" name="cancelBtn" class="btn btn-large btn-primary">Reset</button>
+                <div data-ng-show="success" class=" text-center text-success">
+                    <strong>Privacy Settings Updated Successfully</strong>
+                </div>
+                <div data-ng-show="error" class="text-center text-danger">
+                    <strong data-ng-bind="error"></strong>
+                </div>
 
             </div>
             
-            <div data-ng-show="success" class="text-center text-success">
-                <strong>Privacy Settings Updated Successfully</strong>
-            </div>
 
-            <div data-ng-show="error" class="text-center text-danger">
-                <strong data-ng-bind="error"></strong>
-            </div>
+
             </fieldset>
         </form>
       </tab>

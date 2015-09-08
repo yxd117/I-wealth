@@ -2,9 +2,9 @@
 
 module.exports = {
 	db: {
-		//uri: 'mongodb://localhost/mean-stg',
+		uri: 'mongodb://localhost/mean-stg',
 		//uri: 'mongodb://izz:popPOP12345@ds053312.mongolab.com:53312/fyphexa',
-		uri: 'mongodb://admin:poppop123@ds031893.mongolab.com:31893/hexastg',
+		//uri: 'mongodb://admin:poppop123@ds031893.mongolab.com:31893/hexastg',
 		options: {
 			user: '',
 			pass: ''

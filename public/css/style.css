@@ -12,9 +12,17 @@ h4,
 h5,
 h6 {
     font-family: "Lato","Helvetica Neue",Helvetica,Arial,sans-serif;
-    font-weight: 600;
+    font-weight: 400;
 }
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color:#ad9634;
+}
 
 .lead {
     font-size: 18px;
@@ -25,9 +33,9 @@ h6 {
     padding-top: 80px; /* If you're making other pages, make sure there is 50px of padding to make sure the navbar doesn't overlap content! */
     padding-bottom: 50px;
     text-align: center;
-    color: #ad9634;
-    /*background: url(/img/bg/city2.jpg) no-repeat center center;*/
-    background: url('https://s3-ap-southeast-1.amazonaws.com/hexapic/city2.jpg')no-repeat center center;
+    color: #ffffff;
+    background: url(/img/bg/city1_edited.jpg) no-repeat center center;
+    /*background: url('https://s3-ap-southeast-1.amazonaws.com/hexapic/city2.jpg')no-repeat center center;*/
     background-size: cover;
 }
 
@@ -35,6 +43,7 @@ h6 {
     position: relative;
     padding-top: 10%;
     padding-bottom: 20%;
+    padding-left:10%;
 }
 
 .intro-icons{
@@ -55,7 +64,7 @@ h6 {
 }
 
 .service-list {
-  color:#151515;
+  color:#ffffff;
 }
 
 .intro-divider {
@@ -103,7 +112,9 @@ h6 {
 	margin: 0;
 	font-family: helvetica;
 }
-
+.landing-signup{
+  padding-top:90px;
+}
 .bg1 {
 	background: url(/img/bg/city1.jpeg) no-repeat center;
 	-webkit-background-size: cover;
@@ -136,6 +147,9 @@ h6 {
   background-width: 100%;
 }
 
+.info-box{
+  background-color:#FFFAD7;
+}
 
 /*@media (min-width: 992px) {*/
 /*@media (max-width: 950px){
@@ -217,53 +231,65 @@ h6 {
     border-radius: 32px;
     color: black;
   }
+.panel{
+  margin-right: -20px;
+  border-radius: 0;
+}
 
+.huge {
+    font-size: 25px;
+}
+.panel-home{
+  border-radius: 0;
+  border-color:#B8A631;
+}
+
+.panel-home .panel-heading {
+  border-radius: 0;
+  border-color: #B8A631;
+  color: #fff;
+  background-color: #B8A631;
+}
+
+.panel-home a {
+    color: #B8A631;
+}
+.panel-profile a {
+    color: #ffffff;
+}
+
+.panel-home a:hover {
+    color: #B8A631;
+}
+
+.panel-footer{
+  min-height: 250px;
+  background-color: #FFFEFB;
+}
+.panel-profile{
+  min-height: 150px;
+  background-color: #FFFEFB;
+}
 
 canvas{
   width: 100% !important;
   max-width: 800px;
   height: auto !important;
 }
-/*$sidebar-width: 200px;*/
 
-/*.article-wrap {
-  margin-right: $sidebar-width;
+.scrollArea {
+  height: 100vh;
+  overflow: auto;
 }
-article,
-.sidebar {
-  float: left;
+.scrollArea2 {
+  height: 250px;
+  overflow: auto;
 }
-.sidebar {
-  box-sizing: border-box;
-  padding-left: 20px;
-  width: $sidebar-width;
+.post {
+  background-color: #B8A631;
 }
-
-main {
-  background: black;
-  margin: 20px 0;
-  padding: 10px;
-}
-
-main div {
-  background: blue;
-  color: white;
-  padding: 15px;
-  max-width: 125px;
+.inline { 
+  float:left; 
   margin: 5px;
 }
-.flex-center {
-  display: flex;
-  justify-content: left;
-}
-.nav-tabsDiv {
-    padding: 80px 0 0 0;
-}
-.label-field {
-  text-align: right;
-  font-weight: bold;
-  width: 200px;
-}
-.input-textbox-350 {
-  width: 350px;
-}*/
+

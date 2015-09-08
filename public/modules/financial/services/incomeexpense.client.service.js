@@ -7,6 +7,7 @@ angular.module('financial').factory('IncomeExpenseService', ['$resource', functi
 			description: 'Employment Income',
 			order: 0,
 			value: 0
+			
 		},
 		tbpvIncome: {
 			description: 'Trade, Business, Profession or Vocation',
@@ -53,52 +54,72 @@ angular.module('financial').factory('IncomeExpenseService', ['$resource', functi
 		savings: {
 			description: 'Savings',
 			order: 0,
-			value: 0
+			value: 0,
+			recordsTotal: 0,
+			records: []
 		},
 		mortgageRepayments: {
 			description: 'Mortgage Repayments',
 			order: 1,
-			value: 0
+			value: 0,
+			recordsTotal: 0,
+			records: []
 		},
 		rentalRepayments: {
 			description: 'Rental Repayments',
 			order: 2,
-			value: 0
+			value: 0,
+			recordsTotal: 0,
+			records: []
 		},
 		otherLoanRepayments: {
 			description: 'Other Loan Repayments',
 			order: 3,
-			value: 0
+			value: 0,
+			recordsTotal: 0,
+			records: []
 		},
 		conservancyPropertyTaxes: {
 			description: 'Conservancy and Property Taxes',
 			order: 4,
-			value: 0
+			value: 0,
+			recordsTotal: 0,
+			records: []
 		},
 		insurances: {
 			description: 'Insurances',
 			order: 5,
-			value: 0
+			value: 0,
+			recordsTotal: 0,
+			records: []
 		},
 		childrenEducation: {
 			description: 'Children&quot Education',
 			order: 6,
-			value: 0
+			value: 0,
+			recordsTotal: 0,
+			records: []
 		},
 		allowances: {
 			description: 'Allowances for parents & Children',
 			order: 7,
-			value: 0
+			value: 0,
+			recordsTotal: 0,
+			records: []
 		},
 		maid: {
 			description: 'Maid',
 			order: 8,
-			value: 0
+			value: 0,
+			recordsTotal: 0,
+			records: []
 		},
 		others: {
 			description: 'Others',
 			order: 9,
-			value: 0
+			value: 0,
+			recordsTotal: 0,
+			records: []
 		}
 	};	
 
@@ -106,37 +127,51 @@ angular.module('financial').factory('IncomeExpenseService', ['$resource', functi
 		carLoanRepayment: {
 			description: 'Car Loan Repayments',
 			order: 0,
-			value: 0
+			value: 0,
+			recordsTotal: 0,
+			records: []
 		},
 		motorInsurances: {
 			description: 'Motor Insurances',
 			order: 1,
-			value: 0
+			value: 0,
+			recordsTotal: 0,
+			records: []
 		},
 		roadTax: {
 			description: 'Road Tax',
 			order: 2,
-			value: 0
+			value: 0,
+			recordsTotal: 0,
+			records: []
 		},
 		carparkFees: {
 			description: 'Carpark Fees',
 			order: 3,
-			value: 0
+			value: 0,
+			recordsTotal: 0,
+			records: []
 		},
 		petrolMaintenanceExpense: {
 			description: 'Petrol & Maintenance Expenses',
 			order: 4,
-			value: 0
+			value: 0,
+			recordsTotal: 0,
+			records: []
 		},
 		publicTransport: {
 			description: 'Public Transport',
 			order: 5,
-			value: 0
+			value: 0,
+			recordsTotal: 0,
+			records: []
 		},
 		others: {
 			description: 'Others',
 			order: 6,
-			value: 0
+			value: 0,
+			recordsTotal: 0,
+			records: []
 		}
 	};	
 
@@ -144,27 +179,37 @@ angular.module('financial').factory('IncomeExpenseService', ['$resource', functi
 		utilityBill: {
 			description: 'Utilities Bill',
 			order: 0,
-			value: 0
+			value: 0,
+			recordsTotal: 0,
+			records: []
 		},
 		homeTelephone: {
 			description: 'Home Telephone',
 			order: 1,
-			value: 0
+			value: 0,
+			recordsTotal: 0,
+			records: []
 		},
 		mobilePhone: {
 			description: 'Mobile Phone',
 			order: 2,
-			value: 0
+			value: 0,
+			recordsTotal: 0,
+			records: []
 		},
 		cableTVInternet: {
 			description: 'Cable TV & Internet',
 			order: 3,
-			value: 0
+			value: 0,
+			recordsTotal: 0,
+			records: []
 		},
 		others: {
 			description: 'Others',
 			order: 4,
-			value: 0
+			value: 0,
+			recordsTotal: 0,
+			records: []
 		}
 	};
 
@@ -172,32 +217,44 @@ angular.module('financial').factory('IncomeExpenseService', ['$resource', functi
 		groceries: {
 			description: 'Groceries',
 			order: 0,
-			value: 0
+			value: 0,
+			recordsTotal: 0,
+			records: []
 		},
 		eatingOut: {
 			description: 'Eating Out',
 			order: 1,
-			value: 0
+			value: 0,
+			recordsTotal: 0,
+			records: []
 		},
 		clothings: {
 			description: 'Clothings',
 			order: 2,
-			value: 0
+			value: 0,
+			recordsTotal: 0,
+			records: []
 		},
 		personalGrooming: {
 			description: 'Personal Grooming',
 			order: 3,
-			value: 0
+			value: 0,
+			recordsTotal: 0,
+			records: []
 		},
 		healthMedical: {
 			description: 'Health & Medical',
 			order: 4,
-			value: 0
+			value: 0,
+			recordsTotal: 0,
+			records: []
 		},
 		others: {
 			description: 'Others',
 			order: 5,
-			value: 0
+			value: 0,
+			recordsTotal: 0,
+			records: []
 		}
 	};
 
@@ -205,22 +262,30 @@ angular.module('financial').factory('IncomeExpenseService', ['$resource', functi
 		tourFamilyOutings: {
 			description: 'Tour & Family Outings',
 			order: 0,
-			value: 0
+			value: 0,
+			recordsTotal: 0,
+			records: []
 		},
 		entertainment: {
 			description: 'Entertainment',
 			order: 1,
-			value: 0
+			value: 0,
+			recordsTotal: 0,
+			records: []
 		},
 		hobbiesSports: {
 			description: 'Hobbies & Sports',
 			order: 2,
-			value: 0
+			value: 0,
+			recordsTotal: 0,
+			records: []
 		},
 		others: {
 			description: 'Others',
 			order: 3,
-			value: 0
+			value: 0,
+			recordsTotal: 0,
+			records: []
 		}
 	};
 

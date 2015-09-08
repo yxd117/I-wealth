@@ -20,6 +20,8 @@
 		"angular-toArrayFilter": "*",
 		"font-awesome": "*",
 		"angular-tooltips": "*",
-		"angular-route": "*"
+		"angular-route": "*",
+		"angular-nvd3": "*",
+		"n3-line-chart":"*"
 	}
 }

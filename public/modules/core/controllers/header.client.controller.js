@@ -17,5 +17,6 @@ angular.module('core').controller('HeaderController', ['$scope', 'Authentication
 
 		$scope.redirectHome = '/#!/';
 		if(Authentication.user) $scope.redirectHome = '/#!/home';
+		if(!Authentication.user) $scope.redirectHome = '/#!/';
 	}
 ]);

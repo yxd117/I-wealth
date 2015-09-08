@@ -1,0 +1,130 @@
+<section data-ng-controller="PostsController"> 
+  <div class="row">
+    <div class="col-md-12" style="margin-bottom:0px;">
+      <div class="form-group form-inline" >
+        <label class="control-label" for="postFilter"><h4>View Posts: </h4></label>
+        <select class="form-control" name="postFilter" data-ng-model="postFilter">
+          <option value="public" selected>All</option>
+          <option value="friends">Friends</option>
+          <option value="personal">Personal</option>
+        </select>
+        <a class="btn btn-primary pull-right" role="button" ng-click="newPost()">Create New Post</a>  
+      </div>          
+    </div>
+  </div>   
+
+  <div class="list-group scrollArea" ng-if="postFilter === 'public'" data-ng-init="findPostsPublic()">
+    <a data-ng-repeat="post in posts" data-ui-sref="postView({postId: post._id})" class="panel panel-default list-group-item" style="padding-bottom:0px; margin-right:1px;">
+      <div class="row">
+        <div class="col-md-12" >
+          <div class="inline">
+            <img style="border:1px solid gray;width:50px; height:50px; max-width:100%; max-height:100%;"  id="preview" ng-src="{{imageUrl}}{{post.user.profilePic}}" />              
+          </div>
+          <div class="inline">
+              <medium>
+                <b><span data-ng-bind="post.user.firstName"></span></b>
+                <b><span data-ng-bind="post.user.lastName"></span></b>
+              </medium>               
+            </br>    
+            <small class="list-group-item-text">
+              Posted on
+              <i><span data-ng-bind="post.created | date:'short'"></span></i>    
+              <span data-ng-if="post.privacy === 'public'">(Public)</span> 
+              <span data-ng-if="post.privacy === 'friends'">(Friends Only)</span> 
+              <span data-ng-if="post.privacy === 'private'">(Private)</span>   
+            </small>            
+          </div>              
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <h4 class="list-group-item-heading" data-ng-bind="post.title"></h4>
+          <p class="list-group-item-text" data-ng-bind="post.content"></p>           
+        </div>
+      </div>
+      <div class="row" style="margin-top:5px; margin-bottom:0px; background-color:#f6f6f6;">
+        <div class="col-md-12" style="margin-top:5px;">
+          <p>Comments (<span data-ng-bind="post.comments.length"></span>)</p>
+        </div>  
+      </div>
+    </a>
+
+  </div>
+
+  <div class="list-group scrollArea" ng-if="postFilter === 'friends'" data-ng-init="findPostsFriends()">
+    <a data-ng-repeat="post in posts" data-ui-sref="postView({postId: post._id})" class="panel panel-default list-group-item" style="padding-bottom:0px; margin-right:1px;">
+      <div class="row">
+        <div class="col-md-12" >
+          <div class="inline">
+            <img style="border:1px solid gray;width:50px; height:50px; max-width:100%; max-height:100%;"  id="preview" ng-src="{{imageUrl}}{{post.user.profilePic}}" />              
+          </div>
+          <div class="inline">
+              <medium>
+                <b><span data-ng-bind="post.user.firstName"></span></b>
+                <b><span data-ng-bind="post.user.lastName"></span></b>
+              </medium>               
+            </br>    
+            <small class="list-group-item-text">
+              Posted on
+              <i><span data-ng-bind="post.created | date:'short'"></span></i>    
+              <span data-ng-if="post.privacy === 'public'">(Public)</span> 
+              <span data-ng-if="post.privacy === 'friends'">(Friends Only)</span> 
+              <span data-ng-if="post.privacy === 'private'">(Private)</span>   
+            </small>            
+          </div>              
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <h4 class="list-group-item-heading" data-ng-bind="post.title"></h4>
+          <p class="list-group-item-text" data-ng-bind="post.content"></p>           
+        </div>
+      </div>
+      <div class="row" style="margin-top:5px; margin-bottom:0px; background-color:#f6f6f6;">
+        <div class="col-md-12" style="margin-top:5px;">
+          <p>Comments (<span data-ng-bind="post.comments.length"></span>)</p>
+        </div>  
+      </div>
+    </a>
+  </div>
+
+  <div class="list-group scrollArea" ng-if="postFilter === 'personal'" data-ng-init="findPostsPersonal()">
+    <a data-ng-repeat="post in posts" data-ui-sref="postView({postId: post._id})" class="panel panel-default list-group-item" style="padding-bottom:0px; margin-right:1px;">
+      <div class="row">
+        <div class="col-md-12" >
+          <div class="inline">
+            <img style="border:1px solid gray;width:50px; height:50px; max-width:100%; max-height:100%;"  id="preview" ng-src="{{imageUrl}}{{post.user.profilePic}}" />              
+          </div>
+          <div class="inline">
+              <medium>
+                <b><span data-ng-bind="post.user.firstName"></span></b>
+                <b><span data-ng-bind="post.user.lastName"></span></b>
+              </medium>               
+            </br>    
+            <small class="list-group-item-text">
+              Posted on
+              <i><span data-ng-bind="post.created | date:'short'"></span></i>    
+              <span data-ng-if="post.privacy === 'public'">(Public)</span> 
+              <span data-ng-if="post.privacy === 'friends'">(Friends Only)</span> 
+              <span data-ng-if="post.privacy === 'private'">(Private)</span>   
+            </small>            
+          </div>              
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <h4 class="list-group-item-heading" data-ng-bind="post.title"></h4>
+          <p class="list-group-item-text" data-ng-bind="post.content"></p>           
+        </div>
+      </div>
+      <div class="row" style="margin-top:5px; margin-bottom:0px; background-color:#f6f6f6;">
+        <div class="col-md-12" style="margin-top:5px;">
+          <p>Comments (<span data-ng-bind="post.comments.length"></span>)</p>
+        </div>  
+      </div>
+    </a>
+  </div>
+
+
+
+</section>

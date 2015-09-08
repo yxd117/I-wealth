@@ -1,16 +1,16 @@
 <section ng-controller="MilestonesController">
 
 	<div class= "content">
-		<h2>Update your Goal</h2>
+		<h2>Update your Milestone</h2>
 		<body>
-			Monitor and update your progress on your goal now!
+			Monitor and update your progress towards your goal now!
 		</body>
 		<hr/>		
 
 			<aside>
 			<div class="col-md-4">
 			<div ng-show="readonly" class="ng-show">
-				<h4 align="center">Goal Details</h4>
+				<h4 align="center">Milestone Details</h4>
 
 				<div class="row">
 				<div class="col-xs-5">
@@ -63,9 +63,9 @@
 				
 				<div class="row">
 				<br/>
-				<div class="col-xs-offset-5 col-xs-7">
-					<button class="btn btn-medium btn-primary" ng-click="editMilestone()" style="width:200px">Edit</button>
-				</div>																
+					<div class="col-xs-offset-5 col-xs-7">
+						<button class="btn btn-medium btn-primary" ng-click="editMilestone()" style="width:150px">Edit</button>
+					</div>																
 				</div>
 			</div>
 			<form name="updateMilestoneForm" data-ng-submit="updateMilestone()">
@@ -140,8 +140,10 @@
 			</fieldset>
 			</form>
 			</div>
-			</aside>			
-			<div class="col-md-8">				
+			</aside>
+			<div class="col-md-1">
+			</div>			
+			<div class="col-md-7">				
 				You have saved <b>${{user.mileStones[user.updateMilestonePos].currentAmount}}</b> so far! <br/>
 				<div class="progress">
 
@@ -161,30 +163,28 @@
 
 				<form name="contributeForm" data-ng-submit="makeContribution()">
 					<fieldset>
-					<label for="text">Make a Contribution to Your Goal:</label>
+					<label for="text">Make a Contribution to Your Milestone: </label>
 					<div class="row">
 						<div class="col-xs-6 col-xs-4">													
 							<input type="number" step="any" ng-model="contribution" name="contribution" id="contribution" placeholder="Enter an amount! $$$"  class ="form-control" ng-required="true"/>
+						</div>
+						<div class="col-xs-6 col-xs-4">
 							<button type="submit" class="btn btn-medium btn-primary" style="width:100px">Contribute!</button>			
 						</div>																			
 					</div>
 					</fieldset>
 				</form>				
 				<br/>
-				<div class = "row">
-				<div class="col-xs-6">
-					<b>Done with your goal? </b></li>
-					<i>Mark it as complete now.</i>				
 					
-					<button ng-click="markComplete()" class="btn btn-medium btn-success" style="width:100px">Complete!</button>			
-				</div>
-				</div>
-								
-				<div class = "row">
-				<div class="col-md-4"></div>
-  				<div class="col-md-4 col-md-offset-4">
-				<a class="btn btn-warning" type="button" href="./#!/milestones" style="float: right;width:180px">Return</a>		
-				</div>
+				<div class="row" style="padding-top:30px">
+					<div class="col-xs-6">
+					</div>
+					<div class="col-xs-3">
+						<button ng-click="markComplete()" class="btn btn-medium btn-success">Goal Completed!</button>		
+					</div>
+	  				<div class="col-xs-3">
+						<a class="btn btn-medium btn-default" type="button" href="./#!/milestones">Return</a>		
+					</div>
 				</div>
 			</div>
 			

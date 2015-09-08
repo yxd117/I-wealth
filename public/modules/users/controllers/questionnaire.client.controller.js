@@ -12,9 +12,9 @@ angular.module('users').controller('QuestionnaireController', ['$scope', '$state
 		//Questions
 		$scope.oneAtATime = false;
 
-		$scope.qnsPersonal = QuestionnaireService.qnsPersonal();
-		$scope.qnsJob = QuestionnaireService.qnsJob();
-		$scope.qnsFinance = QuestionnaireService.qnsFinance();
+		$scope.qnsPersonal = QuestionnaireService.qnsPersonal;
+		$scope.qnsJob = QuestionnaireService.qnsJob;
+		$scope.qnsFinance = QuestionnaireService.qnsFinance;
 
 		$scope.clearSuccessMessage = function() {
 			$scope.success = false;
@@ -71,53 +71,53 @@ angular.module('users').controller('QuestionnaireController', ['$scope', '$state
 		var verifyQnsPersonalCompleted = function(user){
 			var completePersonalQns = true;
 			var personalScore = 0;
-			if(user.sGender === null || user.sGender === undefined) completePersonalQns = false;
+			if(user.creditProfileScore.sGender === null || user.creditProfileScore.sGender === undefined) completePersonalQns = false;
 			else {
-				personalScore += Number(user.sGender);
-				if(Number(user.sGender) === 1){
+				personalScore += Number(user.creditProfileScore.sGender);
+				if(Number(user.creditProfileScore.sGender) === 1){
 					user.gender = 'Male';
 				} else user.gender = 'Female';
 			}
 
-			if(user.sAge === null || user.sAge === undefined) completePersonalQns = false;
-			else personalScore += Number(user.sAge);
+			if(user.creditProfileScore.sAge === null || user.creditProfileScore.sAge === undefined) completePersonalQns = false;
+			else personalScore += Number(user.creditProfileScore.sAge);
 
-			if(user.sEducationLevel === null || user.sEducationLevel === undefined) completePersonalQns = false;
+			if(user.creditProfileScore.sEducationLevel === null || user.creditProfileScore.sEducationLevel === undefined) completePersonalQns = false;
 			else {
-				personalScore += Number(user.sEducationLevel);
-				if(Number(user.sEducationLevel) === 5){
+				personalScore += Number(user.creditProfileScore.sEducationLevel);
+				if(Number(user.creditProfileScore.sEducationLevel) === 5){
 					user.educationLevel = 'PhD';
-				} else if(Number(user.sEducationLevel) === 4) {
+				} else if(Number(user.creditProfileScore.sEducationLevel) === 4) {
 					user.educationLevel = 'Masters';
-				} else if (Number(user.sEducationLevel) === 3) {
+				} else if (Number(user.creditProfileScore.sEducationLevel) === 3) {
 					user.educationLevel = 'Graduate';
-				} else if (Number(user.sEducationLevel) === 2) {
+				} else if (Number(user.creditProfileScore.sEducationLevel) === 2) {
 					user.educationLevel = 'Undergraduate';
-				} else if (Number(user.sEducationLevel) === 1){
+				} else if (Number(user.creditProfileScore.sEducationLevel) === 1){
 					user.educationLevel = 'A/O/N Levels';
 				} else user.educationLevel = 'PSLE';
 			}
 
-			if(user.sMaritalStatus === null || user.sMaritalStatus === undefined) completePersonalQns = false;
+			if(user.creditProfileScore.sMaritalStatus === null || user.creditProfileScore.sMaritalStatus === undefined) completePersonalQns = false;
 			else {
-				personalScore += Number(user.sMaritalStatus);		
-				if(Number(user.sMaritalStatus) === 3) user.maritalStatus = 'Married';
+				personalScore += Number(user.creditProfileScore.sMaritalStatus);		
+				if(Number(user.creditProfileScore.sMaritalStatus) === 3) user.maritalStatus = 'Married';
 			}
 
-			if(user.sLocativeSituation === null || user.sLocativeSituation === undefined) completePersonalQns = false;
-			else personalScore += Number(user.sLocativeSituation);	
+			if(user.creditProfileScore.sLocativeSituation === null || user.creditProfileScore.sLocativeSituation === undefined) completePersonalQns = false;
+			else personalScore += Number(user.creditProfileScore.sLocativeSituation);	
 
-			if(user.sLocativeType === null || user.sLocativeType === undefined) completePersonalQns = false;
+			if(user.creditProfileScore.sLocativeType === null || user.creditProfileScore.sLocativeType === undefined) completePersonalQns = false;
 			else personalScore += Number(user.sLocativeType);
 
-			if(user.sNoOfDependents === null || user.sNoOfDependents === undefined) completePersonalQns = false;
+			if(user.creditProfileScore.sNoOfDependents === null || user.creditProfileScore.sNoOfDependents === undefined) completePersonalQns = false;
 			else {
-				personalScore += Number(user.sNoOfDependents);
-				if (Number(user.sNoOfDependents) === 3){
+				personalScore += Number(user.creditProfileScore.sNoOfDependents);
+				if (Number(user.creditProfileScore.sNoOfDependents) === 3){
 					user.noOfDependents = 0;
-				} else if (Number(user.sNoOfDependents) === 2){
+				} else if (Number(user.creditProfileScore.sNoOfDependents) === 2){
 					user.noOfDependents = 1;
-				} else if (Number(user.sNoOfDependents) === 1){
+				} else if (Number(user.creditProfileScore.sNoOfDependents) === 1){
 					user.noOfDependents = 2;
 				}
 			}	
@@ -133,22 +133,22 @@ angular.module('users').controller('QuestionnaireController', ['$scope', '$state
 		var verifyQnsJobCompleted = function(user){
 			var completeJobQns = true;
 			var jobScore = 0;
-			if(user.sCurrentOccupation === null || user.sCurrentOccupation === undefined) completeJobQns = false;
+			if(user.creditProfileScore.sCurrentOccupation === null || user.creditProfileScore.sCurrentOccupation === undefined) completeJobQns = false;
 			else {
-				jobScore += Number(user.sCurrentOccupation);
-				if(Number(user.sCurrentOccupation) === 3){
+				jobScore += Number(user.creditProfileScore.sCurrentOccupation);
+				if(Number(user.creditProfileScore.sCurrentOccupation) === 3){
 					user.currentOccupation = 'Salaried Employee';
-				} else if (Number(user.sCurrentOccupation) === 2){
+				} else if (Number(user.creditProfileScore.sCurrentOccupation) === 2){
 					user.currentOccupation = 'Businessman/Self-employed';
-				} else if (Number(user.sCurrentOccupation) === 1){
+				} else if (Number(user.creditProfileScore.sCurrentOccupation) === 1){
 					user.currentOccupation = 'Student';
 				}else user.currentOccupation = 'Unemployed';
 			}
 
-			if(user.sCurrentWorkPeriod === null || user.sCurrentWorkPeriod === undefined) completeJobQns = false;
-			else jobScore += Number(user.sCurrentWorkPeriod);
-			if(user.sLastWorkPeriod === null || user.sLastWorkPeriod === undefined) completeJobQns = false;
-			else jobScore += Number(user.sLastWorkPeriod);	
+			if(user.creditProfileScore.sCurrentWorkPeriod === null || user.creditProfileScore.sCurrentWorkPeriod === undefined) completeJobQns = false;
+			else jobScore += Number(user.creditProfileScore.sCurrentWorkPeriod);
+			if(user.creditProfileScore.sLastWorkPeriod === null || user.creditProfileScore.sLastWorkPeriod === undefined) completeJobQns = false;
+			else jobScore += Number(user.creditProfileScore.sLastWorkPeriod);	
 
 			user.completeJobQns = completeJobQns;
 			user.jobRating = jobScore;
@@ -161,18 +161,18 @@ angular.module('users').controller('QuestionnaireController', ['$scope', '$state
 		var verifyQnsFinanceCompleted = function(user){
 			var completeFinanceQns = true;
 			var financeScore = 0;
-			if(user.sMonthlyIncome === null || user.sMonthlyIncome === undefined) completeFinanceQns = false;
-			else financeScore += Number(user.sMonthlyIncome);
-			if(user.sMonthlyExpense === null || user.sMonthlyExpense === undefined) completeFinanceQns = false;
-			else financeScore += Number(user.sMonthlyExpense);
-			if(user.sMonthlySavings === null || user.sMonthlySavings === undefined) completeFinanceQns = false;
+			if(user.creditProfileScore.sMonthlyIncome === null || user.creditProfileScore.sMonthlyIncome === undefined) completeFinanceQns = false;
+			else financeScore += Number(user.creditProfileScore.sMonthlyIncome);
+			if(user.creditProfileScore.sMonthlyExpense === null || user.creditProfileScore.sMonthlyExpense === undefined) completeFinanceQns = false;
+			else financeScore += Number(user.creditProfileScore.sMonthlyExpense);
+			if(user.creditProfileScore.sMonthlySavings === null || user.creditProfileScore.sMonthlySavings === undefined) completeFinanceQns = false;
 			else financeScore += Number(user.sMonthlySavings);
-			if(user.sCreditHistory === null || user.sCreditHistory === undefined) completeFinanceQns = false;
-			else financeScore += Number(user.sCreditHistory);		
-			if(user.sBankruptStatus === null || user.sBankruptStatus === undefined) completeFinanceQns = false;
-			else financeScore += Number(user.sBankruptStatus);	
-			if(user.sNumberOfCreditCards === null || user.sNumberOfCreditCards === undefined) completeFinanceQns = false;
-			else financeScore += Number(user.sNumberOfCreditCards);	
+			if(user.creditProfileScore.sCreditHistory === null || user.creditProfileScore.sCreditHistory === undefined) completeFinanceQns = false;
+			else financeScore += Number(user.creditProfileScore.sCreditHistory);		
+			if(user.creditProfileScore.sBankruptStatus === null || user.creditProfileScore.sBankruptStatus === undefined) completeFinanceQns = false;
+			else financeScore += Number(user.creditProfileScore.sBankruptStatus);	
+			if(user.creditProfileScore.sNumberOfCreditCards === null || user.creditProfileScore.sNumberOfCreditCards === undefined) completeFinanceQns = false;
+			else financeScore += Number(user.creditProfileScore.sNumberOfCreditCards);	
 
 			user.completeFinanceQns = completeFinanceQns;
 			user.financeRating = financeScore;

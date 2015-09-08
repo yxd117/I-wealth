@@ -26,6 +26,10 @@ module.exports = {
 			],
 			js: [
 				'public/lib/angular/angular.min.js',
+				'public/lib/n3-line-chart/build/line-chart.min.js',
+				'public/lib/d3/d3.js',
+				'public/lib/nvd3/nv.d3.js',
+				'public/lib/angular-nvd3/dist/angular-nvd3.js',
 				'public/lib/angular-resource/angular-resource.min.js',
 				'public/lib/angular-animate/angular-animate.min.js',
 				'public/lib/angular-ui-router/release/angular-ui-router.min.js',
@@ -46,7 +50,8 @@ module.exports = {
 			'https://fonts.googleapis.com/css?family=Lato:300,400,700,300italic,400italic,700italic',
 			'public/lib/angular-chart.js/dist/angular-chart.css',
 			'public/lib/font-awesome/css/font-awesome.min.css',
-			'public/lib/angular-tooltips/src/css/angular-tooltips.css'			
+			'public/lib/angular-tooltips/src/css/angular-tooltips.css',
+			'public/lib/nvd3/nv.d3.css'			
 		],
 		js: 'public/dist/application.min.js'
 		// css: [

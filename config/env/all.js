@@ -24,7 +24,7 @@ module.exports = {
 		secure: false,
 		// Only set the maxAge to null if the cookie shouldn't be expired
 		// at all. The cookie will expunge when the browser is closed.
-		maxAge: null,
+		maxAge: 7200000,
 		// To set the cookie in a specific domain uncomment the following
 		// setting:
 		// domain: 'yourdomain.com'
@@ -47,12 +47,16 @@ module.exports = {
 				'public/lib/bootstrap/dist/css/bootstrap-theme.css',
 			],
 			js: [
-				'public/lib/angular/angular.js',
-				'public/lib/angular-resource/angular-resource.js',
-				'public/lib/angular-animate/angular-animate.js',
-				'public/lib/angular-ui-router/release/angular-ui-router.js',
-				'public/lib/angular-ui-utils/ui-utils.js',
-				'public/lib/angular-bootstrap/ui-bootstrap-tpls.js',
+				'public/lib/angular/angular.min.js',
+				'public/lib/n3-line-chart/build/line-chart.min.js',
+				'public/lib/d3/d3.js',
+				'public/lib/nvd3/nv.d3.js',
+				'public/lib/angular-nvd3/dist/angular-nvd3.js',
+				'public/lib/angular-resource/angular-resource.min.js',
+				'public/lib/angular-animate/angular-animate.min.js',
+				'public/lib/angular-ui-router/release/angular-ui-router.min.js',
+				'public/lib/angular-ui-utils/ui-utils.min.js',
+				'public/lib/angular-bootstrap/ui-bootstrap-tpls.min.js',
 				'public/lib/ng-file-upload-shim/ng-file-upload-shim.min.js',
 				'public/lib/ng-file-upload-shim/ng-file-upload.min.js',
 				'public/lib/angular-date-dropdowns/directive.js',
@@ -67,7 +71,8 @@ module.exports = {
 			'public/css/style.css',
 			'public/lib/angular-chart.js/dist/angular-chart.css',
 			'public/lib/font-awesome/css/font-awesome.min.css',
-			'public/lib/angular-tooltips/src/css/angular-tooltips.css'
+			'public/lib/angular-tooltips/src/css/angular-tooltips.css',
+			'public/lib/nvd3/nv.d3.css'
 		],
 		js: [
 			'public/config.js',

@@ -1,0 +1,90 @@
+<section data-ng-controller="SocialController" ng-init="refreshSocialRankPic()">
+	<div class="row">
+		<div class="col-md-12 panel panel-profile panel-home" >
+			<!-- <div style="background-color:#fbfbfb; border:1px solid gray;"> -->
+			<div>
+				<div class="row">
+					<div class="col-sm-5 col-md-5">
+					</br>
+						<img style="border:1px solid gray; max-width:100%; max-height:100%;"  id="preview" ng-src="{{imageUrl}}{{user.profilePic}}" />
+					</div>
+					<div class="col-sm-7 col-md-7">
+						</br>
+						<div class="row">
+							<div class="col-md-12"><h4>{{user.firstName}} {{user.lastName}} </h4></div>
+						</div>
+						<div class="row">
+							<div class="col-md-4">Joined: </div>
+							<div class="col-md-8">{{yearJoined}}</div>
+						</div>					
+					</div>		
+				</div>
+				</br>
+			</div>
+		</div>		
+	</div>
+	<div class="row">
+		<div class="col-md-12 panel panel-home panel-profile" >			
+			<div>
+				<h4>Social Rank: </h4>
+				<img style="max-width:100%; max-height:100%; margin-top:5px;"  id="preview" ng-src="{{decachedSocialRankUrl}}" />
+			</div>
+		</div>		
+	</div>
+	<div class="row" data-ng-init="findFriends()">
+		<div class="col-md-12 panel panel-home panel-profile" >
+			<div class="row">
+				<div class="col-md-12">
+					Friends: {{numFriends}}
+						<a data-toggle="modal" data-target="#myModal" style="color:blue;"> (View All)</a>
+
+						<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+							<div class="modal-dialog" role="document">
+								<div class="modal-content">
+									<div class="modal-header">
+										<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+										<h4 class="modal-title" id="myModalLabel">Friends</h4>
+									</div>
+									<div class="modal-body">
+										<div class="row">
+											<div class="col-md-12 scrollArea2">
+												<div ng-repeat="user in friendList | filter: {friendStatus : 3}">
+													<div class="col-md-4" style="padding: 10px 0px;">
+														<div class="row">
+															<div class="col-md-12">
+																<img style="border:1px solid gray;width:50px; height:50px; max-width:100%; max-height:100%;"  id="preview" ng-src="{{imageUrl}}{{user.profilePic}}" /> 
+															</div>									
+														</div>
+														<div class="row">
+															<div class="col-md-12">
+																<a data-ui-sref="viewProfile({profileId: user.userObjectId})" style="color:black;" data-dismiss="modal">{{user.firstName}} {{user.lastName}}</a>
+															</div>
+														</div>
+													</div>		
+												</div>
+											</div>
+										</div>
+									</div> 
+									<div class="modal-footer">
+
+									</div>
+								</div>
+							</div>
+						</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<div ng-repeat="user in friendList | limitTo : 6">
+						<div class="col-md-4" style="padding: 10px 0px;">
+							<div class="col-md-12">
+								<img style="border:1px solid gray;width:50px; height:50px; max-width:100%; max-height:100%;"  id="preview" ng-src="{{imageUrl}}{{user.profilePic}}" /> 
+								<a data-ui-sref="viewProfile({profileId: user.userObjectId})" style="color:black;">{{user.firstName}} {{user.lastName}}</a>
+							</div>
+						</div>		
+					</div>
+				</div>
+			</div>
+		</div>		
+	</div>
+</section>

@@ -123,61 +123,10 @@ var UserSchema = new Schema({
 	},
 
 	//Start of Questionnaire scores for the different fields
-	//<--Personal Qn Scores -->
-	sGender: {			//1
-		type: Number
-	},
-	sEducationLevel: {	//2
-		type: Number
-	},
-	sLocativeType: { 	//3
-		type: Number
-	},
-	sLocativeSituation: {	//4
-		type: Number
-	},
-	sAge: {				//5
-		type: Number
-	},
-	sMaritalStatus: {	//6
-		type: Number	
-	},
-	sNoOfDependents: {	//7
-		type: Number	
-	},
-
-	//<--Job Qn Scores -->
-	sCurrentOccupation: { //8 
-		type: Number	
-	},
-	sCurrentWorkPeriod: { //9
-		type: Number 	
-	},
-	sLastWorkPeriod: { 	//10
-		type: Number 	
-	},
-
-	//<-- Financial Information --> 
-	sMonthlyIncome: { 	//11
-		type: Number	
-	},
-	sMonthlyExpense: {
-		type: Number 	//12
-	},
-	sMonthlySavings: {
-		type: Number 	//13
-	},
-	sCreditHistory: {
-		type: Number 	//14
-	},
-	sBankruptStatus: {
-		type: Number 	//15
-	},
-	sNumberOfCreditCards: {
-		type: Number 	//16
-	},
 	//END of Score Results
-
+	creditProfileScore: {
+		type: Object
+	},
 	// Actual user Data Fields
 	dateOfBirth: {
 		type: Date
@@ -232,10 +181,13 @@ var UserSchema = new Schema({
 	},
 
 	// Additional Work Details
+	description:{
+		type:String
+	},
 	industry: {
 		type: String
 	},
-	jobRank: {
+	jobPosition: {
 		type: String
 	},
 	employmentType: {
@@ -245,8 +197,12 @@ var UserSchema = new Schema({
 		type: String,
 		default: 'public'
 	},
+	contact: {
+		type: Object
+	},
 	profilePic: {
-		type: String
+		type: String,
+		default: 'default_avatar.jpg'
 	},
 	profilePicType: {
 		type: String
@@ -303,6 +259,8 @@ var UserSchema = new Schema({
 		type: Boolean,
 		default: false
 	}, 
+
+	
 	debtsInfoArr: {
 		type: Array
 	},
@@ -315,9 +273,41 @@ var UserSchema = new Schema({
 	}, 
 	updateMilestonePos: {
 		type: Number
+	},
+
+	//FriendList
+	// friendList: {
+	// 	type: Array
+	// },
+	friendList:[({
+		email: {
+			type:String
+		},
+		id:{
+			type:Schema.ObjectId,
+			ref:'User'
+		},
+		friendStatus:{
+			type:Number
+		}
+	})],
+
+	budgetLimits:{
+		type:Object
+	},
+	//posts by users
+	posts: [{
+		type: Schema.ObjectId,
+		ref: 'Post'
+	}],
+	socialPoints:{
+		type: Number,
+		default: 0
+	},
+	socialRankPic: {
+		type: String,
+		default: 'rank1newbie.png'		
 	}
-
-
 
 });
 
@@ -350,6 +340,5 @@ UserSchema.methods.hashPassword = function(password) {
 UserSchema.methods.authenticate = function(password) {
 	return this.password === this.hashPassword(password);
 };
-
 
 mongoose.model('User', UserSchema);

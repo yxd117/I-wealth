@@ -1,0 +1,41 @@
+<section data-ng-controller="PostsController" class="content">
+  <div class="row">
+    <div class="col-md-offset-1 col-md-10 panel panel-default">
+      <h1>New Post</h1>
+      <div class="col-md-12">
+        <form name="postForm" class="form-horizontal" data-ng-submit="createPost()" novalidate>
+          <fieldset>
+            <div class="form-group">
+              <label class="control-label" for="title">Title</label>
+              <div class="controls">
+                <input name="title" type="text" data-ng-model="title" id="title" class="form-control" placeholder="Title">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="control-label" for="content">Content</label>
+              <div class="controls">
+                <textarea name="content" data-ng-model="content" id="content" class="form-control" cols="30" rows="10" placeholder="Content"></textarea>
+              </div>
+            </div>
+            <div class="form-group form-inline">
+              <label class="control-label" for="privacy">Privacy: </label>
+              <select class="form-control" name="privacy" data-ng-model="privacy" ng-init="privacy = 'public'">
+                <option value="public" selected>Public</option>
+                <option value="friends">Friends</option>
+                <option value="private">Private</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <input type="submit" class="btn btn-primary">
+              <a class="btn btn-default" role="button" onclick="history.back()">Back</a>
+            </div>
+            <div data-ng-show="error" class="text-danger">
+              <strong data-ng-bind="error"></strong>
+            </div>
+          </fieldset>
+        </form>
+      </div>  
+    </div>  
+  </div>
+
+</section>

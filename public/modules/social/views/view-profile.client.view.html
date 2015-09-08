@@ -1,0 +1,176 @@
+<section data-ng-controller="SocialController" class="content" data-ng-init="findOne()">
+	<div class="col-md-5">
+		<div class="row">
+			<div class="col-md-12 panel panel-home panel-profile" >
+				<div>
+					<div class="row">
+						<div class="col-sm-4 col-md-4">
+							</br>
+							<img style="border:1px solid gray; max-width:100%; max-height:100%;"  id="preview" ng-src="{{imageUrl}}{{userProfile.profilePic}}" /> 	
+
+
+						</div>
+						<div class="col-sm-8 col-md-8">
+							</br>
+							<div class="row">
+									<!-- <div class="col-md-3">Name:</div> -->
+									{{userProfile.userObjectId}}
+									<div class="col-md-12"><h4>{{userProfile.firstName}} {{userProfile.lastName}} </h4></div>
+							</div>
+							<div class="row">
+									<div class="col-md-3">Joined: </div>
+									<div class="col-md-9">{{userProfile.yearJoined}}	</div>
+							</div>
+							<div class="row" ng-hide="userProfile.age === 'N/A' || !userProfile.age">
+									<div class="col-md-3">Age: </div>
+									<div class="col-md-9">{{userProfile.age}}	</div>
+							</div>
+							<div class="row" ng-hide="!userProfile.industry">
+									<div class="col-md-3">Industry: </div>
+									<div class="col-md-9">{{userProfile.industry}}</div>
+							</div>
+							<div class="row" ng-hide="!userProfile.jobPosition">
+									<div class="col-md-3">Position: </div>
+									<div class="col-md-9">{{userProfile.jobPosition}}</div>
+							</div>
+							</br>
+							<div class="row">
+								<div class="col-md-12">
+									<a class="btn btn-primary" role="button" ng-click="addFriend(user.email, user.userObjectId)" ng-show="userProfile.friendStatus === 0 && userProfile.email !== user.email">Add Friend</a>
+									<a class="btn btn-default" role="button" ng-click="" ng-show="userProfile.friendStatus === 1">Sent Friend Request</a>
+									<a class="btn btn-warning" role="button" ng-click="acceptFriend(user.email, user.userObjectId)" ng-show="userProfile.friendStatus === 2">Accept Friend Request</a>
+									<a class="btn btn-success" role="button" ng-click="" ng-show="userProfile.friendStatus === 3">Friends</a>										
+								</div>
+							</div>				
+							</br>
+						</div>						
+					</div>
+					</br>
+				</div>
+			</div>	
+		</div>
+
+		<div class="row">
+			<div class="col-md-12 panel panel-home panel-profile" >
+				<div>
+					<h4>About Me: </h4>
+					{{userProfile.description}}
+				</div>
+			</div>		
+		</div>
+
+		<div class="row">
+			<div class="col-md-12 panel panel-home panel-profile" >
+				<div>
+					<h4>Social Rank: </h4>
+					<img style="max-width:60%; max-height:60%;"  id="preview" ng-src="{{imageUrl}}{{userProfile.socialRankPic}}" />
+				</div>
+			</div>		
+		</div>
+		<!-- To verify User Friends -->
+		<div class="row">
+			<div class="col-md-12 panel panel-home panel-profile" >
+				<div class="row">
+					<div class="col-md-12">
+						Friends: {{userProfile.friendList.num}} 
+						<a data-toggle="modal" data-target="#myModal" style="color:blue;"> (View All)</a>
+
+						<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+							<div class="modal-dialog" role="document">
+								<div class="modal-content">
+									<div class="modal-header">
+										<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+										<h4 class="modal-title" id="myModalLabel">Friends</h4>
+									</div>
+									<div class="modal-body">
+										<div class="row">
+											<div class="col-md-12 scrollArea2">
+												<div ng-repeat="user in userProfile.friendList | filter: {friendStatus : 3}">
+													<div class="col-md-4" style="padding: 10px 0px;">
+														<div class="row">
+															<div class="col-md-12">
+																<img style="border:1px solid gray;width:50px; height:50px; max-width:100%; max-height:100%;"  id="preview" ng-src="{{imageUrl}}{{user.id.profilePic}}" /> 
+															</div>									
+														</div>
+														<div class="row">
+															<div class="col-md-12">
+																<a data-ui-sref="viewProfile({profileId: user.id._id})" style="color:black;" data-dismiss="modal">{{user.id.firstName}} {{user.id.lastName}}</a>
+															</div>
+														</div>
+													</div>		
+												</div>
+											</div>
+										</div>
+									</div> 
+									<div class="modal-footer">
+
+									</div>
+								</div>
+							</div>
+						</div>
+
+
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<div ng-repeat="user in userProfile.friendList | limitTo : 6 | filter: {friendStatus : 3}">
+							<div class="col-md-4" style="padding: 10px 0px;">
+								<div class="row">
+									<div class="col-md-12">
+										<img style="border:1px solid gray;width:50px; height:50px; max-width:100%; max-height:100%;"  id="preview" ng-src="{{imageUrl}}{{user.id.profilePic}}" /> 
+									</div>									
+								</div>
+								<div class="row">
+									<div class="col-md-12">
+										<a data-ui-sref="viewProfile({profileId: user.id._id})" style="color:black;">{{user.id.firstName}} {{user.id.lastName}}</a>
+									</div>
+								</div>
+							</div>		
+						</div>
+					</div>
+				</div>
+			</div>		
+		</div>
+	</div>
+
+	<div class="col-md-7">
+		<h4>Posts</h4>
+		<i ng-if="userProfile.posts.length === 0">No Posts found</i>
+	  	<div class="list-group scrollArea" data-ng-init="findProfilePosts()">
+		    <a data-ng-repeat="post in posts" data-ui-sref="postView({postId: post._id})" class="list-group-item" style="padding-bottom:0px;">
+		      <div class="row">
+		        <div class="col-md-12" >
+		          <div class="inline">
+		            <img style="border:1px solid gray;width:50px; height:50px; max-width:100%; max-height:100%;"  id="preview" ng-src="{{imageUrl}}{{post.user.profilePic}}" />              
+		          </div>
+		          <div class="inline">
+		            <medium>
+		              <b><span data-ng-bind="post.user.firstName"></span></b>
+		              <b><span data-ng-bind="post.user.lastName"></span></b>
+		            </medium> </br>    
+		            <small class="list-group-item-text">
+		              Posted on
+		              <i><span data-ng-bind="post.created | date:'short'"></span></i>    
+		              <span data-ng-if="post.privacy === 'public'">(Public)</span> 
+		              <span data-ng-if="post.privacy === 'friends'">(Friends Only)</span> 
+		              <span data-ng-if="post.privacy === 'private'">(Private)</span>   
+		            </small>            
+		          </div>              
+		        </div>
+		      </div>
+		      <div class="row">
+		        <div class="col-md-12">
+		          <h4 class="list-group-item-heading" data-ng-bind="post.title"></h4>
+		          <p class="list-group-item-text" data-ng-bind="post.content"></p>           
+		        </div>
+		      </div>
+		      <div class="row" style="margin-top:5px; margin-bottom:0px; background-color:#f6f6f6;">
+		        <div class="col-md-12" style="margin-top:5px;">
+		          <p>Comments (<span data-ng-bind="post.comments.length"></span>)</p>
+		        </div>  
+		      </div>
+		    </a>
+	  	</div>
+	</div>
+</section>

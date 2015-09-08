@@ -89,9 +89,21 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
 		// 	url: '/social/managefriends',
 		// 	templateUrl: 'modules/social/views/manage-friends.client.view.html'
 		// }).
-		state('forum',{
-			url: '/social',
-			templateUrl: 'modules/social/views/social.client.view.html'
+		state('manageBudget', {
+			url: '/budget',
+			templateUrl: 'modules/financial/views/manage-budget.client.view.html'
+		 }).
+		state('socialPost',{
+			url: '/social/posts',
+			templateUrl: 'modules/social/views/socialpost.client.view.html'
+		}).
+		state('socialFriends',{
+			url: '/social/friends',
+			templateUrl: 'modules/social/views/socialfriends.client.view.html'
+		}).
+		state('socialUsers',{
+			url: '/social/users',
+			templateUrl: 'modules/social/views/socialusers.client.view.html'
 		});
 
 	}

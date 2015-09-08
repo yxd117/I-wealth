@@ -1,0 +1,23 @@
+<section data-ng-controller="SocialController" data-ng-init="findAll()">
+	<div class="row">
+		<div class="col-md-12">
+			<h4>Users</h4>
+			<label>Search: <input ng-model="searchText"></label>
+		</div>
+		<div ng-repeat="user in userList | filter:searchText">
+			<div class="col-md-4" style="padding: 10px 0px;">
+				<div class="col-md-5">
+					<img style="border:1px solid gray;width:100px; height:100px;"  id="preview" ng-src="{{imageUrl}}{{user.profilePic}}" /> 
+				</div>
+				<div class="col-md-7">
+					{{user.firstName}} {{user.lastName}}</br>
+ 					<a data-ui-sref="viewProfile({profileId: user.userObjectId})">{{user.email}} </a></br>
+					<a class="btn btn-primary" role="button" ng-click="addFriend(user.email, user.userObjectId)" ng-show="user.friendStatus === 0">Add Friend</a>
+					<a class="btn btn-default" role="button" ng-click="" ng-show="user.friendStatus === 1">Sent Friend Request</a>
+					<a class="btn btn-warning" role="button" ng-click="acceptFriend(user.email, user.userObjectId)" ng-show="user.friendStatus === 2">Accept Friend Request</a>
+					<a class="btn btn-success" role="button" ng-click="" ng-show="user.friendStatus === 3">Friends</a>
+				</div>
+			</div>		
+		</div>
+	</div>
+</section>

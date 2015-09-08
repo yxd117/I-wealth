@@ -5,7 +5,7 @@ angular.module('users').factory('QuestionnaireService', ['$resource', function($
 	var qnsPersonal = [
 		{
 			qnID: 'gender',
-			qnModel: 'user.sGender', // TO update 
+			qnModel: 'user.creditProfileScore.sGender', // TO update 
 			content: 'What is your Gender?',
 			options: ['Male', 'Female'],
 			rating: {
@@ -15,7 +15,7 @@ angular.module('users').factory('QuestionnaireService', ['$resource', function($
 		},
 		{
 			qnID: 'age',
-			qnModel: 'user.sAge',
+			qnModel: 'user.creditProfileScore.sAge',
 			content: 'What is your Age?',
 			options: ['Between 20 and 30 years', 'Between 30 and 40 years', 'Between 40 and 50 years', 'Between 50 and 60 years', 'Above 60 years'],
 			rating: {
@@ -29,7 +29,7 @@ angular.module('users').factory('QuestionnaireService', ['$resource', function($
 		},
 		{
 			qnID: 'educationLevel',
-			qnModel: 'user.sEducationLevel', // To Update
+			qnModel: 'user.creditProfileScore.sEducationLevel', // To Update
 			content: 'What is your Highest Education Level?',
 			options: ['PhD', 'Masters', 'Graduate', 'Undergraduate', 'A/O/N Levels', 'PSLE & Below'],
 			rating: {
@@ -44,7 +44,7 @@ angular.module('users').factory('QuestionnaireService', ['$resource', function($
 		},
 		{
 			qnID: 'maritalStatus',
-			qnModel: 'user.sMaritalStatus', //To Update
+			qnModel: 'user.creditProfileScore.sMaritalStatus', //To Update
 			content: 'What is your Marital Status?',
 			options: ['Married', 'Single/Divorced/Widowed'],
 			rating: {
@@ -55,7 +55,7 @@ angular.module('users').factory('QuestionnaireService', ['$resource', function($
 		},
 		{
 			qnID: 'locativeType',
-			qnModel: 'user.sLocativeType',
+			qnModel: 'user.creditProfileScore.sLocativeType',
 			content: 'What is your highest value housing that you currently own?',
 			options: ['Landed Property', 'Condo/Private Apartments', 'HDB Executive Flats/ HUDC Flats/ Studio Apartments', 'HDB (Others)', 'Shop houses/ other housing units', 'N/A'],
 			rating: {
@@ -70,7 +70,7 @@ angular.module('users').factory('QuestionnaireService', ['$resource', function($
 		},
 		{
 			qnID: 'locativeSituation',
-			qnModel: 'user.sLocativeSituation',
+			qnModel: 'user.creditProfileScore.sLocativeSituation',
 			content: 'What is your current ownership status?',
 			options: ['Own house', 'Personal apartment', 'Parents apartment', 'Rent'],
 			rating: {
@@ -83,7 +83,7 @@ angular.module('users').factory('QuestionnaireService', ['$resource', function($
 		},
 		{
 			qnID: 'noOfDependents',
-			qnModel: 'user.sNoOfDependents', //To Update
+			qnModel: 'user.creditProfileScore.sNoOfDependents', //To Update
 			content: 'How many Dependents do you have?',
 			options: ['0 person', '1 person', '2 persons', '3 or more persons'],
 			rating: {
@@ -99,7 +99,7 @@ angular.module('users').factory('QuestionnaireService', ['$resource', function($
 	var qnsJob = [
 		{
 			qnID: 'currentOccupation',
-			qnModel: 'user.sCurrentOccupation', //To Update
+			qnModel: 'user.creditProfileScore.sCurrentOccupation', //To Update
 			content: 'What is your current occupation?',
 			options: ['Salaried Employee', 'Businessman/Self-employed', 'Student', 'Unemployed'],
 			rating: {
@@ -111,7 +111,7 @@ angular.module('users').factory('QuestionnaireService', ['$resource', function($
 		},
 		{
 			qnID: 'currentWorkPeriod',
-			qnModel: 'user.sCurrentWorkPeriod', 
+			qnModel: 'user.creditProfileScore.sCurrentWorkPeriod', 
 			content: 'How long have you been with your current employer?',
 			options: ['Greater than 5 years', 'Between 2 and 5 years', 'Between 1 and 2 years', 'Retired', 'NA'],
 			rating: {
@@ -125,7 +125,7 @@ angular.module('users').factory('QuestionnaireService', ['$resource', function($
 		},
 		{
 			qnID: 'lastWorkPeriod',
-			qnModel: 'user.sLastWorkPeriod',
+			qnModel: 'user.creditProfileScore.sLastWorkPeriod',
 			content: 'How long have you been with your previous employer?',
 			options: ['Greater than 5 years', 'Between 2 and 5 years', 'Between 1 and 2 years', 'Retired', 'NA'],
 			rating: {
@@ -142,7 +142,7 @@ angular.module('users').factory('QuestionnaireService', ['$resource', function($
 	var qnsFinance = [
 		{
 			qnID: 'monthlyIncome',
-			qnModel: 'user.sMonthlyIncome',
+			qnModel: 'user.creditProfileScore.sMonthlyIncome',
 			content: 'What is your average monthly Net Income?',
 			options: ['Above $10,000', 'Between $8,000 and $10,000', 'Between $6,000 and $8,000', 'Between $4,000 and $6,000', 'Between $1,000 and $4,000', 'Less than $1,000', 'NA'],
 			rating: {
@@ -157,7 +157,7 @@ angular.module('users').factory('QuestionnaireService', ['$resource', function($
 		},
 		{
 			qnID: 'monthlyExpense',
-			qnModel: 'user.sMonthlyExpense',
+			qnModel: 'user.creditProfileScore.sMonthlyExpense',
 			content: 'What is your average monthly expenditure?',
 			options: ['Above $10,000', 'Between $8,000 and $10,000', 'Between $6,000 and $8,000', 'Between $4,000 and $6,000', 'Between $1,000 and $4,000', 'Less than $1,000', 'NA'],
 			rating: {
@@ -173,7 +173,7 @@ angular.module('users').factory('QuestionnaireService', ['$resource', function($
 		},
 		{
 			qnID: 'monthlySavings',
-			qnModel: 'user.sMonthlySavings',
+			qnModel: 'user.creditProfileScore.sMonthlySavings',
 			content: 'What is your average monthly savings?',
 			options: ['Above $10,000', 'Between $8,000 and $10,000', 'Between $6,000 and $8,000', 'Between $4,000 and $6,000', 'Between $1,000 and $4,000', 'Less than $1,000', 'NA'],
 			rating: {
@@ -189,7 +189,7 @@ angular.module('users').factory('QuestionnaireService', ['$resource', function($
 		},
 		{
 			qnID: 'creditHistory',
-			qnModel: 'user.sCreditHistory',
+			qnModel: 'user.creditProfileScore.sCreditHistory',
 			content: 'Have you had any history of credit default?',
 			options: ['90 days default', '60 days default', '30 days default', 'NA'],
 			rating: {
@@ -202,7 +202,7 @@ angular.module('users').factory('QuestionnaireService', ['$resource', function($
 		},
 		{
 			qnID: 'bankruptStatus',
-			qnModel: 'user.sBankruptStatus',
+			qnModel: 'user.creditProfileScore.sBankruptStatus',
 			content: 'Have you been bankrupt in the last 6 years?',
 			options: ['Yes', 'No'],
 			rating: {
@@ -213,7 +213,7 @@ angular.module('users').factory('QuestionnaireService', ['$resource', function($
 		},
 		{
 			qnID: 'numberOfCreditCards',
-			qnModel: 'user.sNumberOfCreditCards',
+			qnModel: 'user.creditProfileScore.sNumberOfCreditCards',
 			content: 'How many credit cards do you own?',
 			options: ['5 or more', '3 - 4', '2', '1', '0'],
 			rating: {
@@ -227,15 +227,29 @@ angular.module('users').factory('QuestionnaireService', ['$resource', function($
 		}
 	];
 
+	var creditProfileScore = {
+		sGender: 0,
+		sAge: 0,
+		sEducationLevel: 0,
+		sMaritalStatus: 0,
+		sLocativeType: 0,
+		sLocativeSituation: 0,
+		sNoOfDependents: 0,
+		sCurrentOccupation: 0,
+		sCurrentWorkPeriod: 0,
+		sLastWorkPeriod: 0,
+		sMonthlyIncome: 0,
+		sMonthlyExpense: 0,
+		sMonthlySavings: 0,
+		sCreditHistory: 0,
+		sBankruptStatus: 0,
+		sNumberOfCreditCards: 0
+	};
+
 	return {
-		qnsPersonal: function(){
-			return qnsPersonal;
-		},
-		qnsJob: function(){
-			return qnsJob;
-		},
-		qnsFinance: function(){
-			return qnsFinance;
-		}
+		qnsPersonal: qnsPersonal,
+		qnsJob: qnsJob,
+		qnsFinance: qnsFinance,
+		creditProfileScore: creditProfileScore
 	};
 }]);
