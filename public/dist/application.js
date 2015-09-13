@@ -73,8 +73,8 @@ ApplicationConfiguration.registerModule('social');
 ApplicationConfiguration.registerModule('users');
 'use strict';
 
-angular.module('admin').controller('AdminController', ['$scope', '$http', '$location', 'Authentication',
-	function($scope, $http, $location, Authentication) {
+angular.module('admin').controller('AdminController', ['$scope', '$http', '$location', 'Authentication', '$window',
+	function($scope, $http, $location, Authentication, $window) {
 		$scope.user = Authentication.user;
 
 		// If user is signed in then redirect back home
@@ -87,6 +87,9 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', '$loca
 		}
 		
 
+		$scope.goToDB =function(){
+            $window.open('https://mongolab.com/databases/fyphexa');
+		};
 
 	}
 ]);
@@ -625,7 +628,6 @@ angular.module('financial').controller('AssetsController', ['$scope', '$rootScop
                 var user = new Users($scope.user);
                 user.$update(function(response) {
                     $scope.success = true;
-
                     Authentication.user = response;
                     $scope.user = Authentication.user;  
 
@@ -641,25 +643,31 @@ angular.module('financial').controller('AssetsController', ['$scope', '$rootScop
         //--DATE Selected
         var current = function() {
             $scope.dt = new Date();
+            $scope.month = $scope.dt.getMonth();
+            $scope.year = Number($scope.dt.getFullYear());
+            $scope.monthDisplay = $scope.selectedMonth;
+            console.log($scope.month);
+            console.log($scope.year);
         };
 
         current();
-        var mth = [];
-        mth[0] = 'January';
-        mth[1] = 'February';
-        mth[2] = 'March';
-        mth[3] = 'April';
-        mth[4] = 'May';
-        mth[5] = 'June';
-        mth[6] = 'July';
-        mth[7] = 'August';
-        mth[8] = 'September';
-        mth[9] = 'October';
-        mth[10] = 'November';
-        mth[11] = 'December';
+        $scope.monthArr = [
+            'January',
+            'February',
+            'March',
+            'April',
+            'May',
+            'June',
+            'July',
+            'August',
+            'September',
+            'October',
+            'November',
+            'December'
+            ];
     
         var reloadData = function(){
-            if (!$scope.user.assetsRecordsPeriod || ($scope.user.assetsRecordsPeriod.minMonth > $scope.month && $scope.user.assetsRecordsPeriod.minYear >= $scope.year) || ($scope.user.assetsRecordsPeriod.minMonth < $scope.month && $scope.user.assetsRecordsPeriod.minYear > $scope.year)) {
+            if (!$scope.user.assetsRecordsPeriod || ($scope.user.assetsRecordsPeriod.minMonth > $scope.month && $scope.user.assetsRecordsPeriod.minYear >= $scope.year) || ( $scope.user.assetsRecordsPeriod.minYear > $scope.year)) {
 
                 $scope.displayAssetsRecords = angular.copy(AssetsService.assetsRecords);
                 $scope.displayAssetsRecords.year = angular.copy($scope.year);
@@ -724,53 +732,46 @@ angular.module('financial').controller('AssetsController', ['$scope', '$rootScop
             }
         };
 
-        $scope.$watch('dt', function() {
-            $scope.month = $scope.dt.getMonth();
-            $scope.monthDisplay = mth[$scope.month];
-            $scope.year = $scope.dt.getFullYear();
+
+
+        var retrieveRecord = function() {
+            $scope.month = $scope.monthArr.indexOf($scope.selectedMonth);
+            $scope.monthDisplay = $scope.selectedMonth;
+            $scope.year = $scope.selectedYear;
 
             if ($scope.success || $scope.error) {
                 $scope.success = false;
                 $scope.error = false;
             }
 
-            console.log($scope.user.assetsRecords);
-
             $scope.$watch('user', function() {
                 reloadData();
             });
+        };
+
+        $scope.$watch('selectedMonth', function(){
+            retrieveRecord();
+        });
+        $scope.$watch('selectedYear', function(){
+            retrieveRecord();
         });
 
         $scope.$watch('user', function(){
-            $scope.$watch('dt', function() {
-                $scope.month = $scope.dt.getMonth();
-                $scope.monthDisplay = mth[$scope.month];
-                $scope.year = $scope.dt.getFullYear();
+            $scope.month = $scope.monthArr.indexOf($scope.selectedMonth);
+            $scope.monthDisplay = $scope.selectedMonth;
+            $scope.year = $scope.selectedYear;
 
-                if ($scope.success || $scope.error) {
-                    $scope.success = false;
-                    $scope.error = false;
-                }
+            console.log($scope.user.assetsRecords);
 
-                console.log($scope.user.assetsRecords);
-
-                    reloadData();
-            });
+            reloadData();
         });
-        $scope.clear = function() {
-            $scope.dt = null;
-        };
 
-
-        $scope.open = function($event) {
-            $scope.opened = true;
+        $scope.clearSuccessMessage = function(){
+            if ($scope.success || $scope.error) {
+                $scope.success = false;
+                $scope.error = false;
+            }
         };
-
-        $scope.dateOptions = {
-            formatYear: 'yyyy',
-            startingDay: 1
-        };
-        //--DATE Selected
 
     }
 ]);
@@ -1736,9 +1737,6 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
 
 
         $scope.displayHome = {};
-
-        var numHealthyRatio = 0;
-        var numUnHealthyRatio = 0;
         $scope.homeHealth = [{
             value: 100,
             type: 'info'
@@ -1761,8 +1759,11 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
         $scope.displayOverview.ratioInvestment = 'N/A';
 
         //Set Checkbox Ratio
-        $scope.checkRatio = {};
-        $scope.checkRatio.liquidity =true;
+
+        $scope.check = {
+            ratio: 'liquidity'
+        };
+        // $scope.checkRatio.liquidity =true;
 
         //Set Checkbox Overview
         $scope.checkTotal = {};
@@ -1785,25 +1786,36 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
         $scope.oneAtATime = false;
 
         //--DATE Selected
+        
         var current = function() {
             $scope.dt = new Date();
+            $scope.month = $scope.dt.getMonth();
+            $scope.year = Number($scope.dt.getFullYear());
+            $scope.monthDisplay = $scope.selectedMonth;
+            console.log($scope.month);
+            console.log($scope.year);
+
+            $scope.selectedMonth = $scope.month;
+            $scope.selectedYear = $scope.year;
         };
 
-        current();
-        var mth = [];
-        mth[0] = 'January';
-        mth[1] = 'February';
-        mth[2] = 'March';
-        mth[3] = 'April';
-        mth[4] = 'May';
-        mth[5] = 'June';
-        mth[6] = 'July';
-        mth[7] = 'August';
-        mth[8] = 'September';
-        mth[9] = 'October';
-        mth[10] = 'November';
-        mth[11] = 'December';
 
+        current();
+
+        $scope.monthArr = [
+            'January',
+            'February',
+            'March',
+            'April',
+            'May',
+            'June',
+            'July',
+            'August',
+            'September',
+            'October',
+            'November',
+            'December'
+            ];
         //Charts Variables display time period
         $scope.selectedChartOption = '0';
 
@@ -1821,13 +1833,47 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
         var ratioSolvencyArr = [];
         var ratioInvestmentArr = [];
 
+        var ratioIdealLiquidityMinArr = [];
+        var ratioIdealLiquidityMaxArr = [];
+
+        var ratioIdealAssetDebtMinArr = [];
+        var ratioIdealAssetDebtMaxArr = [];
+
+        var ratioIdealDebtServiceMinArr = [];
+        var ratioIdealDebtServiceMaxArr = [];
+
+        var ratioIdealHouseExpenseMinArr = [];
+        var ratioIdealHouseExpenseMaxArr = [];
+
+        var ratioIdealDebtIncomeMinArr = [];
+        var ratioIdealDebtIncomeMaxArr = [];
+
+        var ratioIdealConsumerDebtMinArr = [];
+        var ratioIdealConsumerDebtMaxArr = [];
+
+        var ratioIdealNetWorthBenchmarkMinArr = [];
+        
+        var ratioIdealSavingMinArr = [];
+        var ratioIdealSavingMaxArr = [];
+
+        var ratioIdealSolvencyMinArr = [];
+
+        var ratioIdealInvestmentMinArr = [];
+
         //Change to reflect date change
+        $scope.$watch('selectedMonth', function(){
+            retrieveLatestRecords();
 
-        $scope.$watch('dt', function() {
+        });
+        $scope.$watch('selectedYear', function(){
+            retrieveLatestRecords();
+        });
 
-            $scope.month = $scope.dt.getMonth();
-            $scope.monthDisplay = mth[$scope.month];
-            $scope.year = $scope.dt.getFullYear();
+        var retrieveLatestRecords = function(){
+
+            $scope.month = $scope.monthArr.indexOf($scope.selectedMonth);
+            $scope.monthDisplay = $scope.selectedMonth;
+            $scope.year = $scope.selectedYear;
 
             //Run Function to retrieve latest records
             $scope.displayAssetsRecords = retrieveAssetsRecord($scope.month, $scope.year);
@@ -1844,62 +1890,26 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
             $scope.$watch('selectedChartOption', function() {
                 updateChart();
             });
-        });
+        };
+        
+        $scope.r = function(){
+            retrieveLatestRecords();
+        };
         //Change time period of chart
         $scope.$watch('selectedChartOption', function() {
-
             updateChart();
         });
 
         //For Financial Health Page checkboxes
-        $scope.$watch('checkRatio.liquidity', function() {
-
-            updateChart();
-        });
-        $scope.$watch('checkRatio.assetDebt', function() {
-
-            updateChart();
-        });
-        $scope.$watch('checkRatio.debtService', function() {
-
-            updateChart();
-        });
-        $scope.$watch('checkRatio.houseExpense', function() {
-
-            updateChart();
-        });
-        $scope.$watch('checkRatio.debtIncome', function() {
-
-            updateChart();
-        });
-        $scope.$watch('checkRatio.consumerDebt', function() {
-
-            updateChart();
-        });
-        $scope.$watch('checkRatio.netWorthBenchmark', function() {
-
-            updateChart();
-        });
-        $scope.$watch('checkRatio.saving', function() {
-
-            updateChart();
-        });
-        $scope.$watch('checkRatio.solvency', function() {
-
-            updateChart();
-        });
-        $scope.$watch('checkRatio.investment', function() {
-            
+        $scope.$watch('check.ratio', function() {
             updateChart();
         });
 
         //For Overview Page Checkboxes
         $scope.$watch('checkTotal.assets', function() {
-
             updateChart();
         });
         $scope.$watch('checkTotal.liabilities', function() {
-
             updateChart();
         });
         $scope.$watch('checkTotal.netGrossIncome', function() {
@@ -1911,6 +1921,7 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
         $scope.$watch('checkTotal.monthlyExpense', function() {
             updateChart();
         });
+
         var updateChart = function(){
             var ratioMthArr =[];
             var ratioMthNum;
@@ -1931,7 +1942,7 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
             if($scope.selectedChartOption === '0'){
                 ratioMthNum = 2;
                 for(ratioMthNum; ratioMthNum >=0; ratioMthNum--){
-                    ratioMthArr[ratioMthNum] = mth[ratioMth];
+                    ratioMthArr[ratioMthNum] = $scope.monthArr[ratioMth];
                     aRecords = retrieveAssetsRecord(ratioMth, ratioYear);
                     lRecords = retrieveLiabilitiesRecords(ratioMth, ratioYear);
                     ieRecords = retrieveIncomeExpenseRecords(ratioMth, ratioYear);
@@ -1977,7 +1988,7 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
             }else if($scope.selectedChartOption === '1'){
                 ratioMthNum = 5;
                 for(ratioMthNum; ratioMthNum >=0; ratioMthNum--){
-                    ratioMthArr[ratioMthNum] = mth[ratioMth];
+                    ratioMthArr[ratioMthNum] = $scope.monthArr[ratioMth];
                     aRecords = retrieveAssetsRecord(ratioMth, ratioYear);
                     lRecords = retrieveLiabilitiesRecords(ratioMth, ratioYear);
                     ieRecords = retrieveIncomeExpenseRecords(ratioMth, ratioYear);
@@ -2022,7 +2033,7 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
             }else if($scope.selectedChartOption === '2'){
                 ratioMthNum = 11;
                 for(ratioMthNum; ratioMthNum >=0; ratioMthNum--){
-                    ratioMthArr[ratioMthNum] = mth[ratioMth];
+                    ratioMthArr[ratioMthNum] = $scope.monthArr[ratioMth];
                     aRecords = retrieveAssetsRecord(ratioMth, ratioYear);
                     lRecords = retrieveLiabilitiesRecords(ratioMth, ratioYear);
                     ieRecords = retrieveIncomeExpenseRecords(ratioMth, ratioYear);
@@ -2070,53 +2081,45 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
             $scope.series = [];
             $scope.data = [];    
 
-            if($scope.checkRatio.liquidity){
-                $scope.series.push('Liquidity');
-                $scope.data.push(ratioLiquidityArr);
+            if($scope.check.ratio === 'liquidity'){
+                $scope.series.push('Min Ideal Ratio', 'Max Ideal Ratio', 'Liquidity Ratio');
+                $scope.data.push(ratioIdealLiquidityMinArr, ratioIdealLiquidityMaxArr, ratioLiquidityArr);
             }
-            if($scope.checkRatio.assetDebt){
-                $scope.series.push('Asset to Debt');
-                $scope.data.push(ratioAssetDebtArr);
+            if($scope.check.ratio === 'assetDebt'){
+                $scope.series.push('Min Ideal Ratio', 'Max Ideal Ratio','Asset to Debt Ratio');
+                $scope.data.push(ratioIdealAssetDebtMinArr, ratioIdealAssetDebtMaxArr,ratioAssetDebtArr);
             }
-            if($scope.checkRatio.debtService){
-                $scope.series.push('Debt Service');
-                $scope.data.push(ratioDebtServiceArr);
+            if($scope.check.ratio === 'debtService'){
+                $scope.series.push('Min Ideal Ratio', 'Max Ideal Ratio','Debt Service Ratio');
+                $scope.data.push(ratioIdealDebtServiceMinArr, ratioIdealDebtServiceMaxArr,ratioDebtServiceArr);
             }
-            if($scope.checkRatio.houseExpense){
-                $scope.series.push('Housing Expense');
-                $scope.data.push(ratioHouseExpenseArr);
+            if($scope.check.ratio === 'houseExpense'){
+                $scope.series.push('Min Ideal Ratio', 'Max Ideal Ratio','Housing Expense Ratio');
+                $scope.data.push(ratioIdealHouseExpenseMinArr, ratioIdealHouseExpenseMaxArr,ratioHouseExpenseArr);
             }
-            if($scope.checkRatio.debtIncome){
-                $scope.series.push('Debt to Income');
-                $scope.data.push(ratioDebtIncomeArr);
+            if($scope.check.ratio === 'debtIncome'){
+                $scope.series.push('Min Ideal Ratio', 'Max Ideal Ratio','Debt to Income Ratio');
+                $scope.data.push(ratioIdealDebtIncomeMinArr, ratioIdealDebtIncomeMaxArr,ratioDebtIncomeArr);
             }
-            if($scope.checkRatio.consumerDebt){
-                $scope.series.push('Consumer Debt');
-                $scope.data.push(ratioConsumerDebtArr);
+            if($scope.check.ratio === 'consumerDebt'){
+                $scope.series.push('Min Ideal Ratio', 'Max Ideal Ratio','Consumer Debt Ratio');
+                $scope.data.push(ratioIdealConsumerDebtMinArr, ratioIdealConsumerDebtMaxArr,ratioConsumerDebtArr);
             }
-            if($scope.checkRatio.loanValue){
-                $scope.series.push('Loan to Value');
-                $scope.data.push(ratioLoanValueArr);
+            if($scope.check.ratio === 'netWorthBenchmark'){
+                $scope.series.push('Min Ideal Ratio', 'Net Worth Benchmark');
+                $scope.data.push(ratioIdealNetWorthBenchmarkMinArr, ratioNetWorthBenchmarkArr);
             }
-            if($scope.checkRatio.tangibleNetWorth){
-                $scope.series.push('Tangible Net Worth');
-                $scope.data.push(ratioTangibleNetWorthArr);
+            if($scope.check.ratio === 'saving'){
+                $scope.series.push('Min Ideal Ratio', 'Max Ideal Ratio','Saving Ratio');
+                $scope.data.push(ratioIdealSavingMinArr, ratioIdealSavingMaxArr,ratioSavingArr);
             }
-            if($scope.checkRatio.netWorthBenchmark){
-                $scope.series.push('Net Worth Benchmark');
-                $scope.data.push(ratioNetWorthBenchmarkArr);
+            if($scope.check.ratio === 'solvency'){
+                $scope.series.push('Min Ideal Ratio','Solvency Ratio');
+                $scope.data.push(ratioIdealSolvencyMinArr, ratioSolvencyArr);
             }
-            if($scope.checkRatio.saving){
-                $scope.series.push('Saving');
-                $scope.data.push(ratioSavingArr);
-            }
-            if($scope.checkRatio.solvency){
-                $scope.series.push('Solvency');
-                $scope.data.push(ratioSolvencyArr);
-            }
-            if($scope.checkRatio.investment){
-                $scope.series.push('Investment');
-                $scope.data.push(ratioInvestmentArr);
+            if($scope.check.ratio === 'investment'){
+                $scope.series.push('Min Ideal Ratio', 'Investment Ratio');
+                $scope.data.push(ratioIdealInvestmentMinArr,ratioInvestmentArr);
             }
 
 
@@ -2146,25 +2149,10 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
                 $scope.dataOverview.push(ieRecordsTotalAmtArr);
             }
         };
-
-
-        $scope.clear = function() {
-            $scope.dt = null;
-        };
-
-
-        $scope.open = function($event) {
-            $scope.opened = true;
-        };
-
-        $scope.dateOptions = {
-            formatYear: 'yyyy',
-            startingDay: 1
-        };
         
         var retrieveAssetsRecord = function(month, year){
             var displayAssetsRecords;
-            if (!$scope.user.assetsRecordsPeriod || ($scope.user.assetsRecordsPeriod.minMonth > month && $scope.user.assetsRecordsPeriod.minYear >= year) || ($scope.user.assetsRecordsPeriod.minMonth < month && $scope.user.assetsRecordsPeriod.minYear > year)) {
+            if (!$scope.user.assetsRecordsPeriod || ($scope.user.assetsRecordsPeriod.minMonth > month && $scope.user.assetsRecordsPeriod.minYear >= year) || ( $scope.user.assetsRecordsPeriod.minYear > year)) {
 
                     displayAssetsRecords = AssetsService.assetsRecords;
                     displayAssetsRecords.year = angular.copy(year);
@@ -2224,7 +2212,7 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
 
         var retrieveLiabilitiesRecords = function(month, year){
             var displayLiabilitiesRecords; 
-            if (!$scope.user.liabilitiesRecordsPeriod || ($scope.user.liabilitiesRecordsPeriod.minMonth > month && $scope.user.liabilitiesRecordsPeriod.minYear >= year) || ($scope.user.liabilitiesRecordsPeriod.minMonth < month && $scope.user.liabilitiesRecordsPeriod.minYear > year)) {
+            if (!$scope.user.liabilitiesRecordsPeriod || ($scope.user.liabilitiesRecordsPeriod.minMonth > month && $scope.user.liabilitiesRecordsPeriod.minYear >= year) || ( $scope.user.liabilitiesRecordsPeriod.minYear > year)) {
 
                 displayLiabilitiesRecords = LiabilitiesService.liabilitiesRecords;
                 displayLiabilitiesRecords.year = angular.copy(year);
@@ -2282,7 +2270,7 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
 
         var retrieveIncomeExpenseRecords = function(month, year){
             var displayIncomeExpenseRecords;
-            if (!$scope.user.incomeExpenseRecordsPeriod || ($scope.user.incomeExpenseRecordsPeriod.minMonth > month && $scope.user.incomeExpenseRecordsPeriod.minYear >= year) || ($scope.user.incomeExpenseRecordsPeriod.minMonth < month && $scope.user.incomeExpenseRecordsPeriod.minYear > year)) {
+            if (!$scope.user.incomeExpenseRecordsPeriod || ($scope.user.incomeExpenseRecordsPeriod.minMonth > month && $scope.user.incomeExpenseRecordsPeriod.minYear >= year) || ($scope.user.incomeExpenseRecordsPeriod.minYear > year)) {
 
                 displayIncomeExpenseRecords = IncomeExpenseService.incomeExpenseRecords;
                 displayIncomeExpenseRecords.year = angular.copy(year);
@@ -2356,6 +2344,10 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
             var rentalRepaymentsValue;
             var carLoanRepaymentValue;
             var otherLoanRepaymentsValue;
+
+            var numHealthyRatio = 0;
+            var numUnHealthyRatio = 0;
+
             try {
                 mortgageRepaymentsValue = $scope.displayIncomeExpenseRecords.monthlyExpense.fixedExpense.mortgageRepayments.value;
             }catch (e){
@@ -2473,17 +2465,21 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
                     $scope.displayAnalysis.liquidity = $scope.analysisRatio.analysisLiquidity.unhealthy[0];
                     numUnHealthyRatio++;
                     $scope.homeUnHealthyRatioArr.push('Liquidity Ratio');
+                    $scope.liquidityHealth = 2;
                 }else if ($scope.displayOverview.ratioLiquidity >=3 && $scope.displayOverview.ratioLiquidity < 6){
                     $scope.displayAnalysis.liquidity = $scope.analysisRatio.analysisLiquidity.healthy[0];
                     numHealthyRatio++;
                     $scope.homeHealthyRatioArr.push('Liquidity Ratio');
+                    $scope.liquidityHealth = 1;
                 }else if ($scope.displayOverview.ratioLiquidity >=6){
                     $scope.displayAnalysis.liquidity = $scope.analysisRatio.analysisLiquidity.healthy[1];
                     numHealthyRatio++;
                     $scope.homeHealthyRatioArr.push('Liquidity Ratio');
+                    $scope.liquidityHealth = 1;
                 }
             }else{
                 $scope.displayAnalysis.liquidity = 'Unable to generate ratio due to missing inputs';
+                $scope.liquidityHealth = 0;
             }
             //2)
             if($scope.displayOverview.ratioAssetDebt !== 'N/A'){
@@ -2491,17 +2487,21 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
                     $scope.displayAnalysis.assetDebt = $scope.analysisRatio.analysisAssetDebt.healthy[0];
                     numHealthyRatio++;
                     $scope.homeHealthyRatioArr.push('Asset to Debt Ratio');
+                    $scope.assetDebtHealth = 1;
                 }else if($scope.displayOverview.ratioAssetDebt >=0.4 && $scope.displayOverview.ratioAssetDebt < 0.6){
                     $scope.displayAnalysis.assetDebt = $scope.analysisRatio.analysisAssetDebt.healthy[1];
                     numHealthyRatio++;
                     $scope.homeHealthyRatioArr.push('Asset to Debt Ratio');
+                    $scope.assetDebtHealth = 1;
                 }else if($scope.displayOverview.ratioAssetDebt >=0.6){
                     $scope.displayAnalysis.assetDebt = $scope.analysisRatio.analysisAssetDebt.unhealthy[0];
                     numUnHealthyRatio++;
                     $scope.homeUnHealthyRatioArr.push('Asset to Debt Ratio');
+                    $scope.assetDebtHealth = 2;
                 }
             }else{
                 $scope.displayAnalysis.assetDebt = 'Unable to generate ratio due to missing inputs';
+                $scope.assetDebtHealth = 0;
             }
             //3)
             if($scope.displayOverview.ratioDebtService !== 'N/A'){
@@ -2509,13 +2509,16 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
                     $scope.displayAnalysis.debtService = $scope.analysisRatio.analysisDebtService.healthy[0];
                     numHealthyRatio++;
                     $scope.homeHealthyRatioArr.push('Debt Service Ratio');
+                    $scope.debtServiceHealth = 1;
                 }else if($scope.displayOverview.ratioDebtService > 0.36){
                     $scope.displayAnalysis.debtService = $scope.analysisRatio.analysisDebtService.unhealthy[0];
                     numUnHealthyRatio++;
                     $scope.homeUnHealthyRatioArr.push('Debt Service Ratio');
+                    $scope.debtServiceHealth = 2;
                 }
             }else{
                 $scope.displayAnalysis.debtService = 'Unable to generate ratio due to missing inputs';
+                $scope.debtServiceHealth = 0;
             }
             //4)
             if($scope.displayOverview.ratioHouseExpense !== 'N/A'){
@@ -2523,13 +2526,16 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
                     $scope.displayAnalysis.houseExpense = $scope.analysisRatio.analysisHouseExpense.healthy[0];
                     numHealthyRatio++;
                     $scope.homeHealthyRatioArr.push('Housing Expense Ratio');
+                    $scope.houseExpenseHealth = 1;
                 }else if($scope.displayOverview.ratioHouseExpense > 0.28){
                     $scope.displayAnalysis.houseExpense = $scope.analysisRatio.analysisHouseExpense.unhealthy[0];
                     numUnHealthyRatio++;
                     $scope.homeUnHealthyRatioArr.push('Housing Expense Ratio');
+                    $scope.houseExpenseHealth = 2;
                 }
             }else{
                 $scope.displayAnalysis.houseExpense = 'Unable to generate ratio due to missing inputs';
+                $scope.houseExpenseHealth = 0;
             }
             //5)
             if($scope.displayOverview.ratioDebtIncome !== 'N/A'){
@@ -2537,13 +2543,16 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
                     $scope.displayAnalysis.debtIncome = $scope.analysisRatio.analysisDebtIncome.healthy[0];
                     numHealthyRatio++;
                     $scope.homeHealthyRatioArr.push('Debt to Income Ratio');
+                    $scope.debtIncomeHealth = 1;
                 }else if($scope.displayOverview.ratioDebtIncome > 0.4){
                     $scope.displayAnalysis.debtIncome = $scope.analysisRatio.analysisDebtIncome.unhealthy[0];
                     numUnHealthyRatio++;
                     $scope.homeUnHealthyRatioArr.push('Debt to Income Ratio');
+                    $scope.debtIncomeHealth = 2;
                 }
             }else{
                 $scope.displayAnalysis.debtIncome = 'Unable to generate ratio due to missing inputs';
+                $scope.debtIncomeHealth = 0;
             }            
             //6)
             if($scope.displayOverview.ratioConsumerDebt !== 'N/A'){
@@ -2551,13 +2560,16 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
                     $scope.displayAnalysis.consumerDebt = $scope.analysisRatio.analysisConsumerDebt.healthy[0];
                     numHealthyRatio++;
                     $scope.homeHealthyRatioArr.push('Consumer Debt Ratio');
+                    $scope.consumerDebtHealth = 1;
                 }else if($scope.displayOverview.ratioConsumerDebt > 0.2){
                     $scope.displayAnalysis.consumerDebt = $scope.analysisRatio.analysisConsumerDebt.unhealthy[0];
                     numUnHealthyRatio++;
                     $scope.homeUnHealthyRatioArr.push('Consumer Debt Ratio');
+                    $scope.consumerDebtHealth = 2;
                 }
             }else{
                 $scope.displayAnalysis.consumerDebt = 'Unable to generate ratio due to missing inputs';
+                $scope.consumerDebtHealth = 0;
             } 
             //7)
             if($scope.displayOverview.ratioNetWorthBenchmark !== 'N/A'){
@@ -2565,17 +2577,21 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
                     $scope.displayAnalysis.netWorthBenchmark = $scope.analysisRatio.analysisNetWorthBenchmark.unhealthy[0];
                     numUnHealthyRatio++;
                     $scope.homeUnHealthyRatioArr.push('Net Worth Benchmark');
+                    $scope.netWorthHealth = 2;
                 }else if($scope.displayOverview.ratioNetWorthBenchmark >0.75 && $scope.displayOverview.ratioNetWorthBenchmark <=1){
                     $scope.displayAnalysis.netWorthBenchmark = $scope.analysisRatio.analysisNetWorthBenchmark.healthy[1];
                     numHealthyRatio++;
                     $scope.homeHealthyRatioArr.push('Net Worth Benchmark');
+                    $scope.netWorthHealth = 1;
                 }else if($scope.displayOverview.ratioNetWorthBenchmark > 1){
                     $scope.displayAnalysis.netWorthBenchmark = $scope.analysisRatio.analysisNetWorthBenchmark.healthy[0];
                     numHealthyRatio++;
                     $scope.homeHealthyRatioArr.push('Net Worth Benchmark');
+                    $scope.netWorthHealth = 1;
                 }
             }else{
                 $scope.displayAnalysis.netWorthBenchmark = 'Unable to generate ratio due to missing inputs';
+                $scope.netWorthHealth = 0;
             }
             //8)
             if($scope.displayOverview.ratioSaving !== 'N/A'){
@@ -2583,17 +2599,21 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
                     $scope.displayAnalysis.saving = $scope.analysisRatio.analysisSaving.unhealthy[0];
                     numUnHealthyRatio++; 
                     $scope.homeUnHealthyRatioArr.push('Saving Ratio');
+                    $scope.savingHealth = 2;
                 }else if($scope.displayOverview.ratioSaving >=0.12 && $scope.displayOverview.ratioSaving <=0.7){
                     $scope.displayAnalysis.saving = $scope.analysisRatio.analysisSaving.healthy[1];
                     numHealthyRatio++;
                     $scope.homeHealthyRatioArr.push('Saving Ratio');
+                    $scope.savingHealth = 1;
                 }else if($scope.displayOverview.ratioSaving > 0.7){
                     $scope.displayAnalysis.saving = $scope.analysisRatio.analysisSaving.healthy[0];
                     numHealthyRatio++;
                     $scope.homeHealthyRatioArr.push('Saving Ratio');
+                    $scope.savingHealth = 1;
                 }
             }else{
                 $scope.displayAnalysis.saving = 'Unable to generate ratio due to missing inputs';
+                $scope.savingHealth = 0;
             }
             //9)
             if($scope.displayOverview.ratioSolvency !== 'N/A'){
@@ -2601,13 +2621,16 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
                     $scope.displayAnalysis.solvency = $scope.analysisRatio.analysisSolvency.unhealthy[0];
                     numUnHealthyRatio++;
                     $scope.homeUnHealthyRatioArr.push('Solvency Ratio');
+                    $scope.solvencyHealth = 2;
                 }else if($scope.displayOverview.ratioSolvency > 0.2){
                     $scope.displayAnalysis.solvency = $scope.analysisRatio.analysisSolvency.healthy[0];
                     numHealthyRatio++;
                     $scope.homeHealthyRatioArr.push('Solvency Ratio');
+                    $scope.solvencyHealth = 1;
                 }
             }else{
                 $scope.displayAnalysis.solvency = 'Unable to generate ratio due to missing inputs';
+                $scope.solvencyHealth = 0;
             } 
             //10)
             if($scope.displayOverview.ratioInvestment !== 'N/A'){
@@ -2615,13 +2638,16 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
                     $scope.displayAnalysis.investment = $scope.analysisRatio.analysisInvestment.unhealthy[0];
                     numUnHealthyRatio++;
                     $scope.homeUnHealthyRatioArr.push('Investment Ratio');
+                    $scope.investmentHealth = 2;
                 }else if($scope.displayOverview.ratioInvestment > 0.2){
                     $scope.displayAnalysis.investment = $scope.analysisRatio.analysisInvestment.healthy[0];
                     numHealthyRatio++;
                     $scope.homeHealthyRatioArr.push('Investment Ratio');
+                    $scope.investmentHealth = 1;
                 }
             }else{
                 $scope.displayAnalysis.investment = 'Unable to generate ratio due to missing inputs';
+                $scope.investmentHealth = 0;
             } 
 
             //Render ratio to home page
@@ -2629,7 +2655,13 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
 
             $scope.homeHealthDisplay = true;
             $scope.homeHealth = [{value: (numHealthyRatio*10), type: 'success'}, {value: (numUnHealthyRatio*10), type:'danger'}];
-
+            if($scope.homeHealth[0].value === 0 && $scope.homeHealth[1].value === 0){
+                $scope.homeHealth = [{
+                    value: 100,
+                    type: 'info'
+                }];
+                $scope.homeHealthDisplay = false;
+            }
         };
 
         //for chart display
@@ -2700,58 +2732,87 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
             
 
             //Assign Ratio to Scope
+
             if(isFinite(ratioLiquidityChart)) {
                 ratioLiquidityArr[ratioMthNum] = Number(ratioLiquidityChart.toFixed(2));
             } else{
                 ratioLiquidityArr[ratioMthNum] = 0;
             }
+            ratioIdealLiquidityMinArr[ratioMthNum] = 3;
+            ratioIdealLiquidityMaxArr[ratioMthNum] = 6;
+
             if(isFinite(ratioAssetDebtChart)) {
                 ratioAssetDebtArr[ratioMthNum] = Number(ratioAssetDebtChart.toFixed(2));
             } else{
-                ratioAssetDebtArr[ratioMthNum] = 0;
+                ratioAssetDebtArr[ratioMthNum] = 0; 
             }
+            ratioIdealAssetDebtMinArr[ratioMthNum] = 0;
+            ratioIdealAssetDebtMaxArr[ratioMthNum] = 0.3;
+
             if(isFinite(ratioDebtServiceChart)) {
                 ratioDebtServiceArr[ratioMthNum] = Number(ratioDebtServiceChart.toFixed(2));
             } else {
                 ratioDebtServiceArr[ratioMthNum] = 0;
+
             }
+            ratioIdealDebtServiceMinArr[ratioMthNum] = 0;
+            ratioIdealDebtServiceMaxArr[ratioMthNum] = 0.36;            
+
             if(isFinite(ratioHouseExpenseChart)) {
                 ratioHouseExpenseArr[ratioMthNum] = Number(ratioHouseExpenseChart.toFixed(2));
             } else{
                 ratioHouseExpenseArr[ratioMthNum] = 0;
             }
+            ratioIdealHouseExpenseMinArr[ratioMthNum] = 0;
+            ratioIdealHouseExpenseMaxArr[ratioMthNum] = 0.28;
+
             if(isFinite(ratioDebtIncomeChart)) {
                 ratioDebtIncomeArr[ratioMthNum] = Number(ratioDebtIncomeChart.toFixed(2));
             } else {
                 ratioDebtIncomeArr[ratioMthNum] = 0;
             }
+            ratioIdealDebtIncomeMinArr[ratioMthNum] = 0;
+            ratioIdealDebtIncomeMaxArr[ratioMthNum] = 0.4;
+
             if(isFinite(ratioConsumerDebtChart)) {
                 ratioConsumerDebtArr[ratioMthNum] = Number(ratioConsumerDebtChart.toFixed(2));
             }else {
                 ratioConsumerDebtArr[ratioMthNum] = 0;
             }
+            ratioIdealConsumerDebtMinArr[ratioMthNum] = 0;
+            ratioIdealConsumerDebtMaxArr[ratioMthNum] = 0.2;   
+
             if(isFinite(ratioNetWorthBenchmarkChart)) {
                 ratioNetWorthBenchmarkArr[ratioMthNum] = Number(ratioNetWorthBenchmarkChart.toFixed(2));
             }else {
-                ratioNetWorthBenchmarkArr[ratioMthNum] = 0;
+                ratioNetWorthBenchmarkArr[ratioMthNum] = 0;    
             }
+            ratioIdealNetWorthBenchmarkMinArr[ratioMthNum] = 0.75;
+
             if(isFinite(ratioSavingChart)) {
                 ratioSavingArr[ratioMthNum] = Number(ratioSavingChart.toFixed(2));
             } else{
                 ratioSavingArr[ratioMthNum] = 0;
             }
+            ratioIdealSavingMinArr[ratioMthNum] = 0.12;
+            ratioIdealSavingMaxArr[ratioMthNum] = 0.7;
+
             if(isFinite(ratioSolvencyChart)) {
                 ratioSolvencyArr[ratioMthNum] = Number(ratioSolvencyChart.toFixed(2));
             } else {
-                ratioSolvencyArr[ratioMthNum] = 0;
+                ratioSolvencyArr[ratioMthNum] = 0;   
             }
+            ratioIdealSolvencyMinArr[ratioMthNum] = 0.2;
+
             if(isFinite(ratioInvestmentChart)) {
                 ratioInvestmentArr[ratioMthNum] = Number(ratioInvestmentChart.toFixed(2));
             } else{
-                ratioInvestmentArr[ratioMthNum] = 0;
+                ratioInvestmentArr[ratioMthNum] = 0;           
             }
+            ratioIdealInvestmentMinArr[ratioMthNum] = 0.2;
 
         };
+        console.log($scope.homeHealth);
 	}
 ]);
 'use strict';
@@ -3057,44 +3118,54 @@ angular.module('financial').controller('IncomeExpenseController', ['$scope', '$r
 
         //Chart Settings
         $scope.incomeExpenseChartDisplay = true;
-        $scope.incomeExpenseDoughnutData = [1]; 
-        $scope.incomeExpenseDoughnutLabels = ['No Data'];
+        $scope.incomeDoughnutData = [1]; 
+        $scope.expenseDoughnutLabels = ['No Data'];
+        $scope.expenseDoughnutData = [1]; 
+        $scope.incomeDoughnutLabels = ['No Data'];
 
         //--DATE Selected
         var current = function() {
             $scope.dt = new Date();
+            $scope.month = $scope.dt.getMonth();
+            $scope.year = Number($scope.dt.getFullYear());
+            $scope.monthDisplay = $scope.selectedMonth;
+            console.log($scope.month);
+            console.log($scope.year);        
         };
 
         current();
-        var mth = [];
-        mth[0] = 'January';
-        mth[1] = 'February';
-        mth[2] = 'March';
-        mth[3] = 'April';
-        mth[4] = 'May';
-        mth[5] = 'June';
-        mth[6] = 'July';
-        mth[7] = 'August';
-        mth[8] = 'September';
-        mth[9] = 'October';
-        mth[10] = 'November';
-        mth[11] = 'December';
+        $scope.monthArr = [
+            'January',
+            'February',
+            'March',
+            'April',
+            'May',
+            'June',
+            'July',
+            'August',
+            'September',
+            'October',
+            'November',
+            'December'
+            ];
 
-        $scope.$watch('dt', function() {
-            $scope.month = $scope.dt.getMonth();
-            $scope.monthDisplay = mth[$scope.month];
-            $scope.year = $scope.dt.getFullYear();
+        var retrieveRecord = function() {
+            $scope.month = $scope.monthArr.indexOf($scope.selectedMonth);
+            $scope.monthDisplay = $scope.selectedMonth;
+            $scope.year = $scope.selectedYear;
 
             if ($scope.success || $scope.error) {
                 $scope.success = false;
                 $scope.error = false;
             }
-
-
-
             $scope.$watch('user', function() {
-                if (!$scope.user.incomeExpenseRecordsPeriod || ($scope.user.incomeExpenseRecordsPeriod.minMonth > $scope.month && $scope.user.incomeExpenseRecordsPeriod.minYear >= $scope.year) || ($scope.user.incomeExpenseRecordsPeriod.minMonth < $scope.month && $scope.user.incomeExpenseRecordsPeriod.minYear > $scope.year)) {
+                reloadData();
+            });
+        };
 
+
+        var reloadData = function() {
+                if (!$scope.user.incomeExpenseRecordsPeriod || ($scope.user.incomeExpenseRecordsPeriod.minMonth > $scope.month && $scope.user.incomeExpenseRecordsPeriod.minYear >= $scope.year) || ( $scope.user.incomeExpenseRecordsPeriod.minYear > $scope.year)) {
                 	$scope.displayIncomeExpenseRecords = angular.copy(IncomeExpenseService.incomeExpenseRecords);
                 	$scope.displayIncomeExpenseRecords.year = angular.copy($scope.year);
                 	$scope.displayIncomeExpenseRecords.month = angular.copy($scope.month);
@@ -3148,16 +3219,32 @@ angular.module('financial').controller('IncomeExpenseController', ['$scope', '$r
                         $scope.displayIncomeExpenseRecords = latestRecord;
                     }
                 }
+                //To edit to bar graph
                 if(!$scope.displayIncomeExpenseRecords.incomeNormalAmt && !$scope.displayIncomeExpenseRecords.otherIncomeAmt && !$scope.displayIncomeExpenseRecords.fixedExpenseAmt && !$scope.displayIncomeExpenseRecords.transportAmt && !$scope.displayIncomeExpenseRecords.utilityHouseholdAmt && !$scope.displayIncomeExpenseRecords.foodNecessitiesAmt && !$scope.displayIncomeExpenseRecords.miscAmt){
-                    $scope.incomeExpenseDoughnutData = [1]; 
-                    $scope.incomeExpenseDoughnutLabels = ['No Data'];
+                    $scope.incomeDoughnutData = [1]; 
+                    $scope.incomeDoughnutLabels = ['No Data'];
+                    $scope.expenseDoughnutData = [1]; 
+                    $scope.expenseDoughnutLabels = ['No Data'];
                 }else {
-                    $scope.incomeExpenseDoughnutData = [$scope.displayIncomeExpenseRecords.incomeNormalAmt, $scope.displayIncomeExpenseRecords.otherIncomeAmt, $scope.displayIncomeExpenseRecords.fixedExpenseAmt, $scope.displayIncomeExpenseRecords.transportAmt, $scope.displayIncomeExpenseRecords.utilityHouseholdAmt, $scope.displayIncomeExpenseRecords.foodNecessitiesAmt, $scope.displayIncomeExpenseRecords.miscAmt]; 
-                    $scope.incomeExpenseDoughnutLabels = ['Employment Income', 'Other Income', 'Fixed Expense', 'Transport', 'Utilities & Household Maintenance', 'Food & Necessities', 'Miscellaneous'];
+                    $scope.incomeDoughnutData = [$scope.displayIncomeExpenseRecords.incomeNormalAmt, $scope.displayIncomeExpenseRecords.otherIncomeAmt]; 
+                    $scope.incomeDoughnutLabels = ['Employment Income', 'Other Income'];
+                    $scope.expenseDoughnutData = [$scope.displayIncomeExpenseRecords.fixedExpenseAmt, $scope.displayIncomeExpenseRecords.transportAmt, $scope.displayIncomeExpenseRecords.utilityHouseholdAmt, $scope.displayIncomeExpenseRecords.foodNecessitiesAmt, $scope.displayIncomeExpenseRecords.miscAmt]; 
+                    $scope.expenseDoughnutLabels = ['Fixed Expense', 'Transport', 'Utilities & Household Maintenance', 'Food & Necessities', 'Miscellaneous'];
+
+                    if(parseFloat($scope.displayIncomeExpenseRecords.monthlyIncomeAmt) === 0.00) {
+                        $scope.incomeDoughnutData = [1];
+                        $scope.incomeDoughnutLabels = ['No Data'];
+                    }
+                    if(parseFloat($scope.displayIncomeExpenseRecords.monthlyExpenseAmt) === 0.00) {
+                       $scope.expenseDoughnutData = [1]; 
+                       $scope.expenseDoughnutLabels = ['No Data'];
+
+                    }
+                    console.log($scope.incomeDoughnutData);
                 }
 
-            });
-        });
+            };
+
 
 		$scope.updateUserFinances = function(isValid) {
             if (isValid) {
@@ -3219,7 +3306,7 @@ angular.module('financial').controller('IncomeExpenseController', ['$scope', '$r
                 angular.forEach(otherIncomeArr, function(value, key){
                     otherIncomeTotal = otherIncomeTotal + Number(value.value);
                 });
-
+                console.log(otherIncomeTotal);
                 //Expense
                 var fixedExpenseArr = $scope.displayIncomeExpenseRecords.monthlyExpense.fixedExpense;
                 var fixedExpenseTotal = 0;
@@ -3334,24 +3421,19 @@ angular.module('financial').controller('IncomeExpenseController', ['$scope', '$r
             }
         };
 
+        $scope.$watch('selectedMonth', function(){
+            retrieveRecord();
+        });
+        $scope.$watch('selectedYear', function(){
+            retrieveRecord();
+        });
 
-
-        $scope.clear = function() {
-            $scope.dt = null;
+        $scope.clearSuccessMessage = function(){
+            if ($scope.success || $scope.error) {
+                $scope.success = false;
+                $scope.error = false;
+            }
         };
-
-
-        $scope.open = function($event) {
-            $scope.opened = true;
-        };
-
-        $scope.dateOptions = {
-            formatYear: 'yyyy',
-            startingDay: 1
-        };
-        //--DATE Selected
-
-       
 	}
 ]);
 'use strict';
@@ -3372,6 +3454,11 @@ angular.module('financial').controller('LiabilitiesController', ['$scope', '$roo
         //--DATE Selected
         var current = function() {
             $scope.dt = new Date();
+            $scope.month = $scope.dt.getMonth();
+            $scope.year = Number($scope.dt.getFullYear());
+            $scope.monthDisplay = $scope.selectedMonth;
+            console.log($scope.month);
+            console.log($scope.year);
         };
 
 
@@ -3381,102 +3468,102 @@ angular.module('financial').controller('LiabilitiesController', ['$scope', '$roo
         $scope.liabilitiesDoughnutLabels = ['No Data'];
 
         current();
-        var mth = [];
-        mth[0] = 'January';
-        mth[1] = 'February';
-        mth[2] = 'March';
-        mth[3] = 'April';
-        mth[4] = 'May';
-        mth[5] = 'June';
-        mth[6] = 'July';
-        mth[7] = 'August';
-        mth[8] = 'September';
-        mth[9] = 'October';
-        mth[10] = 'November';
-        mth[11] = 'December';
+
+        $scope.monthArr = [
+            'January',
+            'February',
+            'March',
+            'April',
+            'May',
+            'June',
+            'July',
+            'August',
+            'September',
+            'October',
+            'November',
+            'December'
+            ];
 
 
-
-        $scope.$watch('dt', function() {
-            $scope.month = $scope.dt.getMonth();
-            $scope.monthDisplay = mth[$scope.month];
-            $scope.year = $scope.dt.getFullYear();
+        var retrieveRecord = function() {
+            $scope.month = $scope.monthArr.indexOf($scope.selectedMonth);
+            $scope.monthDisplay = $scope.selectedMonth;
+            $scope.year = $scope.selectedYear;
 
             if ($scope.success || $scope.error) {
                 $scope.success = false;
                 $scope.error = false;
             }
-
-
-
             $scope.$watch('user', function() {
-                if (!$scope.user.liabilitiesRecordsPeriod || ($scope.user.liabilitiesRecordsPeriod.minMonth > $scope.month && $scope.user.liabilitiesRecordsPeriod.minYear >= $scope.year) || ($scope.user.liabilitiesRecordsPeriod.minMonth < $scope.month && $scope.user.liabilitiesRecordsPeriod.minYear > $scope.year)) {
+                reloadData();
+            });
+        };
 
-                	$scope.displayLiabilitiesRecords = angular.copy(LiabilitiesService.liabilitiesRecords);
-                	$scope.displayLiabilitiesRecords.year = angular.copy($scope.year);
-                	$scope.displayLiabilitiesRecords.month = angular.copy($scope.month);
-                    console.log('am i in here');
+        var reloadData = function() {
+            if (!$scope.user.liabilitiesRecordsPeriod || ($scope.user.liabilitiesRecordsPeriod.minMonth > $scope.month && $scope.user.liabilitiesRecordsPeriod.minYear >= $scope.year) || ( $scope.user.liabilitiesRecordsPeriod.minYear > $scope.year)) {
 
+            	$scope.displayLiabilitiesRecords = angular.copy(LiabilitiesService.liabilitiesRecords);
+            	$scope.displayLiabilitiesRecords.year = angular.copy($scope.year);
+            	$scope.displayLiabilitiesRecords.month = angular.copy($scope.month);
+
+            } else {
+
+                if ($scope.user.liabilitiesRecordsPeriod.minMonth === $scope.user.liabilitiesRecordsPeriod.maxMonth && $scope.user.liabilitiesRecordsPeriod.minYear === $scope.user.liabilitiesRecordsPeriod.maxYear) {
+                    $scope.displayLiabilitiesRecords = angular.copy($scope.user.liabilitiesRecords[0]);
                 } else {
+                    // IF there is multiple record
 
-                    if ($scope.user.liabilitiesRecordsPeriod.minMonth === $scope.user.liabilitiesRecordsPeriod.maxMonth && $scope.user.liabilitiesRecordsPeriod.minYear === $scope.user.liabilitiesRecordsPeriod.maxYear) {
-                        $scope.displayLiabilitiesRecords = angular.copy($scope.user.liabilitiesRecords[0]);
-                        console.log('her0e');
-                    } else {
-                        // IF there is multiple record
+                    //TO review
+                    var targetYear;
+                    var targetMonth;
+                    var minimumYear = $scope.user.liabilitiesRecordsPeriod.minYear;
+                    var minimumMonth = $scope.user.liabilitiesRecordsPeriod.minMonth;
+                    var maximumYear = $scope.user.liabilitiesRecordsPeriod.maxYear;
+                    var maximumMonth = $scope.user.liabilitiesRecordsPeriod.maxMonth;
 
-                        //TO review
-                        var targetYear;
-                        var targetMonth;
-                        var minimumYear = $scope.user.liabilitiesRecordsPeriod.minYear;
-                        var minimumMonth = $scope.user.liabilitiesRecordsPeriod.minMonth;
-                        var maximumYear = $scope.user.liabilitiesRecordsPeriod.maxYear;
-                        var maximumMonth = $scope.user.liabilitiesRecordsPeriod.maxMonth;
+                    var latestYear = minimumYear;
+                    var latestMonth = minimumMonth;
 
-                        var latestYear = minimumYear;
-                        var latestMonth = minimumMonth;
+                    var latestRecord;
 
-                        var latestRecord;
-
-                        if ($scope.year > maximumYear || $scope.year === maximumYear && $scope.month >= maximumMonth) {
-                            //Date after max
-                            targetYear = maximumYear;
-                            targetMonth = maximumMonth;
-                            for (var r2 in $scope.user.liabilitiesRecords) {
-                                if ($scope.user.liabilitiesRecords[r2].year === targetYear && $scope.user.liabilitiesRecords[r2].month === targetMonth) {
-                                    latestRecord = angular.copy($scope.user.liabilitiesRecords[r2]);
-                                }
+                    if ($scope.year > maximumYear || $scope.year === maximumYear && $scope.month >= maximumMonth) {
+                        //Date after max
+                        targetYear = maximumYear;
+                        targetMonth = maximumMonth;
+                        for (var r2 in $scope.user.liabilitiesRecords) {
+                            if ($scope.user.liabilitiesRecords[r2].year === targetYear && $scope.user.liabilitiesRecords[r2].month === targetMonth) {
+                                latestRecord = angular.copy($scope.user.liabilitiesRecords[r2]);
                             }
-                        } else {
-                            //Date in between
-                            targetYear = $scope.year;
-                            targetMonth = $scope.month;
-                            for (var r3 in $scope.user.liabilitiesRecords) {
-                                if ($scope.user.liabilitiesRecords[r3].year < targetYear || $scope.user.liabilitiesRecords[r3].year === targetYear && $scope.user.liabilitiesRecords[r3].month <= targetMonth) {
-                                    if ($scope.user.liabilitiesRecords[r3].year === latestYear && $scope.user.liabilitiesRecords[r3].month >= latestMonth) {
-                                        latestRecord = angular.copy($scope.user.liabilitiesRecords[r3]);
-                                        latestMonth = angular.copy($scope.user.liabilitiesRecords[r3].month);
-                                    } else if ($scope.user.liabilitiesRecords[r3].year > latestYear) {
-                                        latestRecord = angular.copy($scope.user.liabilitiesRecords[r3]);
-                                        latestMonth = angular.copy($scope.user.liabilitiesRecords[r3].month);
-                                        latestYear = angular.copy($scope.user.liabilitiesRecords[r3].year);
-                                    }
+                        }
+                    } else {
+                        //Date in between
+                        targetYear = $scope.year;
+                        targetMonth = $scope.month;
+                        for (var r3 in $scope.user.liabilitiesRecords) {
+                            if ($scope.user.liabilitiesRecords[r3].year < targetYear || $scope.user.liabilitiesRecords[r3].year === targetYear && $scope.user.liabilitiesRecords[r3].month <= targetMonth) {
+                                if ($scope.user.liabilitiesRecords[r3].year === latestYear && $scope.user.liabilitiesRecords[r3].month >= latestMonth) {
+                                    latestRecord = angular.copy($scope.user.liabilitiesRecords[r3]);
+                                    latestMonth = angular.copy($scope.user.liabilitiesRecords[r3].month);
+                                } else if ($scope.user.liabilitiesRecords[r3].year > latestYear) {
+                                    latestRecord = angular.copy($scope.user.liabilitiesRecords[r3]);
+                                    latestMonth = angular.copy($scope.user.liabilitiesRecords[r3].month);
+                                    latestYear = angular.copy($scope.user.liabilitiesRecords[r3].year);
                                 }
                             }
                         }
-                        $scope.displayLiabilitiesRecords = latestRecord;
                     }
+                    $scope.displayLiabilitiesRecords = latestRecord;
                 }
-                if(!$scope.displayLiabilitiesRecords.shortTermCreditAmt && !$scope.displayLiabilitiesRecords.loansMortgagesAmt && !$scope.displayLiabilitiesRecords.otherLiabilitiesAmt){
-                    $scope.liabilitiesDoughnutData = [1]; 
-                    $scope.liabilitiesDoughnutLabels = ['No Data'];
-                } else{
-                    $scope.liabilitiesDoughnutData = [$scope.displayLiabilitiesRecords.shortTermCreditAmt, $scope.displayLiabilitiesRecords.loansMortgagesAmt, $scope.displayLiabilitiesRecords.otherLiabilitiesAmt];
-                    $scope.liabilitiesDoughnutLabels = ['Short-Term Credit', 'Loans & Mortgages', 'Other Liabilities'];
-                }
+            }
+            if(!$scope.displayLiabilitiesRecords.shortTermCreditAmt && !$scope.displayLiabilitiesRecords.loansMortgagesAmt && !$scope.displayLiabilitiesRecords.otherLiabilitiesAmt){
+                $scope.liabilitiesDoughnutData = [1]; 
+                $scope.liabilitiesDoughnutLabels = ['No Data'];
+            } else{
+                $scope.liabilitiesDoughnutData = [$scope.displayLiabilitiesRecords.shortTermCreditAmt, $scope.displayLiabilitiesRecords.loansMortgagesAmt, $scope.displayLiabilitiesRecords.otherLiabilitiesAmt];
+                $scope.liabilitiesDoughnutLabels = ['Short-Term Credit', 'Loans & Mortgages', 'Other Liabilities'];
+            }
 
-            });
-        });
+        };
 	
 		$scope.updateUserFinances = function(isValid) {
             if (isValid) {
@@ -3586,22 +3673,19 @@ angular.module('financial').controller('LiabilitiesController', ['$scope', '$roo
             }
         };
 
+        $scope.$watch('selectedMonth', function(){
+            retrieveRecord();
+        });
+        $scope.$watch('selectedYear', function(){
+            retrieveRecord();
+        });
 
-
-        $scope.clear = function() {
-            $scope.dt = null;
+        $scope.clearSuccessMessage = function(){
+            if ($scope.success || $scope.error) {
+                $scope.success = false;
+                $scope.error = false;
+            }
         };
-
-
-        $scope.open = function($event) {
-            $scope.opened = true;
-        };
-
-        $scope.dateOptions = {
-            formatYear: 'yyyy',
-            startingDay: 1
-        };
-        //--DATE Selected
 	}
 ]);
 'use strict';
@@ -3802,17 +3886,17 @@ angular.module('financial').factory('FinancialHealthService', ['$resource', func
 
 	var tipHouseExpense = 'One of the best ways to determine how much housing you can afford is by calculating your housing expense ratio';
 
-	var tipDebtIncome = 'Lenders look at this ratio when they are trying to decide whether to lend you money or extend credit.</br> A low DTI shows you have a good balance between debt and income. As you might guess, lenders like this number to be low -</br> generally you&#39;ll want to keep it below 3.6, but the lower it is, the greater the chance you will be able to get the loans or credit you seek.</br> Evidence from studies of mortgage loans suggest that borrowers with a higher debt-to-income ratio</br> are more likely to run into trouble making monthly payments.';
+	var tipDebtIncome = 'Lenders look at this ratio when they are trying to decide whether to lend you money or extend credit. A low DTI shows you have a good balance between debt and income. As you might guess, lenders like this number to be low - generally you&#39;ll want to keep it below 3.6, but the lower it is, the greater the chance you will be able to get the loans or credit you seek.</br> Evidence from studies of mortgage loans suggest that borrowers with a higher debt-to-income ratio</br> are more likely to run into trouble making monthly payments.';
 
 	var tipConsumerDebt = 'A high consumer debt ratio could point to excessive use of credit cards.';
 
-	var tipNetWorthBenchmark = 'This metric is used to compare your actual net worth to a standard.</br> The net worth benchmark assumes that your net worth is a function of your earnings and your years of earnings';
+	var tipNetWorthBenchmark = 'This metric is used to compare your actual net worth to a standard.</br> The net worth benchmark assumes that your net worth is a function</br> of your earnings and your years of earnings';
 
 	var tipSaving = 'It compares the monthly surplus being generated by an individual against total cash inflows.</br> It will give you valuable insight on how well your finances are being managed.</br> It also represents one&#39;s ability to achieve his/her future goals.</br>';
 
-	var tipSolvency = 'Solvency ratio compares an individual&#39;s net worth against total assets accumulated by him/her.</br> This ratio indicates the ability of an individual to repay all his/her existing debts using existing assets in case of unforeseen events.';
+	var tipSolvency = 'Solvency ratio compares an individual&#39;s net worth against total assets accumulated by him/her.</br> This ratio indicates the ability of an individual to repay all his/her existing debts</br> using existing assets in case of unforeseen events.';
 
-	var tipInvestment = 'This ratio compares liquid assets being held by an individual against the total assets accumulated.</br> Investments in stocks, mutual funds or other such investments, which can be converted to cash easily, are considered as liquid assets.';
+	var tipInvestment = 'This ratio compares liquid assets being held by an individual against the total assets accumulated.</br> Investments in stocks, mutual funds or other such investments,</br> which can be converted to cash easily, are considered as liquid assets.';
 
 	var tips = {
 		tipLiquidity: tipLiquidity,
@@ -5820,7 +5904,7 @@ angular.module('social').controller('PostsController', ['$scope', '$stateParams'
 			$http.post('/api/posts', post).success(function(response){
 		        // $location.path('/post/' + response._id);
 		  		$window.location.reload();
-		        $location.path('/socialPost');
+		        $location.path('/social/posts');
 		        // Clear form fields
 		        $scope.title = '';
 		        $scope.content = '';
@@ -5995,8 +6079,9 @@ angular.module('social').controller('SocialController', ['$scope', '$window','$s
 			$http.put('/friendship/addFriend', {friendEmail: friendEmail, friendId: friendId}).success(function(response){
 				console.log(response);
 				$scope.userList.forEach(function(user){
-					if(user.email === friendEmail) user.friendStatus = response.status;
+					if(user.email === friendEmail) user.friendStatus = 1;
 				});
+				$scope.userProfile.friendStatus = 1;
 			}).error(function(){
 				console.log('error adding friends');
 			});
