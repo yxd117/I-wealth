@@ -15,44 +15,54 @@ angular.module('financial').controller('IncomeExpenseController', ['$scope', '$r
 
         //Chart Settings
         $scope.incomeExpenseChartDisplay = true;
-        $scope.incomeExpenseDoughnutData = [1]; 
-        $scope.incomeExpenseDoughnutLabels = ['No Data'];
+        $scope.incomeDoughnutData = [1]; 
+        $scope.expenseDoughnutLabels = ['No Data'];
+        $scope.expenseDoughnutData = [1]; 
+        $scope.incomeDoughnutLabels = ['No Data'];
 
         //--DATE Selected
         var current = function() {
             $scope.dt = new Date();
+            $scope.month = $scope.dt.getMonth();
+            $scope.year = Number($scope.dt.getFullYear());
+            $scope.monthDisplay = $scope.selectedMonth;
+            console.log($scope.month);
+            console.log($scope.year);        
         };
 
         current();
-        var mth = [];
-        mth[0] = 'January';
-        mth[1] = 'February';
-        mth[2] = 'March';
-        mth[3] = 'April';
-        mth[4] = 'May';
-        mth[5] = 'June';
-        mth[6] = 'July';
-        mth[7] = 'August';
-        mth[8] = 'September';
-        mth[9] = 'October';
-        mth[10] = 'November';
-        mth[11] = 'December';
+        $scope.monthArr = [
+            'January',
+            'February',
+            'March',
+            'April',
+            'May',
+            'June',
+            'July',
+            'August',
+            'September',
+            'October',
+            'November',
+            'December'
+            ];
 
-        $scope.$watch('dt', function() {
-            $scope.month = $scope.dt.getMonth();
-            $scope.monthDisplay = mth[$scope.month];
-            $scope.year = $scope.dt.getFullYear();
+        var retrieveRecord = function() {
+            $scope.month = $scope.monthArr.indexOf($scope.selectedMonth);
+            $scope.monthDisplay = $scope.selectedMonth;
+            $scope.year = $scope.selectedYear;
 
             if ($scope.success || $scope.error) {
                 $scope.success = false;
                 $scope.error = false;
             }
-
-
-
             $scope.$watch('user', function() {
-                if (!$scope.user.incomeExpenseRecordsPeriod || ($scope.user.incomeExpenseRecordsPeriod.minMonth > $scope.month && $scope.user.incomeExpenseRecordsPeriod.minYear >= $scope.year) || ($scope.user.incomeExpenseRecordsPeriod.minMonth < $scope.month && $scope.user.incomeExpenseRecordsPeriod.minYear > $scope.year)) {
+                reloadData();
+            });
+        };
 
+
+        var reloadData = function() {
+                if (!$scope.user.incomeExpenseRecordsPeriod || ($scope.user.incomeExpenseRecordsPeriod.minMonth > $scope.month && $scope.user.incomeExpenseRecordsPeriod.minYear >= $scope.year) || ( $scope.user.incomeExpenseRecordsPeriod.minYear > $scope.year)) {
                 	$scope.displayIncomeExpenseRecords = angular.copy(IncomeExpenseService.incomeExpenseRecords);
                 	$scope.displayIncomeExpenseRecords.year = angular.copy($scope.year);
                 	$scope.displayIncomeExpenseRecords.month = angular.copy($scope.month);
@@ -106,16 +116,32 @@ angular.module('financial').controller('IncomeExpenseController', ['$scope', '$r
                         $scope.displayIncomeExpenseRecords = latestRecord;
                     }
                 }
+                //To edit to bar graph
                 if(!$scope.displayIncomeExpenseRecords.incomeNormalAmt && !$scope.displayIncomeExpenseRecords.otherIncomeAmt && !$scope.displayIncomeExpenseRecords.fixedExpenseAmt && !$scope.displayIncomeExpenseRecords.transportAmt && !$scope.displayIncomeExpenseRecords.utilityHouseholdAmt && !$scope.displayIncomeExpenseRecords.foodNecessitiesAmt && !$scope.displayIncomeExpenseRecords.miscAmt){
-                    $scope.incomeExpenseDoughnutData = [1]; 
-                    $scope.incomeExpenseDoughnutLabels = ['No Data'];
+                    $scope.incomeDoughnutData = [1]; 
+                    $scope.incomeDoughnutLabels = ['No Data'];
+                    $scope.expenseDoughnutData = [1]; 
+                    $scope.expenseDoughnutLabels = ['No Data'];
                 }else {
-                    $scope.incomeExpenseDoughnutData = [$scope.displayIncomeExpenseRecords.incomeNormalAmt, $scope.displayIncomeExpenseRecords.otherIncomeAmt, $scope.displayIncomeExpenseRecords.fixedExpenseAmt, $scope.displayIncomeExpenseRecords.transportAmt, $scope.displayIncomeExpenseRecords.utilityHouseholdAmt, $scope.displayIncomeExpenseRecords.foodNecessitiesAmt, $scope.displayIncomeExpenseRecords.miscAmt]; 
-                    $scope.incomeExpenseDoughnutLabels = ['Employment Income', 'Other Income', 'Fixed Expense', 'Transport', 'Utilities & Household Maintenance', 'Food & Necessities', 'Miscellaneous'];
+                    $scope.incomeDoughnutData = [$scope.displayIncomeExpenseRecords.incomeNormalAmt, $scope.displayIncomeExpenseRecords.otherIncomeAmt]; 
+                    $scope.incomeDoughnutLabels = ['Employment Income', 'Other Income'];
+                    $scope.expenseDoughnutData = [$scope.displayIncomeExpenseRecords.fixedExpenseAmt, $scope.displayIncomeExpenseRecords.transportAmt, $scope.displayIncomeExpenseRecords.utilityHouseholdAmt, $scope.displayIncomeExpenseRecords.foodNecessitiesAmt, $scope.displayIncomeExpenseRecords.miscAmt]; 
+                    $scope.expenseDoughnutLabels = ['Fixed Expense', 'Transport', 'Utilities & Household Maintenance', 'Food & Necessities', 'Miscellaneous'];
+
+                    if(parseFloat($scope.displayIncomeExpenseRecords.monthlyIncomeAmt) === 0.00) {
+                        $scope.incomeDoughnutData = [1];
+                        $scope.incomeDoughnutLabels = ['No Data'];
+                    }
+                    if(parseFloat($scope.displayIncomeExpenseRecords.monthlyExpenseAmt) === 0.00) {
+                       $scope.expenseDoughnutData = [1]; 
+                       $scope.expenseDoughnutLabels = ['No Data'];
+
+                    }
+                    console.log($scope.incomeDoughnutData);
                 }
 
-            });
-        });
+            };
+
 
 		$scope.updateUserFinances = function(isValid) {
             if (isValid) {
@@ -177,7 +203,7 @@ angular.module('financial').controller('IncomeExpenseController', ['$scope', '$r
                 angular.forEach(otherIncomeArr, function(value, key){
                     otherIncomeTotal = otherIncomeTotal + Number(value.value);
                 });
-
+                console.log(otherIncomeTotal);
                 //Expense
                 var fixedExpenseArr = $scope.displayIncomeExpenseRecords.monthlyExpense.fixedExpense;
                 var fixedExpenseTotal = 0;
@@ -292,23 +318,18 @@ angular.module('financial').controller('IncomeExpenseController', ['$scope', '$r
             }
         };
 
+        $scope.$watch('selectedMonth', function(){
+            retrieveRecord();
+        });
+        $scope.$watch('selectedYear', function(){
+            retrieveRecord();
+        });
 
-
-        $scope.clear = function() {
-            $scope.dt = null;
+        $scope.clearSuccessMessage = function(){
+            if ($scope.success || $scope.error) {
+                $scope.success = false;
+                $scope.error = false;
+            }
         };
-
-
-        $scope.open = function($event) {
-            $scope.opened = true;
-        };
-
-        $scope.dateOptions = {
-            formatYear: 'yyyy',
-            startingDay: 1
-        };
-        //--DATE Selected
-
-       
 	}
 ]);

@@ -16,6 +16,11 @@ angular.module('financial').controller('LiabilitiesController', ['$scope', '$roo
         //--DATE Selected
         var current = function() {
             $scope.dt = new Date();
+            $scope.month = $scope.dt.getMonth();
+            $scope.year = Number($scope.dt.getFullYear());
+            $scope.monthDisplay = $scope.selectedMonth;
+            console.log($scope.month);
+            console.log($scope.year);
         };
 
 
@@ -25,102 +30,102 @@ angular.module('financial').controller('LiabilitiesController', ['$scope', '$roo
         $scope.liabilitiesDoughnutLabels = ['No Data'];
 
         current();
-        var mth = [];
-        mth[0] = 'January';
-        mth[1] = 'February';
-        mth[2] = 'March';
-        mth[3] = 'April';
-        mth[4] = 'May';
-        mth[5] = 'June';
-        mth[6] = 'July';
-        mth[7] = 'August';
-        mth[8] = 'September';
-        mth[9] = 'October';
-        mth[10] = 'November';
-        mth[11] = 'December';
+
+        $scope.monthArr = [
+            'January',
+            'February',
+            'March',
+            'April',
+            'May',
+            'June',
+            'July',
+            'August',
+            'September',
+            'October',
+            'November',
+            'December'
+            ];
 
 
-
-        $scope.$watch('dt', function() {
-            $scope.month = $scope.dt.getMonth();
-            $scope.monthDisplay = mth[$scope.month];
-            $scope.year = $scope.dt.getFullYear();
+        var retrieveRecord = function() {
+            $scope.month = $scope.monthArr.indexOf($scope.selectedMonth);
+            $scope.monthDisplay = $scope.selectedMonth;
+            $scope.year = $scope.selectedYear;
 
             if ($scope.success || $scope.error) {
                 $scope.success = false;
                 $scope.error = false;
             }
-
-
-
             $scope.$watch('user', function() {
-                if (!$scope.user.liabilitiesRecordsPeriod || ($scope.user.liabilitiesRecordsPeriod.minMonth > $scope.month && $scope.user.liabilitiesRecordsPeriod.minYear >= $scope.year) || ($scope.user.liabilitiesRecordsPeriod.minMonth < $scope.month && $scope.user.liabilitiesRecordsPeriod.minYear > $scope.year)) {
+                reloadData();
+            });
+        };
 
-                	$scope.displayLiabilitiesRecords = angular.copy(LiabilitiesService.liabilitiesRecords);
-                	$scope.displayLiabilitiesRecords.year = angular.copy($scope.year);
-                	$scope.displayLiabilitiesRecords.month = angular.copy($scope.month);
-                    console.log('am i in here');
+        var reloadData = function() {
+            if (!$scope.user.liabilitiesRecordsPeriod || ($scope.user.liabilitiesRecordsPeriod.minMonth > $scope.month && $scope.user.liabilitiesRecordsPeriod.minYear >= $scope.year) || ( $scope.user.liabilitiesRecordsPeriod.minYear > $scope.year)) {
 
+            	$scope.displayLiabilitiesRecords = angular.copy(LiabilitiesService.liabilitiesRecords);
+            	$scope.displayLiabilitiesRecords.year = angular.copy($scope.year);
+            	$scope.displayLiabilitiesRecords.month = angular.copy($scope.month);
+
+            } else {
+
+                if ($scope.user.liabilitiesRecordsPeriod.minMonth === $scope.user.liabilitiesRecordsPeriod.maxMonth && $scope.user.liabilitiesRecordsPeriod.minYear === $scope.user.liabilitiesRecordsPeriod.maxYear) {
+                    $scope.displayLiabilitiesRecords = angular.copy($scope.user.liabilitiesRecords[0]);
                 } else {
+                    // IF there is multiple record
 
-                    if ($scope.user.liabilitiesRecordsPeriod.minMonth === $scope.user.liabilitiesRecordsPeriod.maxMonth && $scope.user.liabilitiesRecordsPeriod.minYear === $scope.user.liabilitiesRecordsPeriod.maxYear) {
-                        $scope.displayLiabilitiesRecords = angular.copy($scope.user.liabilitiesRecords[0]);
-                        console.log('her0e');
-                    } else {
-                        // IF there is multiple record
+                    //TO review
+                    var targetYear;
+                    var targetMonth;
+                    var minimumYear = $scope.user.liabilitiesRecordsPeriod.minYear;
+                    var minimumMonth = $scope.user.liabilitiesRecordsPeriod.minMonth;
+                    var maximumYear = $scope.user.liabilitiesRecordsPeriod.maxYear;
+                    var maximumMonth = $scope.user.liabilitiesRecordsPeriod.maxMonth;
 
-                        //TO review
-                        var targetYear;
-                        var targetMonth;
-                        var minimumYear = $scope.user.liabilitiesRecordsPeriod.minYear;
-                        var minimumMonth = $scope.user.liabilitiesRecordsPeriod.minMonth;
-                        var maximumYear = $scope.user.liabilitiesRecordsPeriod.maxYear;
-                        var maximumMonth = $scope.user.liabilitiesRecordsPeriod.maxMonth;
+                    var latestYear = minimumYear;
+                    var latestMonth = minimumMonth;
 
-                        var latestYear = minimumYear;
-                        var latestMonth = minimumMonth;
+                    var latestRecord;
 
-                        var latestRecord;
-
-                        if ($scope.year > maximumYear || $scope.year === maximumYear && $scope.month >= maximumMonth) {
-                            //Date after max
-                            targetYear = maximumYear;
-                            targetMonth = maximumMonth;
-                            for (var r2 in $scope.user.liabilitiesRecords) {
-                                if ($scope.user.liabilitiesRecords[r2].year === targetYear && $scope.user.liabilitiesRecords[r2].month === targetMonth) {
-                                    latestRecord = angular.copy($scope.user.liabilitiesRecords[r2]);
-                                }
+                    if ($scope.year > maximumYear || $scope.year === maximumYear && $scope.month >= maximumMonth) {
+                        //Date after max
+                        targetYear = maximumYear;
+                        targetMonth = maximumMonth;
+                        for (var r2 in $scope.user.liabilitiesRecords) {
+                            if ($scope.user.liabilitiesRecords[r2].year === targetYear && $scope.user.liabilitiesRecords[r2].month === targetMonth) {
+                                latestRecord = angular.copy($scope.user.liabilitiesRecords[r2]);
                             }
-                        } else {
-                            //Date in between
-                            targetYear = $scope.year;
-                            targetMonth = $scope.month;
-                            for (var r3 in $scope.user.liabilitiesRecords) {
-                                if ($scope.user.liabilitiesRecords[r3].year < targetYear || $scope.user.liabilitiesRecords[r3].year === targetYear && $scope.user.liabilitiesRecords[r3].month <= targetMonth) {
-                                    if ($scope.user.liabilitiesRecords[r3].year === latestYear && $scope.user.liabilitiesRecords[r3].month >= latestMonth) {
-                                        latestRecord = angular.copy($scope.user.liabilitiesRecords[r3]);
-                                        latestMonth = angular.copy($scope.user.liabilitiesRecords[r3].month);
-                                    } else if ($scope.user.liabilitiesRecords[r3].year > latestYear) {
-                                        latestRecord = angular.copy($scope.user.liabilitiesRecords[r3]);
-                                        latestMonth = angular.copy($scope.user.liabilitiesRecords[r3].month);
-                                        latestYear = angular.copy($scope.user.liabilitiesRecords[r3].year);
-                                    }
+                        }
+                    } else {
+                        //Date in between
+                        targetYear = $scope.year;
+                        targetMonth = $scope.month;
+                        for (var r3 in $scope.user.liabilitiesRecords) {
+                            if ($scope.user.liabilitiesRecords[r3].year < targetYear || $scope.user.liabilitiesRecords[r3].year === targetYear && $scope.user.liabilitiesRecords[r3].month <= targetMonth) {
+                                if ($scope.user.liabilitiesRecords[r3].year === latestYear && $scope.user.liabilitiesRecords[r3].month >= latestMonth) {
+                                    latestRecord = angular.copy($scope.user.liabilitiesRecords[r3]);
+                                    latestMonth = angular.copy($scope.user.liabilitiesRecords[r3].month);
+                                } else if ($scope.user.liabilitiesRecords[r3].year > latestYear) {
+                                    latestRecord = angular.copy($scope.user.liabilitiesRecords[r3]);
+                                    latestMonth = angular.copy($scope.user.liabilitiesRecords[r3].month);
+                                    latestYear = angular.copy($scope.user.liabilitiesRecords[r3].year);
                                 }
                             }
                         }
-                        $scope.displayLiabilitiesRecords = latestRecord;
                     }
+                    $scope.displayLiabilitiesRecords = latestRecord;
                 }
-                if(!$scope.displayLiabilitiesRecords.shortTermCreditAmt && !$scope.displayLiabilitiesRecords.loansMortgagesAmt && !$scope.displayLiabilitiesRecords.otherLiabilitiesAmt){
-                    $scope.liabilitiesDoughnutData = [1]; 
-                    $scope.liabilitiesDoughnutLabels = ['No Data'];
-                } else{
-                    $scope.liabilitiesDoughnutData = [$scope.displayLiabilitiesRecords.shortTermCreditAmt, $scope.displayLiabilitiesRecords.loansMortgagesAmt, $scope.displayLiabilitiesRecords.otherLiabilitiesAmt];
-                    $scope.liabilitiesDoughnutLabels = ['Short-Term Credit', 'Loans & Mortgages', 'Other Liabilities'];
-                }
+            }
+            if(!$scope.displayLiabilitiesRecords.shortTermCreditAmt && !$scope.displayLiabilitiesRecords.loansMortgagesAmt && !$scope.displayLiabilitiesRecords.otherLiabilitiesAmt){
+                $scope.liabilitiesDoughnutData = [1]; 
+                $scope.liabilitiesDoughnutLabels = ['No Data'];
+            } else{
+                $scope.liabilitiesDoughnutData = [$scope.displayLiabilitiesRecords.shortTermCreditAmt, $scope.displayLiabilitiesRecords.loansMortgagesAmt, $scope.displayLiabilitiesRecords.otherLiabilitiesAmt];
+                $scope.liabilitiesDoughnutLabels = ['Short-Term Credit', 'Loans & Mortgages', 'Other Liabilities'];
+            }
 
-            });
-        });
+        };
 	
 		$scope.updateUserFinances = function(isValid) {
             if (isValid) {
@@ -230,21 +235,18 @@ angular.module('financial').controller('LiabilitiesController', ['$scope', '$roo
             }
         };
 
+        $scope.$watch('selectedMonth', function(){
+            retrieveRecord();
+        });
+        $scope.$watch('selectedYear', function(){
+            retrieveRecord();
+        });
 
-
-        $scope.clear = function() {
-            $scope.dt = null;
+        $scope.clearSuccessMessage = function(){
+            if ($scope.success || $scope.error) {
+                $scope.success = false;
+                $scope.error = false;
+            }
         };
-
-
-        $scope.open = function($event) {
-            $scope.opened = true;
-        };
-
-        $scope.dateOptions = {
-            formatYear: 'yyyy',
-            startingDay: 1
-        };
-        //--DATE Selected
 	}
 ]);

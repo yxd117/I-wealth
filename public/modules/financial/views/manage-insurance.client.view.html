@@ -1,0 +1,131 @@
+<section data-ng-controller="InsuranceController" class="content"> 
+  <ul class="nav nav-tabs">
+    <li role="presentation"><a href="/#!/financialrecord">Overview</a></li>
+    <li role="presentation"><a href="/#!/financialrecord/assets">Assets</a></li>
+    <li role="presentation"><a href="/#!/financialrecord/liabilities">Liabilities</a></li>
+    <li role="presentation"><a href="/#!/financialrecord/incomeExpense">Income & Expense</a></li>
+    <li role="presentation"><a href="/#!/financialrecord/debts">Debt</a></li>
+    <li role="presentation" class="active"><a href="/#!/financialrecord/insurance">Insurance</a></li>
+  </ul>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>No.</th>
+        <th>Name of Lender / Bank</th>
+        <th>Type</th>
+        <th>Amount</th>
+        <th>Interest Rate</th>
+        <th>Length of Loan</th>
+        <th>Date Started</th>
+        <th>No. of Repayment</th>
+      </tr>
+    </thead>
+    <tbody ng-repeat='debt in user.debtsInfoArr'>
+      <tr ng-if='debt != selectedDebtRecord'>
+         <!-- read-only cells -->     
+        <td>{{ debt.id }}</td>
+        <td>{{ debt.lender }}</td>
+        <td>{{ debt.type }}</td>
+        <td>{{ debt.amt }}</td>
+        <td>{{ debt.interestRate }}</td>
+        <td>{{ debt.lenOfLoan }}</td>
+        <td>{{ debt.dateStarted }}</td>
+        <td>{{ debt.NoOfRepayment }}</td>
+        <td>
+          <a class='btn btn-primary' href='' ng-click='edit(debt)'>
+            Edit
+          </a>
+          <a class='btn btn-danger' href='' ng-click='delete(debt)'>
+            Delete
+          </a>
+        </td>
+      </tr>
+
+      <tr ng-if='debt == selectedDebtRecord'>
+        <!-- editable cells -->
+        <td>{{ debt.id }}</td>
+        <td>
+          <input class='form-control' ng-model='debt.lender' type='text'>
+        </td>
+        <td>
+          <input class='form-control' ng-model='debt.type' type='text'>
+        </td>
+        <td>
+          <input class='form-control' ng-model='debt.amt' type='text'>
+        </td>
+        <td>
+          <input class='form-control' ng-model='debt.interestRate' type='text'>
+        </td>
+        <td>
+          <input class='form-control' ng-model='debt.lenOfLoan' type='text'>
+        </td>
+        <td>
+          <input class='form-control' ng-model='debt.dateStarted' type='text'>
+        </td>
+        <td>
+          <input class='form-control' ng-model='debt.NoOfRepayment' type='text'>
+        </td>
+        <td>
+          <a class='btn btn-primary' href='' ng-click='update(debt)'>
+            Update
+          </a>
+        </td>
+      </tr>
+
+    </tbody>
+  </table>
+
+<button type="button" class="btn btn-primary" data-ng-hide="showAdd" data-ng-click="onAddDebt()">Add new Debt</button>
+<!-- Add Debt Form -->
+<div class="row">
+  <div class="col-md-8">
+  <form name='DebtForm' novalidate role='form' data-ng-show="showAdd">
+    <fieldset>
+      <legend>Add New Debt</legend>
+      <div class='form-group'>
+        <label for='name'>Name of Lender / Bank:</label>
+        <input class='form-control' ng-model='newDebt.lender' name='lender' type='text' required>
+        <span class='help-block' ng-show='DebtForm.lender.$error.required'>Name of Lender / Bank is required</span>
+      </div>
+      <div class='form-group'>
+        <label for='age'>Type: </label>
+        <input class='form-control' ng-model='newDebt.type' name='type' type='text' required>
+        <span class='help-block' ng-show='DebtForm.type.$error.required'>Type is required</span>
+      </div>
+      <div class='form-group'>
+        <label for='percentage'>Amount: </label>
+        <input class='form-control' ng-model='newDebt.amt' name='amt' type='text' required>
+        <span class='help-block' ng-show='DebtForm.amt.$error.required'>Amount is required</span>
+      </div>
+        <div class='form-group'>
+        <label for='name'>Interest Rate:</label>
+        <input class='form-control' ng-model='newDebt.interestRate' name='interestRate' type='text' required>
+        <span class='help-block' ng-show='DebtForm.interestRate.$error.required'>Interest Rate is required</span>
+      </div>
+      <div class='form-group'>
+        <label for='name'>Length of Loan:</label>
+        <input class='form-control' ng-model='newDebt.lenOfLoan' name='lenOfLoan' type='text' required>
+        <span class='help-block' ng-show='DebtForm.lenOfLoan.$error.required'>Length of Loan is required</span>
+      </div>
+      <div class='form-group'>
+        <label for='name'>Date Started:</label>
+        <input class='form-control' ng-model='newDebt.dateStarted' name='dateStarted' type='text' required>
+        <span class='help-block' ng-show='DebtForm.dateStarted.$error.required'>Date Started is required</span>
+      </div>
+      <div class='form-group'>
+        <label for='name'>No. of Repayment:</label>
+        <input class='form-control' ng-model='newDebt.NoOfRepayment' name='NoOfRepayment' type='text' required>
+        <span class='help-block' ng-show='DebtForm.NoOfRepayment.$error.required'>No. of Repayment is required</span>
+      </div>      
+      <button class='btn btn-primary' ng-click='create()' ng-disabled='DebtForm.$invalid'>
+        Save
+      </button>
+      <button class='btn btn-danger' ng-click='cancel()'>
+        Cancel
+      </button>
+      
+    </fieldset>
+  </form>
+</div>
+</div>
+</section>

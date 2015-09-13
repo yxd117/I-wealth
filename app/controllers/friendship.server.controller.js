@@ -44,7 +44,9 @@ exports.addFriend = function(req, res){
 						message: errorHandler.getErrorMessage(err)
 					});
 				} else {
+					console.log(friendship);
 					res.json(friendship);
+					
 				}
 			});	
 

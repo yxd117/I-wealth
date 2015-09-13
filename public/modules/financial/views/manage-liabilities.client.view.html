@@ -7,29 +7,24 @@
 	  <li role="presentation"><a href="/#!/financialrecord/debts">Debt</a></li>
 	</ul>
 	<div class="row">
-		<div class="col-sm-7">
-			<h3> Displaying Records for: <em>{{monthDisplay}}, {{year}} </em></h3>
-		</div>		
-		<div class="col-sm-5">
-			<h3> Total: $ {{displayLiabilitiesRecords.totalAmt}}</h3>
-		</div>
-	</div>	
-    <div class="row">
-    	<div class="col-sm-5">
-    		<form name"dateForm" data-ng-submit="updateView()">
+		<div class="col-sm-6 col-md-6">
+			<h3> Displaying Records for : <em>{{monthDisplay}}, {{year}} </em></h3>	
+			<form name="dateForm">
 			    <div class="form-group">
-			      <label for="date" class="control-label col-sm-4">Select Date:</label>
-			      <div class="col-sm-8">
-			        <input type="date" class="form-control" datepicker-popup ng-model="dt" is-open="opened" datepicker-options="dateOptions"  ng-required="true" close-text="Close" />
-			      </div>
+			    	<div class="row">
+			    		<div class=" col-sm-4 text-center">
+			    			<h4>Select Date: </h4>
+			    		</div>
+					    <div class="col-sm-4">
+					        <select data-ng-options="m as m for m in monthArr" class="form-control" data-ng-model="selectedMonth" ng-init="selectedMonth = monthArr[month]"></select>
+					    </div>
+					    <div class="col-sm-4">
+					        <input type="number" class="form-control" data-ng-model="selectedYear" ng-init="selectedYear = year">
+
+					    </div>				    		
+			    	</div>
 			    </div>
-<!-- 		    <button type="submit" class="btn btn-large btn-primary">Update View</button> -->
 			</form>
-		</div>
-	</div>
-	</br>
-    <div class="row">
-    	<div class="col-md-6">
 		  	<accordion class="accordion" close-others="oneAtATime">
 			    <accordion-group is-open="status.open" ng-click="clearSuccessMessage()">
 			        <accordion-heading>
@@ -122,9 +117,13 @@
 			    </accordion-group>
 		  	</accordion>
   		</div>
-	  	<div class="col-md-6" ng-show="liabilitiesChartDisplay">
-	  		<canvas id="liabilitiesDoughnut" class="chart chart-doughnut" data="liabilitiesDoughnutData" labels="liabilitiesDoughnutLabels" legend="true"></canvas> 
-	  	</div>
-
+	  	<div class="col-md-6">
+	  		<div class="row">
+	  			<div class="col-md-12 text-center">
+					<h3> Total: $ {{displayLiabilitiesRecords.totalAmt}}</h3>
+			  		<canvas id="liabilitiesDoughnut" class="chart chart-doughnut" data="liabilitiesDoughnutData" labels="liabilitiesDoughnutLabels" legend="true"></canvas> 
+	  			</div>
+			</div>
+		</div>
 	</div>
 </section>

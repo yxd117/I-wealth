@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('admin').controller('AdminController', ['$scope', '$http', '$location', 'Authentication',
-	function($scope, $http, $location, Authentication) {
+angular.module('admin').controller('AdminController', ['$scope', '$http', '$location', 'Authentication', '$window',
+	function($scope, $http, $location, Authentication, $window) {
 		$scope.user = Authentication.user;
 
 		// If user is signed in then redirect back home
@@ -14,6 +14,9 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', '$loca
 		}
 		
 
+		$scope.goToDB =function(){
+            $window.open('https://mongolab.com/databases/fyphexa');
+		};
 
 	}
 ]);

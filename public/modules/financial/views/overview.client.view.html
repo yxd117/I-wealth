@@ -1,4 +1,4 @@
-<section data-ng-controller="FinancesController" class="content">
+<section data-ng-controller="FinancesController" class="content" ng-init="current()">
 		<ul class="nav nav-tabs">
 		  <li role="presentation" class="active"><a href="/#!/financialrecord">Overview</a></li>
 		  <li role="presentation"><a href="/#!/financialrecord/assets">Assets</a></li>
@@ -9,19 +9,34 @@
 
 
 	<div class="row">
-		<div class="col-sm-4">
-			<h3> Financial Health Summary </h3>
-			Displaying Records for: <em>{{monthDisplay}}, {{year}} </em>
+		<div class="col-sm-12">
+			<h3> Financial Health Summary : <em>{{monthDisplay}}, {{year}} </em></h3>
 		</div>
 	</div>
 	<div class="row">
 		<div class="col-sm-4">
-			<form name"dateForm" data-ng-submit="updateView()">
+			<!-- <form name"dateForm" data-ng-submit="updateView()">
 			    <div class="form-group">
 			      <label for="date" class="control-label col-sm-4">Select Date:</label>
 			      <div class="col-sm-8">
 			        <input type="date" class="form-control" datepicker-popup ng-model="dt" is-open="opened" datepicker-options="dateOptions"  ng-required="true" close-text="Close" />
 			      </div>
+			    </div>
+			</form> -->
+			<form name="dateForm">
+			    <div class="form-group">
+			    	<div class="row">
+			    		<div class=" col-md-4">
+			    			<h4>Select Date: </h4>
+			    		</div>
+					    <div class="col-sm-4" style="padding:0;">
+					        <select data-ng-options="m as m for m in monthArr" class="form-control" data-ng-model="selectedMonth" ng-init="selectedMonth = monthArr[month]"></select>
+					    </div>
+					    <div class="col-sm-4">
+					        <input type="number" class="form-control" data-ng-model="selectedYear" ng-init="selectedYear = year">
+
+					    </div>				    		
+			    	</div>
 			    </div>
 			</form>
 			<div class="col-sm-12">
@@ -58,16 +73,18 @@
 			</div>
 		</div>
 		<div class="col-sm-8">
-			<div class="form-group pull-right col-sm-5">
-  				<label for="ratioOptions" class="col-sm-4">Displaying for:</label>
-	  			<div class="col-sm-8">
-					<select ng-model="selectedChartOption" class="form-control col-sm-2">
-						<option value="0">Past 3 months</option>
-						<option value="1">Past 6 months</option>
-						<option value="2">Past 12 months</option>
-					</select>
+				<div class="row">
+						<div class="col-sm-8 text-right" >
+							<h4>Displaying For: </h4>
+						</div>
+			  			<div class="col-sm-4 pull-right">
+							<select ng-model="selectedChartOption" class="form-control">
+								<option value="0">Past 3 months</option>
+								<option value="1">Past 6 months</option>
+								<option value="2">Past 12 months</option>
+							</select>
+						</div>							
 				</div>
-			</div>
 				<canvas id="ratioChart" class="chart chart-line" data="dataOverview" labels="labelsOverview" legend="true" series="seriesOverview" options="{bezierCurve:false}"></canvas> 
 		</div>
 	</div>	

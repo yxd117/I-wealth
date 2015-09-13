@@ -131,7 +131,6 @@ angular.module('financial').controller('AssetsController', ['$scope', '$rootScop
                 var user = new Users($scope.user);
                 user.$update(function(response) {
                     $scope.success = true;
-
                     Authentication.user = response;
                     $scope.user = Authentication.user;  
 
@@ -147,25 +146,31 @@ angular.module('financial').controller('AssetsController', ['$scope', '$rootScop
         //--DATE Selected
         var current = function() {
             $scope.dt = new Date();
+            $scope.month = $scope.dt.getMonth();
+            $scope.year = Number($scope.dt.getFullYear());
+            $scope.monthDisplay = $scope.selectedMonth;
+            console.log($scope.month);
+            console.log($scope.year);
         };
 
         current();
-        var mth = [];
-        mth[0] = 'January';
-        mth[1] = 'February';
-        mth[2] = 'March';
-        mth[3] = 'April';
-        mth[4] = 'May';
-        mth[5] = 'June';
-        mth[6] = 'July';
-        mth[7] = 'August';
-        mth[8] = 'September';
-        mth[9] = 'October';
-        mth[10] = 'November';
-        mth[11] = 'December';
+        $scope.monthArr = [
+            'January',
+            'February',
+            'March',
+            'April',
+            'May',
+            'June',
+            'July',
+            'August',
+            'September',
+            'October',
+            'November',
+            'December'
+            ];
     
         var reloadData = function(){
-            if (!$scope.user.assetsRecordsPeriod || ($scope.user.assetsRecordsPeriod.minMonth > $scope.month && $scope.user.assetsRecordsPeriod.minYear >= $scope.year) || ($scope.user.assetsRecordsPeriod.minMonth < $scope.month && $scope.user.assetsRecordsPeriod.minYear > $scope.year)) {
+            if (!$scope.user.assetsRecordsPeriod || ($scope.user.assetsRecordsPeriod.minMonth > $scope.month && $scope.user.assetsRecordsPeriod.minYear >= $scope.year) || ( $scope.user.assetsRecordsPeriod.minYear > $scope.year)) {
 
                 $scope.displayAssetsRecords = angular.copy(AssetsService.assetsRecords);
                 $scope.displayAssetsRecords.year = angular.copy($scope.year);
@@ -230,53 +235,46 @@ angular.module('financial').controller('AssetsController', ['$scope', '$rootScop
             }
         };
 
-        $scope.$watch('dt', function() {
-            $scope.month = $scope.dt.getMonth();
-            $scope.monthDisplay = mth[$scope.month];
-            $scope.year = $scope.dt.getFullYear();
+
+
+        var retrieveRecord = function() {
+            $scope.month = $scope.monthArr.indexOf($scope.selectedMonth);
+            $scope.monthDisplay = $scope.selectedMonth;
+            $scope.year = $scope.selectedYear;
 
             if ($scope.success || $scope.error) {
                 $scope.success = false;
                 $scope.error = false;
             }
 
-            console.log($scope.user.assetsRecords);
-
             $scope.$watch('user', function() {
                 reloadData();
             });
+        };
+
+        $scope.$watch('selectedMonth', function(){
+            retrieveRecord();
+        });
+        $scope.$watch('selectedYear', function(){
+            retrieveRecord();
         });
 
         $scope.$watch('user', function(){
-            $scope.$watch('dt', function() {
-                $scope.month = $scope.dt.getMonth();
-                $scope.monthDisplay = mth[$scope.month];
-                $scope.year = $scope.dt.getFullYear();
+            $scope.month = $scope.monthArr.indexOf($scope.selectedMonth);
+            $scope.monthDisplay = $scope.selectedMonth;
+            $scope.year = $scope.selectedYear;
 
-                if ($scope.success || $scope.error) {
-                    $scope.success = false;
-                    $scope.error = false;
-                }
+            console.log($scope.user.assetsRecords);
 
-                console.log($scope.user.assetsRecords);
-
-                    reloadData();
-            });
+            reloadData();
         });
-        $scope.clear = function() {
-            $scope.dt = null;
-        };
 
-
-        $scope.open = function($event) {
-            $scope.opened = true;
+        $scope.clearSuccessMessage = function(){
+            if ($scope.success || $scope.error) {
+                $scope.success = false;
+                $scope.error = false;
+            }
         };
-
-        $scope.dateOptions = {
-            formatYear: 'yyyy',
-            startingDay: 1
-        };
-        //--DATE Selected
 
     }
 ]);

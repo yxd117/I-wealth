@@ -66,8 +66,9 @@ angular.module('social').controller('SocialController', ['$scope', '$window','$s
 			$http.put('/friendship/addFriend', {friendEmail: friendEmail, friendId: friendId}).success(function(response){
 				console.log(response);
 				$scope.userList.forEach(function(user){
-					if(user.email === friendEmail) user.friendStatus = response.status;
+					if(user.email === friendEmail) user.friendStatus = 1;
 				});
+				$scope.userProfile.friendStatus = 1;
 			}).error(function(){
 				console.log('error adding friends');
 			});

@@ -36,9 +36,9 @@
 							</br>
 							<div class="row">
 								<div class="col-md-12">
-									<a class="btn btn-primary" role="button" ng-click="addFriend(user.email, user.userObjectId)" ng-show="userProfile.friendStatus === 0 && userProfile.email !== user.email">Add Friend</a>
+									<a class="btn btn-primary" role="button" ng-click="addFriend(userProfile.email, userProfile._id)" ng-show="userProfile.friendStatus === 0 && userProfile.email !== user.email">Add Friend</a>
 									<a class="btn btn-default" role="button" ng-click="" ng-show="userProfile.friendStatus === 1">Sent Friend Request</a>
-									<a class="btn btn-warning" role="button" ng-click="acceptFriend(user.email, user.userObjectId)" ng-show="userProfile.friendStatus === 2">Accept Friend Request</a>
+									<a class="btn btn-warning" role="button" ng-click="acceptFriend(userProfile.email, userProfile._id)" ng-show="userProfile.friendStatus === 2">Accept Friend Request</a>
 									<a class="btn btn-success" role="button" ng-click="" ng-show="userProfile.friendStatus === 3">Friends</a>										
 								</div>
 							</div>				

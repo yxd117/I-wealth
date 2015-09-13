@@ -76,7 +76,7 @@
 	  		</div>
 
 	  		<div class="col-lg-4 col-md-6" data-ng-controller="FinancesController" >
-	  			<div class="panel panel-home">
+	  			<div class="panel panel-home" ng-init="selectedMonth = monthArr[month]">
 		  			<div class="panel-heading">
 		  				<div class="row">
 		  					<div class="col-xs-3">
@@ -95,8 +95,10 @@
 							</div>
 						</div>
 						<div class="row">
-							 <span ng-hide="homeHealthDisplay">No data available</span>
-							 <span ng-show="homeHealthDisplay">
+							<div class="col-md-12">
+								<span ng-hide="homeHealthDisplay">No data available</span>
+							</div>	 
+							<span ng-show="homeHealthDisplay">
 							 	<div class="col-md-6">
 							 		<h4>Healthy Ratios</h4>
 									<div ng-repeat="item in homeHealthyRatioArr">							
@@ -109,7 +111,7 @@
 										<li><em>{{item}}</em></li>
 									</div>
 								</div>
-							 </span>					
+							</span>					
 						</div>
 					</div>
 				</div>

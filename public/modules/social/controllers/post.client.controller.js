@@ -25,7 +25,7 @@ angular.module('social').controller('PostsController', ['$scope', '$stateParams'
 			$http.post('/api/posts', post).success(function(response){
 		        // $location.path('/post/' + response._id);
 		  		$window.location.reload();
-		        $location.path('/socialPost');
+		        $location.path('/social/posts');
 		        // Clear form fields
 		        $scope.title = '';
 		        $scope.content = '';
