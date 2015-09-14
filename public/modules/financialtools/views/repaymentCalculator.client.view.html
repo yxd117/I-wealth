@@ -8,160 +8,148 @@
     <div class="col-md-6">
       <h3>Total Cost of Loan</h3>
       <p>This calculator calculates the total amount you will have to pay the bank which includes both the interest rates and the principal amount borrowed and also the minimum monthly repayment for your loan period.</p>
+      
     </div>    
   </div>
   <hr>
-  <br/>
 
   <div class="row">
-  <div class="col-md-6">
-    <form name='CalculatorForm' class="form-horizontal" novalidate role='form'>
-      <fieldset>
-        <div class='form-group'>
-          <label for='amtBorrowed' class="col-md-4" style="text-align:right">Amount Borrowed: $</label>
-          <div class="col-md-4">
-            <input class='form-control' ng-model='calculator.amtBorrowed' name='amtBorrowed' type='number' min="1" required>
-            <span class='help-block' ng-show='CalculatorForm.amtBorrowed.$error.required'>* required</span>  
-          </div>        
-        </div>
-        <div class='form-group'>
-          <label for='loanTermYears' class="col-md-4" style="text-align:right">Loan Term in Years: </label>
-          <div class="col-md-4">
-            <input class='form-control' ng-model='calculator.loanTermYears' name='loanTermYears' type='number' min="0.1" required>
-            <span class='help-block' ng-show='CalculatorForm.loanTermYears.$error.required'>* required</span>              
+    <p><small>Note: All fields are compulsory for calculation.</small></p>
+
+    <!-- Primary Calculator -->
+    <div class="col-md-4">
+      <h4 ng-show='isFormOpened'>Option 1</h4>
+      <form name='CalculatorForm' class="form-horizontal" novalidate role='form'>
+        <fieldset>
+          <div class='form-group'>
+            <label for='amtBorrowed' class="col-md-6" style="text-align:right">Amount Borrowed: $</label>
+            <div class="col-md-6">
+              <input class='form-control' ng-model='calculator.amtBorrowed' name='amtBorrowed' type='number' min="1" required>
+            </div>        
           </div>
-        </div>
-        <div class='form-group'>
-          <label for='interestRate' class="col-md-4" style="text-align:right">Applied Interest Rate (per annum): </label>
-          <div class="col-md-4">
-            <input class='form-control' ng-model='calculator.interestRate' name='interestRate' type='number' min="0.01" required>
-            <span class='help-block' ng-show='CalculatorForm.interestRate.$error.required'>* required</span>              
+          <div class='form-group'>
+            <label for='loanTermYears' class="col-md-6" style="text-align:right">Loan Term in Years: </label>
+            <div class="col-md-6">
+              <input class='form-control' ng-model='calculator.loanTermYears' name='loanTermYears' type='number' min="0.1" required>
+            </div>
           </div>
-        </div>
-        <div class='form-group'>
-          <label for='fees' class="col-md-4" style="text-align:right">Processing fee: $</label>
-          <div class="col-md-4">
-            <input class='form-control' ng-model='calculator.fees' name='fees' type='number' min="0" required>
-            <span class='help-block' ng-show='CalculatorForm.fees.$error.required'>* required</span>              
+          <div class='form-group'>
+            <label for='interestRate' class="col-md-6" style="text-align:right">Applied Interest Rate (per annum): </label>
+            <div class="col-md-6">
+              <input class='form-control' ng-model='calculator.interestRate' name='interestRate' type='number' min="0.01" required>
+            </div>
           </div>
-        </div>
-        <div class="col-md-4">  
-                    
-         <button class='btn btn-primary btn-lg btn-block' ng-click='calculateMonthyRepaymentSum()' ng-disabled='CalculatorForm.$invalid'> Submit
-          </button>
-
-           <button class='btn btn-primary btn-lg btn-block' ng-click='showCompareForm()'> Compare Alternative
-          </button>  
-        </div>
-      </fieldset>
-    </form>
-    <br/><br/>
-  </div>
- 
-
-
-
-  <div class="col-md-6">
-    <form name='CalculatorForm2' class="form-horizontal" novalidate role='form' ng-show='isFormOpened'>
-      <fieldset>
-        <div class='form-group'>
-          <div class="col-md-4">
-            <input class='form-control' ng-model='calculator2.amtBorrowed2' name='amtBorrowed2' type='number' min="1" required>
-            <span class='help-block' ng-show='CalculatorForm2.amtBorrowed2.$error.required'>* required</span>  
-          </div>  
-        </div> 
-        
-        <div class='form-group'>
-          <div class="col-md-4">
-            <input class='form-control' ng-model='calculator2.loanTermYears2' name='loanTermYears2' type='number' min="0.1" required>
-            <span class='help-block' ng-show='CalculatorForm2.loanTermYears2.$error.required'>* required</span>              
+          <div class='form-group'>
+            <label for='fees' class="col-md-6" style="text-align:right">Processing fee: $</label>
+            <div class="col-md-6">
+              <input class='form-control' ng-model='calculator.fees' name='fees' type='number' min="0" required>
+            </div>
           </div>
-        </div> 
-
-        <div class='form-group'>
-          <div class="col-md-4">
-            <input class='form-control' ng-model='calculator2.interestRate2' name='interestRate2' type='number' min="0.01" required>
-            <span class='help-block' ng-show='CalculatorForm2.interestRate2.$error.required'>* required</span>              
+          <div class="col-md-12">  
+           <button class='btn btn-primary btn-lg btn-block' ng-click='calculateMonthyRepaymentSum()' ng-disabled='CalculatorForm.$invalid'> Submit
+            </button>
+             <button class='btn btn-primary btn-lg btn-block' ng-disabled='CalculatorForm.$invalid' ng-click='showCompareForm()'>Compare Alternative
+            </button>  
           </div>
-        </div>
-
-        <div class='form-group'>
-          <div class="col-md-4">
-            <input class='form-control' ng-model='calculator2.fees2' name='fees2' type='number' min="0" required>
-            <span class='help-block' ng-show='CalculatorForm2.fees2.$error.required'>* required</span>              
-          </div>
-        </div>
-      
-        <div class="col-md-4">                
-          <button class='btn btn-primary btn-lg btn-block' ng-click='calculateMonthyRepaymentSum2()' ng-disabled='CalculatorForm2.$invalid'> Submit
-          </button>
-        </div>
-      </fieldset>
-    </form>
-  </div>
-
-    <div>
-       <linechart data="barData" options="barOptions" width="400" height="400" data-ng-show="showChart"></linechart>
+        </fieldset>
+      </form>
+      <br/><br/>
     </div>
 
-</div>  <!-- ROW  -->
- 
+    <!-- Compare Alternative Form -->
+    <div class="col-md-2" ng-show='isFormOpened'>
+      <h4>Option 2</h4>
+      <form name='CalculatorForm2' class="form-horizontal" novalidate role='form' >
+        <fieldset>
+          <div class='form-group'>
+            <div class="col-md-12">
+              <input class='form-control' ng-model='calculator2.amtBorrowed2' name='amtBorrowed2' type='number' min="1" required>
+            </div>  
+          </div> 
+          
+          <div class='form-group'>
+            <div class="col-md-12">
+              <input class='form-control' ng-model='calculator2.loanTermYears2' name='loanTermYears2' type='number' min="0.1" required>
+            </div>
+          </div> 
 
-<div class="row">
+          <div class='form-group'>
+            <div class="col-md-12">
+              <input class='form-control' ng-model='calculator2.interestRate2' name='interestRate2' type='number' min="0.01" required>
+            </div>
+          </div>
+
+          <div class='form-group'>
+            <div class="col-md-12">
+              <input class='form-control' ng-model='calculator2.fees2' name='fees2' type='number' min="0" required>
+            </div>
+          </div>
+        
+          <div class="col-md-12">                
+            <button class='btn btn-primary btn-lg btn-block' ng-click='calculateMonthyRepaymentSum2()' ng-disabled='CalculatorForm2.$invalid'> Submit
+            </button>
+          </div>
+        </fieldset>
+      </form>
+  </div>
+
+  <!-- BAR CHART -->
   <div class="col-md-6">
-    <div class="bg-info" style="padding:20px">
-      <div class="row">
-        <div class="col-md-12">
-          <h4>Option 1</h4>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12">
-          <h4>Minimum monthly repayments is {{monthlyRepaymentSum | currency}}</h4>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12">
-          <h4>Total cost of loan is {{totalCostLoan | currency}}</h4>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12">
-          <h4>You will be paying an additional amount of {{results | currency}}</h4>
-        </div>
-      </div>
-    </div>        
+    <linechart data="barData" options="barOptions" width="600" height="400" data-ng-show="showChart"></linechart>
   </div>
 
- <div class="col-md-6" ng-show='isFormOpened'>
-    <div class="bg-info" style="padding:20px">
-      <div class="row">
-        <div class="col-md-12">
-          <h4>Option 2</h4>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12">
-          <h4>Minimum monthly repayments is {{monthlyRepaymentSum2 | currency}}</h4>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12">
-          <h4>Total cost of loan is {{totalCostLoan2 | currency}}</h4>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12">
-          <h4>You will be paying an additional amount of {{results2 | currency}}</h4>
-        </div>
-      </div>
-    </div>        
-  </div>
+</div>  <!-- ROW  -->
 
+<!-- Results Table -->
+<div class="row">
+  <div class="col-md-5">
+    <h4>Results</h4>
+    <table class="table">
+      <tr ng-show='isFormOpened'>
+        <td>
+        </td>
+        <td>
+          Option 1
+        </td>
+        <td>
+          Option 2
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Minimum monthly repayments is 
+        </td>
+        <td>
+          {{monthlyRepaymentSum | currency}}
+        </td>
+        <td ng-show='isFormOpened'>
+          {{monthlyRepaymentSum2 | currency}}
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Total cost of loan is 
+        </td>
+        <td>
+          {{totalCostLoan | currency}}
+        </td>
+        <td ng-show='isFormOpened'>
+          {{totalCostLoan2 | currency}}
+        </td>
+      </tr>
+      <tr>
+        <td>
+          You will be paying an additional amount of 
+        </td>
+        <td>
+          {{results | currency}}
+        </td>
+        <td ng-show='isFormOpened'>
+          {{results2 | currency}}
+        </td>
+      </tr>
+    </table>
+  </div>
 </div>
-
- 
-
-
 
 </section>

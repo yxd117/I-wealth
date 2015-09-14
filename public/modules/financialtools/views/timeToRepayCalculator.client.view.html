@@ -9,41 +9,39 @@
     <div class="col-md-6">
       <h3>Ideal Monthly Repayment Amount</h3>
       <p>This calculator calculates the number of months and interest you need to repay the lender to clear the debt according to your monthly repayment amount. If you are paying the minimum repayment sum, you should compare how much interest you will be saving from increasing your monthly repayment sum.</p>
+      
     </div>    
   </div>
   <hr>
-  <br/>
 
- <div class="row"> 
-  <div class="col-md-6">
+ <div class="row">
+  <p><small>Note: All fields are compulsory for calculation.</small></p>
+  <div class="col-md-4">
+    <h4 ng-show='isFormOpened'>Option 1</h4>
       <form name='CalculatorForm' class="form-horizontal" novalidate role='form'>
         <fieldset>
           <div class='form-group'>
-            <label for='amtOwing' class="col-md-4" style="text-align:right">Amount Owing: </label>
-            <div class="col-md-4">
+            <label for='amtOwing' class="col-md-6" style="text-align:right">Amount Owing: </label>
+            <div class="col-md-6">
                <input class='form-control' ng-model='calculator.amtOwing' name='amtOwing' type='number' min='1' required>
-                <span class='help-block' ng-show='CalculatorForm.amtOwing.$error.required'>* required</span>
             </div>
           </div>
           <div class='form-group'>
-            <label for='monthlyRepayment' class="col-md-4" style="text-align:right">Monthly Repayment: </label>
-            <div class="col-md-4">
+            <label for='monthlyRepayment' class="col-md-6" style="text-align:right">Monthly Repayment: </label>
+            <div class="col-md-6">
                 <input class='form-control' ng-model='calculator.monthlyRepayment' name='monthlyRepayment' type='number' min='1' required>
-                <span class='help-block' ng-show='CalculatorForm.monthlyRepayment.$error.required'>* required</span>
             </div>
           </div>
           <div class='form-group'>
-            <label for='interestRate' class="col-md-4" style="text-align:right">Applied Interest Rate (per annum): </label>
-            <div class="col-md-4">
+            <label for='interestRate' class="col-md-6" style="text-align:right">Applied Interest Rate (per annum): </label>
+            <div class="col-md-6">
                 <input class='form-control' ng-model='calculator.interestRate' name='interestRate' type='number' min='0.01' required>
-               <span class='help-block' ng-show='CalculatorForm.interestRate.$error.required'>* required</span>
             </div>
           </div>        
-          <div class="col-md-4">
+          <div class="col-md-12">
             <button class='btn btn-primary btn-lg btn-block' ng-click='calculateTimeToRepay()' ng-disabled='CalculatorForm.$invalid'> Submit
             </button>
-
-            <button class='btn btn-primary btn-lg btn-block' ng-click='showCompareForm()'> Compare Alternative
+            <button class='btn btn-primary btn-lg btn-block' ng-click='showCompareForm()' ng-disabled='CalculatorForm.$invalid'> Compare Alternative
           </button>  
           </div>
         </fieldset>
@@ -52,28 +50,26 @@
   </div>
 
 
-  <div class="col-md-6">
-    <form name='CalculatorForm2' class="form-horizontal" novalidate role='form' ng-show='isFormOpened'>
+  <div class="col-md-2" ng-show='isFormOpened'>
+    <h4>Option 2</h4>
+    <form name='CalculatorForm2' class="form-horizontal" novalidate role='form'>
       <fieldset>
         <div class='form-group'>
-          <div class="col-md-4">
-             <input class='form-control' ng-model='calculator2.amtOwing2' name='amtOwing2' type='number' min='1' required>
-              <span class='help-block' ng-show='CalculatorForm2.amtOwing2.$error.required'>* required</span>
+          <div class="col-md-12">
+             <input class='form-control' ng-model='calculator2.amtOwing2' name='amtOwing2' type='number' min='1' placeholder="Amount Owing"required>
           </div>
         </div>
         <div class='form-group'>
-          <div class="col-md-4">
-              <input class='form-control' ng-model='calculator2.monthlyRepayment2' name='monthlyRepayment2' type='number' min='1' required>
-              <span class='help-block' ng-show='CalculatorForm2.monthlyRepayment2.$error.required'>* required</span>
+          <div class="col-md-12">
+              <input class='form-control' ng-model='calculator2.monthlyRepayment2' name='monthlyRepayment2' type='number' min='1' placeholder="Monthly Repayment" required>
           </div>
         </div>
         <div class='form-group'>
-          <div class="col-md-4">
-              <input class='form-control' ng-model='calculator2.interestRate2' name='interestRate2' type='number' min='0.01' required>
-             <span class='help-block' ng-show='CalculatorForm2.interestRate2.$error.required'>* required</span>
+          <div class="col-md-12">
+              <input class='form-control' ng-model='calculator2.interestRate2' name='interestRate2' type='number' min='0.01' placeholder="Applied Interest Rate" required>
           </div>
         </div>        
-        <div class="col-md-4">
+        <div class="col-md-12">
           <button class='btn btn-primary btn-lg btn-block' ng-click='calculateTimeToRepay2()' ng-disabled='CalculatorForm2.$invalid'> Submit
           </button>
         </div>
@@ -81,43 +77,50 @@
     </form>
 </div>
 
-    <div>
-       <linechart data="barData" options="barOptions" width="400" height="400" data-ng-show="showChart"></linechart>
-    </div>
+<div class="col-md-6">
+  <linechart data="barData" options="barOptions" width="600" height="400" data-ng-show="showChart"></linechart>
+</div>
 
 </div>  <!-- ROW  -->
-      
 
-<div class="row">       
-  <div class="col-md-6">
-    <div class="bg-info" style="padding:20px">
-    <div class="row">
-        <div class="col-md-12">
-          <h4>Option 1</h4>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-12">     
-          <h4>You will take {{timeToRepay}} to repay your loan</h4> 
-        </div>
-      </div>
-    </div> 
-  </div>  
-
-  <div class="col-md-6" ng-show='isFormOpened'>
-      <div class="bg-info" style="padding:20px">
-      <div class="row">
-        <div class="col-md-12">
-          <h4>Option 2</h4>
-        </div>
-      </div>
-        <div class="row">
-          <div class="col-md-12">     
-            <h4>You will take {{timeToRepay2}} to repay your loan</h4> 
-          </div>
-        </div>
-      </div> 
-    </div> 
-</div>  
+<div class="row">
+  <div class="col-md-5">
+    <h4>Results</h4>
+    <table class="table">
+      <tr ng-show='isFormOpened'>
+        <td>
+        </td>
+        <td>
+          Option 1
+        </td>
+        <td>
+          Option 2
+        </td>
+      </tr>
+      <tr>
+        <td>
+          Time needed to repay loan 
+        </td>
+        <td>
+          {{timeToRepay}}
+        </td>
+        <td ng-show='isFormOpened'>
+          {{timeToRepay2}}
+        </td>
+      </tr>
+      <tr>
+        <td>
+          The Interest you will be paying is  
+        </td>
+        <td>
+          {{interestPaid | currency}}
+        </td>
+        <td ng-show='isFormOpened'>
+          {{interestPaid2 | currency}}
+        </td>
+      </tr>
+    </table>
+  </div>
+</div> <!-- ROW  -->
 
 </section> 

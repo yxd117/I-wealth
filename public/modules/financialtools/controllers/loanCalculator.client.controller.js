@@ -56,7 +56,7 @@ angular.module('financial').controller('LoanCalculatorController', ['$scope', '$
           $scope.showChart = true;
 
           /* Check if barData already have existing elements */
-          if($scope.barData.length === 2){
+          if($scope.barData.length > 0){
             // update the array element 0 with the new value
             $scope.barData[0].val_0 = $scope.calculator.amtBorrowed;
             $scope.barData[0].val_1 = $scope.results;
@@ -142,7 +142,7 @@ angular.module('financial').controller('LoanCalculatorController', ['$scope', '$
           $scope.showChart = true;
 
           /* Check if barData already have existing elements */
-          if($scope.barData.length === 2){
+          if($scope.barData.length > 0){
             // update the array element 0 with the new value
             $scope.barData[0].val_0 = $scope.principalAmtToBorrow;
             $scope.barData[0].val_1 = $scope.interestPaid;
@@ -198,12 +198,12 @@ angular.module('financial').controller('LoanCalculatorController', ['$scope', '$
         var convertToYrsMths = function(){
           
           if ($scope.timeToRepayVal > 12) {
-             yearMth = $scope.timeToRepayVal / 12;
-             year = Math.floor(yearMth);
-             month = Math.ceil(yearMth % 1);
+             yearMth = $scope.timeToRepayVal;
+             year = Math.floor(yearMth / 12);
+             month = Math.ceil(yearMth % 12);
             $scope.timeToRepay = year + ' years ' + month +  ' months';
             // Calculate interest
-            interestAmt = $scope.calculator.monthlyRepayment * (year * 12 + month) - $scope.calculator.amtOwing;
+            interestAmt = $scope.calculator.monthlyRepayment * yearMth - $scope.calculator.amtOwing;
             
 
           } else {
@@ -216,22 +216,20 @@ angular.module('financial').controller('LoanCalculatorController', ['$scope', '$
           $scope.showChart = true;
 
           /* Check if barData already have existing elements */
-          if($scope.barData.length === 2){
+          if($scope.barData.length > 0){
             // update the array element 0 with the new value
             $scope.barData[0].val_0 = $scope.calculator.amtOwing;
-            //$scope.barData[0].val_1 = interestAmt;
-            $scope.barData[0].val_1 = 0;
-
+            $scope.barData[0].val_1 = interestAmt;
+ 
           } else{
              /* Populate the chart data wih principal and interest amt */
-              //$scope.barData.push({x: 1, val_0: $scope.calculator.amtOwing, val_1: interestAmt});
-              $scope.barData.push({x: 1, val_0: $scope.calculator.amtOwing, val_1: 0});
+              $scope.barData.push({x: 1, val_0: $scope.calculator.amtOwing, val_1: interestAmt});
 
               /* Set the barOptions */
               $scope.barOptions = {
                    axes: {
-                      //x: {key: 'x', type: 'linear', labelFunction: function(value) {var labelStr = ""; if(value == 1){ labelStr = 'Repay $' + $scope.monthlyRepaymentSum.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + ' monthly';} else if(value == 2 && $scope.barData.length == 2){ labelStr = 'Repay $' + $scope.monthlyRepaymentSum2.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,') + ' monthly'; } return labelStr;}, ticks: $scope.barData.length + 1},
-                      x: {key: 'x', type: 'linear', labelFunction: function() {return '';}, ticks: $scope.barData.length + 1},
+                      x: {key: 'x', type: 'linear', labelFunction: function(value) {var labelStr = ''; if(value === 1){ labelStr = $scope.timeToRepay;} else if(value === 2 && $scope.barData.length === 2){ labelStr = $scope.timeToRepay2; } return labelStr;}, ticks: $scope.barData.length + 1},
+                      //x: {key: 'x', type: 'linear', labelFunction: function() {return '';}, ticks: $scope.barData.length + 1},
                       y: {type: 'linear'}
                    },
       
@@ -267,14 +265,13 @@ angular.module('financial').controller('LoanCalculatorController', ['$scope', '$
   
         $scope.calculateTimeToRepay = function() {
  
-          interestRatePerMth = (($scope.calculator.interestRate / 100) / 12).toFixed(4);         
-          repaymentOverInterest = ($scope.calculator.monthlyRepayment / interestRatePerMth).toFixed(4);
-          cal1 = (Math.log(repaymentOverInterest / (repaymentOverInterest - $scope.calculator.amtOwing)).toFixed(4));
-          cal2 = (Math.log(1+Number(interestRatePerMth))).toFixed(4);
+          interestRatePerMth = (($scope.calculator.interestRate / 100) / 12).toFixed(6);         
+          repaymentOverInterest = ($scope.calculator.monthlyRepayment / interestRatePerMth).toFixed(6);
+          cal1 = (Math.log(repaymentOverInterest / (repaymentOverInterest - $scope.calculator.amtOwing)).toFixed(6));
+          cal2 = (Math.log(1+Number(interestRatePerMth))).toFixed(6);
           
           //$scope.timeToRepayVal = Math.log($scope.calculator.monthlyRepayment / interestRate3PerMth / (($scope.calculator.monthlyRepayment / interestRate3PerMth) - $scope.calculator.amtOwing)) / Math.log(1+interestRate3PerMth);           
           $scope.timeToRepayVal = cal1 / cal2;
- 
           convertToYrsMths();                 
        
        };
@@ -359,34 +356,30 @@ angular.module('financial').controller('LoanCalculatorController', ['$scope', '$
         var convertToYrsMths2 = function(){
           
           if ($scope.timeToRepayVal2 > 12) {
-             yearMth2 = $scope.timeToRepayVal2 / 12;
-             year2 = Math.floor(yearMth2);
-             month2 = Math.ceil(yearMth2 % 1);             
+             yearMth2 = $scope.timeToRepayVal2;
+             year2 = Math.floor(yearMth2 / 12);
+             month2 = Math.ceil(yearMth2 % 12);             
              $scope.timeToRepay2 = year2 + ' years ' + month2 +  ' months';
              //Calculate interest          
-             interestAmt2 = ($scope.calculator2.monthlyRepayment2 / (($scope.calculator2.interestRate2 / 100) / 12)) * (1-(1/(Math.pow(1+(($scope.calculator2.interestRate2 / 100) / 12), (year2 * 12 + month2)))));
-
+             interestAmt2 = $scope.calculator2.monthlyRepayment2 * yearMth2 - $scope.calculator2.amtOwing2;
             // interestAmt2 = $scope.calculator2.monthlyRepayment2 * (year2 * 12 + month2) - $scope.calculator2.amtOwing2;
 
           } else {
               month2 = Math.ceil($scope.timeToRepayVal2);
               $scope.timeToRepay2 = month2 +  ' months';
               // Calculate interest
-              interestAmt2 = ($scope.calculator2.monthlyRepayment2 / (($scope.calculator2.interestRate2 / 100) / 12)) * (1-(1/(Math.pow(1+(($scope.calculator2.interestRate2 / 100) / 12), month2))));
-              //interestAmt2 = $scope.calculator2.monthlyRepayment2 * month2 - $scope.calculator2.amtOwing2;
+              interestAmt2 = $scope.calculator2.monthlyRepayment2 * month2 - $scope.calculator2.amtOwing2;
           }
 
           /* Check if barData already have existing elements */
           if($scope.barData.length === 2){
             // update the array element 1 with the new value
             $scope.barData[1].val_0 = $scope.calculator2.amtOwing2;
-            //$scope.barData[1].val_1 = interestAmt2;
-            $scope.barData[1].val_1 = 0;
+            $scope.barData[1].val_1 = interestAmt2;
 
           } else{         
             /* Populate the chart data wih principal and interest amt */
-            //$scope.barData.push({x: 2, val_0: $scope.calculator2.amtOwing2, val_1: interestAmt2});
-            $scope.barData.push({x: 2, val_0: $scope.calculator2.amtOwing2, val_1: 0});
+            $scope.barData.push({x: 2, val_0: $scope.calculator2.amtOwing2, val_1: interestAmt2});
             /* Dynamically set the number of ticks */
             $scope.barOptions.axes.x.ticks = $scope.barData.length + 1;
           }
@@ -396,10 +389,10 @@ angular.module('financial').controller('LoanCalculatorController', ['$scope', '$
   
         $scope.calculateTimeToRepay2 = function() {
         
-          interestRatePerMth2 = angular.copy((($scope.calculator2.interestRate2 / 100).toFixed(4) / 12).toFixed(4));
-          repaymentOverInterest2 = angular.copy(($scope.calculator2.monthlyRepayment2 / interestRatePerMth2).toFixed(4));
-          cal12 = (Math.log(repaymentOverInterest2 / (repaymentOverInterest2 - $scope.calculator2.amtOwing2)).toFixed(4));
-          cal22 = (Math.log(1+Number(interestRatePerMth2))).toFixed(4);
+          interestRatePerMth2 = (($scope.calculator2.interestRate2 / 100)/ 12).toFixed(6);
+          repaymentOverInterest2 = ($scope.calculator2.monthlyRepayment2 / interestRatePerMth2).toFixed(6);
+          cal12 = (Math.log(repaymentOverInterest2 / (repaymentOverInterest2 - $scope.calculator2.amtOwing2)).toFixed(6));
+          cal22 = (Math.log(1+Number(interestRatePerMth2))).toFixed(6);
           
           //$scope.timeToRepayVal = Math.log($scope.calculator.monthlyRepayment / interestRate3PerMth / (($scope.calculator.monthlyRepayment / interestRate3PerMth) - $scope.calculator.amtOwing)) / Math.log(1+interestRate3PerMth);           
           $scope.timeToRepayVal2 = cal12 / cal22;
