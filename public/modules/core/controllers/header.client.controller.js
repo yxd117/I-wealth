@@ -1,8 +1,9 @@
 'use strict';
 
-angular.module('core').controller('HeaderController', ['$scope', 'Authentication', 'Menus',
-	function($scope, Authentication, Menus) {
+angular.module('core').controller('HeaderController', ['$rootScope', '$scope', 'Authentication', 'Menus', '$http', '$state',
+	function($rootScope, $scope, Authentication, Menus, $http, $state) {
 		$scope.authentication = Authentication;
+		$scope.user = Authentication.user;
 		$scope.isCollapsed = false;
 		$scope.menu = Menus.getMenu('topbar');
 
@@ -16,7 +17,34 @@ angular.module('core').controller('HeaderController', ['$scope', 'Authentication
 		});
 
 		$scope.redirectHome = '/#!/';
-		if(Authentication.user) $scope.redirectHome = '/#!/home';
-		if(!Authentication.user) $scope.redirectHome = '/#!/';
+		if($scope.user) $scope.redirectHome = '/#!/home';
+		if($scope.user) $scope.redirectHome = '/#!/';
+
+		$scope.$watch('authentication.user', function(){
+			$scope.user = Authentication.user;
+			if($scope.user){
+				$scope.imageUrl = 'https://hexapic.s3.amazonaws.com/' + $scope.user.profilePic + '?decache=' + Math.random();
+				console.log($scope.user.profilePic);
+				$http.get($scope.imageUrl).then(function(response){
+					$scope.imageReady = true;
+				}, function(response){
+					$scope.imageReady = false;
+				});				
+			}
+
+        });
+
+		$rootScope.$watch('profileImgUrl', function(){
+			console.log($rootScope.profileImgUrl);
+			if($rootScope.profileImgUrl){
+				$scope.imageUrl = $rootScope.profileImgUrl + '?decache=' + Math.random();
+				$http.get($scope.imageUrl).then(function(response){
+					$scope.imageReady = true;
+					$state.go($state.current, {}, {reload: true});
+				}, function(response){
+					$scope.imageReady = false;
+				});				
+			}			
+		});
 	}
 ]);

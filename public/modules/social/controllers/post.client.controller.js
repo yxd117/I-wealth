@@ -9,6 +9,14 @@ angular.module('social').controller('PostsController', ['$scope', '$stateParams'
 		$scope.postFilter = 'public';
 		$scope.imageUrl = 'https://hexapic.s3.amazonaws.com/';
 
+		$scope.changeColor = function(menu, bool) {
+		    if(bool === true) {
+		        $scope.menuColor = {'background-color': '#B8A631', 'color': 'white'};
+		    } else if (bool === false) {
+		        $scope.menuColor = {'background-color': 'white', 'color':'black'}; //or, whatever the original color is
+		    }
+		};
+
 		$scope.newPost = function(){
 			$location.path('/posts/create');
 			// $scope.post.privacy = 'public';
@@ -68,12 +76,10 @@ angular.module('social').controller('PostsController', ['$scope', '$stateParams'
 	    $scope.findOne = function(){
 			var userURL = '/api/posts/' + $stateParams.postId;
 			$http.get(userURL).then(function(response){
-				console.log(response.data.user._id);
-				console.log($scope.user._id);
 				$scope.post = response.data;
-				console.log($scope.post.title);
 			});	
 	    };
+
 
 	    $scope.findPostsPublic = function () {
 	    	$anchorScroll();
@@ -82,14 +88,12 @@ angular.module('social').controller('PostsController', ['$scope', '$stateParams'
 	    $scope.findPostsFriends = function () {
 	    	$anchorScroll();
 			$http.get('/api/postsByFriends').then(function(response){
-				console.log(response);
 				$scope.posts = response.data;
 			});  	
 	    };
 	    $scope.findPostsPersonal = function () {
 	    	$anchorScroll();
 			$http.get('/api/postsByMe').then(function(response){
-				console.log(response);
 				$scope.posts = response.data;
 			});
 	    };
@@ -130,5 +134,54 @@ angular.module('social').controller('PostsController', ['$scope', '$stateParams'
 	    		console.log('There is an error deleting comment');
 	    	});
 	    };
+
+	    $scope.upPost = function(postId){
+	    	$scope.posts.forEach(function(post){
+	    		if(post._id === postId){
+	    			console.log(post.upVote);
+	    			var uidFound = false;
+	    			post.upVote.forEach(function(uId){
+	    				if($scope.user._id === uId){
+	    					uidFound = true;
+		    				$http.put('/api/downPost', {postId: postId, postFilter: $scope.postFilter}).success(function(response){
+					  			$scope.posts = response;
+
+					  		}).error(function(){
+					  			console.log('There is an error upvoting');
+					  		});
+	    				}
+	    			});
+	    			if(uidFound === false){
+	    				$http.put('/api/upPost', {postId: postId, postFilter: $scope.postFilter}).success(function(response){
+				  			$scope.posts = response;
+				  		}).error(function(){
+				  			console.log('There is an error upvoting');
+				  		});
+	    			}
+	    		}
+	    	});
+	    };
+
+	    $scope.upOnePost = function(postId){
+			var uidFound = false;
+			$scope.post.upVote.forEach(function(uId){
+				if($scope.user._id === uId){
+					uidFound = true;
+    				$http.put('/api/downOnePost', {postId: postId, postFilter: $scope.postFilter}).success(function(response){
+			  			$scope.post = response;
+			  		}).error(function(){
+			  			console.log('There is an error upvoting');
+			  		});
+				}
+			});
+			if(uidFound === false){
+				$http.put('/api/upOnePost', {postId: postId, postFilter: $scope.postFilter}).success(function(response){
+		  			$scope.post = response;
+		  		}).error(function(){
+		  			console.log('There is an error upvoting');
+		  		});
+			}
+	    };
+
 	}
 ]);

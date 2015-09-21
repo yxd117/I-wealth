@@ -35,6 +35,21 @@ module.exports = function(app) {
 	app.route('/api/removeComment')
 		.put(posts.removeComment);
 
+	app.route('/api/upPost')
+		.put(posts.upPost);
+	app.route('/api/downPost')
+		.put(posts.downPost);
+
+	app.route('/api/upOnePost')
+		.put(posts.upOnePost);
+	app.route('/api/downOnePost')
+		.put(posts.downOnePost);
+
+	app.route('/api/upUserPosts')
+		.put(posts.upUserPosts);
+	app.route('/api/downUserPosts')
+		.put(posts.downUserPosts);
+
 	// Finish by binding the article middleware
 	app.param('postId', posts.postByID);
 };

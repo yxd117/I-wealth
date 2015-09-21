@@ -47,9 +47,9 @@ angular.module('users').config(['$stateProvider',
 			url: '/password/reset/success',
 			templateUrl: 'modules/users/views/password/reset-password-success.client.view.html'
 		}).
-		state('admin', {
-			url: '/adminconsole',
-			templateUrl: 'modules/admin/views/adminconsole.client.view.html'
+		state('adminHome', {
+			url: '/admin/home',
+			templateUrl: 'modules/admin/views/admin-home.client.view.html'
 		}).
 		state('reset', {
 			url: '/password/reset/:token',

@@ -19,8 +19,6 @@ angular.module('social').controller('SocialController', ['$scope', '$window','$s
 
 		$scope.refreshSocialRankPic = function(){
 				$scope.decachedSocialRankUrl = socialRankUrl + '?decache=' + Math.random();
-				// $state.go($state.current, {}, {reload: true});
-				// $window.location.reload();
 		};
 		if(!$scope.user.age){
 			$scope.profileAge = 'N/A';
@@ -104,13 +102,46 @@ angular.module('social').controller('SocialController', ['$scope', '$window','$s
 
 		var findProfilePosts = function(userProfile){
 	    	$anchorScroll();
-	    	console.log($scope.user._id);
-	    	console.log(userProfile._id);
 			$http.get('/api/postsByUser', {params: {_id: userProfile._id}}).then(function(response){
 				console.log(response);
 				$scope.posts = response.data;
 
 			});		
+	    };
+
+	    $scope.changeColor = function(menu, bool) {
+		    if(bool === true) {
+		        $scope.menuColor = {'background-color': '#B8A631', 'color': 'white'};
+		    } else if (bool === false) {
+		        $scope.menuColor = {'background-color': 'white', 'color':'black'}; //or, whatever the original color is
+		    }
+		};
+
+	    $scope.upPost = function(postId, userProfile){
+	    	$scope.posts.forEach(function(post){
+	    		if(post._id === postId){
+	    			console.log(post.upVote);
+	    			var uidFound = false;
+	    			post.upVote.forEach(function(uId){
+	    				if($scope.user._id === uId){
+	    					uidFound = true;
+		    				$http.put('/api/downUserPosts', {_id: userProfile._id, postId: postId}).success(function(response){
+					  			$scope.posts = response;
+					  			console.log(response);
+					  		}).error(function(){
+					  			console.log('There is an error upvoting');
+					  		});
+	    				}
+	    			});
+	    			if(uidFound === false){
+	    				$http.put('/api/upUserPosts', {_id: userProfile._id,postId: postId}).success(function(response){
+				  			$scope.posts = response;
+				  		}).error(function(){
+				  			console.log('There is an error upvoting');
+				  		});
+	    			}
+	    		}
+	    	});
 	    };
 
 	}

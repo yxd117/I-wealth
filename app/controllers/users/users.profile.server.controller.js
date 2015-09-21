@@ -91,5 +91,4 @@ exports.signaws = function(req, res){
             res.end();
         } 
     });
-
 };

@@ -42,6 +42,7 @@ angular.element(document).ready(function() {
 	//Then init the app
 	angular.bootstrap(document, [ApplicationConfiguration.applicationModuleName]);
 });
+
 'use strict';
 
 // Use Application configuration module to register a new module
@@ -73,8 +74,29 @@ ApplicationConfiguration.registerModule('social');
 ApplicationConfiguration.registerModule('users');
 'use strict';
 
-angular.module('admin').controller('AdminController', ['$scope', '$http', '$location', 'Authentication', '$window',
-	function($scope, $http, $location, Authentication, $window) {
+// Setting up route
+angular.module('admin').config(['$stateProvider',
+	function($stateProvider) {
+		// Users state routing
+		$stateProvider.
+		state('adminUsers', {
+			url: '/admin/users',
+			templateUrl: 'modules/admin/views/admin-users.client.view.html'
+		}).
+		state('adminAssets', {
+			url: '/admin/assets',
+			templateUrl: 'modules/admin/views/admin-assets.client.view.html'
+		}).
+		state('adminStatistics', {
+			url: '/admin/statistics',
+			templateUrl: 'modules/admin/views/admin-statistics.client.view.html'
+		});
+	}
+]);
+'use strict';
+
+angular.module('admin').controller('AdminController', ['$scope', '$http', '$location', 'Authentication', '$window', '$state', 
+	function($scope, $http, $location, Authentication, $window, $state) {
 		$scope.user = Authentication.user;
 
 		// If user is signed in then redirect back home
@@ -85,12 +107,225 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', '$loca
 			var userType = $scope.user.roles;
 			if (userType[0].localeCompare('admin') !== 0) $location.path('/');
 		}
-		
+
+
+		$scope.emailSelected = null;
 
 		$scope.goToDB =function(){
             $window.open('https://mongolab.com/databases/fyphexa');
 		};
 
+		$scope.goToAWS = function(){
+			$window.open('https://console.aws.amazon.com/s3/home?bucket=hexapic&prefix=assets%2F&region=us-west-2#');
+		};
+
+		$scope.retrieveUserRecordsInit = function(){
+			$scope.success = $scope.error = null;
+			$scope.successRetrieve = null;
+			$http.get('/admin/retrieveUsers').then(function(response){
+				$scope.userList = response.data;
+				$scope.emailSelected = null;
+				$scope.userRecord = null;
+			});			
+		};
+		$scope.retrieveUserRecords = function(){
+			$scope.success = $scope.error = null;
+			$scope.successRetrieve = null;
+			$http.get('/admin/retrieveUsers').then(function(response){
+				$scope.userList = response.data;
+				$scope.emailSelected = null;
+				$scope.userRecord = null;
+				$scope.successRetrieve = true;
+			});
+		};
+
+		$scope.showRecord = function(email){
+			$scope.successRetrieve = false;
+			$scope.emailSelected = email;
+			$scope.userList.forEach(function(user){
+				if(user.email === email){
+					$scope.userRecord = angular.toJson(user, true);
+				}
+			});
+		};
+
+		$scope.updateRecord = function(){
+			$http.put('/admin/updateUser', {userEmail: $scope.emailSelected, userRecord: $scope.userRecord}).success(function(response){
+				$http.get('/admin/retrieveUsers').then(function(response){
+					$scope.userList = response.data;
+				});
+				$scope.userRecord = angular.toJson(response, true);
+				$scope.success = true;
+			}).error(function(response){
+				console.log(response.data.message);
+				$scope.error = response.data.message;
+			});
+		};
+
+		$scope.deleteRecord = function(){
+			console.log($scope.emailSelected);
+			if(!$scope.emailSelected){
+				console.log('lol');
+				$scope.errorDelete = 'User not selected';
+			}else{
+				$http.put('/admin/deleteUser', {userEmail: $scope.emailSelected, userRecord: $scope.userRecord}).success(function(response){
+					console.log(response);
+					$scope.userList = response;
+					$scope.successDelete = true;
+					$scope.userRecord = null;
+					$scope.emailSelected = null;
+					
+				}).error(function(response){
+					$scope.errorDelete = response.data.message;
+				});				
+			}
+
+		};
+		$scope.checkDelete = function(){
+			$scope.successDelete = null;
+			$scope.errorDelete = null;
+			if(!$scope.emailSelected){
+				$scope.errorDelete = 'User not selected';
+			}
+		};
+
+		$scope.createNewUser = function(){
+			$http.post('/admin/createUser', $scope.credentials).success(function(response) {
+				// If successful we assign the response to the global user model
+				console.log(response);
+				$scope.userList = response;
+				$scope.successCreate = true;
+			}).error(function(response) {
+				$scope.errorCreate = response.message;
+			});			
+		};
+
+		// Upload functions
+		$scope.decachedImageUrl = 'https://hexapic.s3.amazonaws.com/assets/default'+ '?decache=' + Math.random();
+      
+		var upload_file = function(file, signed_request, url){
+			$http.put(signed_request, file).success(function(response) {
+
+				$scope.uploaded = true;
+				var newImage = url + '?decache=' + Math.random();
+				$http.get(newImage).then(function(response){
+					$scope.decachedImageUrl = newImage;
+				}, function(response){
+
+				});
+				
+			}).error(function(response) {
+				alert('Could not upload file.'); 
+			});
+
+		};
+		/*
+		    Function to get the temporary signed request from the app.
+		    If request successful, continue to upload the file using this signed
+		    request.
+		*/
+
+	    var upload = function (file) {
+
+			// var str = angular.copy(file.name).split('.');
+			// $scope.assetName = str[0];
+			$scope.assetName = $scope.assetDetails.name;
+			$scope.assetType = file.type;			
+
+		    $http.put('/signawsAdmin', {'assetName': $scope.assetName, 'assetType': $scope.assetType}).success(function(response) {
+				// If successful 
+				upload_file(file, response.signed_request, response.url);
+			}).error(function(response) {
+				alert('Could not get signed URL.');
+			});
+	    };
+
+	    $scope.addNewAsset = function(file){
+	    	upload(file);
+	    	console.log($scope.assetDetails.name);
+	    	$scope.assetDetails.image = $scope.assetDetails.name;
+	    	$http.post('/admin/addNewAsset', $scope.assetDetails).success(function(response) {
+				// If successful we assign the response to the global user model
+				console.log(response);
+				$scope.assets = response;
+				$scope.successAddAsset = true;
+				$scope.successUpdateRecords = $scope.errorUpdateRecords = null;
+				$scope.successRetrieveAssets = null;
+				$http.get('/admin/retrieveAssets').then(function(response){
+					$scope.assetList = response.data;
+					$scope.assetSelected = null;
+					$scope.assetRecord = null;
+				});
+			}).error(function(response) {
+				$scope.errorAddAsset = response.message;
+			});	
+
+	    };
+
+
+	    $scope.retrieveAssetRecordsInit = function(){
+			$scope.successUpdateRecords = $scope.errorUpdateRecords = null;
+			$scope.successRetrieveAssets = null;
+			$http.get('/admin/retrieveAssets').then(function(response){
+				$scope.assetList = response.data;
+				$scope.assetSelected = null;
+				$scope.assetRecord = null;
+			});	
+	    };
+
+	    $scope.retrieveAssetRecords = function(){
+			$scope.successUpdateRecords = $scope.errorUpdateRecords = null;
+			$scope.successRetrieveAssets = null;
+			$scope.assetRecordShow = false;
+			$http.get('/admin/retrieveAssets').then(function(response){
+				$scope.assetList = response.data;
+				$scope.assetSelected = null;
+				$scope.assetRecord = null;
+				$scope.successRetrieveAssets = true;
+			});		    	
+	    };
+
+		$scope.showAssetRecord = function(assetName){
+			$scope.assetRecordShow = true;
+			$scope.successUpdateAssets = $scope.successAssetDelete = $scope.errorAssetDelete = null;
+			var imageUrl = 'https://hexapic.s3.amazonaws.com/assets/';
+			$scope.assetImageUrl = imageUrl + assetName + '?decache=' + Math.random();
+
+			$scope.successRetrieveAssets = false;
+			$scope.assetSelected = assetName;
+			$scope.assetList.forEach(function(asset){
+				if(asset.name === assetName){
+					$scope.assetRecord = asset;
+				}
+			});
+		};
+
+		$scope.updateAssetRecord = function(){
+			$http.put('/admin/updateAsset', {assetName: $scope.assetSelected, assetRecord: $scope.assetRecord}).success(function(response){
+				$http.get('/admin/retrieveAssets').then(function(response){
+					$scope.assetList = response.data;
+				});
+				$scope.assetRecord = response;
+				$scope.successUpdateAssets = true;
+			}).error(function(response){
+				console.log(response.data.message);
+				$scope.errorUpdateAssets = response.data.message;
+			});
+		};
+
+		$scope.deleteAssetRecord = function(){
+			$http.put('/admin/deleteAsset', {assetName: $scope.assetSelected, assetRecord: $scope.assetRecord}).success(function(response){
+				console.log(response);
+				$scope.assetList = response;
+				$scope.successAssetDelete = true;
+				$scope.assetRecord = null;
+				$scope.assetSelected = null;
+				// $scope.assetRecordShow = false;
+				
+			}).error(function(response){
+				$scope.errorAssetDelete = response.data.message;
+			});	
+		};
 	}
 ]);
 'use strict';
@@ -236,9 +471,10 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
 ]);
 'use strict';
 
-angular.module('core').controller('HeaderController', ['$scope', 'Authentication', 'Menus',
-	function($scope, Authentication, Menus) {
+angular.module('core').controller('HeaderController', ['$rootScope', '$scope', 'Authentication', 'Menus', '$http', '$state',
+	function($rootScope, $scope, Authentication, Menus, $http, $state) {
 		$scope.authentication = Authentication;
+		$scope.user = Authentication.user;
 		$scope.isCollapsed = false;
 		$scope.menu = Menus.getMenu('topbar');
 
@@ -252,8 +488,35 @@ angular.module('core').controller('HeaderController', ['$scope', 'Authentication
 		});
 
 		$scope.redirectHome = '/#!/';
-		if(Authentication.user) $scope.redirectHome = '/#!/home';
-		if(!Authentication.user) $scope.redirectHome = '/#!/';
+		if($scope.user) $scope.redirectHome = '/#!/home';
+		if($scope.user) $scope.redirectHome = '/#!/';
+
+		$scope.$watch('authentication.user', function(){
+			$scope.user = Authentication.user;
+			if($scope.user){
+				$scope.imageUrl = 'https://hexapic.s3.amazonaws.com/' + $scope.user.profilePic + '?decache=' + Math.random();
+				console.log($scope.user.profilePic);
+				$http.get($scope.imageUrl).then(function(response){
+					$scope.imageReady = true;
+				}, function(response){
+					$scope.imageReady = false;
+				});				
+			}
+
+        });
+
+		$rootScope.$watch('profileImgUrl', function(){
+			console.log($rootScope.profileImgUrl);
+			if($rootScope.profileImgUrl){
+				$scope.imageUrl = $rootScope.profileImgUrl + '?decache=' + Math.random();
+				$http.get($scope.imageUrl).then(function(response){
+					$scope.imageReady = true;
+					$state.go($state.current, {}, {reload: true});
+				}, function(response){
+					$scope.imageReady = false;
+				});				
+			}			
+		});
 	}
 ]);
 'use strict';
@@ -646,6 +909,8 @@ angular.module('financial').controller('AssetsController', ['$scope', '$rootScop
             $scope.month = $scope.dt.getMonth();
             $scope.year = Number($scope.dt.getFullYear());
             $scope.monthDisplay = $scope.selectedMonth;
+            $scope.selectedYear = $scope.year;
+            // ng-init="selectedYear = year"
             console.log($scope.month);
             console.log($scope.year);
         };
@@ -1786,22 +2051,6 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
         $scope.oneAtATime = false;
 
         //--DATE Selected
-        
-        var current = function() {
-            $scope.dt = new Date();
-            $scope.month = $scope.dt.getMonth();
-            $scope.year = Number($scope.dt.getFullYear());
-            $scope.monthDisplay = $scope.selectedMonth;
-            console.log($scope.month);
-            console.log($scope.year);
-
-            $scope.selectedMonth = $scope.month;
-            $scope.selectedYear = $scope.year;
-        };
-
-
-        current();
-
         $scope.monthArr = [
             'January',
             'February',
@@ -1815,7 +2064,23 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
             'October',
             'November',
             'December'
-            ];
+            ];      
+        var current = function() {
+            $scope.dt = new Date();
+            $scope.month = $scope.dt.getMonth();
+            $scope.year = Number($scope.dt.getFullYear());
+            $scope.monthDisplay = $scope.selectedMonth;
+            console.log($scope.month);
+            console.log($scope.year);
+
+            $scope.selectedMonth = $scope.monthArr[$scope.month];
+            console.log($scope.selectedMonth);
+            $scope.selectedYear = $scope.year;
+        };
+
+
+        current();
+
         //Charts Variables display time period
         $scope.selectedChartOption = '0';
 
@@ -5881,6 +6146,14 @@ angular.module('social').controller('PostsController', ['$scope', '$stateParams'
 		$scope.postFilter = 'public';
 		$scope.imageUrl = 'https://hexapic.s3.amazonaws.com/';
 
+		$scope.changeColor = function(menu, bool) {
+		    if(bool === true) {
+		        $scope.menuColor = {'background-color': '#B8A631', 'color': 'white'};
+		    } else if (bool === false) {
+		        $scope.menuColor = {'background-color': 'white', 'color':'black'}; //or, whatever the original color is
+		    }
+		};
+
 		$scope.newPost = function(){
 			$location.path('/posts/create');
 			// $scope.post.privacy = 'public';
@@ -5940,12 +6213,10 @@ angular.module('social').controller('PostsController', ['$scope', '$stateParams'
 	    $scope.findOne = function(){
 			var userURL = '/api/posts/' + $stateParams.postId;
 			$http.get(userURL).then(function(response){
-				console.log(response.data.user._id);
-				console.log($scope.user._id);
 				$scope.post = response.data;
-				console.log($scope.post.title);
 			});	
 	    };
+
 
 	    $scope.findPostsPublic = function () {
 	    	$anchorScroll();
@@ -5954,14 +6225,12 @@ angular.module('social').controller('PostsController', ['$scope', '$stateParams'
 	    $scope.findPostsFriends = function () {
 	    	$anchorScroll();
 			$http.get('/api/postsByFriends').then(function(response){
-				console.log(response);
 				$scope.posts = response.data;
 			});  	
 	    };
 	    $scope.findPostsPersonal = function () {
 	    	$anchorScroll();
 			$http.get('/api/postsByMe').then(function(response){
-				console.log(response);
 				$scope.posts = response.data;
 			});
 	    };
@@ -6002,6 +6271,55 @@ angular.module('social').controller('PostsController', ['$scope', '$stateParams'
 	    		console.log('There is an error deleting comment');
 	    	});
 	    };
+
+	    $scope.upPost = function(postId){
+	    	$scope.posts.forEach(function(post){
+	    		if(post._id === postId){
+	    			console.log(post.upVote);
+	    			var uidFound = false;
+	    			post.upVote.forEach(function(uId){
+	    				if($scope.user._id === uId){
+	    					uidFound = true;
+		    				$http.put('/api/downPost', {postId: postId, postFilter: $scope.postFilter}).success(function(response){
+					  			$scope.posts = response;
+
+					  		}).error(function(){
+					  			console.log('There is an error upvoting');
+					  		});
+	    				}
+	    			});
+	    			if(uidFound === false){
+	    				$http.put('/api/upPost', {postId: postId, postFilter: $scope.postFilter}).success(function(response){
+				  			$scope.posts = response;
+				  		}).error(function(){
+				  			console.log('There is an error upvoting');
+				  		});
+	    			}
+	    		}
+	    	});
+	    };
+
+	    $scope.upOnePost = function(postId){
+			var uidFound = false;
+			$scope.post.upVote.forEach(function(uId){
+				if($scope.user._id === uId){
+					uidFound = true;
+    				$http.put('/api/downOnePost', {postId: postId, postFilter: $scope.postFilter}).success(function(response){
+			  			$scope.post = response;
+			  		}).error(function(){
+			  			console.log('There is an error upvoting');
+			  		});
+				}
+			});
+			if(uidFound === false){
+				$http.put('/api/upOnePost', {postId: postId, postFilter: $scope.postFilter}).success(function(response){
+		  			$scope.post = response;
+		  		}).error(function(){
+		  			console.log('There is an error upvoting');
+		  		});
+			}
+	    };
+
 	}
 ]);
 'use strict';
@@ -6025,8 +6343,6 @@ angular.module('social').controller('SocialController', ['$scope', '$window','$s
 
 		$scope.refreshSocialRankPic = function(){
 				$scope.decachedSocialRankUrl = socialRankUrl + '?decache=' + Math.random();
-				// $state.go($state.current, {}, {reload: true});
-				// $window.location.reload();
 		};
 		if(!$scope.user.age){
 			$scope.profileAge = 'N/A';
@@ -6110,13 +6426,46 @@ angular.module('social').controller('SocialController', ['$scope', '$window','$s
 
 		var findProfilePosts = function(userProfile){
 	    	$anchorScroll();
-	    	console.log($scope.user._id);
-	    	console.log(userProfile._id);
 			$http.get('/api/postsByUser', {params: {_id: userProfile._id}}).then(function(response){
 				console.log(response);
 				$scope.posts = response.data;
 
 			});		
+	    };
+
+	    $scope.changeColor = function(menu, bool) {
+		    if(bool === true) {
+		        $scope.menuColor = {'background-color': '#B8A631', 'color': 'white'};
+		    } else if (bool === false) {
+		        $scope.menuColor = {'background-color': 'white', 'color':'black'}; //or, whatever the original color is
+		    }
+		};
+
+	    $scope.upPost = function(postId, userProfile){
+	    	$scope.posts.forEach(function(post){
+	    		if(post._id === postId){
+	    			console.log(post.upVote);
+	    			var uidFound = false;
+	    			post.upVote.forEach(function(uId){
+	    				if($scope.user._id === uId){
+	    					uidFound = true;
+		    				$http.put('/api/downUserPosts', {_id: userProfile._id, postId: postId}).success(function(response){
+					  			$scope.posts = response;
+					  			console.log(response);
+					  		}).error(function(){
+					  			console.log('There is an error upvoting');
+					  		});
+	    				}
+	    			});
+	    			if(uidFound === false){
+	    				$http.put('/api/upUserPosts', {_id: userProfile._id,postId: postId}).success(function(response){
+				  			$scope.posts = response;
+				  		}).error(function(){
+				  			console.log('There is an error upvoting');
+				  		});
+	    			}
+	    		}
+	    	});
 	    };
 
 	}
@@ -6229,9 +6578,9 @@ angular.module('users').config(['$stateProvider',
 			url: '/password/reset/success',
 			templateUrl: 'modules/users/views/password/reset-password-success.client.view.html'
 		}).
-		state('admin', {
-			url: '/adminconsole',
-			templateUrl: 'modules/admin/views/adminconsole.client.view.html'
+		state('adminHome', {
+			url: '/admin/home',
+			templateUrl: 'modules/admin/views/admin-home.client.view.html'
 		}).
 		state('reset', {
 			url: '/password/reset/:token',
@@ -6293,7 +6642,7 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$http
 				// And redirect to the index page
 				var userType = $scope.authentication.user.roles;
 				if (userType[0].localeCompare('admin') === 0) {
-					$location.path('/adminconsole');
+					$location.path('/admin/home');
 				}else{
 					if (!completeQns)$location.path('/settings/questionnaire');
 					else $location.path('/home');					
@@ -6431,6 +6780,7 @@ angular.module('users').controller('QuestionnaireController', ['$scope', '$state
 		var verifyQnsPersonalCompleted = function(user){
 			var completePersonalQns = true;
 			var personalScore = 0;
+
 			if(user.creditProfileScore.sGender === null || user.creditProfileScore.sGender === undefined) completePersonalQns = false;
 			else {
 				personalScore += Number(user.creditProfileScore.sGender);
@@ -6438,7 +6788,7 @@ angular.module('users').controller('QuestionnaireController', ['$scope', '$state
 					user.gender = 'Male';
 				} else user.gender = 'Female';
 			}
-
+			
 			if(user.creditProfileScore.sAge === null || user.creditProfileScore.sAge === undefined) completePersonalQns = false;
 			else personalScore += Number(user.creditProfileScore.sAge);
 
@@ -6457,18 +6807,19 @@ angular.module('users').controller('QuestionnaireController', ['$scope', '$state
 					user.educationLevel = 'A/O/N Levels';
 				} else user.educationLevel = 'PSLE';
 			}
-
+			
 			if(user.creditProfileScore.sMaritalStatus === null || user.creditProfileScore.sMaritalStatus === undefined) completePersonalQns = false;
 			else {
 				personalScore += Number(user.creditProfileScore.sMaritalStatus);		
 				if(Number(user.creditProfileScore.sMaritalStatus) === 3) user.maritalStatus = 'Married';
 			}
-
+			
 			if(user.creditProfileScore.sLocativeSituation === null || user.creditProfileScore.sLocativeSituation === undefined) completePersonalQns = false;
 			else personalScore += Number(user.creditProfileScore.sLocativeSituation);	
 
 			if(user.creditProfileScore.sLocativeType === null || user.creditProfileScore.sLocativeType === undefined) completePersonalQns = false;
-			else personalScore += Number(user.sLocativeType);
+			else personalScore += Number(user.creditProfileScore.sLocativeType);
+			console.log(personalScore);
 
 			if(user.creditProfileScore.sNoOfDependents === null || user.creditProfileScore.sNoOfDependents === undefined) completePersonalQns = false;
 			else {
@@ -6526,7 +6877,7 @@ angular.module('users').controller('QuestionnaireController', ['$scope', '$state
 			if(user.creditProfileScore.sMonthlyExpense === null || user.creditProfileScore.sMonthlyExpense === undefined) completeFinanceQns = false;
 			else financeScore += Number(user.creditProfileScore.sMonthlyExpense);
 			if(user.creditProfileScore.sMonthlySavings === null || user.creditProfileScore.sMonthlySavings === undefined) completeFinanceQns = false;
-			else financeScore += Number(user.sMonthlySavings);
+			else financeScore += Number(user.creditProfileScore.sMonthlySavings);
 			if(user.creditProfileScore.sCreditHistory === null || user.creditProfileScore.sCreditHistory === undefined) completeFinanceQns = false;
 			else financeScore += Number(user.creditProfileScore.sCreditHistory);		
 			if(user.creditProfileScore.sBankruptStatus === null || user.creditProfileScore.sBankruptStatus === undefined) completeFinanceQns = false;
@@ -6546,8 +6897,8 @@ angular.module('users').controller('QuestionnaireController', ['$scope', '$state
 ]);
 'use strict';
 
-angular.module('users').controller('SettingsController', ['$scope', '$http','$state','$timeout' ,'$location', 'Users', 'Authentication', 'Upload',
-	function($scope, $http, $state, $timeout,$location, Users, Authentication, Upload) {
+angular.module('users').controller('SettingsController', ['$rootScope','$scope', '$http','$state','$timeout' ,'$location', 'Users', 'Authentication', 'Upload',
+	function($rootScope, $scope, $http, $state, $timeout,$location, Users, Authentication, Upload) {
 		$scope.user = Authentication.user;
 
 		// If user is not signed in then redirect back home
@@ -6707,22 +7058,9 @@ angular.module('users').controller('SettingsController', ['$scope', '$http','$st
 		var upload_file = function(file, signed_request, url){
 
 			$http.put(signed_request, file).success(function(response) {
-				// If successful 
-				// $scope.imgUrl = '';
-				// $timeout(function(){
-				
-				// // 	// $state.transitionTo($state.current, $stateParams, {
-				// // 	//     reload: true,
-				// // 	//     inherit: false,
-				// // 	//     notify: true
-				// // 	// });
-				// $scope.imgUrl = url; 
-				// $state.go($state.current, {}, {reload: true});
-				// },10000);
 				$scope.decachedImageUrl = url + '?decache=' + Math.random();
+				$rootScope.profileImgUrl = url + '?decache=' + Math.random();
 				$state.go($state.current, {}, {reload: true});
-				//$route.reload();     
-		        //document.getElementById("avatar_url").value = url;
 			}).error(function(response) {
 				alert('Could not upload file.'); 
 			});
@@ -6741,7 +7079,6 @@ angular.module('users').controller('SettingsController', ['$scope', '$http','$st
 		    console.log(file);
 		    $http.get('/signaws', file).success(function(response) {
 				// If successful 
-				//var resp = JSON.parse(response);
 				upload_file(file, response.signed_request, response.url);
 			}).error(function(response) {
 				alert('Could not get signed URL.');

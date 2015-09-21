@@ -49,7 +49,12 @@
 
       <div class="row">
         <div class=" col-md-12">
-          <h4>Comments ({{post.comments.length}})</h4>
+          <h4>
+            <button class="btn btn-large btn-default" ng-click="upOnePost(post._id)" ng-class="{selectedPost: post.up === true}">
+              <span class="glyphicon glyphicon glyphicon-arrow-up"></span>
+            </button>
+            {{post.upVote.length}} Points &middot; Comments ({{post.comments.length}})
+          </h4>
           <div class="list-group" ng-if="post.comments.length != 0">
             <div class="list-group-item" data-ng-repeat="comment in post.comments | orderBy:'-created'" ng-init="editCmt = false">
 

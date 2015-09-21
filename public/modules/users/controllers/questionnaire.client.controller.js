@@ -71,6 +71,7 @@ angular.module('users').controller('QuestionnaireController', ['$scope', '$state
 		var verifyQnsPersonalCompleted = function(user){
 			var completePersonalQns = true;
 			var personalScore = 0;
+
 			if(user.creditProfileScore.sGender === null || user.creditProfileScore.sGender === undefined) completePersonalQns = false;
 			else {
 				personalScore += Number(user.creditProfileScore.sGender);
@@ -78,7 +79,7 @@ angular.module('users').controller('QuestionnaireController', ['$scope', '$state
 					user.gender = 'Male';
 				} else user.gender = 'Female';
 			}
-
+			
 			if(user.creditProfileScore.sAge === null || user.creditProfileScore.sAge === undefined) completePersonalQns = false;
 			else personalScore += Number(user.creditProfileScore.sAge);
 
@@ -97,18 +98,19 @@ angular.module('users').controller('QuestionnaireController', ['$scope', '$state
 					user.educationLevel = 'A/O/N Levels';
 				} else user.educationLevel = 'PSLE';
 			}
-
+			
 			if(user.creditProfileScore.sMaritalStatus === null || user.creditProfileScore.sMaritalStatus === undefined) completePersonalQns = false;
 			else {
 				personalScore += Number(user.creditProfileScore.sMaritalStatus);		
 				if(Number(user.creditProfileScore.sMaritalStatus) === 3) user.maritalStatus = 'Married';
 			}
-
+			
 			if(user.creditProfileScore.sLocativeSituation === null || user.creditProfileScore.sLocativeSituation === undefined) completePersonalQns = false;
 			else personalScore += Number(user.creditProfileScore.sLocativeSituation);	
 
 			if(user.creditProfileScore.sLocativeType === null || user.creditProfileScore.sLocativeType === undefined) completePersonalQns = false;
-			else personalScore += Number(user.sLocativeType);
+			else personalScore += Number(user.creditProfileScore.sLocativeType);
+			console.log(personalScore);
 
 			if(user.creditProfileScore.sNoOfDependents === null || user.creditProfileScore.sNoOfDependents === undefined) completePersonalQns = false;
 			else {
@@ -166,7 +168,7 @@ angular.module('users').controller('QuestionnaireController', ['$scope', '$state
 			if(user.creditProfileScore.sMonthlyExpense === null || user.creditProfileScore.sMonthlyExpense === undefined) completeFinanceQns = false;
 			else financeScore += Number(user.creditProfileScore.sMonthlyExpense);
 			if(user.creditProfileScore.sMonthlySavings === null || user.creditProfileScore.sMonthlySavings === undefined) completeFinanceQns = false;
-			else financeScore += Number(user.sMonthlySavings);
+			else financeScore += Number(user.creditProfileScore.sMonthlySavings);
 			if(user.creditProfileScore.sCreditHistory === null || user.creditProfileScore.sCreditHistory === undefined) completeFinanceQns = false;
 			else financeScore += Number(user.creditProfileScore.sCreditHistory);		
 			if(user.creditProfileScore.sBankruptStatus === null || user.creditProfileScore.sBankruptStatus === undefined) completeFinanceQns = false;

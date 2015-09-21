@@ -32,7 +32,7 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$http
 				// And redirect to the index page
 				var userType = $scope.authentication.user.roles;
 				if (userType[0].localeCompare('admin') === 0) {
-					$location.path('/adminconsole');
+					$location.path('/admin/home');
 				}else{
 					if (!completeQns)$location.path('/settings/questionnaire');
 					else $location.path('/home');					

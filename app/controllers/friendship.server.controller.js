@@ -128,7 +128,7 @@ exports.retrieveUserList = function(req, res){
 						friendStatus = req.user.friendList[f].friendStatus;
 					}
 				}
-				if(users[i].privacy === 'public'){
+				if(users[i].privacy === 'public' && users[i].roles[0] === 'user'){
 
 					userProfile = {
 						userObjectId: users[i].id,

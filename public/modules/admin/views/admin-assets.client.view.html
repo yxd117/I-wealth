@@ -1,0 +1,178 @@
+<section class="content" data-ng-controller="AdminController">
+	<div class= "row">
+		<div class="col-md-12">
+			<ul class="nav nav-tabs">
+			  <li role="presentation"><a href="/#!/admin/home">Home</a></li>
+			  <li role="presentation"><a href="/#!/admin/users">Manage Users</a></li>
+			  <li role="presentation" class="active"><a href="/#!/admin/assets">Manage Assets</a></li>
+			  <li role="presentation"><a href="/#!/admin/statistics">Statistics</a></li>
+			</ul>
+		</div>		
+	</div>
+	<div class="row">
+		<div class="col-md-12" ng-init="retrieveAssetRecordsInit()">
+			<h4>Advertisement Records</h4>
+			<div class="row">
+				<div class="col-md-12">
+					<button class="btn btn-default btn-default-sm" ng-click="retrieveAssetRecords()">Refresh List</button>
+					<button class="btn btn-primary btn-primary-sm" data-toggle="modal" data-target="#assetModal" ng-click="">Add New Asset</button>
+					<div class="modal fade" id="assetModal" tabindex="-1" role="dialog" aria-labelledby="assetModalLabel">
+						<div class="modal-dialog" role="document">
+							<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+									<h4 class="modal-title" id="assetModalLabel">Add New Asset</h4>
+								</div>
+								<div class="modal-body">
+									<div class="row">
+										<div class="col-md-12">
+											<form name="assetForm" data-ng-submit="addNewAsset(file)" class="signin" novalidate autocomplete="off">
+												<fieldset>
+													<div class="row">
+												      <div class="col-md-12">
+												      	<img style="border:1px solid gray;width:300px;height:300px;" ng-if="file" ngf-src="file" ngf-background="file" ngf-no-object-url="false"/>
+												        <input type="file" ngf-select ng-model="file"/>
+												        <!-- <button class="btn btn-large btn-primary" ng-click="upload(file)">Add Asset Picture</button> -->
+												      </div>
+													</div>		
+													<div class="form-group">
+														<label for="assetName">Name</label>
+														<input type="text" required id="assetName" name="assetName" class="form-control" data-ng-model="assetDetails.name" placeholder="Asset Name">
+													</div>
+													<div class="form-group">
+														<label for="description">Description</label>
+														<textarea type="text" id="description" name="description" class="form-control" data-ng-model="assetDetails.description" placeholder="Description"></textarea>
+													</div>
+													<div class="form-group">
+														<label for="startDate">Start Date</label>
+														<input type="date" class="form-control" datepicker-popup ng-model="assetDetails.startDate" is-open="opened" ng-required="true" close-text="Close" />
+													</div>
+													<div class="form-group">
+														<label for="endDate">End Date</label>
+														<input type="date" class="form-control" datepicker-popup ng-model="assetDetails.endDate" is-open="opened" ng-required="true" close-text="Close" />
+													</div>
+													<div class="text-center form-group">
+														<button type="submit" class="btn btn-large btn-primary">Add Asset</button>
+														<button class="btn btn-large btn-default" data-dismiss="modal" ng-click="assetDetails = null; file= null; successAddAsset = false; errorAddAsset = false;assetForm.$setPristine();">Close</button>
+													
+													</div>
+												</fieldset>
+												<div data-ng-show="successAddAsset" class="text-center text-success">
+													<strong>New Asset Added Successfully</strong>
+												</div>
+												<div data-ng-show="errorAddAsset" class="text-center text-danger">
+													<strong data-ng-bind="error"></strong>
+												</div>	
+											</form>
+										</div>
+									</div>
+								</div> 
+								<div class="modal-footer">
+
+								</div>
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<div data-ng-show="successRetrieveAssets" class="text-success">
+						<strong>Asset Records Retrieved Successfully</strong>
+					</div>				
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="row" style="margin-top:5px;">
+		<div class="col-md-2" >
+			<div class="scrollArea4" style="border:1px solid grey;">
+				<ul ng-repeat="asset in assetList" ng-click="showAssetRecord(asset.name);" ng-class="{selected: asset.name === assetSelected}">
+					{{asset.name}}
+				</ul>						
+			</div>
+		</div>
+		<!-- <textarea class="col-md-10 scrollArea3" type="text" ng-model="assetRecord"></textarea> -->
+		<div class="col-md-4" ng-show="assetRecordShow">
+			<img style="border:1px solid gray;width:400px;height:400px" ng-src="{{assetImageUrl}}" />
+		</div>
+		<div class="col-md-4" ng-show="assetRecordShow">	
+			<form name="updateAssetForm">
+					<div class="form-group">
+						<label for="assetName">Name (AWS URL)</label>
+						<input type="text" name="assetName" class="form-control" data-ng-model="assetRecord.name" placeholder="Asset Name">
+					</div>
+					<div class="form-group">
+						<label for="description">Description</label>
+						<textarea type="text"  name="description" class="form-control" data-ng-model="assetRecord.description" placeholder="Description"></textarea>
+					</div>
+					<div class="form-group">
+						<label for="startDate">Start Date</label>
+						<input type="date" class="form-control" datepicker-popup ng-model="assetRecord.startDate" is-open="opened" ng-required="true" close-text="Close" />
+					</div>
+					<div class="form-group">
+						<label for="endDate">End Date</label>
+						<input type="date" class="form-control" datepicker-popup ng-model="assetRecord.endDate" is-open="opened" ng-required="true" close-text="Close" />
+					</div>
+					<div class="form-group">
+						<label for="display">Display Advertisement</label> 
+						<div class="col-md-12">
+							<span style="margin-right:20px;"><input type="radio" ng-model="assetRecord.display" ng-value="true"> Yes</span>
+							<span><input type="radio" ng-model="assetRecord.display" ng-value="false"> No</span>
+						</div>
+						
+					</div>
+			</form>
+
+				<div class="row">
+					<div class="col-md-12" style="margin-top:10px;">
+						<button class="btn btn-primary btn-primary-sm" ng-click="updateAssetRecord(); updateAssetForm.$setPristine();">Save Changes</button>
+						<button class="btn btn-danger btn-primary-sm" data-toggle="modal" data-target="#modalAssetDelete" ng-click="checkAssetDelete()">Delete Record</button>
+						<div class="modal fade" id="modalAssetDelete" tabindex="-1" role="dialog" aria-labelledby="assetModalLabel">
+							<div class="modal-dialog" role="document">
+								<div class="modal-content">
+									<div class="modal-header">
+										<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+										<h4 class="modal-title" id="assetModalLabel">Delete Asset</h4>
+									</div>
+									<div class="modal-body">
+										<div class="row">
+											<div class="col-md-12">
+												<button class="btn btn-danger btn-primary-sm" ng-click="deleteAssetRecord()">Delete</button>
+												<button class="btn btn-large btn-default" data-dismiss="modal">Close</button>
+												<div data-ng-show="successAssetDelete" class="text-success">
+													<strong>Asset Record deleted Successfully</strong>
+												</div>
+												<div data-ng-show="errorAssetDelete" class="text-danger">
+													<strong data-ng-bind="errorDelete"></strong>
+												</div>	
+											</div>
+										</div>
+									</div> 
+									<div class="modal-footer">
+
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-12">
+						<div data-ng-show="successUpdateAssets" class="text-success">
+							<strong>Asset Records updated Successfully</strong>
+						</div>
+						<div data-ng-show="errorUpdateAssets" class="text-danger">
+							<strong data-ng-bind="error"></strong>
+						</div>					
+					</div>					
+				</div>
+
+		
+		</div>
+
+
+
+	</div>	
+
+</section>

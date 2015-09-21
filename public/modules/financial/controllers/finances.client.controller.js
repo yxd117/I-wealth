@@ -58,22 +58,6 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
         $scope.oneAtATime = false;
 
         //--DATE Selected
-        
-        var current = function() {
-            $scope.dt = new Date();
-            $scope.month = $scope.dt.getMonth();
-            $scope.year = Number($scope.dt.getFullYear());
-            $scope.monthDisplay = $scope.selectedMonth;
-            console.log($scope.month);
-            console.log($scope.year);
-
-            $scope.selectedMonth = $scope.month;
-            $scope.selectedYear = $scope.year;
-        };
-
-
-        current();
-
         $scope.monthArr = [
             'January',
             'February',
@@ -87,7 +71,23 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
             'October',
             'November',
             'December'
-            ];
+            ];      
+        var current = function() {
+            $scope.dt = new Date();
+            $scope.month = $scope.dt.getMonth();
+            $scope.year = Number($scope.dt.getFullYear());
+            $scope.monthDisplay = $scope.selectedMonth;
+            console.log($scope.month);
+            console.log($scope.year);
+
+            $scope.selectedMonth = $scope.monthArr[$scope.month];
+            console.log($scope.selectedMonth);
+            $scope.selectedYear = $scope.year;
+        };
+
+
+        current();
+
         //Charts Variables display time period
         $scope.selectedChartOption = '0';
 

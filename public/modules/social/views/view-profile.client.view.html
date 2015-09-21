@@ -6,7 +6,7 @@
 					<div class="row">
 						<div class="col-sm-4 col-md-4">
 							</br>
-							<img style="border:1px solid gray; max-width:100%; max-height:100%;"  id="preview" ng-src="{{imageUrl}}{{userProfile.profilePic}}" /> 	
+							<img style="border:1px solid gray; max-width:100%; max-height:100%;width:150px;height:150px;"  id="preview" ng-src="{{imageUrl}}{{userProfile.profilePic}}" /> 	
 
 
 						</div>
@@ -138,36 +138,57 @@
 		<h4>Posts</h4>
 		<i ng-if="userProfile.posts.length === 0">No Posts found</i>
 	  	<div class="list-group scrollArea" data-ng-init="findProfilePosts()">
-		    <a data-ng-repeat="post in posts" data-ui-sref="postView({postId: post._id})" class="list-group-item" style="padding-bottom:0px;">
+			<a data-ng-repeat="post in posts" class="panel panel-default list-group-item" style="padding-bottom:0px; margin-right:1px;">
 		      <div class="row">
-		        <div class="col-md-12" >
+		        <div class="col-md-10">
 		          <div class="inline">
-		            <img style="border:1px solid gray;width:50px; height:50px; max-width:100%; max-height:100%;"  id="preview" ng-src="{{imageUrl}}{{post.user.profilePic}}" />              
+		            <img data-ui-sref="viewProfile({profileId: post.user._id})" style="border:1px solid gray;width:50px; height:50px; max-width:100%; max-height:100%;"  id="preview" ng-src="{{imageUrl}}{{post.user.profilePic}}" />              
 		          </div>
 		          <div class="inline">
-		            <medium>
-		              <b><span data-ng-bind="post.user.firstName"></span></b>
-		              <b><span data-ng-bind="post.user.lastName"></span></b>
-		            </medium> </br>    
+		              <medium data-ui-sref="viewProfile({profileId: post.user._id})">
+		                <b><span data-ng-bind="post.user.firstName"></span></b>
+		                <b><span data-ng-bind="post.user.lastName"></span></b>
+		              </medium>               
+		            </br>    
 		            <small class="list-group-item-text">
 		              Posted on
 		              <i><span data-ng-bind="post.created | date:'short'"></span></i>    
 		              <span data-ng-if="post.privacy === 'public'">(Public)</span> 
 		              <span data-ng-if="post.privacy === 'friends'">(Friends Only)</span> 
 		              <span data-ng-if="post.privacy === 'private'">(Private)</span>   
-		            </small>            
-		          </div>              
+		            </small>        
+		          </div>      
+		        </div>
+		        <div class="col-md-2">
+		          <div class="row">
+		            <div class="col-md-12">
+		              <div class="dropdown" >
+		                <span class="dropdown-toggle pull-right" id="postMenu" data-toggle="dropdown"><i class="glyphicon glyphicon-option-vertical"></i></span>  
+		                </br>
+		                <ul class="dropdown-menu">
+		                  <li style="padding-left:10px;" data-ui-sref="postView({postId: post._id})" ng-style="menuColor" ng-mouseenter="changeColor(i,true)" ng-mouseleave="changeColor(i,false)">View Post</li>
+		                </ul>                         
+		              </div>                 
+		            </div>
+		          </div>   
 		        </div>
 		      </div>
 		      <div class="row">
-		        <div class="col-md-12">
+		        <div class="col-md-10">
 		          <h4 class="list-group-item-heading" data-ng-bind="post.title"></h4>
 		          <p class="list-group-item-text" data-ng-bind="post.content"></p>           
 		        </div>
 		      </div>
-		      <div class="row" style="margin-top:5px; margin-bottom:0px; background-color:#f6f6f6;">
-		        <div class="col-md-12" style="margin-top:5px;">
-		          <p>Comments (<span data-ng-bind="post.comments.length"></span>)</p>
+		      <div class="row" style="margin-top:5px; padding:5px 0px ; margin-bottom:0px; background-color:#f6f6f6;">  
+		        <div class="col-md-2" style="margin:0px; ">
+		          <div ng-click="upPost(post._id, userProfile)" ng-class="{selectedPost: post.up === true}">
+		            <span class="glyphicon glyphicon glyphicon-arrow-up"></span>
+		            <span>{{post.upVote.length}} Points</span>
+		          </div>
+		        </div>
+		        <div class="col-md-3" style="margin:0px;">
+		          <span class="glyphicon glyphicon-comment"></span>
+		          <span>Comments (<span data-ng-bind="post.comments.length"></span>)</span>
 		        </div>  
 		      </div>
 		    </a>

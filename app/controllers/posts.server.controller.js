@@ -224,7 +224,8 @@ exports.delete = function(req, res) {
 /**
  * List of Posts
  */
-exports.listAll = function(req, res) {
+
+var listAllPosts = function(req, res){
 	var friendIdList = [];
 	req.user.friendList.forEach(function(friend){
 		if(friend.friendStatus === 3){
@@ -233,13 +234,19 @@ exports.listAll = function(req, res) {
 	});
 
 	var postToReturn = [];
-	Post.find().sort('-created').populate('user', '_id firstName lastName profilePic').exec(function(err, Posts) {
+	Post.find().sort('-created').populate('user', '_id firstName lastName profilePic').lean().exec(function(err, Posts) {
 		if (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
 			});
 		} else {
 			Posts.forEach(function(post){
+				post.upVote.forEach(function(upId){
+					if(upId === req.user.id){
+						post.up = true;
+
+					}
+				});
 				if(post.privacy === 'public'){
 					postToReturn.push(post);
 
@@ -252,15 +259,17 @@ exports.listAll = function(req, res) {
 							postToReturn.push(post);
 						}
 					});
-
 				}
+
 			});
 			res.json(postToReturn);
 		}
-	});
+	});	
 };
-
-exports.listFriends = function(req, res) {
+exports.listAll = function(req, res) {
+	listAllPosts(req, res);
+};
+var listFriendsPost = function(req, res){
 	var friendIdList = [];
 	req.user.friendList.forEach(function(friend){
 		if(friend.friendStatus === 3){
@@ -269,14 +278,19 @@ exports.listFriends = function(req, res) {
 	});
 
 	var postToReturn = [];
-	Post.find().sort('-created').populate('user', '_id firstName lastName profilePic').exec(function(err, Posts) {
+	Post.find().sort('-created').populate('user', '_id firstName lastName profilePic').lean().exec(function(err, Posts) {
 		if (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
 			});
 		} else {
 			Posts.forEach(function(post){
+				post.upVote.forEach(function(upId){
+					if(upId === req.user.id){
+						post.up = true;
 
+					}
+				});
 				friendIdList.forEach(function(friendId){
 					if(post.user._id.equals(friendId) && post.privacy !== 'private'){
 						postToReturn.push(post);
@@ -285,18 +299,27 @@ exports.listFriends = function(req, res) {
 			});
 			res.json(postToReturn);
 		}
-	});
+	});	
+};
+exports.listFriends = function(req, res) {
+	listFriendsPost(req, res);
 };
 
-exports.listPersonal = function(req, res) {
+var listPersonalPosts = function(req, res){
 	var postToReturn = [];
-	Post.find().sort('-created').populate('user', '_id firstName lastName profilePic').exec(function(err, Posts) {
+	Post.find().sort('-created').populate('user', '_id firstName lastName profilePic').lean().exec(function(err, Posts) {
 		if (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
 			});
 		} else {
 			Posts.forEach(function(post){
+				post.upVote.forEach(function(upId){
+					if(upId === req.user.id){
+						post.up = true;
+
+					}
+				});
 				if(post.user._id.equals(req.user.id)){
 					postToReturn.push(post);
 				}
@@ -305,8 +328,11 @@ exports.listPersonal = function(req, res) {
 		}
 	});
 };
+exports.listPersonal = function(req, res) {
+	listPersonalPosts(req, res);
+};
 
-exports.listUserPosts = function(req, res){
+var listUserPostsFn = function(req, res){
 	var friendIdList = [];
 	req.user.friendList.forEach(function(friend){
 		if(friend.friendStatus === 3){
@@ -315,13 +341,19 @@ exports.listUserPosts = function(req, res){
 	});
 	//Check if friends
 	var postToReturn = [];
-	Post.find().sort('-created').populate('user', '_id firstName lastName profilePic').exec(function(err, Posts) {
+	Post.find().sort('-created').populate('user', '_id firstName lastName profilePic').lean().exec(function(err, Posts) {
 		if (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
 			});
 		} else {
 			Posts.forEach(function(post){
+				post.upVote.forEach(function(upId){
+					if(upId === req.user.id){
+						post.up = true;
+
+					}
+				});
 				if(post.user._id.equals(req.query._id)){
 					postToReturn.push(post);
 					console.log(postToReturn);
@@ -338,10 +370,12 @@ exports.listUserPosts = function(req, res){
 					
 				}
 			});
-
 			res.json(postToReturn);
 		}
 	});
+};
+exports.listUserPosts = function(req, res){
+	listUserPostsFn(req, res);
 };
 /**
  * Post middleware
@@ -354,7 +388,7 @@ exports.postByID = function(req, res, next, id) {
 		});
 	}
 
-	Post.findById(id).populate([{path: 'comments'}, {path: 'user', select: '_id firstName lastName profilePic'}]).exec(function(err, post){
+	Post.findById(id).populate([{path: 'comments'}, {path: 'user', select: '_id firstName lastName profilePic'}]).lean().exec(function(err, post){
     	var options = {
     		path: 'comments.userId',
     		model: 'User'
@@ -366,6 +400,12 @@ exports.postByID = function(req, res, next, id) {
 					message: 'Post not found'
 				});
 			}
+			p.upVote.forEach(function(upId){
+				if(upId === req.user.id){
+					p.up = true;
+
+				}
+			});
 			req.Post = p;
 			console.log(p);
 			next();
@@ -387,4 +427,148 @@ exports.hasAuthorization = function(req, res, next) {
 };
 
 
+exports.upPost = function(req, res){
+	Post.update({'_id': req.body.postId}, {$push: {upVote: req.user.id}}, function(err){
+        if(err){
+            console.log(err);
+        }else{
+            console.log('Successfully upPost');
+            if(req.body.postFilter === 'public'){
+            	listAllPosts(req, res);
+            }else if(req.body.postFilter === 'friends'){
+            	listFriendsPost(req, res);
+            }else if(req.body.postFilter === 'personal'){
+            	listPersonalPosts(req, res);
+            }
+        }			
+	});
+};
 
+exports.downPost = function(req, res){
+	Post.update({'_id': req.body.postId}, {$pull: {upVote: req.user.id}}, function(err){
+        if(err){
+            console.log(err);
+        }else{
+            console.log('Successfully upPost');
+            if(req.body.postFilter === 'public'){
+            	listAllPosts(req, res);
+            }else if(req.body.postFilter === 'friends'){
+            	listFriendsPost(req, res);
+            }else if(req.body.postFilter === 'personal'){
+            	listPersonalPosts(req, res);
+            }
+ 
+        }			
+	});
+};
+
+var findOnePost = function(req, res){
+	Post.findById(req.body.postId).populate([{path: 'comments'}, {path: 'user', select: '_id firstName lastName profilePic'}]).lean().exec(function(err, post){
+		var options = {
+			path: 'comments.userId',
+			model: 'User'
+		};
+		Post.populate(post, options, function(err, p){
+			if (err) console.log(err);
+			if (!p) {
+				return res.status(404).send({
+					message: 'Post not found'
+				});
+			}
+			p.upVote.forEach(function(upId){
+				if(upId === req.user.id){
+					p.up = true;
+
+				}
+			});
+			res.json(p);
+		});
+	});
+    	
+};
+
+exports.upOnePost = function(req, res){
+	Post.update({'_id': req.body.postId}, {$push: {upVote: req.user.id}}, function(err){
+        if(err){
+            console.log(err);
+        }else{
+            console.log('Successfully upPost');
+            findOnePost(req, res);
+        }			
+	});
+};
+
+exports.downOnePost = function(req, res){
+	Post.update({'_id': req.body.postId}, {$pull: {upVote: req.user.id}}, function(err){
+        if(err){
+            console.log(err);
+        }else{
+            console.log('Successfully upPost');
+            findOnePost(req, res);
+        }			
+	});
+};
+
+var listUserPostsUpdateFn = function(req, res){
+	var friendIdList = [];
+	req.user.friendList.forEach(function(friend){
+		if(friend.friendStatus === 3){
+			friendIdList.push(friend.id);
+		}
+	});
+	//Check if friends
+	var postToReturn = [];
+	Post.find().sort('-created').populate('user', '_id firstName lastName profilePic').lean().exec(function(err, Posts) {
+		if (err) {
+			return res.status(400).send({
+				message: errorHandler.getErrorMessage(err)
+			});
+		} else {
+			Posts.forEach(function(post){
+				post.upVote.forEach(function(upId){
+					if(upId === req.user.id){
+						post.up = true;
+
+					}
+				});
+				if(post.user._id.equals(req.body._id)){
+					postToReturn.push(post);
+					console.log(postToReturn);
+				}else if(post.user._id.equals(req.body.userId)){
+					if(post.privacy ===' public'){
+						postToReturn.push(post);
+					}else{
+						friendIdList.forEach(function(friendId){
+							if(post.user._id.equals(friendId) && post.privacy !== 'private'){
+								postToReturn.push(post);
+							}
+						});
+					}
+					
+				}
+			});
+			res.json(postToReturn);
+		}
+	});
+};
+exports.upUserPosts = function(req, res){
+	Post.update({'_id': req.body.postId}, {$push: {upVote: req.user.id}}, function(err){
+        if(err){
+            console.log(err);
+        }else{
+            console.log('Successfully upPost');
+            listUserPostsUpdateFn(req, res);
+        }			
+	});
+};
+
+exports.downUserPosts = function(req, res){
+	Post.update({'_id': req.body.postId}, {$pull: {upVote: req.user.id}}, function(err){
+        if(err){
+            console.log(err);
+        }else{
+            console.log('Successfully upPost');
+            listUserPostsUpdateFn(req, res);
+        }			
+	});
+};

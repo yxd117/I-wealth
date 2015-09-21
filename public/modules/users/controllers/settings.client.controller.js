@@ -1,7 +1,7 @@
 'use strict';
 
-angular.module('users').controller('SettingsController', ['$scope', '$http','$state','$timeout' ,'$location', 'Users', 'Authentication', 'Upload',
-	function($scope, $http, $state, $timeout,$location, Users, Authentication, Upload) {
+angular.module('users').controller('SettingsController', ['$rootScope','$scope', '$http','$state','$timeout' ,'$location', 'Users', 'Authentication', 'Upload',
+	function($rootScope, $scope, $http, $state, $timeout,$location, Users, Authentication, Upload) {
 		$scope.user = Authentication.user;
 
 		// If user is not signed in then redirect back home
@@ -161,22 +161,9 @@ angular.module('users').controller('SettingsController', ['$scope', '$http','$st
 		var upload_file = function(file, signed_request, url){
 
 			$http.put(signed_request, file).success(function(response) {
-				// If successful 
-				// $scope.imgUrl = '';
-				// $timeout(function(){
-				
-				// // 	// $state.transitionTo($state.current, $stateParams, {
-				// // 	//     reload: true,
-				// // 	//     inherit: false,
-				// // 	//     notify: true
-				// // 	// });
-				// $scope.imgUrl = url; 
-				// $state.go($state.current, {}, {reload: true});
-				// },10000);
 				$scope.decachedImageUrl = url + '?decache=' + Math.random();
+				$rootScope.profileImgUrl = url + '?decache=' + Math.random();
 				$state.go($state.current, {}, {reload: true});
-				//$route.reload();     
-		        //document.getElementById("avatar_url").value = url;
 			}).error(function(response) {
 				alert('Could not upload file.'); 
 			});
@@ -195,7 +182,6 @@ angular.module('users').controller('SettingsController', ['$scope', '$http','$st
 		    console.log(file);
 		    $http.get('/signaws', file).success(function(response) {
 				// If successful 
-				//var resp = JSON.parse(response);
 				upload_file(file, response.signed_request, response.url);
 			}).error(function(response) {
 				alert('Could not get signed URL.');

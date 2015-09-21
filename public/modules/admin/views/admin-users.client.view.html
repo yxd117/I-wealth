@@ -1,0 +1,133 @@
+<section class="content" data-ng-controller="AdminController">
+	<div class= "row">
+		<div class="col-md-12">
+			<ul class="nav nav-tabs">
+			  <li role="presentation"><a href="/#!/admin/home">Home</a></li>
+			  <li role="presentation"class="active"><a href="/#!/admin/users">Manage Users</a></li>
+			  <li role="presentation"><a href="/#!/admin/assets">Manage Assets</a></li>
+			  <li role="presentation"><a href="/#!/admin/statistics">Statistics</a></li>
+			</ul>
+		</div>		
+	</div>
+	<div class="row">
+		<div class="col-md-12" ng-init="retrieveUserRecordsInit()">
+			<h4>User Records</h4>
+			<div class="row">
+				<div class="col-md-12">
+					<button class="btn btn-default btn-default-sm" ng-click="retrieveUserRecords()">Refresh List</button>
+					<button class="btn btn-primary btn-primary-sm" data-toggle="modal" data-target="#myModal" ng-click="credentials = null; successCreate = null; errorCreate = null; userForm.$setPristine();">Create New User</button>
+
+					<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+						<div class="modal-dialog" role="document">
+							<div class="modal-content">
+								<div class="modal-header">
+									<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+									<h4 class="modal-title" id="myModalLabel">Create New User</h4>
+								</div>
+								<div class="modal-body">
+									<div class="row">
+										<div class="col-md-12">
+											<form name="userForm" data-ng-submit="createNewUser()" class="signin" novalidate autocomplete="off">
+												<fieldset>
+													<div data-ng-show="error" class="text-center text-danger">
+														<strong data-ng-bind="error"></strong>
+													</div>			
+													<div class="form-group">
+														<label for="firstName">First Name</label>
+														<input type="text" required id="firstName" name="firstName" class="form-control" data-ng-model="credentials.firstName" placeholder="First Name">
+													</div>
+													<div class="form-group">
+														<label for="lastName">Last Name</label>
+														<input type="text" id="lastName" name="lastName" class="form-control" data-ng-model="credentials.lastName" placeholder="Last Name">
+													</div>
+													<div class="form-group">
+														<label for="email">Email</label>
+														<input type="email" id="email" name="email" class="form-control" data-ng-model="credentials.email" placeholder="Email">
+													</div>
+													<div class="form-group">
+														<label for="password">Password</label>
+														<input type="password" id="password" name="password" class="form-control" data-ng-model="credentials.password" placeholder="Password">
+													</div>
+													<div class="text-center form-group">
+														<button type="submit" class="btn btn-large btn-primary">Create User</button>
+														<button class="btn btn-large btn-default" data-dismiss="modal">Close</button>
+													</div>
+												</fieldset>
+													<div data-ng-show="successCreate" class="text-center text-success">
+														<strong>User Record Created Successfully</strong>
+													</div>
+											</form>
+										</div>
+									</div>
+								</div> 
+								<div class="modal-footer">
+
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-12">
+					<div data-ng-show="successRetrieve" class="text-success">
+						<strong>User Records Retrieved Successfully</strong>
+					</div>				
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row" style="margin-top:5px;">
+		<div class="col-md-2" >
+			<div class="scrollArea4" style="border:1px solid grey;">
+				<ul ng-repeat="user in userList" ng-click="showRecord(user.email)" ng-class="{selected: user.email === emailSelected}">
+					{{user.email}}
+				</ul>						
+			</div>
+		</div>
+		<textarea class="col-md-10 scrollArea3" type="text" ng-model="userRecord"></textarea>
+		<div class="col-md-10" style="margin-top:10px;">
+			<button class="btn btn-primary btn-primary-sm" ng-click="updateRecord()">Save Changes</button>
+			<button class="btn btn-danger btn-primary-sm" data-toggle="modal" data-target="#modalDelete" ng-click="checkDelete()">Delete User</button>
+			<div class="modal fade" id="modalDelete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+							<h4 class="modal-title" id="myModalLabel">Delete User</h4>
+						</div>
+						<div class="modal-body">
+							<div class="row">
+								<div class="col-md-12">
+									<button class="btn btn-danger btn-primary-sm" ng-click="deleteRecord()">Delete</button>
+									<button class="btn btn-large btn-default" data-dismiss="modal">Close</button>
+									<div data-ng-show="successDelete" class="text-success">
+										<strong>User Record deleted Successfully</strong>
+									</div>
+									<div data-ng-show="errorDelete" class="text-danger">
+										<strong data-ng-bind="errorDelete"></strong>
+									</div>	
+								</div>
+							</div>
+						</div> 
+						<div class="modal-footer">
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-10">
+			<div data-ng-show="success" class="text-success">
+				<strong>User Records updated Successfully</strong>
+			</div>
+			<div data-ng-show="error" class="text-danger">
+				<strong data-ng-bind="error"></strong>
+			</div>					
+		</div>
+	</div>	
+
+
+
+
+</section>

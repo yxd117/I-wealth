@@ -285,6 +285,16 @@ canvas{
   height: 250px;
   overflow: auto;
 }
+
+.scrollArea3 {
+  height: 400px;
+  overflow: auto;
+}
+
+.scrollArea4 {
+  height: 500px;
+  overflow: auto;
+}
 .post {
   background-color: #B8A631;
 }
@@ -292,4 +302,11 @@ canvas{
   float:left; 
   margin: 5px;
 }
+.selected {
+  background-color: #B8A631;
+}
 
+.selectedPost{
+  color:#B8A631;
+  /*color:blue;*/
+}

@@ -33,6 +33,12 @@ var PostSchema = new Schema({
 		type:String,
 		default: 'public'
 	},
+	upVote:{
+		type:Array
+	},
+	downVote:{
+		type:Array
+	},
 	comments: [({
 		userId: {
 			type: Schema.ObjectId,
