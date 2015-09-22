@@ -15,7 +15,10 @@ angular.module('social').controller('SocialController', ['$scope', '$window','$s
 		$scope.yearJoined = new Date($scope.user.created).getFullYear();
 
 		var socialRankUrl = 'https://hexapic.s3.amazonaws.com/' + Authentication.user.socialRankPic;
+		var profilePicUrl = 'https://hexapic.s3.amazonaws.com/' + Authentication.user.profilePic;
+
 		$scope.decachedSocialRankUrl = socialRankUrl + '?decache=' + Math.random();		
+		$scope.decachedProfilePicUrl = profilePicUrl + '?decache=' + Math.random();
 
 		$scope.refreshSocialRankPic = function(){
 				$scope.decachedSocialRankUrl = socialRankUrl + '?decache=' + Math.random();
@@ -39,13 +42,11 @@ angular.module('social').controller('SocialController', ['$scope', '$window','$s
 
 		$scope.findAll = function(){
 			$http.get('/friendship/retrieveUsers').then(function(response){
-				console.log(response);
 				$scope.userList = response.data;
 			});
 		};
 		$scope.findFriends = function(){
 			$http.get('/friendship/retrieveFriends').then(function(response){
-				console.log(response);
 				var listOfUsers = response.data;
 				listOfUsers.forEach(function(user){
 					if(user.friendStatus === 3){

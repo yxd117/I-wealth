@@ -307,6 +307,9 @@ var UserSchema = new Schema({
 	socialRankPic: {
 		type: String,
 		default: 'rank1newbie.png'		
+	},
+	insurancesInfoArr: {
+		type: Array
 	}
 
 });

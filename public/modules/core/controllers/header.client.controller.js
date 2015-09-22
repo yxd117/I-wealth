@@ -35,7 +35,6 @@ angular.module('core').controller('HeaderController', ['$rootScope', '$scope', '
         });
 
 		$rootScope.$watch('profileImgUrl', function(){
-			console.log($rootScope.profileImgUrl);
 			if($rootScope.profileImgUrl){
 				$scope.imageUrl = $rootScope.profileImgUrl + '?decache=' + Math.random();
 				$http.get($scope.imageUrl).then(function(response){

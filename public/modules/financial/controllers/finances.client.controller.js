@@ -14,8 +14,6 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
             type: 'info'
         }];
         $scope.homeHealthDisplay = false;
-        $scope.homeHealthyRatioArr = [];
-        $scope.homeUnHealthyRatioArr = [];
 
         //Set new record to N/A
         $scope.displayOverview ={};
@@ -619,6 +617,8 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
 
             var numHealthyRatio = 0;
             var numUnHealthyRatio = 0;
+            $scope.homeHealthyRatioArr = [];
+            $scope.homeUnHealthyRatioArr = [];
 
             try {
                 mortgageRepaymentsValue = $scope.displayIncomeExpenseRecords.monthlyExpense.fixedExpense.mortgageRepayments.value;

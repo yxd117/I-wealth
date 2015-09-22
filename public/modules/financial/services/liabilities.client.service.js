@@ -31,34 +31,40 @@ angular.module('financial').factory('LiabilitiesService', ['$resource', function
 
 	var loansMortgages = {
 		mortgageBalance: {
-			description: 'Mortgage Loan Balance',
+			description: 'Mortgage Loan',
 			order: 0,
-			value: 0
+			value: 0,
+			minValue: 0
 		},
 		carBalance :{
-			description: 'Car Loan Balance',
+			description: 'Car Loan',
 			order: 1,
-			value: 0
+			value: 0,
+			minValue: 0
 		},
 		studentLoan: {
 			description: 'Student Loan',
 			order: 2,
-			value: 0
+			value: 0,
+			minValue: 0
 		},
 		personalLoan: {
 			description: 'Personal Loan',
 			order: 3,
-			value: 0
+			value: 0,
+			minValue: 0
 		},
 		renovationLoan: {
 			description: 'Renovation Loan',
 			order: 4,
-			value: 0
+			value: 0,
+			minValue: 0
 		},
 		others: {
 			description: 'Others',
 			order: 5,
-			value: 0
+			value: 0,
+			minValue: 0
 		}
 	};
 

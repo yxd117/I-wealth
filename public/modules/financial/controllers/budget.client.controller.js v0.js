@@ -202,7 +202,7 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
                     $scope.dynamicE = Math.floor(valueE);
                     $scope.typeE = typeE;
                     $scope.feStatus = standingCheck($scope.thisMonthFixedExpenseTotal,$scope.fixedExpenseB);                    
-                    $scope.displayFeExceed = ($scope.displayThisMonthFixedExpenseTotal-$scope.fixedExpenseB).toFixed(2);
+                    
                     
                     //Load Transport Expense Table
                     var transportArr = record.monthlyExpense.transport;                    
@@ -213,8 +213,7 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
                     var typeT = progressInfo(valueT);
                     $scope.dynamicT = Math.floor(valueT);                    
                     $scope.typeT =typeT;
-                    $scope.tStatus = standingCheck($scope.thisMonthTransportTotal,$scope.transportB);
-                    $scope.displayTExceed = ($scope.displayThisMonthTransportTotal-$scope.transportB).toFixed(2);
+                    $scope.tStatus = standingCheck($scope.thisMonthTransportTotal,$scope.transportB);                                        
                     
                     //Load Food Expense Table
                     var foodArr = record.monthlyExpense.foodNecessities;
@@ -226,7 +225,7 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
                     $scope.dynamicF = Math.floor(valueF);
                     $scope.typeF =typeF;
                     $scope.fStatus = standingCheck($scope.thisMonthFoodTotal,$scope.foodB);
-                    $scope.displayFExceed = ($scope.displayThisMonthFoodTotal-$scope.foodB).toFixed(2);
+                    
 
                     //Load Utilities Expense Table
                     var utilitiesArr = record.monthlyExpense.utilityHousehold;
@@ -238,7 +237,7 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
                     $scope.dynamicU = Math.floor(valueU);
                     $scope.typeU =typeU;
                     $scope.uStatus = standingCheck($scope.thisMonthUtilitiesTotal,$scope.utilitiesB);
-                    $scope.displayUExceed = ($scope.displayThisMonthUtilitiesTotal-$scope.utilitiesB).toFixed(2);
+                    
 
                     //Load Misc Expense Table
                     var miscArr = record.monthlyExpense.misc;
@@ -250,7 +249,7 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
                     $scope.dynamicM = Math.floor(valueM);
                     $scope.typeM =typeM;
                     $scope.mStatus = standingCheck($scope.thisMonthMiscTotal,$scope.miscB);
-                    $scope.displayMExceed = ($scope.displayThisMonthMiscTotal-$scope.miscB).toFixed(2);
+                    
                     //Load Charts
 
                     if(!record.fixedExpenseAmt && !record.transportAmt && !record.utilityHouseholdAmt && !record.foodNecessitiesAmt && !record.miscAmt) {
@@ -688,122 +687,133 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
             $scope.loadTables();
          };
 
-        $scope.standbyForDelete = function (item,expenseType) {
-            $scope.item = item;
-            $scope.expenseType = expenseType; 
-
-        };
-
-        $scope.cancelDelete = function () {
-            $scope.item = '';
-            $scope.expenseType = '';             
-        };
-
-        $scope.deleteRecord = function() {
-                         
-            for(var i=0;i<$scope.user.incomeExpenseRecords.length; i++) {            
-                var expenseRecord = $scope.user.incomeExpenseRecords[i];  
-                if (expenseRecord.month===presentMonth&&expenseRecord.year===presentYear) {
-                    console.log('level1');
-                    var expenseSelected;
-                    
-                    if($scope.expenseType==='fixedExpense') {
-                        expenseSelected = expenseRecord.monthlyExpense.fixedExpense;
-                        console.log('level2.1');                                                
-                    } else if($scope.expenseType==='transport') {
-                        expenseSelected = expenseRecord.monthlyExpense.transport;
-                        console.log('level2.2');
-                    } else if($scope.expenseType==='utility') {
-                        expenseSelected = expenseRecord.monthlyExpense.utilityHousehold;
-                        console.log('level2.3');
-                    } else if($scope.expenseType==='food') {
-                        expenseSelected = expenseRecord.monthlyExpense.foodNecessities;
-                        console.log('level2.4');
-                    } else if($scope.expenseType==='misc') {
-                        expenseSelected = expenseRecord.monthlyExpense.misc;
-                        console.log('level2.5');
-                    }
-
-                    for (var get in expenseSelected) {                        
-                        var obj = expenseSelected[get];                        
+        $scope.deleteFERecord = function(item) {
+            console.log(item);
+            var confirmDelete = confirm('Confirm delete record: '+item.detail);
+            if (confirmDelete) {
+                for(var i=0;i<$scope.user.incomeExpenseRecords.length; i++) {            
+                    var expenseRecord = $scope.user.incomeExpenseRecords[i];  
+                    if (expenseRecord.month===presentMonth&&expenseRecord.year===presentYear) {
+                        console.log('level1');
+                        var expenseSelected;
+                        console.log(item.description);
+                        for (var checkFE in $scope.fixedExpense) {
+                            var checkFEobj = $scope.fixedExpense[checkFE];
+                            console.log(checkFEobj.description);
+                            if (checkFEobj.description===item.description) {
+                                expenseSelected = expenseRecord.monthlyExpense.fixedExpense;
+                                console.log('level2.1');
+                            }
+                        }
+                        for (var checkT in $scope.transportExpense) {
+                            var checkTobj = $scope.transportExpense[checkT];
+                            if (checkTobj.description===item.description) {
+                                expenseSelected = expenseRecord.monthlyExpense.transport;
+                                console.log('level2.2');
+                            }
+                        }
+                        for (var checkU in $scope.utilityExpense) {
+                            var checkUobj = $scope.utilityExpense[checkU];
+                            if (checkUobj.description===item.description) {
+                                expenseSelected = expenseRecord.monthlyExpense.utilityHousehold;
+                                console.log('level2.3');
+                            }
+                        }
+                        for (var checkF in $scope.foodExpense) {
+                            var checkFobj = $scope.foodExpense[checkF];
+                            if (checkFobj.description===item.description) {
+                                expenseSelected = expenseRecord.monthlyExpense.foodNecessities;
+                                console.log('level2.4');
+                            }
+                        }
+                        for (var checkM in $scope.miscExpense) {
+                            var checkMobj = $scope.miscExpense[checkM];
+                            if (checkMobj.description===item.description) {
+                                expenseSelected = expenseRecord.monthlyExpense.misc;
+                                console.log('level2.5');
+                            }
+                        }
                         
-                        if($scope.item.description=== obj.description) {
-                            console.log('SUCCESS');
-                            for (var a =0; a<obj.records.length; a++) {
-                                var specRec = obj.records[a];
-                                var itemNo = Number($scope.item.amount);
-                                if (specRec.detail===$scope.item.detail&&specRec.amount===itemNo){
-                                    obj.recordsTotal -= itemNo;
-                                    obj.value -= itemNo;
-                                    obj.records.splice(a,1);
-                                    console.log('Make it?');
-                                    //MORE DETAILED CHECK REQUIRED
-                                    //CHANGE RECORDS TOTAL                                        
+                        for (var get in expenseSelected) {                        
+                            var obj = expenseSelected[get];                        
+                            
+                            if(item.description=== obj.description) {
+                                console.log('SUCCESS');
+                                for (var a =0; a<obj.records.length; a++) {
+                                    var specRec = obj.records[a];
+                                    var itemNo = Number(item.amount);
+                                    if (specRec.detail===item.detail&&specRec.amount===itemNo){
+                                        obj.recordsTotal -= itemNo;
+                                        obj.value -= itemNo;
+                                        obj.records.splice(a,1);
+                                        console.log('Make it?');
+                                        //MORE DETAILED CHECK REQUIRED
+                                        //CHANGE RECORDS TOTAL                                        
+                                    }
                                 }
                             }
                         }
-                    }
-                    var fixedExpenseArr = expenseRecord.monthlyExpense.fixedExpense;
-                    var fixedExpenseTotal = 0;
-                    for (var rt in fixedExpenseArr) {
-                        var obj1 = fixedExpenseArr[rt];
-                        fixedExpenseTotal += obj1.value;
-                    }
-                    expenseRecord.fixedExpenseAmt = fixedExpenseTotal.toFixed(2);
+                        var fixedExpenseArr = expenseRecord.monthlyExpense.fixedExpense;
+                        var fixedExpenseTotal = 0;
+                        for (var rt in fixedExpenseArr) {
+                            var obj1 = fixedExpenseArr[rt];
+                            fixedExpenseTotal += obj1.value;
+                        }
+                        expenseRecord.fixedExpenseAmt = fixedExpenseTotal.toFixed(2);
 
-                    var transportArr = expenseRecord.monthlyExpense.transport;
-                    var transportTotal = 0;
-                    for (var rt1 in transportArr) {
-                        var obj2 = transportArr[rt1];
-                        transportTotal += obj2.value;
-                    }
-                    expenseRecord.transportAmt = transportTotal.toFixed(2);
+                        var transportArr = expenseRecord.monthlyExpense.transport;
+                        var transportTotal = 0;
+                        for (var rt1 in transportArr) {
+                            var obj2 = transportArr[rt1];
+                            transportTotal += obj2.value;
+                        }
+                        expenseRecord.transportAmt = transportTotal.toFixed(2);
 
-                    var utilityHouseholdArr = expenseRecord.monthlyExpense.utilityHousehold;
-                    var utilityHouseholdTotal = 0;
-                    for (var rt2 in utilityHouseholdArr) {
-                        var obj3 = utilityHouseholdArr[rt2];
-                        utilityHouseholdTotal += obj3.value;
-                    }
-                    expenseRecord.utilityHouseholdAmt = utilityHouseholdTotal.toFixed(2);
+                        var utilityHouseholdArr = expenseRecord.monthlyExpense.utilityHousehold;
+                        var utilityHouseholdTotal = 0;
+                        for (var rt2 in utilityHouseholdArr) {
+                            var obj3 = utilityHouseholdArr[rt2];
+                            utilityHouseholdTotal += obj3.value;
+                        }
+                        expenseRecord.utilityHouseholdAmt = utilityHouseholdTotal.toFixed(2);
 
-                    var foodNecessitiesArr = expenseRecord.monthlyExpense.foodNecessities;
-                    var foodNecessitiesTotal = 0;
-                    for (var rt3 in foodNecessitiesArr) {
-                        var obj4 = foodNecessitiesArr[rt3];
-                        foodNecessitiesTotal += obj4.value;
-                    }
-                    expenseRecord.foodNecessitiesAmt = foodNecessitiesTotal.toFixed(2);
+                        var foodNecessitiesArr = expenseRecord.monthlyExpense.foodNecessities;
+                        var foodNecessitiesTotal = 0;
+                        for (var rt3 in foodNecessitiesArr) {
+                            var obj4 = foodNecessitiesArr[rt3];
+                            foodNecessitiesTotal += obj4.value;
+                        }
+                        expenseRecord.foodNecessitiesAmt = foodNecessitiesTotal.toFixed(2);
 
-                    var miscArr = expenseRecord.monthlyExpense.misc;
-                    var miscTotal = 0;
-                    for (var rt4 in miscArr) {
-                        var obj5 = miscArr[rt4];
-                        miscTotal += obj5.value;
-                    }
-                    expenseRecord.miscAmt = miscTotal.toFixed(2);
+                        var miscArr = expenseRecord.monthlyExpense.misc;
+                        var miscTotal = 0;
+                        for (var rt4 in miscArr) {
+                            var obj5 = miscArr[rt4];
+                            miscTotal += obj5.value;
+                        }
+                        expenseRecord.miscAmt = miscTotal.toFixed(2);
 
-                    var monthlyIncomeAmt = Number(expenseRecord.monthlyIncomeAmt);                
-                    var monthlyExpenseAmt = fixedExpenseTotal + transportTotal + utilityHouseholdTotal + foodNecessitiesTotal + miscTotal;
-                    var netCashFlow = monthlyIncomeAmt - monthlyExpenseAmt;                
-                    expenseRecord.monthlyIncomeAmt = monthlyIncomeAmt.toFixed(2);                
-                    expenseRecord.monthlyExpenseAmt = monthlyExpenseAmt.toFixed(2);
-                    expenseRecord.netCashFlow = netCashFlow.toFixed(2); 
+                        var monthlyIncomeAmt = Number(expenseRecord.monthlyIncomeAmt);                
+                        var monthlyExpenseAmt = fixedExpenseTotal + transportTotal + utilityHouseholdTotal + foodNecessitiesTotal + miscTotal;
+                        var netCashFlow = monthlyIncomeAmt - monthlyExpenseAmt;                
+                        expenseRecord.monthlyIncomeAmt = monthlyIncomeAmt.toFixed(2);                
+                        expenseRecord.monthlyExpenseAmt = monthlyExpenseAmt.toFixed(2);
+                        expenseRecord.netCashFlow = netCashFlow.toFixed(2); 
+                    }
                 }
+                var userNow = new Users($scope.user);
+                userNow.$update(function(response) {
+                $scope.success = true;
+                Authentication.user = response;
+                $scope.user = Authentication.user;
+
+                }, function(response) {
+                    $scope.error = response.data.message;
+
+                });
+                $scope.loadTables();
             }
-            var userNow = new Users($scope.user);
-            userNow.$update(function(response) {
-            $scope.success = true;
-            Authentication.user = response;
-            $scope.user = Authentication.user;
 
-            }, function(response) {
-                $scope.error = response.data.message;
-
-            });
-            $scope.item = '';
-            $scope.expenseType = '';
-            $scope.loadTables();            
         };
 
         $scope.setFixedExpense = function() {

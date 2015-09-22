@@ -1,0 +1,502 @@
+<section ng-controller="InsurancesController" class="content"> 
+	<ul class="nav nav-tabs">
+	  <li role="presentation"><a href="/#!/financialrecord">Overview</a></li>
+	  <li role="presentation"><a href="/#!/financialrecord/assets">Assets</a></li>
+	  <li role="presentation"><a href="/#!/financialrecord/liabilities">Liabilities</a></li>
+	  <li role="presentation"><a href="/#!/financialrecord/incomeExpense">Income & Expense</a></li>
+	  <li role="presentation"><a href="/#!/financialrecord/debts">Debt</a></li>
+	  <li role="presentation" class="active"><a href="/#!/financialrecord/insurances">Insurances</a></li>
+	</ul>
+	<h3>Insurance Policies</h3>
+	<table class="table">
+	    <thead>
+	      <tr>
+	        <th>No.</th>
+	        <th>Policy Name</th>
+	        <th>Provider</th>
+	        <th>Year</th>
+	        <th>Policy No</th>
+	        <th>Term</th>
+	        <th>Details</th>
+	        <th></th>	        
+	      </tr>
+	    </thead>
+	    <tbody>
+	      <tr ng-repeat='insurance in displayInsuranceInfo'>
+	         <!-- read-only cells -->     
+	        <td>{{insurance.id}}</td>
+	        <td><a ng-click="viewModal(insurance)" data-toggle="modal" data-target="#viewModal">{{ insurance.policyName }}</a></td>
+	        <td>{{ insurance.provider }}</td>
+	        <td>{{ insurance.year }}</td>
+	        <td>{{ insurance.policyNo }}</td>
+	        <td>{{ insurance.term }}</td>
+	        <td><button class="btn btn-success btn-sm" type="button" ng-click="viewModal(insurance)" data-toggle="modal" data-target="#viewModal">View More</button></td>
+	        <td>          
+	          <button type="button"ng-click="editModal(insurance)" data-toggle="modal" data-target="#editModal"  aria-label="Left Align">
+	            <span class="glyphicon glyphicon-pencil align-left" aria-hidden="true"></span>
+	          </button>
+	        
+	          <button type="button" ng-click="deleteModal(insurance)" data-toggle="modal" data-target="#deleteModal"  aria-label="Left Align">
+	            <span class="glyphicon glyphicon-trash align-left" aria-hidden="true"></span>
+	          </button>
+	        </td>
+	      </tr>
+	    </tbody>
+    </table>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addModal">Add New Insurance
+  </button>
+
+
+  	<!-- Add new insurance Modal !-->
+    <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	    <div class="modal-dialog" role="document">
+	      	<div class="modal-content">                     
+		      	<div class="modal-header">
+		        	<button type="button" class="close" data-dismiss="modal" ng-click="cancel()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		            <h4 class="modal-title" id="myModalLabel">Add New Policy</h4>
+		       	</div>
+		       	<form class="form-horizontal" role="form" ng-submit="addNewPolicy()">
+			       	<fieldset>
+			        <div class="modal-body">
+			        	<div class = "ng-hide" ng-hide="success">	
+			        		<div class="scroll">
+			            
+				            	<h4 align="center"><u>Your Policy</u></h4><br/>
+							    <div class="form-group">
+							      <label class="control-label col-sm-3">Policy Name:</label>
+							      <div class="col-sm-6">
+							        <input type="text" class="form-control" data-ng-model="insurance.policyName" placeholder="Enter policy name" required>
+							      </div>
+							    </div>
+							    <div class="form-group">
+							      <label class="control-label col-sm-3">Provider:</label>
+							      <div class="col-sm-6">          
+							        <input type="text" class="form-control" data-ng-model="insurance.provider" placeholder="Great-Eastern/NTUC Income" required>
+							      </div>
+							    </div>
+							    <div class="form-group">
+							      <label class="control-label col-sm-3">Policy No:</label>
+							      <div class="col-sm-6">          
+							        <input class='form-control' type="text" ng-model='insurance.policyNo' placeholder="eg. 	200923853" required>					        
+							      </div>
+							    </div>
+							    <div class="form-group">
+							      <label class="control-label col-sm-3">Year:</label>
+							      <div class="col-sm-3">          
+							        <input type="number" class="form-control text-center ng-pristine ng-valid ng-valid-number" data-ng-model="selectedYear" ng-init="selectedYear = year" required>					        
+							      </div>
+							    </div>
+							    <div class="form-group">
+							      <label class="control-label col-sm-3">Term:</label>
+							      <div class="col-sm-3">          
+							        <select class='form-control' ng-model='insurance.term' name='type' required>
+							        	<option>Life</option>
+							        	<option>Health</option>
+							        	<option>General</option>
+							        </select>
+							      </div>
+							    </div>
+							    <h4 align="center"><u>Your Coverage</u></h4><br/>
+							    <div class="form-group">
+							      <label class="control-label col-sm-3">Death/TPD:</label>
+							      <div class="col-sm-6">          
+							        <input class='form-control' type="number" step="any" ng-model='insurance.coverage.death' placeholder="$10,000">					        
+							      </div>
+							    </div>
+							    <div class="form-group">
+							      <label class="control-label col-sm-3">Critical Illness:</label>
+							      <div class="col-sm-6">          
+							        <input class='form-control' type="number" step="any" ng-model='insurance.coverage.critical' placeholder="$10,000">					        
+							      </div>
+							    </div>
+							    <div class="form-group">
+							      <label class="control-label col-sm-3">Accident:</label>
+							      <div class="col-sm-6">          
+							        <input class='form-control' type="number" step="any" ng-model='insurance.coverage.accident' placeholder="$10,000">					        
+							      </div>
+							    </div>
+							    <div class="form-group">
+							      <label class="control-label col-sm-3">Hospitalization:</label>
+							      <div class="col-sm-6">          
+							        <input class='form-control' type="number" step="any" ng-model='insurance.coverage.hospitalization' placeholder="$10,000">					        
+							      </div>
+							    </div>
+							    <div class="form-group">
+							      <label class="control-label col-sm-3">Medical Reimbursement:</label>
+							      <div class="col-sm-6">          
+							        <input class='form-control' type="number" step="any" ng-model='insurance.coverage.reimbursement' placeholder="$10,000">					        
+							      </div>
+							    </div>
+							    <div class="form-group">
+							      <label class="control-label col-sm-3">Disability Income (Monthly Benefit):</label>
+							      <div class="col-sm-6">          
+							        <input class='form-control' type="number" step="any" ng-model='insurance.coverage.disability' placeholder="$10,000">					        
+							      </div>
+							    </div>
+							    <div class="form-group">
+							      <label class="control-label col-sm-3">Hospital Income (Daily Benefit):</label>
+							      <div class="col-sm-6">          
+							        <input class='form-control' type="number" step="any" ng-model='insurance.coverage.hospitalIncome' placeholder="$10,000">					        
+							      </div>
+							    </div>
+							    <h4 align="center"><u>Premiums</u></h4><br/>
+							    <div class="form-group">
+							      <label class="control-label col-sm-3">Term:</label>
+							      <div class="col-sm-3">          
+							        <select class='form-control' ng-model='insurance.premiums.payStyle' name='type'>
+							        	<option>Monthly</option>
+							        	<option>Yearly</option>					        	
+							        </select>
+							      </div>
+							    </div>
+							    <div class="form-group">
+							      <label class="control-label col-sm-3">Premiums Payable:</label>
+							      <div class="col-sm-6">          
+							        <input class='form-control' type="number" step="any" ng-model='insurance.premiums.amt' placeholder="$10,000">					        
+							      </div>
+							    </div>
+							    <div class="form-group">
+							      <label class="control-label col-sm-3">Premiums Payable by CPF:</label>
+							      <div class="col-sm-6">          
+							        <input class='form-control' type="number" step="any" ng-model='insurance.premiums.cpfAmt' placeholder="$10,000">					        
+							      </div>
+							    </div>
+							    <div class="form-group">
+							      <label class="control-label col-sm-3">Agent Name:</label>
+							      <div class="col-sm-6">          
+							        <input class='form-control' type="text" ng-model='insurance.agent.name' placeholder="Stephen Romero">  
+							      </div>
+							    </div>
+							    <div class="form-group">
+							      <label class="control-label col-sm-3">Agent Contact No:</label>
+							      <div class="col-sm-6">          
+							        <input class='form-control' type="text" ng-model='insurance.agent.number' placeholder="+65-9100-8520">	   
+							      </div>
+							    </div>
+							    <div class="form-group">
+							      <label class="control-label col-sm-3">Remarks:</label>
+							      <div class="col-sm-6">          
+							        <textarea class='form-control' type="text" ng-model='insurance.remarks' placeholder="Notes">	 </textarea>
+							      </div>
+							    </div>					  	                           	              
+			        		</div>
+			        	</div>
+			        </div>
+			        <div class = "ng-show" ng-show="success">
+			        <h4>Policy successfully Added!</h4>
+			        </div>
+		        
+			        <div class="modal-footer">
+			        	<div class = "ng-hide" ng-hide="success">
+				        <div class="form-group">
+				            <button type="submit" class="btn btn-success">Add
+				            </button>
+				            <button type="button" class="btn btn-default" ng-click="cancel()" data-dismiss="modal">Cancel
+				            </button>
+				        </div>
+				        </div>
+				        <div class = "ng-show" ng-show="success">
+				        	<button type="submit" class="btn btn-success" ng-click="cancel()" data-dismiss="modal">Dismiss
+				        	</button>
+			        	</div>              
+		    		</div>
+		    		</fieldset>
+		    	</form>
+		    </div>
+	   </div>
+   </div>
+
+     	<!-- View insurance Modal !-->
+    <div class="modal fade" id="viewModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	    <div class="modal-dialog-lg" role="document">
+	      	<div class="modal-content">                     
+		      	<div class="modal-header">
+		        	<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		            <h3 class="modal-title" align="center" id="myModalLabel">Policy Details</h3>
+		       	</div>
+			    <div class="modal-body">
+					<h4>Your Policy</h4>			    				        	
+			    	<table class="table">
+					    <thead>
+					    	<tr font-color="red">					        
+						        <th>Policy Name</th>
+						        <th>Provider</th>
+						        <th>Year</th>
+						        <th>Policy No</th>
+						        <th>Term</th>						        
+					      	</tr>
+					    </thead>
+					    <tbody>
+					    	<tr>
+					    		<td>{{insurance.policyName}}</td>
+					    		<td>{{insurance.provider}}</td>
+					    		<td>{{insurance.year}}</td>
+					    		<td>{{insurance.policyNo}}</td>
+					    		<td>{{insurance.term}}</td>					    		
+					    	</tr>
+					    </tbody>
+					</table>
+					<br/>
+					<h4>Your Coverage</h4>	
+					<table class="table">
+					    <thead>					    
+					    	<tr>					        						        
+						        <th>Death/TPD</th>						        	        
+						        <th>Critical Illness</th>
+						        <th>Accident</th>
+						        <th>Hospitalization</th>
+						        <th>Medical Reimbursement</th>
+						        <th>Disability Income</th>
+						        <th>Hospitalization Income</th>
+					      	</tr>
+					    </thead>
+					    <tbody>
+					    	<tr>
+					    		<td>${{insurance.coverage.death.toFixed(2)}}</td>
+					    		<td>${{insurance.coverage.critical.toFixed(2)}}</td>
+					    		<td>${{insurance.coverage.accident.toFixed(2)}}</td>
+					    		<td>${{insurance.coverage.hospitalization.toFixed(2)}}</td>
+					    		<td>${{insurance.coverage.reimbursement.toFixed(2)}}</td>
+					    		<td>${{insurance.coverage.disability.toFixed(2)}}</td>
+					    		<td>${{insurance.coverage.hospitalIncome.toFixed(2)}}</td>
+					    	</tr>
+					    </tbody>
+					</table>
+					<br/>
+					<h4>Premium</h4>	
+					<table class="table">
+					    <thead>
+					    	<tr>
+					    		<th>Monthly/Yearly Payment</th>					        						        
+						        <th>Premiums Payable</th>
+						        <th>Premiums Payable(by CPF)</th>
+						        <th>Agent Name</th>
+						        <th>Agent Contact No</th>
+						        <th>Remarks</th>
+					      	</tr>
+					    </thead>
+					    <tbody>
+					    	<tr>
+					    		<td>{{insurance.premiums.payStyle}}</td>
+					    		<td>${{insurance.premiums.amt}}</td>
+					    		<td>${{insurance.premiums.cpfAmt}}</td>
+					    		<td>{{insurance.agent.name}}</td>
+					    		<td>{{insurance.agent.number}}</td>
+					    		<td>{{insurance.remarks}}</td>
+					    	</tr>
+					    </tbody>
+					</table>
+		        </div>
+			     <div class="modal-footer">
+			        <button type="submit" class="btn btn-success align=center" data-dismiss="modal">Dismiss
+			        </button>			        	
+		    	</div>
+
+		    </div>
+	   </div>
+   </div>
+
+
+     	<!-- Edit new insurance Modal !-->
+    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	    <div class="modal-dialog" role="document">
+	      	<div class="modal-content">  
+	      	<form class="form-horizontal" role="form" name="editForm" ng-submit="editPolicy()">
+			       	<fieldset>                   
+		      	<div class="modal-header">
+		        	<button type="button" class="close" data-dismiss="modal" ng-click="cancel()" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		            <h4 class="modal-title" id="myModalLabel">Update Policy</h4>
+		       	</div>
+		       	
+			        <div class="modal-body">
+			        	<div class = "ng-hide" ng-hide="success">	
+			        		<div class="scroll">
+			            
+				            	<h4 align="center"><u>Your Policy</u></h4><br/>
+							    <div class="form-group">
+							      <label class="control-label col-sm-3">Policy Name:</label>
+							      <div class="col-sm-6">
+							        <input type="text" class="form-control" data-ng-model="insurance.policyName" placeholder="Enter policy name" required>
+							      </div>
+							    </div>
+							    <div class="form-group">
+							      <label class="control-label col-sm-3">Provider:</label>
+							      <div class="col-sm-6">          
+							        <input type="text" class="form-control" data-ng-model="insurance.provider" placeholder="Great-Eastern/NTUC Income" required>
+							      </div>
+							    </div>
+							    <div class="form-group">
+							      <label class="control-label col-sm-3">Policy No:</label>
+							      <div class="col-sm-6">          
+							        <input class='form-control' type="text" ng-model='insurance.policyNo' placeholder="eg. 	200923853" required>					        
+							      </div>
+							    </div>
+							    <div class="form-group">
+							      <label class="control-label col-sm-3">Year:</label>
+							      <div class="col-sm-3">          
+							        <input type="number" class="form-control text-center ng-pristine ng-valid ng-valid-number" data-ng-model="selectedYear" ng-init="selectedYear = year" required>					        
+							      </div>
+							    </div>
+							    <div class="form-group">
+							      <label class="control-label col-sm-3">Term:</label>
+							      <div class="col-sm-3">          
+							        <select class='form-control' ng-model='insurance.term' name='type' required>
+							        	<option>Life</option>
+							        	<option>Health</option>
+							        	<option>General</option>
+							        </select>
+							      </div>
+							    </div>
+							    <h4 align="center"><u>Your Coverage</u></h4><br/>
+							    <div class="form-group">
+							      <label class="control-label col-sm-3">Death/TPD:</label>
+							      <div class="col-sm-6">          
+							        <input class='form-control' type="number" step="any" ng-model='insurance.coverage.death' placeholder="$10,000">					        
+							      </div>
+							    </div>
+							    <div class="form-group">
+							      <label class="control-label col-sm-3">Critical Illness:</label>
+							      <div class="col-sm-6">          
+							        <input class='form-control' type="number" step="any" ng-model='insurance.coverage.critical' placeholder="$10,000">					        
+							      </div>
+							    </div>
+							    <div class="form-group">
+							      <label class="control-label col-sm-3">Accident:</label>
+							      <div class="col-sm-6">          
+							        <input class='form-control' type="number" step="any" ng-model='insurance.coverage.accident' placeholder="$10,000">					        
+							      </div>
+							    </div>
+							    <div class="form-group">
+							      <label class="control-label col-sm-3">Hospitalization:</label>
+							      <div class="col-sm-6">          
+							        <input class='form-control' type="number" step="any" ng-model='insurance.coverage.hospitalization' placeholder="$10,000">					        
+							      </div>
+							    </div>
+							    <div class="form-group">
+							      <label class="control-label col-sm-3">Medical Reimbursement:</label>
+							      <div class="col-sm-6">          
+							        <input class='form-control' type="number" step="any" ng-model='insurance.coverage.reimbursement' placeholder="$10,000">					        
+							      </div>
+							    </div>
+							    <div class="form-group">
+							      <label class="control-label col-sm-3">Disability Income (Monthly Benefit):</label>
+							      <div class="col-sm-6">          
+							        <input class='form-control' type="number" step="any" ng-model='insurance.coverage.disability' placeholder="$10,000">					        
+							      </div>
+							    </div>
+							    <div class="form-group">
+							      <label class="control-label col-sm-3">Hospital Income (Daily Benefit):</label>
+							      <div class="col-sm-6">          
+							        <input class='form-control' type="number" step="any" ng-model='insurance.coverage.hospitalIncome' placeholder="$10,000">					        
+							      </div>
+							    </div>
+							    <h4 align="center"><u>Premiums</u></h4><br/>
+							    <div class="form-group">
+							      <label class="control-label col-sm-3">Term:</label>
+							      <div class="col-sm-3">          
+							        <select class='form-control' ng-model='insurance.premiums.payStyle' name='type'>
+							        	<option>Monthly</option>
+							        	<option>Yearly</option>					        	
+							        </select>
+							      </div>
+							    </div>
+							    <div class="form-group">
+							      <label class="control-label col-sm-3">Premiums Payable:</label>
+							      <div class="col-sm-6">          
+							        <input class='form-control' type="number" step="any" ng-model='insurance.premiums.amt' placeholder="$10,000">					        
+							      </div>
+							    </div>
+							    <div class="form-group">
+							      <label class="control-label col-sm-3">Premiums Payable by CPF:</label>
+							      <div class="col-sm-6">          
+							        <input class='form-control' type="number" step="any" ng-model='insurance.premiums.cpfAmt' placeholder="$10,000">					        
+							      </div>
+							    </div>
+							    <div class="form-group">
+							      <label class="control-label col-sm-3">Agent Name:</label>
+							      <div class="col-sm-6">          
+							        <input class='form-control' type="text" ng-model='insurance.agent.name' placeholder="Stephen Romero">  
+							      </div>
+							    </div>
+							    <div class="form-group">
+							      <label class="control-label col-sm-3">Agent Contact No:</label>
+							      <div class="col-sm-6">          
+							        <input class='form-control' type="text" ng-model='insurance.agent.number' placeholder="+65-9100-8520">	   
+							      </div>
+							    </div>
+							    <div class="form-group">
+							      <label class="control-label col-sm-3">Remarks:</label>
+							      <div class="col-sm-6">          
+							        <textarea class='form-control' type="text" ng-model='insurance.remarks' placeholder="Notes">	 </textarea>
+							      </div>
+							    </div>					  	                           	              
+			        		</div>
+			        	</div>
+			        	<div class = "ng-show" ng-show="success">			        
+			       			<div class="form-group">
+			       			<h4>Policy successfully updated!</h4>
+			       			</div>
+			        	</div>
+			        </div>
+			        
+		        
+			        <div class="modal-footer">
+			        	<div class = "ng-hide" ng-hide="success">
+			        	<div data-ng-show="error" class="text-danger">
+								<strong data-ng-bind="error">No Updates Detected</strong>
+							</div>
+				        <div class="form-group">				        	
+				            <button type="submit" class="btn btn-success">Update
+				            </button>
+				            <button type="button" class="btn btn-default" ng-click="cancel()" data-dismiss="modal">Cancel
+				            </button>
+				        </div>
+				        </div>
+				        <div class = "ng-show" ng-show="success">
+				        	<button type="button" class="btn btn-success" ng-click="cancel()" data-dismiss="modal">Dismiss
+				        	</button>
+			        	</div>              
+		    		</div>
+
+		    		</fieldset>
+		    	</form>
+		    </div>
+	   </div>
+   </div>
+
+   <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+      <form ng-submit="deletePolicy()">
+      <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">Warning!</h4>
+          </div>
+        <div class="modal-body">
+            <div class="ng-hide" ng-hide="success">
+            <h4>Are you sure you want delete this policy record?</h4>             	
+            </div>
+            <div class="ng-show" ng-show="success">
+            <h4>Record deleted</h4>
+            </div>
+        </div>
+        <div class="modal-footer">
+        	<div class="form-group">
+            	<div class="ng-hide" ng-hide="success">
+	            	<button type="submit" class="btn btn-danger">Confirm Delete
+	            	</button>
+	            	<button type="button" class="btn btn-default" ng-click="cancelDelete()" data-dismiss="modal">Cancel
+	            	</button>
+	            </div>
+		        <div class = "ng-show" ng-show="success">
+			    	<button class="btn btn-success" ng-click="cancel()" data-dismiss="modal">Dismiss
+			    	</button>
+	        	</div>
+           </div>
+        </div>
+       </form>              
+      </div>
+    </div>
+  </div>
+
+</section>

@@ -9,7 +9,7 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
 		
 		$scope.rankIcon = './img/rank/diamond0.jpg';
 
-		if(!$scope.user.currentCreditRating) $scope.user.currentCreditRating = 'N/A';
+		if(!$scope.user.currentCreditRating) $scope.user.currentCreditRating = 0;
 		$scope.creditGrade = CreditService.creditGrade($scope.user.currentCreditRating);
 		if($scope.creditGrade[0] === 'D'){
 			$scope.rankIcon = './img/rank/diamond2.png';

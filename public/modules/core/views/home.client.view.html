@@ -102,13 +102,13 @@
 							<span ng-show="homeHealthDisplay">
 							 	<div class="col-md-6">
 							 		<h4>Healthy Ratios</h4>
-									<div ng-repeat="item in homeHealthyRatioArr">							
+									<div ng-repeat="item in homeHealthyRatioArr track by $index">							
 										<li><em>{{item}}</em></li>
 									</div>
 								</div>
 							 	<div class="col-md-6">
 							 		<h4>Unhealthy Ratios</h4>
-									<div ng-repeat="item in homeUnHealthyRatioArr">							
+									<div ng-repeat="item in homeUnHealthyRatioArr track by $index">							
 										<li><em>{{item}}</em></li>
 									</div>
 								</div>

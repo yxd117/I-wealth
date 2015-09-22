@@ -173,6 +173,7 @@ angular.module('financial').controller('LiabilitiesController', ['$scope', '$roo
 
                 }
 
+                var errorCheck = 0;
                 var shortTermCreditArr = $scope.displayLiabilitiesRecords.shortTermCredit;
                 var shortTermCreditTotal = 0;
                 angular.forEach(shortTermCreditArr, function(value, key){
@@ -182,6 +183,12 @@ angular.module('financial').controller('LiabilitiesController', ['$scope', '$roo
                 var loansMortgagesArr = $scope.displayLiabilitiesRecords.loansMortgages;
                 var loansMortgagesTotal = 0;
                 angular.forEach(loansMortgagesArr, function(value, key){
+                    if(value.value<value.minValue) {
+                        value.value = value.minValue; 
+                        alert('Minimum liability value for '+value.description+' is: $'+value.value);
+                        errorCheck++;
+                        location.reload();
+                    }
                     loansMortgagesTotal = loansMortgagesTotal + Number(value.value);
                 });
 

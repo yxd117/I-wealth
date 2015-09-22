@@ -405,6 +405,10 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
 			url: '/financialrecord/debts',
 			templateUrl: 'modules/financial/views/manage-debts.client.view.html'
 		}).
+		state('manageInsurances', {
+			url: '/financialrecord/insurances',
+			templateUrl: 'modules/financial/views/manage-insurances.client.view.html'
+		}).
 
 		//Financial Tools
 		state('repaymentTool', {
@@ -506,7 +510,6 @@ angular.module('core').controller('HeaderController', ['$rootScope', '$scope', '
         });
 
 		$rootScope.$watch('profileImgUrl', function(){
-			console.log($rootScope.profileImgUrl);
 			if($rootScope.profileImgUrl){
 				$scope.imageUrl = $rootScope.profileImgUrl + '?decache=' + Math.random();
 				$http.get($scope.imageUrl).then(function(response){
@@ -530,7 +533,7 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
 		
 		$scope.rankIcon = './img/rank/diamond0.jpg';
 
-		if(!$scope.user.currentCreditRating) $scope.user.currentCreditRating = 'N/A';
+		if(!$scope.user.currentCreditRating) $scope.user.currentCreditRating = 0;
 		$scope.creditGrade = CreditService.creditGrade($scope.user.currentCreditRating);
 		if($scope.creditGrade[0] === 'D'){
 			$scope.rankIcon = './img/rank/diamond2.png';
@@ -889,12 +892,14 @@ angular.module('financial').controller('AssetsController', ['$scope', '$rootScop
 
                 $scope.user.updatedAssets = true;
                 var user = new Users($scope.user);
+                console.log(user);
                 user.$update(function(response) {
                     $scope.success = true;
                     Authentication.user = response;
                     $scope.user = Authentication.user;  
 
                 }, function(response) {
+                    console.log(response);
                     $scope.error = response.data.message;
                 });
             } else {
@@ -1039,6 +1044,837 @@ angular.module('financial').controller('AssetsController', ['$scope', '$rootScop
         };
 
     }
+]);
+'use strict';
+
+// Articles controller
+angular.module('financial').controller('BudgetController', ['$scope', '$rootScope', '$stateParams', '$location', 'Authentication', 'Users', '$q', 'IncomeExpenseService', 'BudgetService',
+    function($scope, $rootScope, $stateParams, $location, Authentication, Users, $q, IncomeExpenseService, BudgetService) {
+        $scope.user = Authentication.user;
+
+        // If user is not signed in then redirect back home
+        if (!$scope.user) $location.path('/');
+        
+        this.$setScope = function(context) {
+            $scope = context;
+        };
+
+        $scope.displayIncomeExpenseRecords = angular.copy(IncomeExpenseService.incomeExpenseRecords);
+        var thisMonthExpense;
+        
+        $scope.fixedExpense = $scope.displayIncomeExpenseRecords.monthlyExpense.fixedExpense;
+        $scope.transportExpense = $scope.displayIncomeExpenseRecords.monthlyExpense.transport;
+        $scope.utilityExpense = $scope.displayIncomeExpenseRecords.monthlyExpense.utilityHousehold;
+        $scope.foodExpense = $scope.displayIncomeExpenseRecords.monthlyExpense.foodNecessities;
+        $scope.miscExpense = $scope.displayIncomeExpenseRecords.monthlyExpense.misc;
+        
+        //actual copy
+        var incomeExpense = $scope.user.incomeExpenseRecords;       
+        var today = new Date();
+        //Retrieve records for present month
+        var presentMonth = today.getMonth();
+        var presentYear = today.getYear() +1900;
+
+        //Date Limits initialized
+        var dateObjStart = new Date(today.getFullYear(),today.getMonth(),1);
+        if (((dateObjStart.getMonth()+1).toString()).length===1) {
+            $scope.firstDay = dateObjStart.getFullYear()+'-0'+(dateObjStart.getMonth()+1)+'-0'+dateObjStart.getDate();
+        } else {
+            $scope.firstDay = dateObjStart.getFullYear()+'-'+(dateObjStart.getMonth()+1)+'-0'+dateObjStart.getDate();
+        }
+        var dateObjEnd = new Date(today.getFullYear(), today.getMonth() + 1, 0); 
+        if (((dateObjEnd.getMonth()+1).toString()).length===1) {
+            $scope.lastDay = dateObjEnd.getFullYear()+'-0'+(dateObjEnd.getMonth()+1)+'-'+dateObjEnd.getDate();   
+        } else {
+            $scope.lastDay = dateObjEnd.getFullYear()+'-'+(dateObjEnd.getMonth()+1)+'-'+dateObjEnd.getDate();   
+        }
+
+
+        $scope.feStatus =true;        
+        $scope.tStatus =true;
+        $scope.fStatus =true;
+        $scope.uStatus =true;
+        $scope.mStatus =true;
+
+        $scope.formSubmitted = false;
+        
+        var mth = [];
+        mth[0] = 'January';
+        mth[1] = 'February';
+        mth[2] = 'March';
+        mth[3] = 'April';
+        mth[4] = 'May';
+        mth[5] = 'June';
+        mth[6] = 'July';
+        mth[7] = 'August';
+        mth[8] = 'September';
+        mth[9] = 'October';
+        mth[10] = 'November';
+        mth[11] = 'December';
+        var monthString = mth[presentMonth];            
+        $scope.displayDate = monthString+', '+presentYear;        
+
+        var dateFormatter = function(date) {
+            var mth = [];
+            mth[0] = 'Jan';
+            mth[1] = 'Feb';
+            mth[2] = 'Mar';
+            mth[3] = 'Apr';
+            mth[4] = 'May';
+            mth[5] = 'Jun';
+            mth[6] = 'Jul';
+            mth[7] = 'Aug';
+            mth[8] = 'Sept';
+            mth[9] = 'Oct';
+            mth[10] = 'Nov';
+            mth[11] = 'Dec';
+            var monthString = mth[date.getMonth()];
+            var dateString = date.getDate();
+            var yearString = date.getYear()+1900;
+            var final_String = dateString+'-'+monthString+'-'+yearString;
+            return final_String;
+        };
+
+        var progressInfo = function(value) {
+            var type;
+            if (value < 25) {
+              type = 'success';
+            } else if (value < 50) {
+              type = 'info';
+            } else if (value < 75) {
+              type = 'warning';
+            } else {
+              type = 'danger';
+            }
+            return type; 
+        };
+
+        var standingCheck = function (actual, budget) {
+            if (actual<= budget) {                
+                return true;
+                
+            } else {                
+                return false;
+            }
+        }; 
+        
+
+        $scope.loadTables = function() {
+
+
+            $scope.incomeExpenseChartDisplay = true;
+            $scope.incomeExpenseDoughnutData = [1]; 
+            $scope.incomeExpenseDoughnutLabels = ['No Data'];            
+            
+            
+            //INITIALIZING BUDGET LIMITS & PROGRESS BARS
+            if (typeof $scope.user.budgetLimits === 'undefined') {     
+                console.log('First time bitch');
+                $scope.user.budgetLimits = angular.copy(BudgetService.budgetLimits);                
+                var userNow = new Users($scope.user);
+                userNow.$update(function(response) {
+                    $scope.success = true;
+                    Authentication.user = response;
+                    $scope.user = Authentication.user;
+                }, function(response) {
+                    $scope.error = response.data.message;
+                });
+            }
+            $scope.fixedExpenseB = $scope.user.budgetLimits.fixedExpenseB;
+            $scope.transportB = $scope.user.budgetLimits.transportB;
+            $scope.foodB = $scope.user.budgetLimits.foodB;
+            $scope.miscB = $scope.user.budgetLimits.miscB;
+            $scope.utilitiesB = $scope.user.budgetLimits.utilitiesB;
+
+            $scope.feBudgetSet = false;
+            $scope.tBudgetSet = false;
+            $scope.fBudgetSet = false;
+            $scope.mBudgetSet = false;
+            $scope.uBudgetSet = false;
+            $scope.allBudgetSet = false;
+
+            if ($scope.user.budgetLimits.fixedExpenseB!==0) {
+                $scope.feBudgetSet = true;
+            }
+            if ($scope.user.budgetLimits.transportB!==0) {
+                $scope.tBudgetSet = true;   
+            }
+            if ($scope.user.budgetLimits.foodB!==0) {
+                $scope.fBudgetSet = true;
+            }
+            if ($scope.user.budgetLimits.miscB!==0) {
+                $scope.mBudgetSet = true;
+            }
+            if ($scope.user.budgetLimits.utilitiesB!==0) {
+                $scope.uBudgetSet = true;
+            }
+            if($scope.feBudgetSet && $scope.tBudgetSet && $scope.fBudgetSet && $scope.mBudgetSet && $scope.uBudgetSet) {
+                $scope.allBudgetSet = true;
+            }
+
+            $scope.userExpenseCopy = [];
+            angular.copy($scope.user.incomeExpenseRecords, $scope.userExpenseCopy);            
+            $scope.thisMonthFixedExpenseTotal = '0.00';
+            $scope.thisMonthTransportTotal = '0.00';
+            $scope.thisMonthMiscTotal = '0.00';
+            $scope.thisMonthUtilitiesTotal = '0.00';
+            $scope.thisMonthFoodTotal = '0.00';
+            $scope.totalExpense = '0.00';
+
+
+            $scope.displayFixedExpenseB = $scope.user.budgetLimits.fixedExpenseB;
+            $scope.displayTransportB = $scope.user.budgetLimits.transportB;
+            $scope.displayFoodB = $scope.user.budgetLimits.foodB;
+            $scope.displayUtilitiesB = $scope.user.budgetLimits.utilitiesB;
+            $scope.displayMiscB = $scope.user.budgetLimits.miscB;
+
+            $scope.displayThisMonthFixedExpenseTotal = 0;
+            $scope.displayThisMonthTransportTotal = 0;
+            $scope.displayThisMonthFoodTotal = 0;
+            $scope.displayThisMonthUtilitiesTotal = 0;
+            $scope.displayThisMonthMiscTotal = 0;
+            
+            for(var i=0;i<$scope.userExpenseCopy.length; i++) {            
+                var record = $scope.userExpenseCopy[i];
+                
+                if (record.month===presentMonth&&record.year===presentYear) {
+                                                         
+                    //Load Fixed Expense Table
+                    var fixedExpenseArr = record.monthlyExpense.fixedExpense;
+                    $scope.thisMonthFixedExpenseTotal = record.fixedExpenseAmt;
+                    $scope.displayThisMonthFixedExpenseTotal = Number(record.fixedExpenseAmt);
+
+                    var  valueE = ($scope.thisMonthFixedExpenseTotal/$scope.fixedExpenseB)*100;                    
+                    var typeE = progressInfo(valueE);                   
+                    $scope.dynamicE = Math.floor(valueE);
+                    $scope.typeE = typeE;
+                    $scope.feStatus = standingCheck($scope.thisMonthFixedExpenseTotal,$scope.fixedExpenseB);                    
+                    $scope.displayFeExceed = ($scope.displayThisMonthFixedExpenseTotal-$scope.fixedExpenseB).toFixed(2);
+                    
+                    //Load Transport Expense Table
+                    var transportArr = record.monthlyExpense.transport;                    
+                    $scope.thisMonthTransportTotal = record.transportAmt;                    
+                    $scope.displayThisMonthTransportTotal = Number(record.transportAmt);
+
+                    var valueT = ($scope.thisMonthTransportTotal/$scope.transportB)*100;
+                    var typeT = progressInfo(valueT);
+                    $scope.dynamicT = Math.floor(valueT);                    
+                    $scope.typeT =typeT;
+                    $scope.tStatus = standingCheck($scope.thisMonthTransportTotal,$scope.transportB);
+                    $scope.displayTExceed = ($scope.displayThisMonthTransportTotal-$scope.transportB).toFixed(2);
+                    
+                    //Load Food Expense Table
+                    var foodArr = record.monthlyExpense.foodNecessities;
+                    $scope.thisMonthFoodTotal = record.foodNecessitiesAmt;
+                    $scope.displayThisMonthFoodTotal = Number(record.foodNecessitiesAmt);
+
+                    var valueF = ($scope.thisMonthFoodTotal/$scope.foodB)*100;
+                    var typeF = progressInfo(valueF);
+                    $scope.dynamicF = Math.floor(valueF);
+                    $scope.typeF =typeF;
+                    $scope.fStatus = standingCheck($scope.thisMonthFoodTotal,$scope.foodB);
+                    $scope.displayFExceed = ($scope.displayThisMonthFoodTotal-$scope.foodB).toFixed(2);
+
+                    //Load Utilities Expense Table
+                    var utilitiesArr = record.monthlyExpense.utilityHousehold;
+                    $scope.thisMonthUtilitiesTotal = record.utilityHouseholdAmt;
+                    $scope.displayThisMonthUtilitiesTotal = Number(record.utilityHouseholdAmt);
+
+                    var valueU = ($scope.thisMonthUtilitiesTotal/$scope.utilitiesB)*100;
+                    var typeU = progressInfo(valueU);
+                    $scope.dynamicU = Math.floor(valueU);
+                    $scope.typeU =typeU;
+                    $scope.uStatus = standingCheck($scope.thisMonthUtilitiesTotal,$scope.utilitiesB);
+                    $scope.displayUExceed = ($scope.displayThisMonthUtilitiesTotal-$scope.utilitiesB).toFixed(2);
+
+                    //Load Misc Expense Table
+                    var miscArr = record.monthlyExpense.misc;
+                    $scope.thisMonthMiscTotal = record.miscAmt;
+                    $scope.displayThisMonthMiscTotal = Number(record.miscAmt);
+
+                    var valueM = ($scope.thisMonthMiscTotal/$scope.miscB)*100;
+                    var typeM = progressInfo(valueM);
+                    $scope.dynamicM = Math.floor(valueM);
+                    $scope.typeM =typeM;
+                    $scope.mStatus = standingCheck($scope.thisMonthMiscTotal,$scope.miscB);
+                    $scope.displayMExceed = ($scope.displayThisMonthMiscTotal-$scope.miscB).toFixed(2);
+                    //Load Charts
+
+                    if(!record.fixedExpenseAmt && !record.transportAmt && !record.utilityHouseholdAmt && !record.foodNecessitiesAmt && !record.miscAmt) {
+                        $scope.incomeExpenseDoughnutData = [1]; 
+                        $scope.incomeExpenseDoughnutLabels = ['No Data'];
+                                                
+                        
+                    } else {
+                        $scope.incomeExpenseDoughnutData = [record.fixedExpenseAmt, record.transportAmt, record.utilityHouseholdAmt, record.foodNecessitiesAmt, record.miscAmt]; 
+                        $scope.incomeExpenseDoughnutLabels = ['Fixed Expense', 'Transport', 'Utilities & Household Maintenance', 'Food & Necessities', 'Miscellaneous'];                        
+                        $scope.totalExpense = record.monthlyExpenseAmt;                        
+                    }
+
+                    $scope.feDiffTable = [];
+                    $scope.tDiffTable = [];
+                    $scope.fDiffTable = [];
+                    $scope.mDiffTable =[];
+                    $scope.uDiffTable = [];
+
+                    $scope.fixedExpenseTable = [];
+                    $scope.transportTable = [];
+                    $scope.foodTable = [];
+                    $scope.miscTable = [];
+                    $scope.utilitiesTable = []; 
+                    
+
+                    var rt;
+                    var feType;
+                    var feRecords;
+                    var recordsTotal;
+                    var diff;
+                    var diffObj;
+                    var indRecord;                    
+                    var a;
+                    var dateFormatted;
+                    var amount;
+                    var modRecord;
+                    for (rt in fixedExpenseArr) {
+                        feType = fixedExpenseArr[rt];
+                        feRecords = feType.records;
+                        recordsTotal = feType.recordsTotal;                       
+                        
+                        if (feType.value>feType.recordsTotal) {
+                            diff = (feType.value-feType.recordsTotal).toFixed(2);                                
+                            diffObj = {
+                                type : feType.description,
+                                diff : diff
+                            };
+                            $scope.feDiffTable.push(diffObj);
+                        }                         
+
+                        for(a=0; a<feRecords.length;a++) {
+                            indRecord = feRecords[a];
+                            dateFormatted = dateFormatter(new Date(feRecords[a].date));                        
+                            amount = feRecords[a].amount.toFixed(2);
+
+                            modRecord = {
+                                detail: feRecords[a].detail,
+                                date: dateFormatted,
+                                amount: amount,
+                                description:feType.description
+                            };                            
+                            $scope.fixedExpenseTable.push(modRecord);                        
+                        }
+                    }
+                    for (rt in transportArr) {
+                        feType = transportArr[rt];
+                        feRecords = feType.records;
+                        recordsTotal = feType.recordsTotal;                       
+                        
+                        if (feType.value>feType.recordsTotal) {
+                            diff = (feType.value-feType.recordsTotal).toFixed(2);                                
+                            diffObj = {
+                                type : feType.description,
+                                diff : diff
+                            };
+                            $scope.tDiffTable.push(diffObj);
+                        }
+                        
+
+                        for(a=0; a<feRecords.length;a++) {
+                            indRecord = feRecords[a];
+                            dateFormatted = dateFormatter(new Date(feRecords[a].date));                        
+                            amount = feRecords[a].amount.toFixed(2);
+
+                            modRecord = {
+                                detail: feRecords[a].detail,
+                                date: dateFormatted,
+                                amount: amount,
+                                description:feType.description
+                            };
+                            $scope.transportTable.push(modRecord);
+                        }
+                    }
+
+                    for (rt in foodArr) {
+                        feType = foodArr[rt];
+                        feRecords = feType.records;
+                        recordsTotal = feType.recordsTotal;                       
+                        
+                        if (feType.value>feType.recordsTotal) {
+                            diff = (feType.value-feType.recordsTotal).toFixed(2);                                
+                            diffObj = {
+                                type : feType.description,
+                                diff : diff
+                            };
+                            $scope.fDiffTable.push(diffObj);
+                        }
+                        
+
+                        for(a=0; a<feRecords.length;a++) {
+                            indRecord = feRecords[a];
+                            dateFormatted = dateFormatter(new Date(feRecords[a].date));                        
+                            amount = feRecords[a].amount.toFixed(2);
+                            //var modRecord = {feRecords[a].detail,}
+                            //console.log(typeof feRecords[a].date); 
+
+                            modRecord = {
+                                detail: feRecords[a].detail,
+                                date: dateFormatted,
+                                amount: amount,
+                                description:feType.description
+                            };
+                            $scope.foodTable.push(modRecord);
+                        }
+                    }
+
+                    for (rt in utilitiesArr) {
+                        feType = utilitiesArr[rt];
+                        feRecords = feType.records;
+                        recordsTotal = feType.recordsTotal;                       
+                        
+                        if (feType.value>feType.recordsTotal) {
+                            diff = (feType.value-feType.recordsTotal).toFixed(2);                                
+                            diffObj = {
+                                type : feType.description,
+                                diff : diff
+                            };
+                            $scope.uDiffTable.push(diffObj);
+                        }
+                        
+
+                        for(a=0; a<feRecords.length;a++) {
+                            indRecord = feRecords[a];
+                            dateFormatted = dateFormatter(new Date(feRecords[a].date));                        
+                            amount = feRecords[a].amount.toFixed(2);
+                            //var modRecord = {feRecords[a].detail,}
+                            //console.log(typeof feRecords[a].date); 
+
+                            modRecord = {
+                                detail: feRecords[a].detail,
+                                date: dateFormatted,
+                                amount: amount,
+                                description:feType.description
+                            };
+                            $scope.utilitiesTable.push(modRecord);
+                        }
+                    }
+
+                    for (rt in miscArr) {
+                        feType = miscArr[rt];
+                        feRecords = feType.records;
+                        recordsTotal = feType.recordsTotal;                       
+                        
+                        if (feType.value>feType.recordsTotal) {
+                            diff = (feType.value-feType.recordsTotal).toFixed(2);                                
+                            diffObj = {
+                                type : feType.description,
+                                diff : diff
+                            };
+                            $scope.mDiffTable.push(diffObj);
+                        }
+                        
+
+                        for(a=0; a<feRecords.length;a++) {
+                            indRecord = feRecords[a];
+                            dateFormatted = dateFormatter(new Date(feRecords[a].date));                        
+                            amount = feRecords[a].amount.toFixed(2);
+                            //var modRecord = {feRecords[a].detail,}
+                            //console.log(typeof feRecords[a].date); 
+
+                            modRecord = {
+                                detail: feRecords[a].detail,
+                                date: dateFormatted,
+                                amount: amount,
+                                description:feType.description
+                            };
+                            $scope.miscTable.push(modRecord);
+                        }
+                    }
+                }
+            }
+                    
+        };
+        $scope.loadTables();
+
+        $scope.addNewExpense = function() {
+
+
+            $scope.type = $scope.type.trim();                
+
+            if (!$scope.user.incomeExpenseRecordsPeriod) {
+                //If there is no existing record
+                console.log('do you enter?');
+                $scope.user.incomeExpenseRecordsPeriod = {};
+                $scope.user.incomeExpenseRecordsPeriod.minMonth = presentMonth;
+                $scope.user.incomeExpenseRecordsPeriod.minYear = presentYear;
+                $scope.user.incomeExpenseRecordsPeriod.maxMonth = presentMonth;
+                $scope.user.incomeExpenseRecordsPeriod.maxYear = presentYear;                
+
+            } else if (($scope.user.incomeExpenseRecordsPeriod.maxMonth <= presentMonth && $scope.user.incomeExpenseRecordsPeriod.maxYear <= presentYear) || ($scope.user.incomeExpenseRecordsPeriod.maxMonth > presentMonth && $scope.user.incomeExpenseRecordsPeriod.maxYear < presentYear)) {
+
+                console.log('do you enter2?');
+                //ASSUMING THAT THE USER NEVER INSERTS DATA FOR THE FUTURE (HE CANT POSSIBLY DO SO ALSO)
+                //SETS RECORDS MAX PERIOD TO PRESENT MONTH & YEAR
+                //I ALSO CURRENTLY DONT ALLOW USERS TO SET BUDGET FOR THE FUTURE (ONLY FOR PRESENT MONTH)
+                $scope.user.incomeExpenseRecordsPeriod.maxMonth = presentMonth;
+                $scope.user.incomeExpenseRecordsPeriod.maxYear = presentYear;
+            }
+
+             
+            
+            if($scope.user.incomeExpenseRecords.length===0) { //in the event of an empty record (FIRSTTIME)                
+                console.log('1st');
+                $scope.displayIncomeExpenseRecords.year = presentYear;
+                $scope.displayIncomeExpenseRecords.month = presentMonth;                                
+                $scope.user.incomeExpenseRecords.push($scope.displayIncomeExpenseRecords); 
+            } else { //Existing record but no record of that month
+                var existenceCheck = 0;
+                for (var j=0;j<$scope.user.incomeExpenseRecords.length; j++) {   
+                    var recordChecker = $scope.user.incomeExpenseRecords[j];                                                         
+                    if (recordChecker.month===presentMonth&&recordChecker.year===presentYear) {
+                        existenceCheck++;
+                        console.log('2nd');
+                    }
+                }
+                if (existenceCheck===0) {
+                    $scope.displayIncomeExpenseRecords.year = presentYear;
+                    $scope.displayIncomeExpenseRecords.month = presentMonth;                                
+                    $scope.user.incomeExpenseRecords.push($scope.displayIncomeExpenseRecords);  
+                    console.log('3rd');
+                }
+            }
+            
+            for(var i=0;i<$scope.user.incomeExpenseRecords.length; i++) {            
+                var expenseRecord = $scope.user.incomeExpenseRecords[i];  
+
+                if (expenseRecord.month===presentMonth&&expenseRecord.year===presentYear) {
+                    
+                    var thisMonthSpecExpense = {};
+                    
+                    if($scope.formRef==='fixedExpense') {                        
+                        thisMonthSpecExpense = expenseRecord.monthlyExpense.fixedExpense;
+                    } else if ($scope.formRef==='transport') {
+                        thisMonthSpecExpense = expenseRecord.monthlyExpense.transport;
+                    } else if ($scope.formRef==='utility') {
+                        thisMonthSpecExpense = expenseRecord.monthlyExpense.utilityHousehold ;
+                    } else if ($scope.formRef==='food') {
+                        thisMonthSpecExpense = expenseRecord.monthlyExpense.foodNecessities;
+                    } else if ($scope.formRef==='misc') {
+                        thisMonthSpecExpense = expenseRecord.monthlyExpense.misc;
+                    }
+
+                    var record = {
+                        detail: $scope.detail,
+                        date: $scope.date,
+                        amount: $scope.expenseAmt
+                    };
+
+                    console.log('Almost THERE');
+                    
+                    for (var get in thisMonthSpecExpense) {                        
+                        var obj = thisMonthSpecExpense[get];
+                        if($scope.type=== obj.description) {
+                            console.log('SUCCESS');
+                            obj.recordsTotal += $scope.expenseAmt;
+                            obj.records.push(record);
+                            if (obj.recordsTotal>=obj.value) {
+                                obj.value = obj.recordsTotal;
+                            }
+                        }
+                    }
+                    //thisMonthSpecExpense                                                                      
+                                           
+                }
+                var fixedExpenseArr = expenseRecord.monthlyExpense.fixedExpense;
+                var fixedExpenseTotal = 0;
+                for (var rt in fixedExpenseArr) {
+                    var obj1 = fixedExpenseArr[rt];
+                    fixedExpenseTotal += obj1.value;
+                }
+                expenseRecord.fixedExpenseAmt = fixedExpenseTotal.toFixed(2);
+
+                var transportArr = expenseRecord.monthlyExpense.transport;
+                var transportTotal = 0;
+                for (var rt1 in transportArr) {
+                    var obj2 = transportArr[rt1];
+                    transportTotal += obj2.value;
+                }
+                expenseRecord.transportAmt = transportTotal.toFixed(2);
+
+                var utilityHouseholdArr = expenseRecord.monthlyExpense.utilityHousehold;
+                var utilityHouseholdTotal = 0;
+                for (var rt2 in utilityHouseholdArr) {
+                    var obj3 = utilityHouseholdArr[rt2];
+                    utilityHouseholdTotal += obj3.value;
+                }
+                expenseRecord.utilityHouseholdAmt = utilityHouseholdTotal.toFixed(2);
+
+                var foodNecessitiesArr = expenseRecord.monthlyExpense.foodNecessities;
+                var foodNecessitiesTotal = 0;
+                for (var rt3 in foodNecessitiesArr) {
+                    var obj4 = foodNecessitiesArr[rt3];
+                    foodNecessitiesTotal += obj4.value;
+                }
+                expenseRecord.foodNecessitiesAmt = foodNecessitiesTotal.toFixed(2);
+
+                var miscArr = expenseRecord.monthlyExpense.misc;
+                var miscTotal = 0;
+                for (var rt4 in miscArr) {
+                    var obj5 = miscArr[rt4];
+                    miscTotal += obj5.value;
+                }
+                expenseRecord.miscAmt = miscTotal.toFixed(2);
+
+                var monthlyIncomeAmt = Number(expenseRecord.monthlyIncomeAmt);                
+                var monthlyExpenseAmt = fixedExpenseTotal + transportTotal + utilityHouseholdTotal + foodNecessitiesTotal + miscTotal;
+                var netCashFlow = monthlyIncomeAmt - monthlyExpenseAmt;                
+                expenseRecord.monthlyIncomeAmt = monthlyIncomeAmt.toFixed(2);                
+                expenseRecord.monthlyExpenseAmt = monthlyExpenseAmt.toFixed(2);
+                expenseRecord.netCashFlow = netCashFlow.toFixed(2);  
+            }
+
+            var userNow = new Users($scope.user);
+            userNow.$update(function(response) {
+                $scope.success = true;
+                Authentication.user = response;
+                $scope.user = Authentication.user;
+            }, function(response) {
+                $scope.error = response.data.message;
+            });
+            //alert('Expense Added!');
+            $scope.formSubmitted = true;
+            $scope.detail = '';
+            $scope.date = '';
+            $scope.expenseAmt = '';
+            $scope.type = '';
+            $scope.loadTables();            
+            //location.reload(); 
+                           
+        };
+
+        $scope.resetModal = function () {            
+            $scope.formSubmitted = false;
+        };
+
+        $scope.forms = {};        
+        $scope.$watch('forms.addFixedExpenseForm.$valid', function() {
+            console.log('watching feForm' + $scope.forms.addFixedExpenseForm.$valid); 
+         });
+
+        $scope.setFixedExpenseBudget = function() {
+
+            $scope.user.budgetLimits.fixedExpenseB = $scope.fixedExpenseB;
+
+            var userNow = new Users($scope.user);
+            userNow.$update(function(response) {
+                $scope.success = true;
+                Authentication.user = response;
+                $scope.user = Authentication.user;
+            }, function(response) {
+                $scope.error = response.data.message;
+            });
+            alert('Budget Set!');
+            $scope.loadTables();
+         };
+        $scope.setTransportBudget = function() {
+            
+            $scope.user.budgetLimits.transportB = $scope.transportB;
+
+            var userNow = new Users($scope.user);
+            userNow.$update(function(response) {
+                $scope.success = true;
+                Authentication.user = response;
+                $scope.user = Authentication.user;
+            }, function(response) {
+                $scope.error = response.data.message;
+            });
+            alert('Budget Set!');
+            $scope.loadTables();
+         };
+        $scope.setUtilitiestBudget = function() {
+            
+            $scope.user.budgetLimits.utilitiesB = $scope.utilitiesB;
+
+            var userNow = new Users($scope.user);
+            userNow.$update(function(response) {
+                $scope.success = true;
+                Authentication.user = response;
+                $scope.user = Authentication.user;
+            }, function(response) {
+                $scope.error = response.data.message;
+            });
+            alert('Budget Set!');
+            $scope.loadTables();
+         };
+        $scope.setFoodBudget = function() {
+
+            $scope.user.budgetLimits.foodB = $scope.foodB;
+
+            var userNow = new Users($scope.user);
+            userNow.$update(function(response) {
+                $scope.success = true;
+                Authentication.user = response;
+                $scope.user = Authentication.user;
+            }, function(response) {
+                $scope.error = response.data.message;
+            });
+            alert('Budget Set!');
+            $scope.loadTables();
+         };
+         $scope.setMiscBudget = function() {
+
+            $scope.user.budgetLimits.miscB = $scope.miscB;
+
+            var userNow = new Users($scope.user);
+            userNow.$update(function(response) {
+                $scope.success = true;
+                Authentication.user = response;
+                $scope.user = Authentication.user;
+            }, function(response) {
+                $scope.error = response.data.message;
+            });
+            alert('Budget Set!');
+            $scope.loadTables();
+         };
+
+        $scope.standbyForDelete = function (item,expenseType) {
+            $scope.item = item;
+            $scope.expenseType = expenseType; 
+
+        };
+
+        $scope.cancelDelete = function () {
+            $scope.item = '';
+            $scope.expenseType = '';             
+        };
+
+        $scope.deleteRecord = function() {
+                         
+            for(var i=0;i<$scope.user.incomeExpenseRecords.length; i++) {            
+                var expenseRecord = $scope.user.incomeExpenseRecords[i];  
+                if (expenseRecord.month===presentMonth&&expenseRecord.year===presentYear) {
+                    console.log('level1');
+                    var expenseSelected;
+                    
+                    if($scope.expenseType==='fixedExpense') {
+                        expenseSelected = expenseRecord.monthlyExpense.fixedExpense;
+                        console.log('level2.1');                                                
+                    } else if($scope.expenseType==='transport') {
+                        expenseSelected = expenseRecord.monthlyExpense.transport;
+                        console.log('level2.2');
+                    } else if($scope.expenseType==='utility') {
+                        expenseSelected = expenseRecord.monthlyExpense.utilityHousehold;
+                        console.log('level2.3');
+                    } else if($scope.expenseType==='food') {
+                        expenseSelected = expenseRecord.monthlyExpense.foodNecessities;
+                        console.log('level2.4');
+                    } else if($scope.expenseType==='misc') {
+                        expenseSelected = expenseRecord.monthlyExpense.misc;
+                        console.log('level2.5');
+                    }
+
+                    for (var get in expenseSelected) {                        
+                        var obj = expenseSelected[get];                        
+                        
+                        if($scope.item.description=== obj.description) {
+                            console.log('SUCCESS');
+                            for (var a =0; a<obj.records.length; a++) {
+                                var specRec = obj.records[a];
+                                var itemNo = Number($scope.item.amount);
+                                if (specRec.detail===$scope.item.detail&&specRec.amount===itemNo){
+                                    obj.recordsTotal -= itemNo;
+                                    obj.value -= itemNo;
+                                    obj.records.splice(a,1);
+                                    console.log('Make it?');
+                                    //MORE DETAILED CHECK REQUIRED
+                                    //CHANGE RECORDS TOTAL                                        
+                                }
+                            }
+                        }
+                    }
+                    var fixedExpenseArr = expenseRecord.monthlyExpense.fixedExpense;
+                    var fixedExpenseTotal = 0;
+                    for (var rt in fixedExpenseArr) {
+                        var obj1 = fixedExpenseArr[rt];
+                        fixedExpenseTotal += obj1.value;
+                    }
+                    expenseRecord.fixedExpenseAmt = fixedExpenseTotal.toFixed(2);
+
+                    var transportArr = expenseRecord.monthlyExpense.transport;
+                    var transportTotal = 0;
+                    for (var rt1 in transportArr) {
+                        var obj2 = transportArr[rt1];
+                        transportTotal += obj2.value;
+                    }
+                    expenseRecord.transportAmt = transportTotal.toFixed(2);
+
+                    var utilityHouseholdArr = expenseRecord.monthlyExpense.utilityHousehold;
+                    var utilityHouseholdTotal = 0;
+                    for (var rt2 in utilityHouseholdArr) {
+                        var obj3 = utilityHouseholdArr[rt2];
+                        utilityHouseholdTotal += obj3.value;
+                    }
+                    expenseRecord.utilityHouseholdAmt = utilityHouseholdTotal.toFixed(2);
+
+                    var foodNecessitiesArr = expenseRecord.monthlyExpense.foodNecessities;
+                    var foodNecessitiesTotal = 0;
+                    for (var rt3 in foodNecessitiesArr) {
+                        var obj4 = foodNecessitiesArr[rt3];
+                        foodNecessitiesTotal += obj4.value;
+                    }
+                    expenseRecord.foodNecessitiesAmt = foodNecessitiesTotal.toFixed(2);
+
+                    var miscArr = expenseRecord.monthlyExpense.misc;
+                    var miscTotal = 0;
+                    for (var rt4 in miscArr) {
+                        var obj5 = miscArr[rt4];
+                        miscTotal += obj5.value;
+                    }
+                    expenseRecord.miscAmt = miscTotal.toFixed(2);
+
+                    var monthlyIncomeAmt = Number(expenseRecord.monthlyIncomeAmt);                
+                    var monthlyExpenseAmt = fixedExpenseTotal + transportTotal + utilityHouseholdTotal + foodNecessitiesTotal + miscTotal;
+                    var netCashFlow = monthlyIncomeAmt - monthlyExpenseAmt;                
+                    expenseRecord.monthlyIncomeAmt = monthlyIncomeAmt.toFixed(2);                
+                    expenseRecord.monthlyExpenseAmt = monthlyExpenseAmt.toFixed(2);
+                    expenseRecord.netCashFlow = netCashFlow.toFixed(2); 
+                }
+            }
+            var userNow = new Users($scope.user);
+            userNow.$update(function(response) {
+            $scope.success = true;
+            Authentication.user = response;
+            $scope.user = Authentication.user;
+
+            }, function(response) {
+                $scope.error = response.data.message;
+
+            });
+            $scope.item = '';
+            $scope.expenseType = '';
+            $scope.loadTables();            
+        };
+
+        $scope.setFixedExpense = function() {
+            $scope.selectedExpense = $scope.fixedExpense;
+            $scope.formRef = 'fixedExpense';
+        };
+        $scope.setTransportExpense = function() {
+            $scope.selectedExpense = $scope.transportExpense;
+            $scope.formRef = 'transport';
+        };
+        $scope.setUtilityExpense = function() {
+            $scope.selectedExpense = $scope.utilityExpense;
+            $scope.formRef = 'utility';
+        };
+        $scope.setFoodExpense = function() {
+            $scope.selectedExpense = $scope.foodExpense;
+            $scope.formRef = 'food';
+        };
+        $scope.setMiscExpense = function() {
+            $scope.selectedExpense = $scope.miscExpense;            
+            $scope.formRef = 'misc';
+        };
+     }
+
 ]);
 'use strict';
 
@@ -1884,8 +2720,8 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
 'use strict';
 
 // Articles controller
-angular.module('financial').controller('DebtsController', ['$scope', '$rootScope', '$stateParams', '$location', 'Authentication', 'Users', '$q',
-    function($scope, $rootScope, $stateParams, $location, Authentication, Users, $q) {
+angular.module('financial').controller('DebtsController', ['$scope', '$rootScope', '$stateParams', '$location', 'Authentication', 'Users', '$q', 'LiabilitiesService', 'IncomeExpenseService',
+    function($scope, $rootScope, $stateParams, $location, Authentication, Users, $q, LiabilitiesService, IncomeExpenseService) {
         $scope.user = Authentication.user;
 
         // If user is not signed in then redirect back home
@@ -1895,84 +2731,677 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
             $scope = context;
         };
 
-        $scope.showAdd = false; // hide the Add New Debt button.
+        $scope.add1show = true;
+        $scope.add2show = false;
+
+		$scope.mth = [];	
+        $scope.mth[0] = 'January';
+        $scope.mth[1] = 'February';
+        $scope.mth[2] = 'March';
+        $scope.mth[3] = 'April';
+        $scope.mth[4] = 'May';
+        $scope.mth[5] = 'June';
+        $scope.mth[6] = 'July';
+        $scope.mth[7] = 'August';
+        $scope.mth[8] = 'September';
+        $scope.mth[9] = 'October';
+        $scope.mth[10] = 'November';
+        $scope.mth[11] = 'December';
+
+        //var dt = new Date('2015-10-01');
+        var dt = new Date();
+		var month = dt.getMonth();
+		$scope.month = dt.getMonth();
+        $scope.monthDisplay = $scope.mth[month];
+        var year = dt.getFullYear();  
+        $scope.year = dt.getFullYear();
+        $scope.displayDate = $scope.mth[month]+', '+year;
+
+        $scope.selectedYear = $scope.year;
+        $scope.selectedMonth = $scope.mth[$scope.month];
+
         // When "Add New Debt" button is clicked
-        $scope.onAddDebt = function () {
-            $scope.model = {}; // clear any data leftover from our last transaction
-            $scope.showAdd = true; // show the Add Debt form.
-            //$scope.cancel(); // hide any edit rows
+        $scope.displayIncomeExpenseRecords = angular.copy(IncomeExpenseService.incomeExpenseRecords);
+        var displayLiabilitiesRecords = angular.copy(LiabilitiesService.liabilitiesRecords);
+        var loanMortgageArr = displayLiabilitiesRecords.loansMortgages;
+        $scope.liabilities = [];
+        angular.forEach(loanMortgageArr, function(value, key){
+            $scope.liabilities.push(value); 
+        });
+
+        
+        $scope.$watch('selectedMonth', function() {
+        	
+        	$scope.selectedMonthNo = $scope.mth.indexOf($scope.selectedMonth);
+        	setDebtRecord();
+        	console.log($scope.selectedMonthNo);
+        });
+        $scope.$watch('selectedYear',function() {
+        	setDebtRecord();
+        });
+		
+		var setDebtRecord = function () {
+			var debtRe = $scope.debt;
+			
+			//console.log(debtRe);
+			var counterCheckAgn =0;
+			if (typeof debtRe !== 'undefined') {
+				for(var c=0; c<debtRe.records.length;c++) {
+					var recordDebt = debtRe.records[c];
+					if (recordDebt.year===$scope.selectedYear&&recordDebt.month===$scope.selectedMonthNo) {
+						$scope.recordReq = recordDebt;
+						counterCheckAgn++;
+						console.log('exist?');
+						$scope.noRecordsToDisplay = false;
+						if ($scope.selectedYear===year&&$scope.selectedMonthNo===month) {
+							$scope.presentMonthCheck = true;
+							console.log('Tester');
+						} else {
+							$scope.presentMonthCheck = false;
+						}
+					}
+				}
+			} 
+			if(counterCheckAgn===0){
+				console.log('No Records');
+				$scope.noRecordsToDisplay = true;
+			}
+		};
+		
+        
+		
+        $scope.updateRecordsForNewMonth = function () {        	
+
+        	var needToUpdate = false;
+        	//contribution status
+        	for (var b = 0; b<$scope.user.debtsInfoArr.length; b++) {
+        		var debtRe = $scope.user.debtsInfoArr[b];
+        		debtRe.id = $scope.user.debtsInfoArr.indexOf(debtRe)+1;
+        		if(debtRe.status==='In Progress') {    					    				
+    			
+	        		var counterCheck = 0;
+	    			//debtRe.monthlyPayStatus = false;
+	    			for(var c=0; c<debtRe.records.length;c++) {
+	    				var recordDebt = debtRe.records[c];	    				
+	    				if (recordDebt.year===year&&recordDebt.month===month) {
+	    					console.log('enter or not?');
+							counterCheck++;
+	    				}
+	    			}
+
+	    			if(counterCheck===0) {
+	    				needToUpdate = true;
+	    				console.log('CREATING NEW RECORDS');
+	    				var record = {
+			        		month: month,
+			        		year: year,
+			        		loanBalance: debtRe.loanBalance,
+			        		monthly: 0,
+			        		monthlyPayStatus: false,
+			        		repaymentNo: debtRe.repaymentNo
+			        	};        
+			        	        	
+			        	debtRe.records.push(record);
+
+
+	    				if (($scope.user.liabilitiesRecordsPeriod.maxMonth <= month && $scope.user.liabilitiesRecordsPeriod.maxYear <= year) || ($scope.user.liabilitiesRecordsPeriod.maxMonth > month && $scope.user.liabilitiesRecordsPeriod.maxYear < year)) {
+
+			        		$scope.user.liabilitiesRecordsPeriod.maxMonth = month;
+			                $scope.user.liabilitiesRecordsPeriod.maxYear = year;
+			        	} 
+
+		        	 	//Existing record but no record of that month
+		                var existenceCheck = 0;
+		                for (var j=0;j<$scope.user.liabilitiesRecords.length; j++) {   
+		                    var recordChecker = $scope.user.liabilitiesRecords[j];                                                         
+		                    if (recordChecker.month===month&&recordChecker.year===year) {
+		                        existenceCheck++;
+		                        console.log('2nd');
+		                    }
+		                }
+		                if (existenceCheck===0) {
+		                    displayLiabilitiesRecords.year = year;
+		                    displayLiabilitiesRecords.month = month;                                
+		                    $scope.user.liabilitiesRecords.push(displayLiabilitiesRecords);  
+		                    console.log('3rd');
+		                }
+			            
+
+						for(var i=0;i<$scope.user.liabilitiesRecords.length; i++) {            
+			                var liabilityRecord = $scope.user.liabilitiesRecords[i];  
+
+			            	if (liabilityRecord.month===month&&liabilityRecord.year===year) {
+			            		var loansMortgagesRec = liabilityRecord.loansMortgages;
+
+			            		//update new loan balance
+			            		for (var get in loansMortgagesRec) {                        
+			                        var obj = loansMortgagesRec[get];
+			                        if(debtRe.type=== obj.description) {
+			                        	obj.value += debtRe.loanBalance;
+			                        	obj.minValue += debtRe.loanBalance;
+			                        }
+			                    }
+			                	
+			                	//update totals
+			            	    var shortTermCreditArr = liabilityRecord.shortTermCredit;
+				                var shortTermCreditTotal = 0;
+				                for (var rt in shortTermCreditArr) {
+				                    var obj1 = shortTermCreditArr[rt];
+				                    shortTermCreditTotal += obj1.value;
+				                }
+				                
+				                var loansMortgagesArr = liabilityRecord.loansMortgages;
+				                var loansMortgagesTotal = 0;
+				                for (var rt1 in loansMortgagesArr) {
+				                    var obj2 = loansMortgagesArr[rt1];
+				                    loansMortgagesTotal += obj2.value;
+				                }
+				                
+				                var otherLiabilitiesArr = liabilityRecord.otherLiabilities;
+				                var otherLiabilitiesTotal = 0;
+				                for (var rt2 in otherLiabilitiesArr) {
+				                    var obj3 = otherLiabilitiesArr[rt2];
+				                    otherLiabilitiesTotal += obj3.value;
+				                }
+				                
+				                var liabilitiesTotal = shortTermCreditTotal + loansMortgagesTotal + otherLiabilitiesTotal;
+
+				                liabilityRecord.shortTermCreditAmt = shortTermCreditTotal.toFixed(2);
+				                liabilityRecord.loansMortgagesAmt = loansMortgagesTotal.toFixed(2);
+				                liabilityRecord.otherLiabilitiesAmt = otherLiabilitiesTotal.toFixed(2);
+				                liabilityRecord.totalAmt = liabilitiesTotal.toFixed(2);
+			            	}
+			            }
+	    			}
+	    		}    			
+        	}
+        	console.log(needToUpdate);
+        	if (needToUpdate) {
+				var userNow = new Users($scope.user);
+	            userNow.$update(function(response) {
+	                $scope.success = true;
+	                Authentication.user = response;
+	                $scope.user = Authentication.user;
+	            }, function(response) {
+	                $scope.error = response.data.message;
+	            });
+	            console.log('logic works');
+			}
+        };
+        $scope.updateRecordsForNewMonth();
+
+        $scope.contributionModal = function (debt) {
+        	$scope.debtDetails = true;
+        	$scope.contributionConfirm = false;
+        	$scope.success = false;
+        	$scope.debt = debt;
+
+        	var debtRe = $scope.debt;
+			//console.log(debtRe);
+			console.log($scope.selectedYear);
+			console.log($scope.selectedMonth);
+			for(var c=0; c<debtRe.records.length;c++) {
+				var recordDebt = debtRe.records[c];
+				if (recordDebt.year===$scope.selectedYear&&recordDebt.month===$scope.selectedMonthNo) {
+					$scope.recordReq = recordDebt;
+					console.log($scope.recordReq);
+					$scope.noRecordsToDisplay = false;
+					$scope.presentMonthCheck = true;
+					
+				}
+			}
+			       	        	
         };
 
+        $scope.contribute = function() {
+        	$scope.debtDetails = false;
+        	$scope.contributionConfirm = true;         	
+        };
 
-    //      $scope.debtsInfoArr = [
-		  //   { id: 1, lender: 'UOB', type: 'Housing', amt: 30000, interestRate: 3, lenOfLoan: 10, dateStarted: '10/09/2012', NoOfRepayment: 10},
-		  //   { id: 2, lender: 'OCBC', type: 'Education', amt: 18000, interestRate: 4.5, lenOfLoan: 20, dateStarted: '20/01/2013', NoOfRepayment: 20 },
-		  //   { id: 3, lender: 'DBS', type: 'Car', amt: 40000, interestRate: 5, lenOfLoan: 30, dateStarted: '23/06/2011', NoOfRepayment: 40 },
-		  // ];
+        $scope.confirmContribute = function() {
+        	
+        	var expenseChecker;
+        	if ($scope.debt.linkedStatus==='Yes') {
+        		//Update LIABILITIES
+	        	for(var j=0;j<$scope.user.liabilitiesRecords.length; j++) {            
+	                var liabilityRecord = $scope.user.liabilitiesRecords[j];  
 
-		/*
+	            	if (liabilityRecord.month===month&&liabilityRecord.year===year) {
+	            		var loansMortgagesRec = liabilityRecord.loansMortgages;
 
-		DebtsService.all().success(function(data) {
-   			$scope.debtsInfoArr = data;
-		}); 
+	            		//update new loan balance
+	            		for (var get in loansMortgagesRec) {                        
+	                        var obj = loansMortgagesRec[get];
+	                        if($scope.debt.type=== obj.description) {
+	                        	obj.value -= $scope.debt.monthly;
+	                        	obj.minValue -= $scope.debt.monthly;
+	                        }
+	                    }
+	                	
+	                	//update totals
+	            	    var shortTermCreditArr = liabilityRecord.shortTermCredit;
+		                var shortTermCreditTotal = 0;
+		                for (var rt in shortTermCreditArr) {
+		                    var obj1 = shortTermCreditArr[rt];
+		                    shortTermCreditTotal += obj1.value;
+		                }
+		                
+		                var loansMortgagesArr = liabilityRecord.loansMortgages;
+		                var loansMortgagesTotal = 0;
+		                for (var rt1 in loansMortgagesArr) {
+		                    var obj2 = loansMortgagesArr[rt1];
+		                    loansMortgagesTotal += obj2.value;
+		                }
+		                
+		                var otherLiabilitiesArr = liabilityRecord.otherLiabilities;
+		                var otherLiabilitiesTotal = 0;
+		                for (var rt2 in otherLiabilitiesArr) {
+		                    var obj3 = otherLiabilitiesArr[rt2];
+		                    otherLiabilitiesTotal += obj3.value;
+		                }
+		                
+		                var liabilitiesTotal = shortTermCreditTotal + loansMortgagesTotal + otherLiabilitiesTotal;
 
-		$scope.create = function() {
-		  debtsInfoArr.create($scope.newDebt).success(function(data) {
-		    $scope.debtsInfoArr.push(data);
-		    $scope.newDebt = null;
-		    $scope.showAdd = false;
-		  });
-		};
+		                liabilityRecord.shortTermCreditAmt = shortTermCreditTotal.toFixed(2);
+		                liabilityRecord.loansMortgagesAmt = loansMortgagesTotal.toFixed(2);
+		                liabilityRecord.otherLiabilitiesAmt = otherLiabilitiesTotal.toFixed(2);
+		                liabilityRecord.totalAmt = liabilitiesTotal.toFixed(2);
+	            	}
+	            }
 
-		$scope.delete = function(debt) {
-		  $scope.showAdd = false;
-		  return debtsInfoArr.delete(debt.id).success(function(data) {
-		    var index = $scope.debtsInfoArr.indexOf(debt);
-		    $scope.debtsInfoArr.splice(index, 1);
-		  });
-		};
+	            //Update INCOME&EXPENSE
+	            if (!$scope.user.incomeExpenseRecordsPeriod) {
+                	//If there is no existing record
+	                console.log('do you enter?');
+	                $scope.user.incomeExpenseRecordsPeriod = {};
+	                $scope.user.incomeExpenseRecordsPeriod.minMonth = month;
+	                $scope.user.incomeExpenseRecordsPeriod.minYear = year;
+	                $scope.user.incomeExpenseRecordsPeriod.maxMonth = month;
+	                $scope.user.incomeExpenseRecordsPeriod.maxYear = year;                
 
-		$scope.update = function(debt) {
-		  $scope.showAdd = false;
-		  debtsInfoArr.update(debt).success(function(data) {
-		    $scope.selectedDebtRecord = null;
-		  });
-		}; 
+	            } else if (($scope.user.incomeExpenseRecordsPeriod.maxMonth <= month && $scope.user.incomeExpenseRecordsPeriod.maxYear <= year) || ($scope.user.incomeExpenseRecordsPeriod.maxMonth > month && $scope.user.incomeExpenseRecordsPeriod.maxYear < year)) {
 
-		*/
+	                console.log('do you enter2?');
+	                //ASSUMING THAT THE USER NEVER INSERTS DATA FOR THE FUTURE (HE CANT POSSIBLY DO SO ALSO)
+	                //SETS RECORDS MAX PERIOD TO PRESENT MONTH & YEAR
+	                //I ALSO CURRENTLY DONT ALLOW USERS TO SET BUDGET FOR THE FUTURE (ONLY FOR PRESENT MONTH)
+	                $scope.user.incomeExpenseRecordsPeriod.maxMonth = month;
+	                $scope.user.incomeExpenseRecordsPeriod.maxYear = year;
+	            }
 
-		$scope.create = function() {
-			$scope.newDebt.id = $scope.user.debtsInfoArr.length + 1;
-			$scope.user.debtsInfoArr.push($scope.newDebt);
-			$scope.newDebt = null;
-			$scope.showAdd = false;
-			$scope.user.updatedManageDebt = true;
-			var user = new Users($scope.user);
-	        user.$update(function(response) {
-	            $scope.success = true;
+	             
+	            
+	            if($scope.user.incomeExpenseRecords.length===0) { //in the event of an empty record (FIRSTTIME)                
+	                console.log('1st');
+	                $scope.displayIncomeExpenseRecords.year = year;
+	                $scope.displayIncomeExpenseRecords.month = month;                                
+	                $scope.user.incomeExpenseRecords.push($scope.displayIncomeExpenseRecords); 
+	            } else { //Existing record but no record of that month
+	                var existenceCheck = 0;
+	                for (var k=0;k<$scope.user.incomeExpenseRecords.length; k++) {   
+	                    var recordChecker = $scope.user.incomeExpenseRecords[k];                                                         
+	                    if (recordChecker.month===month&&recordChecker.year===year) {
+	                        existenceCheck++;
+	                        console.log('2nd');
+	                    }
+	                }
+	                if (existenceCheck===0) {
+	                    $scope.displayIncomeExpenseRecords.year = year;
+	                    $scope.displayIncomeExpenseRecords.month = month;                                
+	                    $scope.user.incomeExpenseRecords.push($scope.displayIncomeExpenseRecords);  
+	                    console.log('3rd');
+	                }
+	            }
 
-	            Authentication.user = response;
-	            $scope.user = Authentication.user;
-	        }, function(response) {
-	            $scope.error = response.data.message;
-	        });
-		};
+	            for(var a=0;a<$scope.user.incomeExpenseRecords.length; a++) {            
+	                var expenseRecord = $scope.user.incomeExpenseRecords[a];  
 
-		$scope.edit = function(debt) {
-			$scope.showAdd = false;
-			$scope.selectedDebtRecord = debt;
-		};
+	                if (expenseRecord.month===month&&expenseRecord.year===year) {
+	                    
+	                    var thisMonthSpecExpense = {};
+	                    console.log('DIE HERE');
+	                    if($scope.debt.type!=='Car Loan') {                        
+	                    	thisMonthSpecExpense = expenseRecord.monthlyExpense.fixedExpense;
+	                   
+		                    for (var get10 in thisMonthSpecExpense) {                        
+		                        var obj10 = thisMonthSpecExpense[get10];
+		                        if($scope.debt.type === 'Mortgage Loan' && obj10.description==='Mortgage Repayments') {        	
+		                            console.log('SUCCESS');
+		                            //need validation
+		                            obj10.value += $scope.debt.monthly;	
+		                            expenseChecker = obj10.description;                            
+		                        } else if($scope.debt.type !== 'Mortgage Loan' && obj10.description==='Other Loan Repayments') {
+		                        	obj10.value += $scope.debt.monthly;
+		                        	expenseChecker = obj10.description;
+	                    		}
+	                    	}	
 
-		$scope.update = function(debt) {
-			$scope.showAdd = false;
-			$scope.selectedDebtRecord = null;
-		};
+                    	} else {
+	                        thisMonthSpecExpense = expenseRecord.monthlyExpense.transport;
+	                        for (var get11 in thisMonthSpecExpense) {                        
+		                        var obj11 = thisMonthSpecExpense[get11];
+		                        if(obj11.description==='Car Loan Repayments') {        	
+		                            console.log('SUCCESS');
+		                            //need validation
+		                            obj11.value += $scope.debt.monthly;
+		                            expenseChecker = obj11.description;	                            
+		                        } 
+	                    	}
+	                    }
+                        var fixedExpenseArr = expenseRecord.monthlyExpense.fixedExpense;
+		                var fixedExpenseTotal = 0;
+		                for (var at in fixedExpenseArr) {
+		                    var abj1 = fixedExpenseArr[at];
+		                    fixedExpenseTotal += abj1.value;
+		                }
+		                expenseRecord.fixedExpenseAmt = fixedExpenseTotal.toFixed(2);
 
-		$scope.delete = function(debt) {
+		                var transportArr = expenseRecord.monthlyExpense.transport;
+		                var transportTotal = 0;
+		                for (var at1 in transportArr) {
+		                    var abj2 = transportArr[at1];
+		                    transportTotal += abj2.value;
+		                }
+		                expenseRecord.transportAmt = transportTotal.toFixed(2);
+
+		                var utilityHouseholdArr = expenseRecord.monthlyExpense.utilityHousehold;
+		                var utilityHouseholdTotal = 0;
+		                for (var at2 in utilityHouseholdArr) {
+		                    var abj3 = utilityHouseholdArr[at2];
+		                    utilityHouseholdTotal += abj3.value;
+		                }
+		                expenseRecord.utilityHouseholdAmt = utilityHouseholdTotal.toFixed(2);
+
+		                var foodNecessitiesArr = expenseRecord.monthlyExpense.foodNecessities;
+		                var foodNecessitiesTotal = 0;
+		                for (var at3 in foodNecessitiesArr) {
+		                    var abj4 = foodNecessitiesArr[at3];
+		                    foodNecessitiesTotal += abj4.value;
+		                }
+		                expenseRecord.foodNecessitiesAmt = foodNecessitiesTotal.toFixed(2);
+
+		                var miscArr = expenseRecord.monthlyExpense.misc;
+		                var miscTotal = 0;
+		                for (var at4 in miscArr) {
+		                    var abj5 = miscArr[at4];
+		                    miscTotal += abj5.value;
+		                }
+		                expenseRecord.miscAmt = miscTotal.toFixed(2);
+
+		                var monthlyIncomeAmt = Number(expenseRecord.monthlyIncomeAmt);                
+		                var monthlyExpenseAmt = fixedExpenseTotal + transportTotal + utilityHouseholdTotal + foodNecessitiesTotal + miscTotal;
+		                var netCashFlow = monthlyIncomeAmt - monthlyExpenseAmt;                
+		                expenseRecord.monthlyIncomeAmt = monthlyIncomeAmt.toFixed(2);                
+		                expenseRecord.monthlyExpenseAmt = monthlyExpenseAmt.toFixed(2);
+		                expenseRecord.netCashFlow = netCashFlow.toFixed(2);
+                    
+					}
+				}      
+
+			}
+
+			for (var i = 0; i<$scope.user.debtsInfoArr.length; i++) {
+        		var debtRe = $scope.user.debtsInfoArr[i];
+        		if(debtRe.lender===$scope.debt.lender&&debtRe.amt===$scope.debt.amt) {
+        			//part to change
+        			debtRe.loanBalance -= debtRe.monthly;
+        			debtRe.repaymentNo += 1;
+        			//debtRe.monthlyPayStatus = true;
+    				/*
+        			var newRecord = {
+        				month: month,
+        				year: year,
+        				monthly: debtRe.monthly,
+        				loanBalance: debtRe.loanBalance,
+        				expenseType: expenseChecker 
+        			};
+					*/
+        			for(var c=0; c<debtRe.records.length;c++) {
+    					var recordDebt = debtRe.records[c];
+	    				if (recordDebt.year===year&&recordDebt.month===month) {
+	    					console.log('Working so far');
+	    					recordDebt.monthly = debtRe.monthly;
+	    					recordDebt.expenseType = expenseChecker;
+	    					recordDebt.loanBalance =debtRe.loanBalance;
+	    					recordDebt.monthlyPayStatus = true;
+	    					recordDebt.repaymentNo = debtRe.repaymentNo;
+	    				}
+    				} 
+    				if(debtRe.loanBalance===0) {
+    					debtRe.status = 'Completed';
+    					debtRe.statusBoolean = true;
+    				}
+        			       	
+        		}
+        	}
+        	$scope.debt.monthlyPayStatus = true;
+
+			var userNow = new Users($scope.user);
+            userNow.$update(function(response) {
+                $scope.success = true;
+                Authentication.user = response;
+                $scope.user = Authentication.user;
+            }, function(response) {
+                $scope.error = response.data.message;
+            });
+
+            $scope.contributionConfirm = false;
+            $scope.success = true;
+            $scope.debt = null;
+        };
+
+        $scope.addDebtOne = function () {
+        	
+
+        	$scope.loanBalance = ($scope.newDebt.monthly*$scope.newDebt.lenOfLoan) - ($scope.newDebt.monthly*$scope.newDebt.repaymentNo);
+        	if ($scope.loanBalance<=0) {
+        		$scope.loanBalance = 0;
+        		alert('Check inputs again!');
+        	}
+        	else { 
+	        	$scope.displayLoanBalance = $scope.loanBalance.toFixed(2);
+	        	$scope.newDebt.loanBalance = $scope.loanBalance;
+	        	console.log($scope.newDebt);
+	        	$scope.add1show = false;
+	        	$scope.add2show = true;
+        	}
+        };
+
+        $scope.setNewLoanBalance = function() {
+        	$scope.loanBalance = $scope.newLoanBalance;
+			console.log('TESTER');
+        	$scope.displayLoanBalance = $scope.loanBalance.toFixed(2);
+	        $scope.newDebt.loanBalance = $scope.loanBalance;
+        };
+
+        $scope.createNoLinkedDebt = function() {
+        	$scope.newDebt.linkedStatus = 'No';
+        	//$scope.newDebt.monthlyPayStatus = false;
+        	$scope.newDebt.status = 'In Progress';
+        	$scope.newDebt.statusBoolean = false;
+        	$scope.newDebt.id = $scope.user.debtsInfoArr.length + 1;
+        	$scope.newDebt.creationRecord = {
+        		month: month,
+        		year: year,
+        		loanBalance: $scope.newDebt.loanBalance,
+        		repaymentNo: $scope.newDebt.repaymentNo
+        	};
+			$scope.newDebt.records = [];
+			var record = {
+        		month: month,
+        		year: year,
+        		loanBalance: $scope.newDebt.loanBalance,
+        		monthly: 0,
+        		monthlyPayStatus: false,
+        		repaymentNo: $scope.newDebt.repaymentNo
+        	};
+        	$scope.newDebt.records.push(record);
+        	$scope.user.debtsInfoArr.push($scope.newDebt);
+
+        	var userNow = new Users($scope.user);
+            userNow.$update(function(response) {
+                $scope.success = true;
+                Authentication.user = response;
+                $scope.user = Authentication.user;
+            }, function(response) {
+                $scope.error = response.data.message;
+            });
+            $scope.add2show = false;
+            $scope.add3show = true;
+        };
+
+        $scope.createLinkedDebt = function () {        
+        	console.log($scope.newDebt.loanBalance);
+        	$scope.newDebt.linkedStatus = 'Yes';
+        	$scope.newDebt.status = 'In Progress';
+        	$scope.newDebt.statusBoolean = false;
+        	//$scope.newDebt.monthlyPayStatus = false;
+        	$scope.newDebt.id = $scope.user.debtsInfoArr.length + 1;
+        	$scope.newDebt.creationRecord = {
+        		month: month,
+        		year: year,
+        		loanBalance: $scope.newDebt.loanBalance,
+        		repaymentNo: $scope.newDebt.repaymentNo
+        	};
+        	$scope.newDebt.records = [];
+        	
+        	var record = {
+        		month: month,
+        		year: year,
+        		loanBalance: $scope.newDebt.loanBalance,
+        		monthly: 0,
+        		monthlyPayStatus: false,
+        		repaymentNo: $scope.newDebt.repaymentNo
+        	};        
+        	        	
+        	$scope.newDebt.records.push(record);
+        	
+        	$scope.user.debtsInfoArr.push($scope.newDebt);
+
+        	console.log(month);
+        	console.log(year);
+        	//creating new liabilities record period
+        	if(!$scope.user.liabilitiesRecordsPeriod) {
+        		$scope.user.liabilitiesRecordsPeriod = {};
+        		$scope.user.liabilitiesRecordsPeriod.minMonth = month;
+                $scope.user.liabilitiesRecordsPeriod.minYear = year;
+                $scope.user.liabilitiesRecordsPeriod.maxMonth = month;
+                $scope.user.liabilitiesRecordsPeriod.maxYear = year; 
+        	}
+        	else if (($scope.user.liabilitiesRecordsPeriod.maxMonth <= month && $scope.user.liabilitiesRecordsPeriod.maxYear <= year) || ($scope.user.liabilitiesRecordsPeriod.maxMonth > month && $scope.user.liabilitiesRecordsPeriod.maxYear < year)) {
+
+        		$scope.user.liabilitiesRecordsPeriod.maxMonth = month;
+                $scope.user.liabilitiesRecordsPeriod.maxYear = year;
+        	} 
+
+        	if($scope.user.liabilitiesRecords.length===0) { //in the event of an empty record (FIRSTTIME)                
+                console.log('1st');
+                displayLiabilitiesRecords.year = year;
+                displayLiabilitiesRecords.month = month;                                                
+                $scope.user.liabilitiesRecords.push(displayLiabilitiesRecords); 
+            } else { //Existing record but no record of that month
+                var existenceCheck = 0;
+                for (var j=0;j<$scope.user.liabilitiesRecords.length; j++) {   
+                    var recordChecker = $scope.user.liabilitiesRecords[j];                                                         
+                    if (recordChecker.month===month&&recordChecker.year===year) {
+                        existenceCheck++;
+                        console.log('2nd');
+                    }
+                }
+                if (existenceCheck===0) {
+                    displayLiabilitiesRecords.year = year;
+                    displayLiabilitiesRecords.month = month;                                
+                    $scope.user.liabilitiesRecords.push(displayLiabilitiesRecords);  
+                    console.log('3rd');
+                }
+            }
+
+			for(var i=0;i<$scope.user.liabilitiesRecords.length; i++) {            
+                var liabilityRecord = $scope.user.liabilitiesRecords[i];  
+
+            	if (liabilityRecord.month===month&&liabilityRecord.year===year) {
+            		var loansMortgagesRec = liabilityRecord.loansMortgages;
+
+            		//update new loan balance
+            		for (var get in loansMortgagesRec) {                        
+                        var obj = loansMortgagesRec[get];
+                        if($scope.newDebt.type=== obj.description) {
+                        	obj.value += $scope.newDebt.loanBalance;
+                        	obj.minValue += $scope.newDebt.loanBalance;
+                        }
+                    }
+                	
+                	//update totals
+            	    var shortTermCreditArr = liabilityRecord.shortTermCredit;
+	                var shortTermCreditTotal = 0;
+	                for (var rt in shortTermCreditArr) {
+	                    var obj1 = shortTermCreditArr[rt];
+	                    shortTermCreditTotal += obj1.value;
+	                }
+	                
+	                var loansMortgagesArr = liabilityRecord.loansMortgages;
+	                var loansMortgagesTotal = 0;
+	                for (var rt1 in loansMortgagesArr) {
+	                    var obj2 = loansMortgagesArr[rt1];
+	                    loansMortgagesTotal += obj2.value;
+	                }
+	                
+	                var otherLiabilitiesArr = liabilityRecord.otherLiabilities;
+	                var otherLiabilitiesTotal = 0;
+	                for (var rt2 in otherLiabilitiesArr) {
+	                    var obj3 = otherLiabilitiesArr[rt2];
+	                    otherLiabilitiesTotal += obj3.value;
+	                }
+	                
+	                var liabilitiesTotal = shortTermCreditTotal + loansMortgagesTotal + otherLiabilitiesTotal;
+
+	                liabilityRecord.shortTermCreditAmt = shortTermCreditTotal.toFixed(2);
+	                liabilityRecord.loansMortgagesAmt = loansMortgagesTotal.toFixed(2);
+	                liabilityRecord.otherLiabilitiesAmt = otherLiabilitiesTotal.toFixed(2);
+	                liabilityRecord.totalAmt = liabilitiesTotal.toFixed(2);
+            	}
+            }
+
+            var userNow = new Users($scope.user);
+            userNow.$update(function(response) {
+                $scope.success = true;
+                Authentication.user = response;
+                $scope.user = Authentication.user;
+            }, function(response) {
+                $scope.error = response.data.message;
+            });
+            $scope.add2show = false;
+            $scope.add3show = true;
+        };
+
+        $scope.resetModal = function() {
+        	$scope.add1show = true;
+	        $scope.add2show = false;
+	        $scope.add3show = false;
+	        $scope.newDebt = null;
+        };
+
+        $scope.previousModal1 = function() {
+        	$scope.add1show = true;
+        	$scope.add2show = false;
+        };
+
+        $scope.selectDeleteRecord = function(debt) {
+        	$scope.debt = debt;
+        };
+
+		$scope.deleteRecord = function() {
+		 	
+		 
 		 	$scope.showAdd = false;
-		  	var index = $scope.user.debtsInfoArr.indexOf(debt);
+		  	var index = $scope.user.debtsInfoArr.indexOf($scope.debt);
 		  	$scope.user.debtsInfoArr.splice(index, 1);
 
+		  	for (var b = 0; b<$scope.user.debtsInfoArr.length; b++) {
+        		var debtRe = $scope.user.debtsInfoArr[b];
+        		debtRe.id = $scope.user.debtsInfoArr.indexOf(debtRe)+1;
+        	}
+        	
 		  	var user = new Users($scope.user);
 	        user.$update(function(response) {
 	            $scope.success = true;
@@ -1982,15 +3411,18 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 	        }, function(response) {
 	            $scope.error = response.data.message;
 	        });
+		
 		};
 
 		$scope.cancel = function() {
 		  	$scope.showAdd = false;
 		  	$scope.selectedDebtRecord = null;
+		 	
 		};
 
     }
 ]);
+
 'use strict';
 
 // Articles controller
@@ -2007,8 +3439,6 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
             type: 'info'
         }];
         $scope.homeHealthDisplay = false;
-        $scope.homeHealthyRatioArr = [];
-        $scope.homeUnHealthyRatioArr = [];
 
         //Set new record to N/A
         $scope.displayOverview ={};
@@ -2612,6 +4042,8 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
 
             var numHealthyRatio = 0;
             var numUnHealthyRatio = 0;
+            $scope.homeHealthyRatioArr = [];
+            $scope.homeUnHealthyRatioArr = [];
 
             try {
                 mortgageRepaymentsValue = $scope.displayIncomeExpenseRecords.monthlyExpense.fixedExpense.mortgageRepayments.value;
@@ -3704,6 +5136,117 @@ angular.module('financial').controller('IncomeExpenseController', ['$scope', '$r
 'use strict';
 
 // Articles controller
+angular.module('financial').controller('InsurancesController', ['$scope', '$rootScope', '$stateParams', '$location', 'Authentication',  'Users', '$q',
+	function($scope, $rootScope, $stateParams, $location, Authentication, Users, $q) {
+		$scope.user = Authentication.user;
+        //Check for authentication
+        if (!$scope.user) $location.path('/');
+
+        this.$setScope = function(context) {
+            $scope = context;
+        };
+        
+        var dt = new Date();
+        $scope.year = dt.getFullYear();
+
+        var loadPolicies = function() {
+            $scope.displayInsuranceInfo = angular.copy($scope.user.insurancesInfoArr);    
+        };
+        loadPolicies();        
+
+        $scope.viewModal = function(insurance) {
+            $scope.insurance = insurance;            
+        };
+        
+        $scope.addNewPolicy = function() {
+            $scope.insurance.id = $scope.user.insurancesInfoArr.length+1;
+            $scope.insurance.year = $scope.selectedYear;
+            $scope.user.insurancesInfoArr.push($scope.insurance);
+
+            var userNow = new Users($scope.user);
+            userNow.$update(function(response) {
+                $scope.success = true;
+                Authentication.user = response;
+                $scope.user = Authentication.user;
+            }, function(response) {
+                $scope.error = response.data.message;
+            });
+
+            $scope.success = true;
+            loadPolicies();
+        };
+
+        $scope.editModal = function (insurance) {                        
+
+            for (var i = 0; i<$scope.user.insurancesInfoArr.length; i++) {
+                if($scope.user.insurancesInfoArr[i].id===insurance.id) {
+                    $scope.insurance = $scope.user.insurancesInfoArr[i];                    
+                }
+            }
+        };
+
+        $scope.editPolicy = function() {
+            if ($scope.editForm.$dirty) {
+                for (var i = 0; i<$scope.user.insurancesInfoArr.length; i++) {
+                    if($scope.user.insurancesInfoArr[i].id===$scope.insurance.id) {
+                        $scope.user.insurancesInfoArr[i] = $scope.insurance;                    
+                    }
+                }
+                var userNow = new Users($scope.user);
+                userNow.$update(function(response) {
+                    $scope.success = true;
+                    Authentication.user = response;
+                    $scope.user = Authentication.user;
+                }, function(response) {
+                    $scope.error = response.data.message;
+                });
+
+                $scope.success = true;
+                loadPolicies(); 
+                $scope.editForm.$setPristine();           
+            } else {
+                $scope.error = 'No Changes Detected';
+            }
+        };
+
+        $scope.deleteModal = function(insurance) {
+            $scope.insurance = insurance;
+        };
+
+        $scope.deletePolicy = function() {
+
+            var index = $scope.user.insurancesInfoArr.indexOf($scope.insurance);
+            $scope.user.insurancesInfoArr.splice(index, 1);
+
+            for (var b = 0; b<$scope.user.insurancesInfoArr.length; b++) {
+                var insuranceRe = $scope.user.insurancesInfoArr[b];
+                insuranceRe.id = $scope.user.insurancesInfoArr.indexOf(insuranceRe)+1;
+            }
+            
+            var user = new Users($scope.user);
+            user.$update(function(response) {
+                $scope.success = true;
+
+                Authentication.user = response;
+                $scope.user = Authentication.user;
+            }, function(response) {
+                $scope.error = response.data.message;
+            });
+            $scope.success = true;
+            loadPolicies();
+        };
+
+        $scope.cancel = function() {
+            $scope.success = false;
+            $scope.insurance = null;
+            $scope.error = '';
+        };
+
+	}
+]);
+'use strict';
+
+// Articles controller
 angular.module('financial').controller('LiabilitiesController', ['$scope', '$rootScope', '$stateParams', '$location', 'Authentication', 'LiabilitiesService', 'Users', '$q',
 	function($scope, $rootScope, $stateParams, $location, Authentication, LiabilitiesService, Users, $q) {
 		$scope.user = Authentication.user;
@@ -3876,6 +5419,7 @@ angular.module('financial').controller('LiabilitiesController', ['$scope', '$roo
 
                 }
 
+                var errorCheck = 0;
                 var shortTermCreditArr = $scope.displayLiabilitiesRecords.shortTermCredit;
                 var shortTermCreditTotal = 0;
                 angular.forEach(shortTermCreditArr, function(value, key){
@@ -3885,6 +5429,12 @@ angular.module('financial').controller('LiabilitiesController', ['$scope', '$roo
                 var loansMortgagesArr = $scope.displayLiabilitiesRecords.loansMortgages;
                 var loansMortgagesTotal = 0;
                 angular.forEach(loansMortgagesArr, function(value, key){
+                    if(value.value<value.minValue) {
+                        value.value = value.minValue; 
+                        alert('Minimum liability value for '+value.description+' is: $'+value.value);
+                        errorCheck++;
+                        location.reload();
+                    }
                     loansMortgagesTotal = loansMortgagesTotal + Number(value.value);
                 });
 
@@ -4889,6 +6439,105 @@ angular.module('financial').factory('IncomeExpenseService', ['$resource', functi
 	};
 	return {
 		incomeExpenseRecords: incomeExpenseRecords
+	};
+}]);
+'use strict';
+
+angular.module('financial').factory('LiabilitiesService', ['$resource', function($resource){
+	var shortTermCredit = {
+		creditCard1: {
+			description: 'Credit Card 1 Balance',
+			order: 0,
+			value: 0
+		},
+		creditCard2: {
+			description: 'Credit Card 2 Balance',
+			order: 1,
+			value: 0
+		},
+		creditCard3: {
+			description: 'Credit Card 3 Balance',
+			order: 2,
+			value: 0
+		},
+		overdraftBalance: {
+			description: 'Overdraft Balance',
+			order: 3,
+			value: 0
+		},
+		others: {
+			description: 'Others',
+			order: 4,
+			value: 0
+		}
+	};
+
+	var loansMortgages = {
+		mortgageBalance: {
+			description: 'Mortgage Loan',
+			order: 0,
+			value: 0,
+			minValue: 0
+		},
+		carBalance :{
+			description: 'Car Loan',
+			order: 1,
+			value: 0,
+			minValue: 0
+		},
+		studentLoan: {
+			description: 'Student Loan',
+			order: 2,
+			value: 0,
+			minValue: 0
+		},
+		personalLoan: {
+			description: 'Personal Loan',
+			order: 3,
+			value: 0,
+			minValue: 0
+		},
+		renovationLoan: {
+			description: 'Renovation Loan',
+			order: 4,
+			value: 0,
+			minValue: 0
+		},
+		others: {
+			description: 'Others',
+			order: 5,
+			value: 0,
+			minValue: 0
+		}
+	};
+
+	var otherLiabilities = {
+		others: {
+			description: 'Others',
+			order: 0,
+			value: 0
+		}
+	};	
+
+
+	var shortTermCreditAmt = 0;
+	var loansMortgagesAmt = 0;
+	var otherLiabilitiesAmt = 0;
+	var totalAmt = 0;
+
+
+	var liabilitiesRecords = {		
+		shortTermCredit: shortTermCredit,
+		loansMortgages: loansMortgages,
+		otherLiabilities: otherLiabilities,
+
+		shortTermCreditAmt: shortTermCreditAmt,
+		loansMortgagesAmt: loansMortgagesAmt,
+		otherLiabilitiesAmt: otherLiabilitiesAmt,
+		totalAmt: totalAmt
+	};
+	return {
+		liabilitiesRecords: liabilitiesRecords
 	};
 }]);
 'use strict';
@@ -6339,7 +7988,10 @@ angular.module('social').controller('SocialController', ['$scope', '$window','$s
 		$scope.yearJoined = new Date($scope.user.created).getFullYear();
 
 		var socialRankUrl = 'https://hexapic.s3.amazonaws.com/' + Authentication.user.socialRankPic;
+		var profilePicUrl = 'https://hexapic.s3.amazonaws.com/' + Authentication.user.profilePic;
+
 		$scope.decachedSocialRankUrl = socialRankUrl + '?decache=' + Math.random();		
+		$scope.decachedProfilePicUrl = profilePicUrl + '?decache=' + Math.random();
 
 		$scope.refreshSocialRankPic = function(){
 				$scope.decachedSocialRankUrl = socialRankUrl + '?decache=' + Math.random();
@@ -6363,13 +8015,11 @@ angular.module('social').controller('SocialController', ['$scope', '$window','$s
 
 		$scope.findAll = function(){
 			$http.get('/friendship/retrieveUsers').then(function(response){
-				console.log(response);
 				$scope.userList = response.data;
 			});
 		};
 		$scope.findFriends = function(){
 			$http.get('/friendship/retrieveFriends').then(function(response){
-				console.log(response);
 				var listOfUsers = response.data;
 				listOfUsers.forEach(function(user){
 					if(user.friendStatus === 3){
@@ -7134,7 +8784,7 @@ angular.module('users').factory('CreditService', function() {
 			analysis = ['B', 'Good - People with a Grade B credit score shows lowest default risk because of high credit score and have good quality of loan applications. Chances of getting a loan will be above average.'];
 		}else if(creditRating > 31 && creditRating < 48){
 			analysis = ['C', 'Average - Grade ‘C’ represents medium level of default/ credit risk as having average level of credit score and having an average quality of loan application. Chances of getting a loan will be low.'];
-		}else if (creditRating >=0 && creditRating < 32){
+		}else if (creditRating >0 && creditRating < 32){
 			analysis = ['D', 'Below Average - Grade ‘D’ indicates the high level of risk and also having below average credit score. People with this grade will not be qualified for loan by banks.'];
 		}
 		return analysis;

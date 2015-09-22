@@ -310,3 +310,10 @@ canvas{
   color:#B8A631;
   /*color:blue;*/
 }
+
+.scroll{
+  height:450px;
+  width:auto;
+  overflow: scroll;
+  overflow-x:hidden;
+}

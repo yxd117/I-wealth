@@ -129,12 +129,14 @@ angular.module('financial').controller('AssetsController', ['$scope', '$rootScop
 
                 $scope.user.updatedAssets = true;
                 var user = new Users($scope.user);
+                console.log(user);
                 user.$update(function(response) {
                     $scope.success = true;
                     Authentication.user = response;
                     $scope.user = Authentication.user;  
 
                 }, function(response) {
+                    console.log(response);
                     $scope.error = response.data.message;
                 });
             } else {

@@ -44,6 +44,10 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
 			url: '/financialrecord/debts',
 			templateUrl: 'modules/financial/views/manage-debts.client.view.html'
 		}).
+		state('manageInsurances', {
+			url: '/financialrecord/insurances',
+			templateUrl: 'modules/financial/views/manage-insurances.client.view.html'
+		}).
 
 		//Financial Tools
 		state('repaymentTool', {
