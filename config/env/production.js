@@ -46,8 +46,8 @@ module.exports = {
 				'public/lib/angular-route/angular-route.js',
 				'public/lib/jquery/dist/jquery.min.js',
 				'public/lib/bootstrap/dist/js/bootstrap.min.js',
-				'public/lib/angular-socket-io/socket.js',
 				'public/lib/angular-sanitize/angular-sanitize.min.js',
+				'public/lib/angular-socket-io/socket.js',
 				'public/lib/ngWYSIWYG/js/wysiwyg.js'
 				
 			]
