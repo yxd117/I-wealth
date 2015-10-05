@@ -1,528 +1,506 @@
 'use strict';
 
 // Articles controller
-angular.module('milestones').controller('MilestonesController', ['$scope', '$stateParams', '$location', 'Authentication', 'MilestoneService', 'Users', 
-	function($scope, $stateParams, $location, Authentication, MilestoneService, Users) {
-		$scope.authentication = Authentication;
-
-		$scope.user = Authentication.user;
+angular.module('milestones').controller('MilestonesController', ['$scope', '$stateParams', '$location', 'Authentication', 'Users', 
+	function($scope, $stateParams, $location, Authentication, Users) {
 		
-		//!!--View Milestones Page!!//
-		//View Milestones: text suggesting to start creating goals
-		$scope.showNewGoals = true;	
-
-		//View Milestones: Add new milestone bar
-		$scope.addNewMilestone = false; 
-
-		//View Milestones: After clicking Create New Goal
-		$scope.afterClick = true;	
-	
-		$scope.readonly = true;
-		$scope.noMileStoneDeleted = true;
-
-		//default user details
-		$scope.userCopy = {};
-		angular.copy($scope.user, $scope.userCopy);
+		$scope.authentication = Authentication;
+		$scope.user = Authentication.user;
 
 		this.$setScope = function (context) {
 			$scope = context;
 		};
 		
+		//Setting up Dates
+		var updater = false;
+		var today = new Date();
+		
+		$scope.today= new Date();
+		today.setHours(0,0,0,0);
+		var displayMonth = today.getMonth();
+		var displayDate = today.getDate();
+		var todayFullDate = today.getFullYear()+'-'+today.getMonth()+'-'+today.getDate();							
+
+
+		if (((today.getMonth()+1).toString()).length===1) {
+			displayMonth = '0'+(today.getMonth()+1).toString();			
+		} else {
+			displayMonth = (today.getMonth()+1).toString();
+		}
+
+		if (((today.getDate()+1).toString()).length===1) {
+			displayDate = '0'+today.getDate().toString();
+		}
+
+		$scope.fixedToday = today.getFullYear()+'-'+displayMonth+'-'+displayDate; 
+		$scope.startDate = today.getFullYear()+'-'+displayMonth+'-'+displayDate;
+		$scope.minDater = today.getFullYear()+'-'+displayMonth+'-'+displayDate;	
+		$scope.endDate = $scope.startDate;
+				
+
+		$scope.$watch('goal.type', function() {
+			if (typeof $scope.goal!== 'undefined') {
+                if($scope.goal.type==='Others') {
+                	$scope.others = true;
+                	$scope.requiredCheck = true;
+                } else {
+                	$scope.others = false;
+                	$scope.requiredCheck = false;
+                }
+            }
+        });        
+
+		$scope.$watch('startDate', function() {
+			var newDate = new Date($scope.startDate);
+			if(newDate<today) {
 			
-		$scope.qnsTitle = MilestoneService.qnsTitle();	
-		$scope.qnsType = MilestoneService.qnsType();
-		$scope.qnsTargetAmount = MilestoneService.qnsTargetAmount();		
-		$scope.qnsCurrentAmount = MilestoneService.qnsCurrentAmount();
-		$scope.qnsTargetDate = MilestoneService.qnsTargetDate();
-
-		//View Milestones: Generate new new in table to create goal
-		$scope.generateNewLine = function() {
-			$scope.addNewMilestone = true;
-			$scope.showNewGoals = false;
-			$scope.afterClick = false;
-			$scope.updateButton= false;
-		};
-
-		//View Milestones: Check for existing milestones
-		$scope.tableEmptyCheck = function () {
-			var tableCheck = $scope.user.mileStones;			
-			if (tableCheck.length===0) {
-				$scope.noMilestones = true;
-				$scope.showNewGoals = true;
-				return false;
-			} else {
-				$scope.noMilestones = false;
-				$scope.showNewGoals = false;
-				return true;
+				$scope.minDater = today.getFullYear()+'-'+displayMonth+'-'+displayDate;	
+				$scope.endDate = $scope.minDater;
+			} else {			
+				$scope.endDate = $scope.startDate;
+				$scope.minDater = $scope.startDate;			
 			}
+		});
+
+
+		//UPDATE METHOD (runs every update of milestone OR new day)
+		var updateMethod = function() {
+
+			if (!$scope.user.lastUpdate || $scope.user.lastUpdate!==todayFullDate || updater===true) {
+				
+				$scope.user.lastUpdate = todayFullDate;
+				
+				for (var i =0; i<$scope.user.mileStones.length; i++) {
+					
+					var mileStone = $scope.user.mileStones[i];
+					var dateUsed;
+					var oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds			
+					var startDate = new Date(mileStone.startDate);
+					var endDate = new Date(mileStone.endDate);
+					startDate.setHours(0,0,0,0);
+					endDate.setHours(0,0,0,0);
+
+					//1. Updates latest Progress					
+					mileStone.progress = Math.floor((mileStone.amtSaved/mileStone.targetAmt)*100);
+					if (mileStone.progress>100) {
+						mileStone.progress = 100;
+					}
+					
+					//2. Updates milestone based on Present Day & update respective status
+					if (today<startDate) {	    				
+						dateUsed = startDate;
+						mileStone.status = 'Not Started';
+						mileStone.countDownToStart = Math.round(Math.abs((today.getTime() - startDate.getTime())/(oneDay)));						
+						mileStone.daysLeftFromToday = Math.round(Math.abs((dateUsed.getTime() - endDate.getTime())/(oneDay))); //today till end date
+						mileStone.monthsLeft = Math.floor(mileStone.daysLeftFromToday/30);						
+						mileStone.dateProgress = 0;
+						console.log('A');
+					} else  if (today<endDate && mileStone.progress<100) {
+						dateUsed = today;
+						mileStone.status = 'In-Progress';
+						mileStone.countDownToStart = 0;
+						mileStone.daysLeftFromToday = Math.round(Math.abs((dateUsed.getTime() - endDate.getTime())/(oneDay))); //today till end date
+						mileStone.monthsLeft = Math.floor(mileStone.daysLeftFromToday/30);						
+						mileStone.dateProgress= Math.floor((((Math.abs(startDate.getTime()-today.getTime())/(oneDay))/mileStone.totalDurationDays)*100)); 
+						console.log('B');
+					} else if (today>=endDate||mileStone.progress===100) {						
+						mileStone.status = 'Completed';
+						mileStone.countDownToStart = 0;
+						
+						if (today>=endDate) {
+							mileStone.daysLeftFromToday = 0;
+							mileStone.monthsLeft = 0;
+							mileStone.dateProgress = 100;
+						}
+						if (mileStone.progress===100) {
+							dateUsed = today;
+							mileStone.daysLeftFromToday = Math.round(Math.abs((dateUsed.getTime() - endDate.getTime())/(oneDay))); //today till end date
+							mileStone.monthsLeft = Math.floor(mileStone.daysLeftFromToday/30);
+							mileStone.dateProgress = Math.floor(Math.abs((((startDate.getTime()-today.getTime())/(oneDay))/mileStone.totalDurationDays)*100));
+							
+							//This scenario arises when someone completes a goal after contributing
+							if (typeof mileStone.completionDate === 'undefined' ||$scope.goal.completionDate ==='undefined') {
+								var month = $scope.getMonthString(today.getMonth());
+								mileStone.completionDate = today.getDate()+'-'+month+'-'+today.getFullYear();
+							}							
+						}
+						console.log('C');
+					}
+					//3. Monthly Payment Advice
+			    	if (mileStone.daysLeftFromToday>=30) {
+			    		mileStone.monthlyPayment = (mileStone.targetAmt-mileStone.amtSaved)/(Math.round(mileStone.daysLeftFromToday/30));
+			    	} else {
+			    		mileStone.monthlyPayment = mileStone.targetAmt-mileStone.amtSaved;
+			    	}
+			    	if(mileStone.monthlyPayment<0) {
+			    		mileStone.monthlyPayment = 0;
+			    	}
+
+				}
+				$scope.success = $scope.error = null;			
+				var user = new Users($scope.user);
+				user.$update(function(response) {
+					$scope.success = true;
+					Authentication.user = response;
+					$scope.user = Authentication.user;					
+				}, function(response) {
+					$scope.error = response.data.message;				
+					location.reload();
+				});
+			}
+			updater = false;
+		};
+		updateMethod();	// END.
+
+		$scope.addNewMilestoneFnc = function() {
+			console.log($scope.goal);
+			var errorCheck = 0;	
+
+			$scope.goal.uniqueId = $scope.goal.name+$scope.goal.type;	
+
+			if ($scope.goal.targetAmt<=$scope.goal.amtSaved) {
+				errorCheck++;
+				alert('Amount saved so far cannot be equal/higher than Amount to Save.');
+			} else {
+				$scope.goal.progress = Math.floor(($scope.goal.amtSaved/$scope.goal.targetAmt)*100);
+			}
+
+			if ($scope.startDate===$scope.endDate||$scope.endDate===$scope.fixedToday) {
+				errorCheck++;
+				alert('Error! Please select another completion date!');
+			} else {
+				$scope.goal.startDate = $scope.startDate;
+				$scope.goal.endDate = $scope.endDate;
+			}
+
+			if (errorCheck===0) {
+
+				var dateUsed;
+				var oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds			
+				var startDate = new Date($scope.goal.startDate);
+				var endDateObj = new Date($scope.goal.endDate);
+				startDate.setHours(0,0,0,0);
+
+				if (today<startDate) {	    				
+					$scope.goal.status = 'Not Started';
+					$scope.goal.countDownToStart = Math.round(Math.abs((today.getTime() - startDate.getTime())/(oneDay)));
+					dateUsed = startDate;
+				} else {
+					dateUsed = today;
+					$scope.goal.status = 'In-Progress';
+					$scope.goal.countDownToStart = 0;
+				}
+
+				var month = $scope.getMonthString(dateUsed.getMonth());
+		    	$scope.goal.startDateFormatted = dateUsed.getDate()+'-'+month+'-'+dateUsed.getFullYear();															    	
+				$scope.goal.daysLeftFromToday = Math.round(Math.abs((dateUsed.getTime() - endDateObj.getTime())/(oneDay))); //today till end date
+				$scope.goal.monthsLeft = Math.floor($scope.goal.daysLeftFromToday/30);
+				$scope.goal.totalDurationDays = Math.round(Math.abs((startDate.getTime() - endDateObj.getTime())/(oneDay))); //start date to end date
+				$scope.goal.contributionRecords = [];
+		    	
+		    	if($scope.goal.status=== 'In-Progress') {
+		    		$scope.goal.dateProgress= Math.floor((((Math.abs(startDate.getTime()-today.getTime())/(oneDay))/$scope.goal.totalDurationDays)*100)); 
+		    	} else {
+		    		$scope.goal.dateProgress = 0;
+		    	}
+		    	
+		    	if ($scope.goal.daysLeftFromToday>=30) {
+		    		$scope.goal.monthlyPayment = (($scope.goal.targetAmt-$scope.goal.amtSaved)/(Math.round($scope.goal.daysLeftFromToday/30)));
+		    	} else {		    		
+		    		$scope.goal.monthlyPayment = $scope.goal.targetAmt-$scope.goal.amtSaved;
+		    	}
+		    	
+		    	
+				$scope.user.mileStones.push($scope.goal);
+				$scope.success = $scope.error = null;			
+				var user = new Users($scope.user);
+				user.$update(function(response) {
+					$scope.successMsg = true;
+					Authentication.user = response;
+					$scope.user = Authentication.user;					
+				}, function(response) {
+						$scope.error = response.data.message;
+						alert('Update Failed! Please Try Again.');
+						location.reload();
+				});
+				$scope.startDate = today.getFullYear()+'-'+displayMonth+'-'+displayDate;
+				$scope.minDater = today.getFullYear()+'-'+displayMonth+'-'+displayDate;	
+				$scope.endDate = $scope.startDate;
+
+			}
+
+		};
+		$scope.viewSelector = function(x) {
+			$scope.goal = x;
+		};
+		$scope.updateSelector = function(x) {
+			$scope.goal = x;
+		};
+		$scope.earlyStartSelector = function(x) {
+			$scope.goal = x;
+			$scope.earlyStart = true;
+		};
+		$scope.confirmDelete = function(x) {
+			$scope.goal = x; 
+		};
+		$scope.confirmComplete = function(x) {
+			$scope.goal = x;
 		};
 
-		$scope.tableEmptyCheck();
+		$scope.updateMilestoneFnc = function() {
+			if ($scope.updateMilestoneForm.$dirty) {
+				var errorCheck = 0;			
 
+				$scope.goal.completionDate = 'undefined';
+
+
+				var dateUsed;
+				var month;
+				var oneDay = 24*60*60*1000; // hours*minutes*seconds*milliseconds			
+				var startDate = new Date($scope.goal.startDate);
+				startDate.setHours(0,0,0,0);
+				var endDate = new Date($scope.goal.endDate);
+				endDate.setHours(0,0,0,0);
+
+				$scope.goal.totalDurationDays = Math.round(Math.abs((startDate.getTime() - endDate.getTime())/(oneDay)));
+
+				//1. Check for new updated goal progress
+				$scope.goal.progress = Math.floor(($scope.goal.amtSaved/$scope.goal.targetAmt)*100);				
+				if ($scope.goal.progress>100) {
+					$scope.goal.progress= 100;
+				}
+
+				//2. Updates milestone based on Present Day & update respective status
+				if (today<startDate) {	    				
+					dateUsed = startDate;
+					$scope.goal.status = 'Not Started';
+					$scope.goal.countDownToStart = Math.round(Math.abs((today.getTime() - startDate.getTime())/(oneDay)));						
+					$scope.goal.daysLeftFromToday = Math.round(Math.abs((dateUsed.getTime() - endDate.getTime())/(oneDay))); //today till end date
+					$scope.goal.monthsLeft = Math.floor($scope.goal.daysLeftFromToday/30);						
+					$scope.goal.dateProgress = 0;
+					console.log('A');
+				} else  if (today<endDate && $scope.goal.progress<100) {
+					dateUsed = today;
+					$scope.goal.status = 'In-Progress';
+					$scope.goal.countDownToStart = 0;
+					$scope.goal.daysLeftFromToday = Math.round(Math.abs((dateUsed.getTime() - endDate.getTime())/(oneDay))); //today till end date
+					$scope.goal.monthsLeft = Math.floor($scope.goal.daysLeftFromToday/30);
+					console.log((startDate.getTime()-today.getTime())/(oneDay));
+					$scope.goal.dateProgress= Math.floor((((Math.abs(startDate.getTime()-today.getTime())/(oneDay))/$scope.goal.totalDurationDays)*100)); 
+					console.log('B');
+				} else if (today>=endDate||$scope.goal.progress===100) {						
+					$scope.goal.status = 'Completed';
+					$scope.goal.countDownToStart = 0;
+					
+					if (today>=endDate) {
+						$scope.goal.daysLeftFromToday = 0;
+						$scope.goal.monthsLeft = 0;
+						$scope.goal.dateProgress = 100;
+					}
+					if ($scope.goal.progress===100) {
+						dateUsed = today;
+						$scope.goal.daysLeftFromToday = Math.round(Math.abs((dateUsed.getTime() - endDate.getTime())/(oneDay))); //today till end date
+						$scope.goal.monthsLeft = Math.floor($scope.goal.daysLeftFromToday/30);
+						$scope.goal.dateProgress = Math.floor(Math.abs((((startDate.getTime()-today.getTime())/(oneDay))/$scope.goal.totalDurationDays)*100));
+						
+						//This scenario arises when someone completes a goal after contributing
+						if (typeof $scope.goal.completionDate === 'undefined' ||$scope.goal.completionDate ==='undefined') {
+							month = $scope.getMonthString(today.getMonth());
+							$scope.goal.completionDate = today.getDate()+'-'+month+'-'+today.getFullYear();
+						}							
+					}
+					console.log('C');
+				}
+				//3. Monthly Payment Advice
+				if ($scope.goal.daysLeftFromToday>=30) {
+					$scope.goal.monthlyPayment = ($scope.goal.targetAmt-$scope.goal.amtSaved)/(Math.round($scope.goal.daysLeftFromToday/30));
+				} else {
+					$scope.goal.monthlyPayment = $scope.goal.targetAmt-$scope.goal.amtSaved;
+				}
+				if($scope.goal.monthlyPayment<0) {
+					$scope.goal.monthlyPayment = 0;
+				}
+				//4. Reassign start date based on changes
+				month = $scope.getMonthString(startDate.getMonth());
+		    	$scope.goal.startDateFormatted = startDate.getDate()+'-'+month+'-'+startDate.getFullYear();															    	
+		    	$scope.goal.contributionRecords = [];
+				
+				if(confirm('Editing your milestone will cause you to lose contribution data. Are you sure?')) { 
+					for (var i=0; i<$scope.user.mileStones.length; i++) {
+						var mileStone = $scope.user.mileStones[i];
+						if (mileStone.uniqueId===$scope.goal.uniqueId) {							
+							mileStone = $scope.goal; 
+						}
+					}
+					$scope.success = $scope.error = null;			
+					var user = new Users($scope.user);
+					user.$update(function(response) {
+						$scope.successMsg = true;
+						Authentication.user = response;
+						$scope.user = Authentication.user;					
+					}, function(response) {
+						$scope.error = response.data.message;
+						alert('Update Failed! Please Try Again.');
+						location.reload();
+					});
+				} else {
+					location.reload();
+				}
+				
+			} else {
+				$scope.error = 'No Changes Detected';
+			}
+			$scope.earlyStart = false;			
+		};
+
+
+		$scope.resetModal = function() {
+			$scope.successMsg = false;
+			$scope.goal = '';
+			$scope.error = '';
+			$scope.earlyStart = false;
+		};
+
+		
 		$scope.getMonthString = function(monthNm) {
 			var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 			var monthString = months[monthNm];
 			return monthString;
 		};
 
-		$scope.calculateMonthsBtw = function(d1, d2) {
-		    
-		    var months;
-		    months = (d2.getFullYear() - d1.getFullYear()) * 12;
-		    months -= d1.getMonth() + 1;
-		    months += d2.getMonth();
-		    return months <= 0 ? 0 : months;
-		};
-
-		$scope.paymentAdvice = function() {
-
-			if ($scope.user.mileStones.length>0) {
-				for (var i = 0;  i<$scope.user.mileStones.length; i++) {
-		    		
-		    		var dateUsed = new Date();
-
-	    			var today = new Date();
-	    			var startDate = new Date($scope.user.mileStones[i].startDate);
-	    			if (today>startDate) {
-	    				dateUsed = today;
-	    			} else {	    				
-	    				dateUsed = startDate;
-	    			}
-
-	    			var targetDate = new Date($scope.user.mileStones[i].targetDate);
-	    			var monthsLeft = $scope.calculateMonthsBtw(dateUsed,targetDate);
-	    			var paymentAmount = 0;
-
-	    			if (monthsLeft===0) {
-	    				paymentAmount = ($scope.user.mileStones[i].targetAmount)-($scope.user.mileStones[i].currentAmount);
-	    			} else {
-	    				paymentAmount = (($scope.user.mileStones[i].targetAmount)-($scope.user.mileStones[i].currentAmount))/monthsLeft;
-	    			}
-
-	    			var paymentAmountAdj = paymentAmount.toFixed(2);
-
-	    			if (paymentAmountAdj<0) {
-	    				paymentAmountAdj = 0;
-	    			}
-
-	    			var goalTitle = $scope.user.mileStones[i].goalTitle;
-	    			var goalType = $scope.user.mileStones[i].goalType;
-	    			var currentAmount = $scope.user.mileStones[i].currentAmount;
-	    			var targetAmount = $scope.user.mileStones[i].targetAmount;	    			
-	    			var startDateFormatted = $scope.user.mileStones[i].startDateFormatted;	    			
-	    			var targetDateFormatted = $scope.user.mileStones[i].targetDateFormatted;
-	    			var progress = $scope.user.mileStones[i].progress;
-
-		    		$scope.user.mileStones[i] = {
-		    			goalTitle: goalTitle,
-		    			goalType: goalType,
-		    			currentAmount: currentAmount,
-		    			targetAmount: targetAmount,
-		    			startDate: startDate,
-		    			startDateFormatted: startDateFormatted,
-		    			targetDate: targetDate,
-		    			targetDateFormatted: targetDateFormatted,
-		    			progress: progress,
-		    			paymentAmountAdj: paymentAmountAdj,
-		    			monthsLeft: monthsLeft};				
+		$scope.makeContribution = function(x) {
+			
+			console.log(x);
+			console.log(x.contribution);
+			if (x.contribution!==0) {
+				for (var i = 0; i<$scope.user.mileStones.length; i++) {
+					if ($scope.user.mileStones[i].name===x.name && $scope.user.mileStones[i].startDate===x.startDate) {
+						$scope.user.mileStones[i].amtSaved += x.contribution; 
+						var id = $scope.user.mileStones[i].contributionRecords.length+1;
+						var month = $scope.getMonthString(today.getMonth());
+						var contributionDate = today.getDate()+'-'+month+'-'+today.getFullYear();	
+						var record = {
+							date : contributionDate,
+							contribution : x.contribution,
+							id: id
+						};
+						
+						$scope.user.mileStones[i].contributionRecords.push(record);
+					}
 				}
-
-				$scope.success = $scope.error = null;			
-				var user = new Users($scope.user);
-				user.$update(function(response) {
-					$scope.success = true;
-					Authentication.user = response;
-					$scope.user = Authentication.user;
-					}, function(response) {
-						$scope.error = response.data.message;
-				});
+				x.contribution = 0;
+				updater = true;
+				updateMethod();
+				alert('Contribution added');
+			} else {
+				alert('Enter an amount greater than $0.00');
 			}
 		};
-		
 
-		$scope.addMilestone = function(isValid) {
-			
-			if(isValid) {
-				var goalTitle = $scope.title;
-				var goalType = $scope.goalType;
-				var currentAmount = 0;
-				var targetAmount = $scope.targetAmount;
-				
-
-				//Check for unique goal title ONE MORE VALIDATION TO BE DONE
-				var existingTitleCheck = 0;
-				var userNow = $scope.user;
-				for (var i = 0;  i<userNow.mileStones.length; i++) {
-		    		var mileStone = userNow.mileStones[i];
-		    			
-		    		if (mileStone.goalTitle.toLowerCase()===goalTitle.toLowerCase()) {
-		    			existingTitleCheck++;
-		    		}
-				}
-
-				if (currentAmount<targetAmount&&existingTitleCheck===0) {
-
-					var progress = Math.floor((currentAmount/targetAmount)*100);
-
-					var startDate = $scope.startDate;
-					console.log('added start date'+startDate);
-					var startDateD = startDate.getDate();					
-					//var startDateMth = $scope.getMonthString(startDate.getMonth());
-					var startDateYr = startDate.getFullYear();
-					var startDateFormatted = startDateD+'/'+(startDate.getMonth()+1)+'/'+startDateYr;
-
-					var targetDate = $scope.targetDate;
-					var targetDateD = targetDate.getDate();																				
-					//var targetDateMth = $scope.getMonthString(targetDate.getMonth());
-					var targetDateYr = targetDate.getFullYear();
-					var targetDateFormatted = targetDateD+'/'+(targetDate.getMonth()+1)+'/'+targetDateYr;
-
-					//var startDate1 = new Date(startDateYr+'-'+(startDate.getMonth()+1)+'-'+startDateD);
-					//console.log(startDate1);
-
-					var goalObj = {
-						goalTitle: goalTitle,
-						goalType: goalType,
-						currentAmount: currentAmount,
-						targetAmount: targetAmount,
-						startDate: startDate,
-						startDateFormatted: startDateFormatted,
-						targetDate: targetDate,
-						targetDateFormatted: targetDateFormatted,
-						progress: progress};
-
-					
-					$scope.user.mileStones.push(goalObj);
-					
-					//reset scope
-					$scope.title = '';
-					$scope.goalType = '';
-					$scope.startDate = '';
-					$scope.targetDate = '';
-					$scope.targetAmount = '';	
-					
-					alert('Milestone Added!');
-					$scope.user.updatedMilestones = true;
-					$scope.afterClick = true;					
-					$scope.addNewMilestone=false;
-					
-					$scope.paymentAdvice();
-					
-				} else if (currentAmount>=targetAmount){
-					alert('Current Amount cannot be equals to or more than Target Amount!');
-				} else if (existingTitleCheck>0) {
-					alert('Goal Title already exists! Please use another title name.');
-				}
-				
-			}else {
-				$scope.error = 'Form Incomplete. Please Check again.';
-			}	
-
-			
-		};
-
-		$scope.makeContribution = function() {
-			console.log('entered');
-			$scope.user.mileStones[$scope.user.updateMilestonePos].currentAmount += $scope.contribution;
-			
-			console.log('scope is'+$scope.contribution);
-
-			$scope.user.mileStones[$scope.user.updateMilestonePos].progress = Math.floor(($scope.user.mileStones[$scope.user.updateMilestonePos].currentAmount/$scope.user.mileStones[$scope.user.updateMilestonePos].targetAmount)*100);
-			
-			if ($scope.user.mileStones[$scope.user.updateMilestonePos].progress>100) {
-				$scope.user.mileStones[$scope.user.updateMilestonePos].progress=100;
-			}
-
-			alert('Contribution Added!');
-			$scope.contribution = 0;						
-			var user = new Users($scope.user);			
-			$scope.paymentAdvice();
-
-		};
-
-		$scope.updateMilestone = function () {
-
-
-			var goalTitle = $scope.userCopy.mileStones[$scope.userCopy.updateMilestonePos].goalTitle;
-			var goalType = $scope.userCopy.mileStones[$scope.userCopy.updateMilestonePos].goalType;
-			var currentAmount = $scope.user.mileStones[$scope.user.updateMilestonePos].currentAmount;
-			var targetAmount = $scope.userCopy.mileStones[$scope.userCopy.updateMilestonePos].targetAmount;								
-
-			if (currentAmount<targetAmount) {
-
-				//calculate latest Progress score
-				var progress = Math.floor((currentAmount/targetAmount)*100);
-				//cap progress at 100
-				if(progress>=100) {
-					progress = 100;
-
-				}		
-
-				var startDate = new Date($scope.userCopy.mileStones[$scope.userCopy.updateMilestonePos].startDate);				
-				var startDateD = startDate.getDate();
-				var startDateYr = startDate.getFullYear();
-				var startDateFormatted = startDateD+'/'+(startDate.getMonth()+1)+'/'+startDateYr;
-
-				var targetDate = new Date($scope.userCopy.mileStones[$scope.userCopy.updateMilestonePos].targetDate);
-				var targetDateD = targetDate.getDate();
-				var targetDateYr = targetDate.getFullYear();
-				var targetDateFormatted = targetDateD+'/'+(targetDate.getMonth()+1)+'/'+targetDateYr;				
-				
-				$scope.user.mileStones[$scope.user.updateMilestonePos] = {
-					goalTitle: goalTitle,
-					goalType: goalType,
-					currentAmount: currentAmount,
-					targetAmount: targetAmount,
-					startDate: startDate,
-					startDateFormatted: startDateFormatted,
-					targetDate: targetDate,
-					targetDateFormatted: targetDateFormatted,
-					progress: progress};
-
-				$scope.success = $scope.error = null;
-				alert('Milestone Updated!');			
-				
-
-				$scope.paymentAdvice();
-			} else if (currentAmount>=targetAmount){
-				alert('Current Amount cannot be more than Target Amount!');			
-				
-			} 
-			$scope.uneditMilestone();
-		};
-
-		$scope.cancel = function() {
-
-			$scope.showNewGoals = true;	
-
-			//View Milestones: Add new milestone bar
-			$scope.addNewMilestone = false; 
-
-			//View Milestones: After clicking Create New Goal
-			$scope.afterClick = true;	
-			$scope.tableEmptyCheck();
-
-			//reset scope
-			$scope.title = '';
-			$scope.goalType = '';
-			$scope.startDate = '';
-			$scope.targetDate = '';
-			$scope.targetAmount = 0;
-		};
-
-		$scope.redirectUpdateMilestone = function(x) {
-			
-			
-			
-			var arrayPos = null;
-			for(var i=0; i<$scope.user.mileStones.length; i++) {
-				var mileStone = $scope.user.mileStones[i];
-				if (mileStone.goalTitle===x.goalTitle) {
-					arrayPos = i;
-					console.log('Enter liao');
-				}
-			}
-			console.log('check'+arrayPos);
-				
-			
-			$scope.user.updateMilestonePos = arrayPos;
-			var userNow = new Users($scope.user);
-
-			userNow.$update(function(response) {
-				$scope.success = true;
-				Authentication.user = response;	
-				$scope.user = Authentication.user;			
-				$location.path('/milestones/updatemilestone');
-			
-			}, function(response) {
-				$scope.error = response.data.message;
-			});								
-		};
 
 		$scope.markComplete = function() {
-			var confirmComplete = confirm('Confirm Completion of: '+$scope.user.mileStones[$scope.user.updateMilestonePos].goalTitle +' goal?');
-			var completedObj = $scope.user.mileStones[$scope.user.updateMilestonePos];			
+			
+			var completedObj = $scope.goal;
+			completedObj.id = $scope.user.completedMilestones.length+1;			
 			console.log(completedObj);
-			if(confirmComplete) {
-				$scope.user.completedMilestones.push(completedObj);
 
-				$scope.user.mileStones.splice($scope.user.updateMilestonePos,1);
-
-				$scope.success = $scope.error = null;			
-
-				var user = new Users($scope.user);
-				user.$update(function(response) {
-					$scope.success = true;
-					Authentication.user = response;
-					$scope.user = Authentication.user;
-					$location.path('/milestones');
-
-				}, function(response) {
-					$scope.error = response.data.message;
-				});
-
+			if (typeof completedObj.completionDate === 'undefined' || $scope.goal.completionDate ==='undefined') {
+				var month = $scope.getMonthString(today.getMonth());
+				completedObj.completionDate = today.getDate()+'-'+month+'-'+today.getFullYear();
 			}
+
+			$scope.user.completedMilestones.push(completedObj);
+
+			for (var i = 0;  i<$scope.user.mileStones.length; i++) {
+    			var mileStone = $scope.user.mileStones[i];
+    			
+    			if (mileStone.uniqueId===$scope.goal.uniqueId) {
+    			   				
+    				$scope.user.mileStones.splice(i,1);
+    			}
+			}
+
+			$scope.success = $scope.error = null;			
+
+			var user = new Users($scope.user);
+			user.$update(function(response) {
+				$scope.success = true;
+				Authentication.user = response;
+				$scope.user = Authentication.user;
+				$location.path('/milestones');
+
+			}, function(response) {
+				$scope.error = response.data.message;
+			});
+			$scope.goal = '';
+			
 		};
 
 		
-		$scope.deleteMilestone = function(x) {
-
-			var position = 0;
-			
-			console.log(x.goalTitle);
-
-		  	var confirmDelete = confirm('Confirm delete milestone: '+x.goalTitle);
-			  	if (confirmDelete) {
-
-					for (var i = 0;  i<$scope.user.mileStones.length; i++) {
-		    			var mileStone = $scope.user.mileStones[i];
-		    			
-		    			if (mileStone.goalTitle===x.goalTitle) {
-		    			   				
-		    				$scope.user.mileStones.splice(i,1);
-		    			}
-					}					
-					$scope.noMileStoneDeleted = false;
-					
-					$scope.success = $scope.error = null;			
-
-					var userNow = new Users($scope.user);
-					userNow.$update(function(response) {
-					$scope.success = true;
-					Authentication.user = response;
-					$scope.user = Authentication.user;
-
-					}, function(response) {
-						$scope.error = response.data.message;
-
-					});
-				}
-
-			$scope.tableEmptyCheck();
+		$scope.cancelDelete = function () {
+			$scope.goal = '';
 		};
-
-		$scope.alerts = [    		
-    		{ type: 'success', msg: 'You have successfully deleted your Milestone!' },
-    		{type: 'error', msg:'400 error'}
-  		];
-
-  		$scope.deleteCompletedMilestone = function(x) {
-
-			var position = 0;
-			
-			console.log(x.goalTitle);
-
-		  	var confirmDelete = confirm('Confirm delete milestone: '+x.goalTitle);
-			  	if (confirmDelete) {
-
-					for (var i = 0;  i<$scope.user.completedMilestones.length; i++) {
-		    			var mileStone = $scope.user.completedMilestones[i];
-		    			
-		    			if (mileStone.goalTitle===x.goalTitle) {
-		    			   				
-		    				$scope.user.completedMilestones.splice(i,1);
-		    			}
-					}					
-					//$scope.noMileStoneDeleted = false;
-					
-					$scope.success = $scope.error = null;			
-
-					var userNow = new Users($scope.user);
-					userNow.$update(function(response) {
-					$scope.success = true;
-					Authentication.user = response;
-					$scope.user = Authentication.user;
-
-					}, function(response) {
-						$scope.error = response.data.message;
-
-					});
-				}
-
-			//$scope.tableEmptyCheck();
-		};
-
-		$scope.closeAlert = function(index) {
-    		$scope.alerts.splice(index, 1);
-  		};
-
-  		$scope.editMilestone = function() {
-  			$scope.readonly = false;
-  			
-  		};
-
-  		$scope.uneditMilestone = function() {
-  			$scope.readonly = true;
-  			$scope.userCopy.mileStones[$scope.userCopy.updateMilestonePos].goalTitle = $scope.user.mileStones[$scope.user.updateMilestonePos].goalTitle;
-			$scope.userCopy.mileStones[$scope.userCopy.updateMilestonePos].goalType = $scope.user.mileStones[$scope.user.updateMilestonePos].goalType;			
-			$scope.userCopy.mileStones[$scope.userCopy.updateMilestonePos].targetAmount = $scope.user.mileStones[$scope.user.updateMilestonePos].targetAmount;
-			$scope.userCopy.mileStones[$scope.userCopy.updateMilestonePos].startDate = $scope.user.mileStones[$scope.user.updateMilestonePos].startDate;
-			$scope.userCopy.mileStones[$scope.userCopy.updateMilestonePos].targetDate = $scope.user.mileStones[$scope.user.updateMilestonePos].targetDate;
-  		};
 		
-		$scope.today = function() {
-		    $scope.dt = new Date();
-		 };
-		  $scope.today();
+		$scope.deleteMilestone = function() {			
+			
+			console.log($scope.goal);
 
-		  $scope.clear = function () {
-		    $scope.dt = null;
-		 };
+			for (var i = 0;  i<$scope.user.mileStones.length; i++) {
+    			var mileStone = $scope.user.mileStones[i];
+    			
+    			if (mileStone.uniqueId===$scope.goal.uniqueId) {
+    			   				
+    				$scope.user.mileStones.splice(i,1);
+    			}
+			}								
+			
+			$scope.success = $scope.error = null;			
 
-		  // Disable weekend selection
-		$scope.disabled = function(date, mode) {
-		  return ( mode === 'day' && ( date.getDay() === 0 || date.getDay() === 6 ) );
+			var userNow = new Users($scope.user);
+			userNow.$update(function(response) {
+				$scope.success = true;
+				Authentication.user = response;
+				$scope.user = Authentication.user;
+
+			}, function(response) {
+				$scope.error = response.data.message;
+
+			});
+			$scope.goal = '';
+							
 		};
 
-		$scope.toggleMin = function() {
-		    $scope.minDate = $scope.minDate ? null : new Date();
-		};
-		$scope.toggleMin();
+		$scope.deleteCompletedMilestone = function() {			
+			
+			console.log($scope.goal);
 
-		$scope.open = function($event) {
-		    $scope.opened = true;
-		};
-
-		$scope.dateOptions = {
-		    formatYear: 'yy',
-		    startingDay: 1
-		 };
-
-		  $scope.formats = ['yyyy-MM-dd','dd-MMMM-yyyy', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
-		  $scope.format = $scope.formats[0];
-
-		  var tomorrow = new Date();
-		  tomorrow.setDate(tomorrow.getDate() + 1);
-		  var afterTomorrow = new Date();
-		  afterTomorrow.setDate(tomorrow.getDate() + 2);
-		  $scope.events =
-		    [
-		      {
-		        date: tomorrow,
-		        status: 'full'
-		      },
-		      {
-		        date: afterTomorrow,
-		        status: 'partially'
-		      }
-		    ];
-
-		  $scope.getDayClass = function(date, mode) {
-		    if (mode === 'day') {
-		      var dayToCheck = new Date(date).setHours(0,0,0,0);
-
-		      for (var i=0;i<$scope.events.length;i++){
-		        var currentDay = new Date($scope.events[i].date).setHours(0,0,0,0);
-
-		        if (dayToCheck === currentDay) {
-		          return $scope.events[i].status;
-		        }
-		      }
-		    }
-
-		    return '';
-		  };
-
-
+			for (var i = 0;  i<$scope.user.completedMilestones.length; i++) {
+    			var mileStone = $scope.user.completedMilestones[i];
+    			
+    			if (mileStone.uniqueId===$scope.goal.uniqueId) {
+    			   				
+    				$scope.user.completedMilestones.splice(i,1);
+    			}
 			}
+			for (var b = 0; b<$scope.user.completedMilestones.length; b++) {
+                var completedMilestone = $scope.user.completedMilestones[b];
+                completedMilestone.id = $scope.user.completedMilestones.indexOf(completedMilestone)+1;
+            }								
+			
+			$scope.success = $scope.error = null;			
+
+			var userNow = new Users($scope.user);
+			userNow.$update(function(response) {
+				$scope.success = true;
+				Authentication.user = response;
+				$scope.user = Authentication.user;
+
+			}, function(response) {
+				$scope.error = response.data.message;
+
+			});
+			$scope.goal = '';
+							
+		};		
+	}
 ]);

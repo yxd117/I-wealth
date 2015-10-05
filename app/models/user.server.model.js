@@ -271,8 +271,14 @@ var UserSchema = new Schema({
 	completedMilestones: {
 		type: Array
 	}, 
-	updateMilestonePos: {
-		type: Number
+	lastUpdate: {
+		type: String
+	},
+	lastUpdateDebts: {
+		type: String
+	},
+	debtsCompletedArr: {
+		type: Array
 	},
 
 	//FriendList

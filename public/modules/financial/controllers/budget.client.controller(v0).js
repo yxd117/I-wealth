@@ -51,22 +51,20 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
 
         $scope.formSubmitted = false;
         
-        $scope.mth = [];    
-        $scope.mth[0] = 'January';
-        $scope.mth[1] = 'February';
-        $scope.mth[2] = 'March';
-        $scope.mth[3] = 'April';
-        $scope.mth[4] = 'May';
-        $scope.mth[5] = 'June';
-        $scope.mth[6] = 'July';
-        $scope.mth[7] = 'August';
-        $scope.mth[8] = 'September';
-        $scope.mth[9] = 'October';
-        $scope.mth[10] = 'November';
-        $scope.mth[11] = 'December';
-        var monthString = $scope.mth[presentMonth];
-        $scope.month = today.getMonth();
-        $scope.year = today.getFullYear();
+        var mth = [];
+        mth[0] = 'January';
+        mth[1] = 'February';
+        mth[2] = 'March';
+        mth[3] = 'April';
+        mth[4] = 'May';
+        mth[5] = 'June';
+        mth[6] = 'July';
+        mth[7] = 'August';
+        mth[8] = 'September';
+        mth[9] = 'October';
+        mth[10] = 'November';
+        mth[11] = 'December';
+        var monthString = mth[presentMonth];            
         $scope.displayDate = monthString+', '+presentYear;        
 
         var dateFormatter = function(date) {
@@ -112,15 +110,6 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
                 return false;
             }
         }; 
-
-        $scope.$watch('selectedMonth', function() {            
-            presentMonth = $scope.mth.indexOf($scope.selectedMonth);
-            $scope.loadTables();            
-        });
-        $scope.$watch('selectedYear',function() {
-            presentYear = $scope.selectedYear;
-            $scope.loadTables();
-        });
         
 
         $scope.loadTables = function() {
@@ -129,12 +118,26 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
             $scope.incomeExpenseChartDisplay = true;
             $scope.incomeExpenseDoughnutData = [1]; 
             $scope.incomeExpenseDoughnutLabels = ['No Data'];            
-
-            $scope.fixedExpenseB = 0;
-            $scope.transportB = 0;
-            $scope.foodB = 0;
-            $scope.miscB = 0;
-            $scope.utilitiesB = 0;
+            
+            
+            //INITIALIZING BUDGET LIMITS & PROGRESS BARS
+            if (typeof $scope.user.budgetLimits === 'undefined') {     
+                console.log('First time bitch');
+                $scope.user.budgetLimits = angular.copy(BudgetService.budgetLimits);                
+                var userNow = new Users($scope.user);
+                userNow.$update(function(response) {
+                    $scope.success = true;
+                    Authentication.user = response;
+                    $scope.user = Authentication.user;
+                }, function(response) {
+                    $scope.error = response.data.message;
+                });
+            }
+            $scope.fixedExpenseB = $scope.user.budgetLimits.fixedExpenseB;
+            $scope.transportB = $scope.user.budgetLimits.transportB;
+            $scope.foodB = $scope.user.budgetLimits.foodB;
+            $scope.miscB = $scope.user.budgetLimits.miscB;
+            $scope.utilitiesB = $scope.user.budgetLimits.utilitiesB;
 
             $scope.feBudgetSet = false;
             $scope.tBudgetSet = false;
@@ -143,47 +146,23 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
             $scope.uBudgetSet = false;
             $scope.allBudgetSet = false;
 
-
-            var exist =0;
-            console.log($scope.user.budgetLimits);
-            for (var ab=0; ab<$scope.user.budgetLimits.length; ab++) {
-
-                var budgetLimit = $scope.user.budgetLimits[ab];
-                if (budgetLimit.year===presentYear && budgetLimit.month ===presentMonth) {
-                    
-                    exist++;                    
-
-                    $scope.fixedExpenseB = budgetLimit.fixedExpenseB;
-                    $scope.transportB = budgetLimit.transportB;
-                    $scope.foodB = budgetLimit.foodB;
-                    $scope.miscB = budgetLimit.miscB;
-                    $scope.utilitiesB = budgetLimit.utilitiesB;
-
-                    if (budgetLimit.fixedExpenseB!==0) {
-                        $scope.feBudgetSet = true;
-                    }
-                    if (budgetLimit.transportB!==0) {
-                        $scope.tBudgetSet = true;   
-                    }
-                    if (budgetLimit.foodB!==0) {
-                        $scope.fBudgetSet = true;
-                    }
-                    if (budgetLimit.miscB!==0) {
-                        $scope.mBudgetSet = true;
-                    }
-                    if (budgetLimit.utilitiesB!==0) {
-                        $scope.uBudgetSet = true;
-                    }
-                    if($scope.feBudgetSet && $scope.tBudgetSet && $scope.fBudgetSet && $scope.mBudgetSet && $scope.uBudgetSet) {
-                        $scope.allBudgetSet = true;
-                    }
-
-                    $scope.displayFixedExpenseB = budgetLimit.fixedExpenseB;
-                    $scope.displayTransportB = budgetLimit.transportB;
-                    $scope.displayFoodB = budgetLimit.foodB;
-                    $scope.displayUtilitiesB = budgetLimit.utilitiesB;
-                    $scope.displayMiscB = budgetLimit.miscB;
-                }
+            if ($scope.user.budgetLimits.fixedExpenseB!==0) {
+                $scope.feBudgetSet = true;
+            }
+            if ($scope.user.budgetLimits.transportB!==0) {
+                $scope.tBudgetSet = true;   
+            }
+            if ($scope.user.budgetLimits.foodB!==0) {
+                $scope.fBudgetSet = true;
+            }
+            if ($scope.user.budgetLimits.miscB!==0) {
+                $scope.mBudgetSet = true;
+            }
+            if ($scope.user.budgetLimits.utilitiesB!==0) {
+                $scope.uBudgetSet = true;
+            }
+            if($scope.feBudgetSet && $scope.tBudgetSet && $scope.fBudgetSet && $scope.mBudgetSet && $scope.uBudgetSet) {
+                $scope.allBudgetSet = true;
             }
 
             $scope.userExpenseCopy = [];
@@ -193,25 +172,20 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
             $scope.thisMonthMiscTotal = '0.00';
             $scope.thisMonthUtilitiesTotal = '0.00';
             $scope.thisMonthFoodTotal = '0.00';
-            $scope.totalExpense = '0.00';            
+            $scope.totalExpense = '0.00';
+
+
+            $scope.displayFixedExpenseB = $scope.user.budgetLimits.fixedExpenseB;
+            $scope.displayTransportB = $scope.user.budgetLimits.transportB;
+            $scope.displayFoodB = $scope.user.budgetLimits.foodB;
+            $scope.displayUtilitiesB = $scope.user.budgetLimits.utilitiesB;
+            $scope.displayMiscB = $scope.user.budgetLimits.miscB;
 
             $scope.displayThisMonthFixedExpenseTotal = 0;
             $scope.displayThisMonthTransportTotal = 0;
             $scope.displayThisMonthFoodTotal = 0;
             $scope.displayThisMonthUtilitiesTotal = 0;
             $scope.displayThisMonthMiscTotal = 0;
-
-            $scope.feDiffTable = [];
-            $scope.tDiffTable = [];
-            $scope.fDiffTable = [];
-            $scope.mDiffTable =[];
-            $scope.uDiffTable = [];
-
-            $scope.fixedExpenseTable = [];
-            $scope.transportTable = [];
-            $scope.foodTable = [];
-            $scope.miscTable = [];
-            $scope.utilitiesTable = [];
             
             for(var i=0;i<$scope.userExpenseCopy.length; i++) {            
                 var record = $scope.userExpenseCopy[i];
@@ -290,7 +264,17 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
                         $scope.totalExpense = record.monthlyExpenseAmt;                        
                     }
 
- 
+                    $scope.feDiffTable = [];
+                    $scope.tDiffTable = [];
+                    $scope.fDiffTable = [];
+                    $scope.mDiffTable =[];
+                    $scope.uDiffTable = [];
+
+                    $scope.fixedExpenseTable = [];
+                    $scope.transportTable = [];
+                    $scope.foodTable = [];
+                    $scope.miscTable = [];
+                    $scope.utilitiesTable = []; 
                     
 
                     var rt;
@@ -630,22 +614,22 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
 
         $scope.setFixedExpenseBudget = function() {
 
+            $scope.user.budgetLimits.fixedExpenseB = $scope.fixedExpenseB;
+
+            var userNow = new Users($scope.user);
+            userNow.$update(function(response) {
+                $scope.success = true;
+                Authentication.user = response;
+                $scope.user = Authentication.user;
+            }, function(response) {
+                $scope.error = response.data.message;
+            });
+            alert('Budget Set!');
+            $scope.loadTables();
+         };
+        $scope.setTransportBudget = function() {
             
-            var checker = 0;
-            for (var ab=0; ab<$scope.user.budgetLimits.length; ab++) {
-                var budgetLimit = $scope.user.budgetLimits[ab];
-                if (budgetLimit.year===presentYear && budgetLimit.month ===presentMonth) {
-                    budgetLimit.fixedExpenseB = $scope.fixedExpenseB;
-                    checker++;
-                }
-            }
-            if (checker===0) {
-                var newBudget= angular.copy(BudgetService.budgetLimits); 
-                newBudget.year = presentYear;
-                newBudget.month = presentMonth;
-                newBudget.fixedExpenseB = $scope.fixedExpenseB;
-                $scope.user.budgetLimits.push(newBudget);
-            }
+            $scope.user.budgetLimits.transportB = $scope.transportB;
 
             var userNow = new Users($scope.user);
             userNow.$update(function(response) {
@@ -658,52 +642,9 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
             alert('Budget Set!');
             $scope.loadTables();
          };
-        $scope.setTransportBudget = function() {                      
-
-            var checker = 0;
-            for (var ab=0; ab<$scope.user.budgetLimits.length; ab++) {
-                var budgetLimit = $scope.user.budgetLimits[ab];
-                if (budgetLimit.year===presentYear && budgetLimit.month ===presentMonth) {
-                    budgetLimit.transportB = $scope.transportB;
-                    checker++;
-                }
-            }
-            if (checker===0) {
-                var newBudget= angular.copy(BudgetService.budgetLimits); 
-                newBudget.year = presentYear;
-                newBudget.month = presentMonth;
-                newBudget.transportB = $scope.transportB;
-                $scope.user.budgetLimits.push(newBudget);
-            }            
-
-            var userNow = new Users($scope.user);
-            userNow.$update(function(response) {
-                $scope.success = true;
-                Authentication.user = response;
-                $scope.user = Authentication.user;
-            }, function(response) {
-                $scope.error = response.data.message;
-            });
-            alert('Budget Set!');
-            $scope.loadTables();
-         };
-        $scope.setUtilitiestBudget = function() {                
-
-            var checker = 0;
-            for (var ab=0; ab<$scope.user.budgetLimits.length; ab++) {
-                var budgetLimit = $scope.user.budgetLimits[ab];
-                if (budgetLimit.year===presentYear && budgetLimit.month ===presentMonth) {
-                    budgetLimit.utilitiesB = $scope.utilitiesB;
-                    checker++;
-                }
-            }
-            if (checker===0) {
-                var newBudget= angular.copy(BudgetService.budgetLimits); 
-                newBudget.year = presentYear;
-                newBudget.month = presentMonth;
-                newBudget.utilitiesB = $scope.utilitiesB;
-                $scope.user.budgetLimits.push(newBudget);
-            }
+        $scope.setUtilitiestBudget = function() {
+            
+            $scope.user.budgetLimits.utilitiesB = $scope.utilitiesB;
 
             var userNow = new Users($scope.user);
             userNow.$update(function(response) {
@@ -718,21 +659,7 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
          };
         $scope.setFoodBudget = function() {
 
-            var checker = 0;
-            for (var ab=0; ab<$scope.user.budgetLimits.length; ab++) {
-                var budgetLimit = $scope.user.budgetLimits[ab];
-                if (budgetLimit.year===presentYear && budgetLimit.month ===presentMonth) {
-                    budgetLimit.foodB = $scope.foodB;
-                    checker++;
-                }
-            }
-            if (checker===0) {
-                var newBudget= angular.copy(BudgetService.budgetLimits); 
-                newBudget.year = presentYear;
-                newBudget.month = presentMonth;
-                newBudget.foodB = $scope.foodB;
-                $scope.user.budgetLimits.push(newBudget);
-            }
+            $scope.user.budgetLimits.foodB = $scope.foodB;
 
             var userNow = new Users($scope.user);
             userNow.$update(function(response) {
@@ -747,21 +674,7 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
          };
          $scope.setMiscBudget = function() {
 
-            var checker = 0;
-            for (var ab=0; ab<$scope.user.budgetLimits.length; ab++) {
-                var budgetLimit = $scope.user.budgetLimits[ab];
-                if (budgetLimit.year===presentYear && budgetLimit.month ===presentMonth) {
-                    budgetLimit.miscB = $scope.miscB;
-                    checker++;
-                }
-            }
-            if (checker===0) {
-                var newBudget= angular.copy(BudgetService.budgetLimits); 
-                newBudget.year = presentYear;
-                newBudget.month = presentMonth;
-                newBudget.miscB = $scope.miscB;
-                $scope.user.budgetLimits.push(newBudget);
-            }
+            $scope.user.budgetLimits.miscB = $scope.miscB;
 
             var userNow = new Users($scope.user);
             userNow.$update(function(response) {

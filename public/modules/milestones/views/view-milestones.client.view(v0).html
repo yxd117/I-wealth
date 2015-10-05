@@ -1,0 +1,169 @@
+<section data-ng-controller="MilestonesController" class="content">
+	<div class="row">
+		<div class="col-sm-7">
+			<h3>Milestones for:<em> {{user.firstName}} {{user.lastName}}</em></h3>
+		</div>		
+	</div>	
+	<div class="panel panel-default">
+	  <div class="panel-heading"><b><i>Goals in progress...</i></b></div>
+	  <form name="addGoalForm" data-ng-submit="addMilestone(addGoalForm.$valid)">
+		<fieldset>
+		
+		  <table class="table table-striped">
+		    <thead>
+			    <tr>
+		    	    <th>Goal</th>
+			        <th>Type</th>
+			        <th>Start Date</th>
+			        <th>Completion Date</th>
+			        <th>Target Savings</th>
+			        <th></th>	        
+			    </tr>
+			</thead>
+			<tbody>
+			    <tr ng-repeat ="x in user.mileStones">
+			    <div class="row">
+			    	
+			        <td class="col-xs-1">{{x.goalTitle}}</td>
+			        
+			        
+			        <td class="col-xs-1">{{x.goalType}}</td>
+			        
+			        
+			        <td class="col-xs-1">{{x.startDateFormatted}}</td>
+			        
+			        
+			        <td class="col-xs-1">{{x.targetDateFormatted}}</td>
+			        
+			        
+			        <td class="col-xs-1">${{x.targetAmount}}</td>			        
+			        
+			        
+			        <td class="col-xs-1">
+			        	<button type="button" ng-click=(redirectUpdateMilestone(x)) class="btn btn-default btn-sm" aria-label="Left Align">
+  							<span class="glyphicon glyphicon-pencil align-left" aria-hidden="true"></span>
+						</button>
+					
+			        	<button type="button" ng-click=(deleteMilestone(x)) class="btn btn-default btn-sm" aria-label="Left Align">
+  							<span class="glyphicon glyphicon-trash align-left" aria-hidden="true"></span>
+						</button>
+					</td>
+					
+				</div>
+			    </tr>			   
+			    
+				<tr ng-show="addNewMilestone" class="ng-show">			  				    					    				<td class="col-xs-1">	
+						<div class="form-group">
+						<input type="text" name="title" id="title" data-ng-model="title" class ="form-control" placeholder="Title" ng-required="true"/>
+					</div>
+					</td>
+			    	<td class="col-xs-1">
+			    		<div class ="form-group">
+				    	<input type="text" name="goalType" id="goalType" data-ng-model="goalType" class ="form-control" placeholder="Car/HDB/etc" ng-required="true"/>					   	
+				    	</div>
+			    	</td>
+			    	<td class="col-xs-1">						    	
+			    		<p class="input-group" >
+				            <input type="date" class="form-control" name="startDate" id="startDate" datepicker-popup="{{format}}" data-ng-model="startDate" is-open="opened" datepicker-options="dateOptions" data-date-format="mm/dd/yyyy" ng-required="true" close-text="Close" />
+				            <span class="input-group-btn">
+				                <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+				            </span>
+				        </p>							    
+			    	</td>
+			    	<td class="col-xs-1">						    	
+			    		<p class="input-group" >
+				            <input type="date" class="form-control" name="targetDate" id="targetDate" datepicker-popup="{{format}}" data-ng-model="targetDate" is-open="opened" min-date="minDate" datepicker-options="dateOptions" data-date-format="mm/dd/yyyy" ng-required="true" close-text="Close" />
+				            <span class="input-group-btn">
+				                <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+				            </span>
+				        </p>							    
+			    	</td>
+			    	<td class="col-xs-1">
+			    		<div class ="form-group">						    	
+			    		<input type="number" step="any" name="targetAmount" id="targetAmount" data-ng-model="targetAmount" class ="form-control" placeholder="Target $$$" ng-required="true"/>			   	
+			    		</div>
+			    	</td>
+			    	<td class="col-xs-1">									
+       					<div class="form-group">	       				
+							<button type="submit">Add</button>
+							<button type="button" class="btn btn-small btn-link" ng-click="cancel()">Cancel</button>
+						</div>										       				
+   					</td>					    							    							   	
+				</tr>	    
+			</tbody>
+
+			</table>
+			
+		</fieldset>
+	</form>
+	
+
+	</div>
+
+	<div class="ng-show" ng-show="showNewGoals">
+		You have not set any goals. Click on add a new goal to create one now! </br>
+	</div>
+	<div data-ng-show="error" class="text-danger">
+		<strong data-ng-bind="error">Form Error!</strong>
+	</div>	
+	<div class = "row">
+		<div class="ng-show col-md-12" ng-show="afterClick" >
+   			<div class="form-group">	
+   				</br>       				
+				<button class="btn btn-large btn-primary" ng-click="generateNewLine()">Create New Goal</button>
+			</div>
+   		</div>
+   	</div>
+
+   	<br/>
+   	<div class="panel panel-default">
+	  <div class="panel-heading"><b><i>Completed Goals</i></b></div>
+		  <table class="table table-striped">
+		    <thead>
+			    <tr>
+		    	    <th>Goal</th>
+			        <th>Type</th>
+			        <th>Start Date</th>
+			        <th>Completion Date</th>
+			        <th>Target Savings</th>
+			        <th>Achieved Savings</th>
+			        <th></th>	        
+			    </tr>
+			</thead>
+			<tbody>
+			    <tr ng-repeat ="x in user.completedMilestones">
+			    <div class="row">
+			    	
+			        <td class="col-xs-1">{{x.goalTitle}}</td>
+			        
+			        
+			        <td class="col-xs-1">{{x.goalType}}</td>
+			        
+			        
+			        <td class="col-xs-1">{{x.startDateFormatted}}</td>
+			        
+			        
+			        <td class="col-xs-1">{{x.targetDateFormatted}}</td>
+			        
+			        <td class="col-xs-1">${{x.targetAmount}}</td>
+
+			        <td class="col-xs-1">${{x.currentAmount}}</td>			        
+			        
+			        
+			        <td class="col-xs-1">
+			        	<button type="button" ng-click=(deleteCompletedMilestone(x)) class="btn btn-default btn-sm" aria-label="Left Align">
+  							<span class="glyphicon glyphicon-trash align-left" aria-hidden="true"></span>
+						</button>								        	
+					</td>
+					
+				</div>
+			    </tr>			   			    	    
+			</tbody>
+		</table>
+
+	</div>
+
+
+
+	
+</section>
