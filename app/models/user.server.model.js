@@ -299,7 +299,7 @@ var UserSchema = new Schema({
 	})],
 
 	budgetLimits:{
-		type:Object
+		type:Array
 	},
 	//posts by users
 	posts: [{
