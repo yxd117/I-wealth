@@ -117,7 +117,7 @@ angular.module('financial').controller('IncomeExpenseController', ['$scope', '$r
                     }
                 }
                 //To edit to bar graph
-                if(!$scope.displayIncomeExpenseRecords.incomeNormalAmt && !$scope.displayIncomeExpenseRecords.otherIncomeAmt && !$scope.displayIncomeExpenseRecords.fixedExpenseAmt && !$scope.displayIncomeExpenseRecords.transportAmt && !$scope.displayIncomeExpenseRecords.utilityHouseholdAmt && !$scope.displayIncomeExpenseRecords.foodNecessitiesAmt && !$scope.displayIncomeExpenseRecords.miscAmt){
+                if(!$scope.displayIncomeExpenseRecords.incomeNormalAmt && !$scope.displayIncomeExpenseRecords.otherIncomeAmt && !$scope.displayIncomeExpenseRecords.fixedExpenseAmt && !$scope.displayIncomeExpenseRecords.transportAmt && !$scope.displayIncomeExpenseRecords.utilityHouseholdAmt && !$scope.displayIncomeExpenseRecords.foodNecessitiesAmt && !$scope.displayIncomeExpenseRecords.miscAmt && !$scope.displayIncomeExpenseRecords.optionalSavingsAmt){
                     $scope.incomeDoughnutData = [1]; 
                     $scope.incomeDoughnutLabels = ['No Data'];
                     $scope.expenseDoughnutData = [1]; 
@@ -125,8 +125,8 @@ angular.module('financial').controller('IncomeExpenseController', ['$scope', '$r
                 }else {
                     $scope.incomeDoughnutData = [$scope.displayIncomeExpenseRecords.incomeNormalAmt, $scope.displayIncomeExpenseRecords.otherIncomeAmt]; 
                     $scope.incomeDoughnutLabels = ['Employment Income', 'Other Income'];
-                    $scope.expenseDoughnutData = [$scope.displayIncomeExpenseRecords.fixedExpenseAmt, $scope.displayIncomeExpenseRecords.transportAmt, $scope.displayIncomeExpenseRecords.utilityHouseholdAmt, $scope.displayIncomeExpenseRecords.foodNecessitiesAmt, $scope.displayIncomeExpenseRecords.miscAmt]; 
-                    $scope.expenseDoughnutLabels = ['Fixed Expense', 'Transport', 'Utilities & Household Maintenance', 'Food & Necessities', 'Miscellaneous'];
+                    $scope.expenseDoughnutData = [$scope.displayIncomeExpenseRecords.fixedExpenseAmt, $scope.displayIncomeExpenseRecords.transportAmt, $scope.displayIncomeExpenseRecords.utilityHouseholdAmt, $scope.displayIncomeExpenseRecords.foodNecessitiesAmt, $scope.displayIncomeExpenseRecords.miscAmt, $scope.displayIncomeExpenseRecords.optionalSavingsAmt]; 
+                    $scope.expenseDoughnutLabels = ['Fixed Expense', 'Transport', 'Utilities & Household Maintenance', 'Food & Necessities', 'Miscellaneous', 'Optional Savings'];
 
                     if(parseFloat($scope.displayIncomeExpenseRecords.monthlyIncomeAmt) === 0.00) {
                         $scope.incomeDoughnutData = [1];
@@ -260,9 +260,20 @@ angular.module('financial').controller('IncomeExpenseController', ['$scope', '$r
                     miscTotal = miscTotal + Number(value.value);
                 });
 
+                var optionalSavingsArr = $scope.displayIncomeExpenseRecords.monthlyExpense.optionalSavings;
+                var optionalSavingsTotal = 0;
+                angular.forEach(optionalSavingsArr, function(value, key){
+                    if (value.value<value.recordsTotal) {
+                        value.value = value.recordsTotal;
+                        alert('Minimum Expense for '+value.description+' is: $'+value.value);
+                        errorCheck += 1;
+                    }
+                    optionalSavingsTotal = optionalSavingsTotal + Number(value.value);
+                });
+
 
                 var monthlyIncomeAmt = incomeNormalTotal + otherIncomeTotal;
-                var monthlyExpenseAmt = fixedExpenseTotal + transportTotal + utilityHouseholdTotal + foodNecessitiesTotal + miscTotal;
+                var monthlyExpenseAmt = fixedExpenseTotal + transportTotal + utilityHouseholdTotal + foodNecessitiesTotal + miscTotal + optionalSavingsTotal;
                 var netCashFlow = monthlyIncomeAmt - monthlyExpenseAmt;
 
                 $scope.displayIncomeExpenseRecords.incomeNormalAmt = incomeNormalTotal.toFixed(2);
@@ -272,7 +283,8 @@ angular.module('financial').controller('IncomeExpenseController', ['$scope', '$r
                 $scope.displayIncomeExpenseRecords.transportAmt = transportTotal.toFixed(2);
                 $scope.displayIncomeExpenseRecords.utilityHouseholdAmt = utilityHouseholdTotal.toFixed(2);
                 $scope.displayIncomeExpenseRecords.foodNecessitiesAmt = foodNecessitiesTotal.toFixed(2);
-                $scope.displayIncomeExpenseRecords.miscAmt = miscTotal.toFixed(2);               
+                $scope.displayIncomeExpenseRecords.miscAmt = miscTotal.toFixed(2);           
+                $scope.displayIncomeExpenseRecords.optionalSavingsAmt = optionalSavingsTotal.toFixed(2);    
 
                 $scope.displayIncomeExpenseRecords.monthlyIncomeAmt = monthlyIncomeAmt.toFixed(2);
                 $scope.displayIncomeExpenseRecords.monthlyExpenseAmt = monthlyExpenseAmt.toFixed(2);

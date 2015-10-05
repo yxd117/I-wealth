@@ -29,7 +29,7 @@ angular.module('social').controller('PostsController', ['$scope', '$stateParams'
 		        content: this.content,
 		        privacy: this.privacy
 		    });
-
+	    	console.log(post);
 			$http.post('/api/posts', post).success(function(response){
 		        // $location.path('/post/' + response._id);
 		  		$window.location.reload();
@@ -51,7 +51,7 @@ angular.module('social').controller('PostsController', ['$scope', '$stateParams'
 		        content: $scope.post.content,
 		        privacy: $scope.post.privacy
 		    });
-
+	    	console.log('before');
 			$http.put(postURL, post).success(function(response){
 		        // $location.path('/post/' + response._id);
 		        $location.path(viewPostURL);
@@ -60,8 +60,8 @@ angular.module('social').controller('PostsController', ['$scope', '$stateParams'
 		        // Clear form fields
 		        $scope.title = '';
 		        $scope.content = '';
-			}).error(function(){
-				console.log('Problem with posting');
+			}).error(function(response){
+				console.log(response);
 			});	
 	    };
 

@@ -22,11 +22,14 @@ var fs = require('fs'),
 	flash = require('connect-flash'),
 	config = require('./config'),
 	consolidate = require('consolidate'),
-	path = require('path');
+	path = require('path');	
+
 
 module.exports = function(db) {
 	// Initialize express app
 	var app = express();
+	// var server = require('http').Server(app);
+	// var io = require('socket.io')(server);
 
 	// Globbing model files
 	config.getGlobbedFiles('./app/models/**/*.js').forEach(function(modelPath) {
@@ -159,7 +162,15 @@ module.exports = function(db) {
 		// Return HTTPS server instance
 		return httpsServer;
 	}
-
+	// io.on('connection', function (socket) {
+	//   socket.emit('news', { hello: 'world' , numNotification: 1});
+	//   socket.on('my other event', function (data) {
+	//     console.log(data);
+	//   });
+	//   socket.on('event1', function (data) {
+	//     console.log(data);
+	//   });
+	// });
 	// Return Express server instance
 	return app;
 };

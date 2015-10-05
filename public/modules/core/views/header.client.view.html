@@ -40,6 +40,25 @@
 				</li>
 			</ul>
 			<ul class="nav navbar-nav navbar-right" data-ng-show="authentication.user">
+				
+				<li class="dropdown" dropdown data-ng-controller="NotificationController" ng-init="getNotification()">
+					<a class="dropdown-toggle" dropdown-toggle style="padding-right:5px;padding-left:5px;" ng-click="viewNotification()">
+						<span class="glyphicon glyphicon-bell" style="font-size: 1.5em;padding-top:4px;"></span>
+						<span class="badge badge-notify" style="top:-15px;left:-15px;position:relative;background:red;margin:0px;" ng-hide="numNotification === 0">{{numNotification}}</span>
+						<span class="badge badge-notify" style="top:-15px;left:-15px;position:relative;background:transparent;margin:0px;color:transparent;" ng-show="numNotification === 0">{{numNotification}}</span>
+					</a>
+					<ul class="dropdown-menu">
+						<li ng-repeat="item in list" style="padding:5px;width:200px;">
+							<b>{{item.title}}</b><br>
+							{{item.content}}
+						</li>
+						<li class="divider"></li>
+						<li>
+							<a href="/#!/settings/notification" class="text-center">View All</a>
+						</li>
+					</ul>
+				</li>
+				
 				<li class="dropdown" dropdown>
 					<a class="dropdown-toggle" dropdown-toggle>
 						<img ng-if="imageReady" style="border:1px solid gray;width:30px;height:30px;border-radius: 50%;" ng-src="{{imageUrl}}" />

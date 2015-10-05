@@ -12,7 +12,7 @@
 		"angular-bootstrap": "~0.12.0",
 		"angular-ui-utils": "~0.1.1",
 		"angular-ui-router": "~0.2.11",
-		"angular-sanitize": "~1.0.8",
+		"angular-sanitize": "~1.2",
 		"ng-file-upload-shim": "*",
 		"angular-date-dropdowns": "*",
 		"Chart.js": "*",
@@ -23,6 +23,9 @@
 		"angular-route": "*",
 		"angular-nvd3": "*",
 		"n3-line-chart":"*",
-		"jquery": "1.11.3"
+		"jquery": "1.11.3",
+		"socket.io-client": "*",
+		"angular-socket-io": "*",
+		"ngWYSIWYG": "*"
 	}
 }

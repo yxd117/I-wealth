@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('core').controller('HeaderController', ['$rootScope', '$scope', 'Authentication', 'Menus', '$http', '$state',
+angular.module('core').controller('HeaderController', ['$rootScope', '$scope', 'Authentication', 'Menus', '$http', '$state', 
 	function($rootScope, $scope, Authentication, Menus, $http, $state) {
 		$scope.authentication = Authentication;
 		$scope.user = Authentication.user;
@@ -18,7 +18,7 @@ angular.module('core').controller('HeaderController', ['$rootScope', '$scope', '
 
 		$scope.redirectHome = '/#!/';
 		if($scope.user) $scope.redirectHome = '/#!/home';
-		if($scope.user) $scope.redirectHome = '/#!/';
+		if(!$scope.user) $scope.redirectHome = '/#!/';
 
 		$scope.$watch('authentication.user', function(){
 			$scope.user = Authentication.user;
@@ -45,5 +45,11 @@ angular.module('core').controller('HeaderController', ['$rootScope', '$scope', '
 				});				
 			}			
 		});
+
+		// SocketService.on('news', function (data) {
+		// 	console.log(data.numNotification);
+		// 	$scope.numNotification = data.numNotification;
+		// 	SocketService.emit('my other event', { my: 'data' });
+		// });
 	}
 ]);

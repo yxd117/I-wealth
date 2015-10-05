@@ -23,7 +23,7 @@ var PostSchema = new Schema({
 	content: {
 		type: String,
 		default: '',
-		trim: true
+		trim:true
 	},
 	user: {
 		type: Schema.ObjectId,

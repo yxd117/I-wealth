@@ -30,14 +30,14 @@
 					<h4>Monthly Income</h4>
 				</div>		
 				<div class="col-md-4">
-					<h4> Total: $ {{displayIncomeExpenseRecords.monthlyIncomeAmt}}</h4>
+					<h4> Total: {{displayIncomeExpenseRecords.monthlyIncomeAmt| currency}}</h4>
 				</div>				
 			</div>		
 		  	<accordion class="accordion" close-others="oneAtATime">
 			    <accordion-group is-open="status.open" ng-click="clearSuccessMessage()">
 			        <accordion-heading>
 			           <i class="pull-left glyphicon" ng-class="{'glyphicon-minus': status.open, 'glyphicon-plus': !status.open}"></i>&nbsp;Employment Income 
-			            <p class="pull-right">Total: $ {{displayIncomeExpenseRecords.incomeNormalAmt}}</p>
+			            <p class="pull-right">Total: {{displayIncomeExpenseRecords.incomeNormalAmt| currency}}</p>
 			        </accordion-heading>
 					<form name="incomeNormalForm" data-ng-submit="updateUserFinances(incomeNormalForm.$valid)">
 						<fieldset>
@@ -67,7 +67,7 @@
 			    <accordion-group is-open="status1.open" ng-click="clearSuccessMessage()">
 			        <accordion-heading>
 			            <i class="pull-left glyphicon" ng-class="{'glyphicon-minus': status1.open, 'glyphicon-plus': !status1.open}"></i>&nbsp;Other Income
-			            <p class="pull-right">Total: $ {{displayIncomeExpenseRecords.otherIncomeAmt}}</p>
+			            <p class="pull-right">Total: {{displayIncomeExpenseRecords.otherIncomeAmt| currency}}</p>
 			        </accordion-heading>
 					<form name="householdExpenseForm" data-ng-submit="updateUserFinances(householdExpenseForm.$valid)">
 						<fieldset>
@@ -99,14 +99,14 @@
 					<h4>Monthly Expense</h4>
 				</div>		
 				<div class="col-md-4">
-					<h4> Total: $ {{displayIncomeExpenseRecords.monthlyExpenseAmt}}</h4>
+					<h4> Total: {{displayIncomeExpenseRecords.monthlyExpenseAmt| currency}}</h4>
 				</div>					
 			</div>
 		  	<accordion class="accordion" close-others="oneAtATime">
 			    <accordion-group is-open="status2.open" ng-click="clearSuccessMessage()">
 			        <accordion-heading>
 			           <i class="pull-left glyphicon" ng-class="{'glyphicon-minus': status2.open, 'glyphicon-plus': !status2.open}"></i>&nbsp;Fixed Expense 
-			            <p class="pull-right">Total: $ {{displayIncomeExpenseRecords.fixedExpenseAmt}}</p>
+			            <p class="pull-right">Total: {{displayIncomeExpenseRecords.fixedExpenseAmt| currency}}</p>
 			        </accordion-heading>
 					<form name="fixedExpenseForm" data-ng-submit="updateUserFinances(fixedExpenseForm.$valid)">
 						<fieldset>
@@ -136,7 +136,7 @@
 			    <accordion-group is-open="status3.open" ng-click="clearSuccessMessage()">
 			        <accordion-heading>
 			            <i class="pull-left glyphicon" ng-class="{'glyphicon-minus': status3.open, 'glyphicon-plus': !status3.open}"></i>&nbsp;Transport
-			            <p class="pull-right">Total: $ {{displayIncomeExpenseRecords.transportAmt}}</p>
+			            <p class="pull-right">Total: {{displayIncomeExpenseRecords.transportAmt| currency}}</p>
 			        </accordion-heading>
 					<form name="transportForm" data-ng-submit="updateUserFinances(transportForm.$valid)">
 						<fieldset>
@@ -166,7 +166,7 @@
 			    <accordion-group is-open="status4.open" ng-click="clearSuccessMessage()">
 			        <accordion-heading>
 			           <i class="pull-left glyphicon" ng-class="{'glyphicon-minus': status4.open, 'glyphicon-plus': !status4.open}"></i>&nbsp;Utilities & Household Maintenance 
-			            <p class="pull-right">Total: $ {{displayIncomeExpenseRecords.utilityHouseholdAmt}}</p>
+			            <p class="pull-right">Total: {{displayIncomeExpenseRecords.utilityHouseholdAmt| currency}}</p>
 			        </accordion-heading>
 					<form name="utilityHouseholdForm" data-ng-submit="updateUserFinances(utilityHouseholdForm.$valid)">
 						<fieldset>
@@ -196,7 +196,7 @@
 			    <accordion-group is-open="status5.open" ng-click="clearSuccessMessage()">
 			        <accordion-heading>
 			            <i class="pull-left glyphicon" ng-class="{'glyphicon-minus': status5.open, 'glyphicon-plus': !status5.open}"></i>&nbsp;Food & Necessities
-			            <p class="pull-right">Total: $ {{displayIncomeExpenseRecords.foodNecessitiesAmt}}</p>
+			            <p class="pull-right">Total: {{displayIncomeExpenseRecords.foodNecessitiesAmt| currency}}</p>
 			        </accordion-heading>
 					<form name="foodNecessitiesForm" data-ng-submit="updateUserFinances(foodNecessitiesForm.$valid)">
 						<fieldset>
@@ -226,7 +226,7 @@
 			    <accordion-group is-open="status6.open" ng-click="clearSuccessMessage()">
 			        <accordion-heading>
 			            <i class="pull-left glyphicon" ng-class="{'glyphicon-minus': status6.open, 'glyphicon-plus': !status6.open}"></i>&nbsp;Miscellaneous
-			            <p class="pull-right">Total: $ {{displayIncomeExpenseRecords.miscAmt}}</p>
+			            <p class="pull-right">Total: {{displayIncomeExpenseRecords.miscAmt| currency}}</p>
 			        </accordion-heading>
 					<form name="miscForm" data-ng-submit="updateUserFinances(miscForm.$valid)">
 						<fieldset>
@@ -252,12 +252,48 @@
 						</fieldset>
 					</form>
 			    </accordion-group>
+
+			    <accordion-group is-open="status7.open" ng-click="clearSuccessMessage()">
+			        <accordion-heading>
+			            <i class="pull-left glyphicon" ng-class="{'glyphicon-minus': status6.open, 'glyphicon-plus': !status6.open}"></i>&nbsp;Optional Savings
+			            <p class="pull-right">Total: {{displayIncomeExpenseRecords.optionalSavingsAmt| currency}}</p>
+			        </accordion-heading>
+					<form name="optionalSavingsForm" data-ng-submit="updateUserFinances(optionalSavingsForm.$valid)">
+						<fieldset>
+							<table class="form-group table table-striped">
+								<tr>
+									<th>Type</th>
+									<th>Amount</th>
+								</tr>
+								<tr ng-repeat="item in displayIncomeExpenseRecords.monthlyExpense.optionalSavings | toArray | orderBy:'order'">
+									<td><label for="'{{item.description}}'">{{item.description}}</label> </td>
+									<td>$ <input type="number" step="any" id="'{{item.description}}'" ng-model="item.value"/></td>
+								</tr>
+							</table>
+				        	<div class="form-group">
+								<button type="submit" class="btn btn-large btn-primary">Save Profile</button>
+							</div>
+							<div data-ng-show="success" class="text-success">
+								<strong>Expense Updated Successfully</strong>
+							</div>
+							<div data-ng-show="error" class="text-danger">
+								<strong data-ng-bind="error"></strong>
+							</div>
+						</fieldset>
+					</form>
+			    </accordion-group>
+
 			</accordion>	
   		</div>
 		<div class="col-md-6">
 			<div class="row">
 	  			<div class="col-md-12 text-center">
-					<h3> Net Gross Income: $ {{displayIncomeExpenseRecords.netCashFlow}}</h3>
+					<h3> Net Gross Income: 
+						<span ng-if="displayIncomeExpenseRecords.netCashFlow < 0" style="color:red">{{displayIncomeExpenseRecords.netCashFlow|  currency}}</span>
+						<span ng-if="displayIncomeExpenseRecords.netCashFlow >= 0">{{displayIncomeExpenseRecords.netCashFlow|  currency}}</span>
+
+					</h3>
+
 					<div class="row">
 						<div class="col-md-offset-2 col-md-8">
 							<canvas id="incomeDoughnut" class="chart chart-doughnut" data="incomeDoughnutData" labels="incomeDoughnutLabels" legend="true"></canvas>

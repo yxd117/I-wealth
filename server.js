@@ -31,8 +31,25 @@ var app = require('./config/express')(db);
 // Bootstrap passport config
 require('./config/passport')();
 
+require('./config/notification')();
+
 // Start the app by listening on <port>
 app.listen(config.port);
+
+// var server = require('http').Server(app);
+// var io = require('socket.io')(server);
+
+// server.listen(config.port);
+
+// io.on('connection', function (socket) {
+//   socket.emit('news', { hello: 'world' , numNotification: 1});
+//   socket.on('my other event', function (data) {
+//     console.log(data);
+//   });
+//   socket.on('event1', function (data) {
+//     console.log(data);
+//   });
+// });
 
 // Expose app
 exports = module.exports = app;

@@ -23,6 +23,7 @@ module.exports = {
 			css: [
 				'public/lib/bootstrap/dist/css/bootstrap.min.css',
 				'public/lib/bootstrap/dist/css/bootstrap-theme.min.css',
+				'public/lib/ngWYSIWYG/css/editor.css'	
 			],
 			js: [
 				'public/lib/angular/angular.min.js',
@@ -44,7 +45,10 @@ module.exports = {
 				'public/lib/angular-tooltips/src/js/angular-tooltips.js',
 				'public/lib/angular-route/angular-route.js',
 				'public/lib/jquery/dist/jquery.min.js',
-				'public/lib/bootstrap/dist/js/bootstrap.min.js'
+				'public/lib/bootstrap/dist/js/bootstrap.min.js',
+				'public/lib/angular-socket-io/socket.js',
+				'public/lib/angular-sanitize/angular-sanitize.min.js',
+				'public/lib/ngWYSIWYG/js/wysiwyg.js'
 				
 			]
 		},
@@ -54,7 +58,8 @@ module.exports = {
 			'public/lib/angular-chart.js/dist/angular-chart.css',
 			'public/lib/font-awesome/css/font-awesome.min.css',
 			'public/lib/angular-tooltips/src/css/angular-tooltips.css',
-			'public/lib/nvd3/nv.d3.css'			
+			'public/lib/nvd3/nv.d3.css',
+			'public/lib/ngWYSIWYG/css/editor.css'			
 		],
 		js: 'public/dist/application.min.js'
 		// css: [

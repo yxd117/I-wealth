@@ -30,7 +30,7 @@
 			    <accordion-group is-open="status.open" ng-click="clearSuccessMessage()">
 			        <accordion-heading>
 			             <i class="pull-left glyphicon" ng-class="{'glyphicon-minus': status.open, 'glyphicon-plus': !status.open}"></i>&nbsp;Short-Term Credit
-			            <p class="pull-right">Total: $ {{displayLiabilitiesRecords.shortTermCreditAmt}}</p>
+			            <p class="pull-right">Total: {{displayLiabilitiesRecords.shortTermCreditAmt| currency}}</p>
 			        </accordion-heading>
 					<form name="shortTermCreditForm" data-ng-submit="updateUserFinances(shortTermCreditForm.$valid)">
 						<fieldset>
@@ -60,7 +60,7 @@
 			    <accordion-group is-open="status1.open" ng-click="clearSuccessMessage()">
 			        <accordion-heading>
 			            <i class="pull-left glyphicon" ng-class="{'glyphicon-minus': status1.open, 'glyphicon-plus': !status1.open}"></i>&nbsp;Loans & Mortgages 
-			            <p class="pull-right">Total: $ {{displayLiabilitiesRecords.loansMortgagesAmt}}</p>
+			            <p class="pull-right">Total: {{displayLiabilitiesRecords.loansMortgagesAmt| currency}}</p>
 			        </accordion-heading>
 					<form name="loansMortgagesForm" data-ng-submit="updateUserFinances(loansMortgagesForm.$valid)">
 						<fieldset>
@@ -90,7 +90,7 @@
 			   	<accordion-group is-open="status2.open" ng-click="clearSuccessMessage()">
 			        <accordion-heading>
 			             <i class="pull-left glyphicon" ng-class="{'glyphicon-minus': status2.open, 'glyphicon-plus': !status2.open}"></i>&nbsp;Other Liabilities
-			            <p class="pull-right">Total: $ {{displayLiabilitiesRecords.otherLiabilitiesAmt}}</p>
+			            <p class="pull-right">Total: {{displayLiabilitiesRecords.otherLiabilitiesAmt| currency}}</p>
 			        </accordion-heading>
 			        <form name="otherLiabilitiesForm" data-ng-submit="updateUserFinances(otherLiabilitiesForm.$valid)">
 						<fieldset>
@@ -121,7 +121,7 @@
 	  	<div class="col-md-6">
 	  		<div class="row">
 	  			<div class="col-md-12 text-center">
-					<h3> Total: $ {{displayLiabilitiesRecords.totalAmt}}</h3>
+					<h3> Total: {{displayLiabilitiesRecords.totalAmt| currency}}</h3>
 			  		<canvas id="liabilitiesDoughnut" class="chart chart-doughnut" data="liabilitiesDoughnutData" labels="liabilitiesDoughnutLabels" legend="true"></canvas> 
 	  			</div>
 			</div>

@@ -88,19 +88,28 @@ exports.read = function(req, res) {
  * Update a Post
  */
 exports.update = function(req, res) {
-	var Post = req.Post;
-
-	Post = _.extend(Post, req.body);
-
-	Post.save(function(err) {
+	var post = req.Post;
+	post = _.extend(post, req.body);
+	console.log(post._id);
+	Post.update({'_id': post._id}, {'title': post.title, 'content': post.content, 'privacy': post.privacy}, function(err){
 		if (err) {
 			return res.status(400).send({
 				message: errorHandler.getErrorMessage(err)
 			});
 		} else {
-			res.json(Post);
+			res.json(post);
 		}
 	});
+	// post.save(function(err) {
+	// 	console.log(err);
+	// 	if (err) {
+	// 		return res.status(400).send({
+	// 			message: errorHandler.getErrorMessage(err)
+	// 		});
+	// 	} else {
+	// 		res.json(post);
+	// 	}
+	// });
 };
 
 //Add Comment
@@ -418,7 +427,10 @@ exports.postByID = function(req, res, next, id) {
  * Post authorization middleware
  */
 exports.hasAuthorization = function(req, res, next) {
-	if (req.Post.user.id !== req.user.id) {
+	console.log('here');
+	console.log(req.Post.user._id);
+	console.log(req.user._id);
+	if (!req.Post.user._id.equals(req.user._id)) {
 		return res.status(403).send({
 			message: 'User is not authorized'
 		});

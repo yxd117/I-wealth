@@ -1,7 +1,7 @@
 'use strict';
 
 // Articles controller
-angular.module('social').controller('SocialController', ['$scope', '$window','$stateParams','$state', '$location', 'Authentication', '$http', 'UserProfile', '$anchorScroll',
+angular.module('social').controller('SocialController', ['$scope', '$window','$stateParams','$state', '$location', 'Authentication', '$http', 'UserProfile', '$anchorScroll', 
 	function($scope,$window, $stateParams, $state, $location, Authentication, $http, UserProfile, $anchorScroll) {
 		$scope.user = Authentication.user;
 		if (!$scope.user) $location.path('/');
@@ -144,6 +144,8 @@ angular.module('social').controller('SocialController', ['$scope', '$window','$s
 	    		}
 	    	});
 	    };
+
+	    
 
 	}
 ]);

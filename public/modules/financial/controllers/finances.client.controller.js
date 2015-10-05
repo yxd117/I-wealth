@@ -17,15 +17,47 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
 
         //Set new record to N/A
         $scope.displayOverview ={};
+
+        //1---Liquidity---
+        //Liquidity Ratio
         $scope.displayOverview.ratioLiquidity = 'N/A';
-        $scope.displayOverview.ratioAssetDebt = 'N/A';
-        $scope.displayOverview.ratioDebtService = 'N/A';
-        $scope.displayOverview.ratioHouseExpense = 'N/A';
-        $scope.displayOverview.ratioDebtIncome = 'N/A';
-        $scope.displayOverview.ratioConsumerDebt = 'N/A';
-        $scope.displayOverview.ratioNetWorthBenchmark = 'N/A';
+        //Total Liquidity Ratio
+        $scope.displayOverview.ratioTotalLiquidity = 'N/A';
+
+        //2---Savings---
+        //Surplus Income Ratio /Savings Ratio
         $scope.displayOverview.ratioSaving = 'N/A';
+        //Basic Saving Ratio
+        $scope.displayOverview.ratioBasicSaving = 'N/A';
+
+        //3---Expenses---
+        //Essential Expenses to Income Ratio
+        $scope.displayOverview.ratioEssentialExpenses = 'N/A';
+        //Lifestyle Expenses to Income Ratio
+        $scope.displayOverview.ratioLifestyleExpenses = 'N/A';
+
+        //4---Debt---
+        //AssetDebt Ratio
+        $scope.displayOverview.ratioAssetDebt = 'N/A';
+        //DebtService Ratio
+        $scope.displayOverview.ratioDebtService = 'N/A';
+        //Housing Expense Ratio
+        $scope.displayOverview.ratioHouseExpense = 'N/A';
+        //Debt to Income Ratio
+        $scope.displayOverview.ratioDebtIncome = 'N/A';
+        //Consumer Debt Ratio
+        $scope.displayOverview.ratioConsumerDebt = 'N/A';
+
+        //5---Net Worth/ Others---
+        //Net Worth Benchmark
+        $scope.displayOverview.ratioNetWorthBenchmark = 'N/A';
+        //Solvency Ratio
         $scope.displayOverview.ratioSolvency = 'N/A';
+
+        //6---Asset vs Debts
+        //Current Asset to Debt Ratio
+        $scope.displayOverview.ratioCurrentAssetDebt = 'N/A';
+        //Investment Ratio
         $scope.displayOverview.ratioInvestment = 'N/A';
 
         //Set Checkbox Ratio
@@ -90,45 +122,77 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
         $scope.selectedChartOption = '0';
 
         //Ratio Arrays
+        //1---Liquidity---
+        //Liquidity Ratio
         var ratioLiquidityArr = [];
-        var ratioAssetDebtArr = [];
-        var ratioDebtServiceArr = [];
-        var ratioHouseExpenseArr = [];
-        var ratioDebtIncomeArr = [];
-        var ratioConsumerDebtArr = [];
-        var ratioLoanValueArr = [];
-        var ratioTangibleNetWorthArr = [];
-        var ratioNetWorthBenchmarkArr = [];
-        var ratioSavingArr = [];
-        var ratioSolvencyArr = [];
-        var ratioInvestmentArr = [];
-
         var ratioIdealLiquidityMinArr = [];
         var ratioIdealLiquidityMaxArr = [];
+        //Total Liquidity Ratio
+        var ratioTotalLiquidityArr = [];
+        var ratioIdealTotalLiquidityMinArr = [];
+        var ratioIdealTotalLiquidityMaxArr = [];
 
+        //2---Savings---
+        //Surplus Income Ratio /Savings Ratio
+        var ratioSavingArr = [];
+        var ratioIdealSavingMinArr = [];
+        var ratioIdealSavingMaxArr = [];
+        //Basic Saving Ratio
+        var ratioBasicSavingArr = [];
+        var ratioIdealBasicSavingMinArr = [];
+        var ratioIdealBasicSavingMaxArr = [];
+
+        //3---Expenses---
+        //Essential Expenses to Income Ratio
+        var ratioEssentialExpensesArr = [];
+        var ratioIdealEssentialExpensesMinArr = [];
+        var ratioIdealEssentialExpensesMaxArr = [];
+        //Lifestyle Expenses to Income Ratio
+        var ratioLifestyleExpensesArr = [];
+        var ratioIdealLifestyleExpensesMinArr = [];
+        var ratioIdealLifestyleExpensesMaxArr = [];
+
+        //4---Debt---
+        //AssetDebt Ratio
+        var ratioAssetDebtArr = [];
         var ratioIdealAssetDebtMinArr = [];
         var ratioIdealAssetDebtMaxArr = [];
-
+        //DebtService Ratio
+        var ratioDebtServiceArr = [];
         var ratioIdealDebtServiceMinArr = [];
         var ratioIdealDebtServiceMaxArr = [];
-
+        //Housing Expense Ratio
+        var ratioHouseExpenseArr = [];
         var ratioIdealHouseExpenseMinArr = [];
         var ratioIdealHouseExpenseMaxArr = [];
-
+        //Debt to Income Ratio
+        var ratioDebtIncomeArr = [];
         var ratioIdealDebtIncomeMinArr = [];
         var ratioIdealDebtIncomeMaxArr = [];
-
+        //Consumer Debt Ratio
+        var ratioConsumerDebtArr = [];
         var ratioIdealConsumerDebtMinArr = [];
         var ratioIdealConsumerDebtMaxArr = [];
 
+        //5---Net Worth/ Others--- 
+        //Net Worth Benchmark
+        var ratioNetWorthBenchmarkArr = [];
         var ratioIdealNetWorthBenchmarkMinArr = [];
-        
-        var ratioIdealSavingMinArr = [];
-        var ratioIdealSavingMaxArr = [];
-
+        var ratioIdealNetWorthBenchmarkMaxArr = [];
+        //Solvency Ratio
+        var ratioSolvencyArr = [];
         var ratioIdealSolvencyMinArr = [];
+        var ratioIdealSolvencyMaxArr = [];
 
+        //6---Asset vs Debts
+        //Current Asset to Debt Ratio
+        var ratioCurrentAssetDebtArr = [];
+        var ratioIdealCurrentAssetDebtMinArr = [];
+        var ratioIdealCurrentAssetDebtMaxArr = [];
+        //Investment Ratio
+        var ratioInvestmentArr = [];
         var ratioIdealInvestmentMinArr = [];
+        var ratioIdealInvestmentMaxArr = [];
 
         //Change to reflect date change
         $scope.$watch('selectedMonth', function(){
@@ -351,45 +415,90 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
             $scope.series = [];
             $scope.data = [];    
 
+            //1 Liquidity Ratio
+            //Liquidity Ratio
             if($scope.check.ratio === 'liquidity'){
-                $scope.series.push('Min Ideal Ratio', 'Max Ideal Ratio', 'Liquidity Ratio');
+                $scope.series.push('Min Ideal Ratio', 'Max Ideal Ratio', 'Current Liquidity Ratio');
                 $scope.data.push(ratioIdealLiquidityMinArr, ratioIdealLiquidityMaxArr, ratioLiquidityArr);
             }
+            //Total Liquidity Ratio
+            if($scope.check.ratio === 'totalLiquidity'){
+                $scope.series.push('Min Ideal Ratio', 'Total Liquidity Ratio');
+                $scope.data.push(ratioIdealTotalLiquidityMinArr, ratioTotalLiquidityArr);
+            }
+            //2 Savings Ratio
+            //Surplus Income Ratio /Savings Ratio
+            if($scope.check.ratio === 'saving'){
+                $scope.series.push('Min Ideal Ratio', 'Max Ideal Ratio','Surplus Income Ratio');
+                $scope.data.push(ratioIdealSavingMinArr, ratioIdealSavingMaxArr,ratioSavingArr);
+            }
+            //Basic Saving Ratio
+            if($scope.check.ratio === 'basicSaving'){
+                $scope.series.push('Min Ideal Ratio', 'Basic Saving Ratio');
+                $scope.data.push(ratioIdealBasicSavingMinArr, ratioBasicSavingArr);
+            }
+
+            //3 Expenses Ratio
+            //Essential Expenses to Income Ratio
+            if($scope.check.ratio === 'essentialExpenses'){
+                $scope.series.push('Max Ideal Ratio','Essential Expenses to Income Ratio');
+                $scope.data.push(ratioIdealEssentialExpensesMaxArr, ratioEssentialExpensesArr);
+            }
+            //Lifestyle Expenses to Income Ratio
+            if($scope.check.ratio === 'lifestyleExpenses'){
+                $scope.series.push('Max Ideal Ratio','Lifestyle Expenses to Income Ratio');
+                $scope.data.push(ratioIdealLifestyleExpensesMaxArr, ratioLifestyleExpensesArr);
+            }
+
+            //4 Debt Ratios
+            //AssetDebt Ratio
             if($scope.check.ratio === 'assetDebt'){
-                $scope.series.push('Min Ideal Ratio', 'Max Ideal Ratio','Asset to Debt Ratio');
+                $scope.series.push('Min Ideal Ratio', 'Max Ideal Ratio','Total Debt to Annual Income Ratio');
                 $scope.data.push(ratioIdealAssetDebtMinArr, ratioIdealAssetDebtMaxArr,ratioAssetDebtArr);
             }
+            //DebtService Ratio
             if($scope.check.ratio === 'debtService'){
-                $scope.series.push('Min Ideal Ratio', 'Max Ideal Ratio','Debt Service Ratio');
+                $scope.series.push('Min Ideal Ratio', 'Max Ideal Ratio','Current Debt to Annual Income Ratio');
                 $scope.data.push(ratioIdealDebtServiceMinArr, ratioIdealDebtServiceMaxArr,ratioDebtServiceArr);
             }
+            //Housing Expense Ratio
             if($scope.check.ratio === 'houseExpense'){
-                $scope.series.push('Min Ideal Ratio', 'Max Ideal Ratio','Housing Expense Ratio');
+                $scope.series.push('Min Ideal Ratio', 'Max Ideal Ratio','Property Debt to Total Income Ratio');
                 $scope.data.push(ratioIdealHouseExpenseMinArr, ratioIdealHouseExpenseMaxArr,ratioHouseExpenseArr);
             }
+            //Debt to Income Ratio
             if($scope.check.ratio === 'debtIncome'){
-                $scope.series.push('Min Ideal Ratio', 'Max Ideal Ratio','Debt to Income Ratio');
+                $scope.series.push('Min Ideal Ratio', 'Max Ideal Ratio','Monthly Debt Servicing to Income Ratio');
                 $scope.data.push(ratioIdealDebtIncomeMinArr, ratioIdealDebtIncomeMaxArr,ratioDebtIncomeArr);
             }
+            //Consumer Debt Ratio
             if($scope.check.ratio === 'consumerDebt'){
-                $scope.series.push('Min Ideal Ratio', 'Max Ideal Ratio','Consumer Debt Ratio');
+                $scope.series.push('Min Ideal Ratio', 'Max Ideal Ratio','Monthly Credit Card Debt to Income Ratio');
                 $scope.data.push(ratioIdealConsumerDebtMinArr, ratioIdealConsumerDebtMaxArr,ratioConsumerDebtArr);
             }
+
+            //5 Net Worth and Other Ratio
+            //Net Worth Benchmark
             if($scope.check.ratio === 'netWorthBenchmark'){
                 $scope.series.push('Min Ideal Ratio', 'Net Worth Benchmark');
                 $scope.data.push(ratioIdealNetWorthBenchmarkMinArr, ratioNetWorthBenchmarkArr);
             }
-            if($scope.check.ratio === 'saving'){
-                $scope.series.push('Min Ideal Ratio', 'Max Ideal Ratio','Saving Ratio');
-                $scope.data.push(ratioIdealSavingMinArr, ratioIdealSavingMaxArr,ratioSavingArr);
-            }
+            //Solvency Ratio
             if($scope.check.ratio === 'solvency'){
                 $scope.series.push('Min Ideal Ratio','Solvency Ratio');
                 $scope.data.push(ratioIdealSolvencyMinArr, ratioSolvencyArr);
             }
+
+            //6 Asset vs Debt Ratio
+            //Current Asset to Debt Ratio
+            if($scope.check.ratio === 'currentAssetDebt'){
+                $scope.series.push('Min Ideal Ratio', 'Current Asset to Debt Ratio');
+                $scope.data.push(ratioIdealCurrentAssetDebtMinArr, ratioCurrentAssetDebtArr);
+            }
+            //Investment Ratio
             if($scope.check.ratio === 'investment'){
-                $scope.series.push('Min Ideal Ratio', 'Investment Ratio');
-                $scope.data.push(ratioIdealInvestmentMinArr,ratioInvestmentArr);
+                $scope.series.push('Min Ideal Ratio', 'Investment Assets to Total Assets Ratio');
+                $scope.data.push(ratioIdealInvestmentMinArr, ratioInvestmentArr);
             }
 
 
@@ -599,26 +708,59 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
 
         //for Current display
         var calculateRatios = function(){
+            var numHealthyRatio = 0;
+            var numUnHealthyRatio = 0;
+            $scope.homeHealthyRatioArr = [];
+            $scope.homeUnHealthyRatioArr = [];
+
             //Ratio Formula time
             //1) Liquidity Ratio
+            //Current Liquidity 
             var ratioLiquidity = angular.copy($scope.displayAssetsRecords.cashEquivalentsAmt) / angular.copy($scope.displayIncomeExpenseRecords.monthlyExpenseAmt);
-            //2) Assets to Debt Ratio
-            var ratioAssetDebt = $scope.displayAssetsRecords.totalAmt / $scope.displayLiabilitiesRecords.totalAmt;
-            //3) Debt Service Ratio
+            //Total Liquidity 
+            var ratioTotalLiquidity = ($scope.displayAssetsRecords.cashEquivalentsAmt + $scope.displayAssetsRecords.investedAssetsAmt) / $scope.displayIncomeExpenseRecords.monthlyExpenseAmt;
+
+            //2) Savings
+            //Surplus Income Ratio /Savings Ratio //To review -- disposable income / monthly gross income
+            var ratioSaving = $scope.displayIncomeExpenseRecords.monthlyIncomeAmt / $scope.displayIncomeExpenseRecords.netCashFlow;
+            //Basic Saving Ratio   
+            var ratioBasicSaving = $scope.displayIncomeExpenseRecords.optionalSavingsAmt / $scope.displayIncomeExpenseRecords.monthlyIncomeAmt;
+
+            //3) Expenses Ratio
+            //Essential Expenses to Income Ratio
+            var ratioEssentialExpenses;
+            var publicTransportValue;
+            try{
+                publicTransportValue = $scope.displayIncomeExpenseRecords.monthlyExpense.transport.publicTransport.value;
+            }catch(e){
+                publicTransportValue = 0;
+            }
+            ratioEssentialExpenses = ($scope.displayIncomeExpenseRecords.fixedExpenseAmt + publicTransportValue + $scope.displayIncomeExpenseRecords.utilityHouseholdAmt + $scope.displayIncomeExpenseRecords.foodNecessitiesAmt)/ $scope.displayIncomeExpenseRecords.monthlyIncomeAmt;
+
+            //Lifestyle Expenses to Income Ratio
+            var ratioLifestyleExpenses;
+            var maidValue;
+
+            try{
+                maidValue = $scope.displayIncomeExpenseRecords.monthlyExpense.fixedExpense.maid.value;
+            }catch(e){
+                maidValue = 0;
+            }
+            ratioLifestyleExpenses = (maidValue + $scope.displayIncomeExpenseRecords.transportAmt - publicTransportValue + $scope.displayIncomeExpenseRecords.miscAmt) / $scope.displayIncomeExpenseRecords.monthlyIncomeAmt;
+
+            //4 Debt Ratio
+            //Assets to Debt Ratio
+            var ratioAssetDebt = $scope.displayLiabilitiesRecords.totalAmt / $scope.displayAssetsRecords.totalAmt;
+            //Debt Service Ratio
             var ratioDebtService = $scope.displayLiabilitiesRecords.totalAmt / $scope.displayIncomeExpenseRecords.monthlyIncomeAmt;
-            //4) Housing Expense Ratio
+            //Housing Expense Ratio
             var ratioHouseExpense = ($scope.displayIncomeExpenseRecords.monthlyExpenseAmt - $scope.displayIncomeExpenseRecords.fixedExpenseAmt) / $scope.displayIncomeExpenseRecords.netCashFlow;  
-            //5) Debt Income Ratio
+            //Debt Income Ratio
             var ratioDebtIncome;
             var mortgageRepaymentsValue;
             var rentalRepaymentsValue;
             var carLoanRepaymentValue;
             var otherLoanRepaymentsValue;
-
-            var numHealthyRatio = 0;
-            var numUnHealthyRatio = 0;
-            $scope.homeHealthyRatioArr = [];
-            $scope.homeUnHealthyRatioArr = [];
 
             try {
                 mortgageRepaymentsValue = $scope.displayIncomeExpenseRecords.monthlyExpense.fixedExpense.mortgageRepayments.value;
@@ -645,16 +787,22 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
             // if ($scope.displayIncomeExpenseRecords.monthlyExpense && $scope.displayIncomeExpenseRecords.monthlyExpense.fixedExpense && $scope.displayIncomeExpenseRecords.monthlyExpense.transport && $scope.displayIncomeExpenseRecords.monthlyExpense.fixedExpense.mortgageRepayments && $scope.displayIncomeExpenseRecords.monthlyExpense.fixedExpense.rentalRepayments && $scope.displayIncomeExpenseRecords.monthlyExpense.transport.carLoanRepayment && $scope.displayIncomeExpenseRecords.monthlyExpense.fixedExpense.otherLoanRepayments){
             //     ratioDebtIncome = ($scope.displayIncomeExpenseRecords.monthlyExpense.fixedExpense.mortgageRepayments.value + $scope.displayIncomeExpenseRecords.monthlyExpense.fixedExpense.rentalRepayments.value + $scope.displayIncomeExpenseRecords.monthlyExpense.transport.carLoanRepayment.value + $scope.displayIncomeExpenseRecords.monthlyExpense.fixedExpense.otherLoanRepayments.value)  /  $scope.displayIncomeExpenseRecords.netCashFlow;
             // }
-             
-            //6) Consumer Debt Ratio
+            
+            //Consumer Debt Ratio
             var ratioConsumerDebt = $scope.displayLiabilitiesRecords.shortTermCreditAmt / $scope.displayIncomeExpenseRecords.netCashFlow;
-            //7) Net WorthBenchmark Ratio
+
+            //5 Net Worth 
+            //Net WorthBenchmark Ratio
             var ratioNetWorthBenchmark = ($scope.displayAssetsRecords.totalAmt - $scope.displayLiabilitiesRecords.totalAmt) / ($scope.user.age  * $scope.displayIncomeExpenseRecords.monthlyIncomeAmt * 12 / 10);
-            //8) Saving Ratio
-            var ratioSaving = $scope.displayIncomeExpenseRecords.monthlyIncomeAmt / $scope.displayIncomeExpenseRecords.netCashFlow;
-            //9) Solvency Ratio
+
+            //Solvency Ratio
             var ratioSolvency = ($scope.displayAssetsRecords.totalAmt - $scope.displayLiabilitiesRecords.totalAmt) / $scope.displayAssetsRecords.totalAmt;
-            //10) Investment Ratio
+
+            //6 Asset vs Debt
+            //Current Asset to Debt Ratio
+            var ratioCurrentAssetDebt = $scope.displayAssetsRecords.cashEquivalentsAmt / $scope.displayLiabilitiesRecords.shortTermCreditAmt;
+
+            //Investment Ratio
             var ratioInvestment;
             var privatePropertiesValue;
             try{
@@ -667,62 +815,105 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
             //     ratioInvestment = ($scope.displayAssetsRecords.cashEquivalentsAmt + $scope.displayAssetsRecords.investedAssetsAmt - $scope.displayAssetsRecords.investedAssets.privateProperties.value) / $scope.displayAssetsRecords.totalAmt;
             // }
 
+
+
             //Assign Ratio to Scope
-            //1)
+            //1) Liquidity Ratio
+            //Current Liquidity 
             if(isFinite(ratioLiquidity)) {
                 $scope.displayOverview.ratioLiquidity = ratioLiquidity.toFixed(2);
             }else {
                 $scope.displayOverview.ratioLiquidity = 'N/A';
             }
-            //2) 
-            if(isFinite(ratioAssetDebt)) {
-                $scope.displayOverview.ratioAssetDebt = ratioAssetDebt.toFixed(2);
-            }else {
-                $scope.displayOverview.ratioAssetDebt = 'N/A';
-            }
-            //3) 
-            if(isFinite(ratioDebtService)) {
-                $scope.displayOverview.ratioDebtService = ratioDebtService.toFixed(2);
-            }else {
-                $scope.displayOverview.ratioDebtService ='N/A';
-            }
-            //4)
-            if(isFinite(ratioHouseExpense)) {
-                $scope.displayOverview.ratioHouseExpense = ratioHouseExpense.toFixed(2);
-            } else {
-                $scope.displayOverview.ratioHouseExpense = 'N/A';
-            }
-            //5)
-            if(isFinite(ratioDebtIncome)) {
-                $scope.displayOverview.ratioDebtIncome = ratioDebtIncome.toFixed(2);
+            //Total Liquidity 
+            if(isFinite(ratioTotalLiquidity)){
+                $scope.displayOverview.ratioTotalLiquidity = ratioTotalLiquidity.toFixed(2);
             }else{
-                $scope.displayOverview.ratioDebtIncome = 'N/A';
+                $scope.displayOverview.ratioTotalLiquidity = 'N/A';
             }
-            //6)
-            if(isFinite(ratioConsumerDebt)) {
-                $scope.displayOverview.ratioConsumerDebt = ratioConsumerDebt.toFixed(2);
-            }else{
-                $scope.displayOverview.ratioConsumerDebt = 'N/A';
-            }
-            //7)
-            if(isFinite(ratioNetWorthBenchmark)) {
-                $scope.displayOverview.ratioNetWorthBenchmark = ratioNetWorthBenchmark.toFixed(2);
-            } else {
-                $scope.displayOverview.ratioNetWorthBenchmark = 'N/A';
-            }
-            //8)
+
+            //2) Savings
+            //Surplus Income Ratio /Savings Ratio
             if(isFinite(ratioSaving)) {
                 $scope.displayOverview.ratioSaving = ratioSaving.toFixed(2);
             }else{
                 $scope.displayOverview.ratioSaving = 'N/A';
             }
-            //9)
+            //Basic Saving Ratio 
+            if(isFinite(ratioBasicSaving)){
+                $scope.displayOverview.ratioBasicSaving = ratioBasicSaving.toFixed(2);
+            }else{
+                $scope.displayOverview.ratioBasicSaving = 'N/A';
+            }
+
+            //3) Expenses Ratio
+            //Essential Expenses to Income Ratio
+            if(isFinite(ratioEssentialExpenses)){
+                $scope.displayOverview.ratioEssentialExpenses = ratioEssentialExpenses.toFixed(2);
+            }else{
+                $scope.displayOverview.ratioEssentialExpenses = 'N/A';
+            }
+            //Lifestyle Expenses to Income Ratio
+            if(isFinite(ratioLifestyleExpenses)){
+                $scope.displayOverview.ratioLifestyleExpenses = ratioLifestyleExpenses.toFixed(2);
+            }else{
+                $scope.displayOverview.ratioLifestyleExpenses = 'N/A';
+            }
+
+
+            //4) Debt Ratio
+            //Assets to Debt Ratio
+            if(isFinite(ratioAssetDebt)) {
+                $scope.displayOverview.ratioAssetDebt = ratioAssetDebt.toFixed(2);
+            }else {
+                $scope.displayOverview.ratioAssetDebt = 'N/A';
+            }
+            //Debt Service Ratio
+            if(isFinite(ratioDebtService)) {
+                $scope.displayOverview.ratioDebtService = ratioDebtService.toFixed(2);
+            }else {
+                $scope.displayOverview.ratioDebtService ='N/A';
+            }
+            //Housing Expense Ratio
+            if(isFinite(ratioHouseExpense)) {
+                $scope.displayOverview.ratioHouseExpense = ratioHouseExpense.toFixed(2);
+            } else {
+                $scope.displayOverview.ratioHouseExpense = 'N/A';
+            }
+            //Debt Income Ratio
+            if(isFinite(ratioDebtIncome)) {
+                $scope.displayOverview.ratioDebtIncome = ratioDebtIncome.toFixed(2);
+            }else{
+                $scope.displayOverview.ratioDebtIncome = 'N/A';
+            }
+            //Consumer Debt Ratio
+            if(isFinite(ratioConsumerDebt)) {
+                $scope.displayOverview.ratioConsumerDebt = ratioConsumerDebt.toFixed(2);
+            }else{
+                $scope.displayOverview.ratioConsumerDebt = 'N/A';
+            }
+            //5 Net Worth 
+            //Net WorthBenchmark Ratio
+            if(isFinite(ratioNetWorthBenchmark)) {
+                $scope.displayOverview.ratioNetWorthBenchmark = ratioNetWorthBenchmark.toFixed(2);
+            } else {
+                $scope.displayOverview.ratioNetWorthBenchmark = 'N/A';
+            }
+            //Solvency Ratio
             if(isFinite(ratioSolvency)) {
                 $scope.displayOverview.ratioSolvency = ratioSolvency.toFixed(2);
             }else{
                 $scope.displayOverview.ratioSolvency = 'N/A';
             }
-            //10)
+
+            //6 Asset vs Debt
+            //Current Asset to Debt Ratio
+            if(isFinite(ratioCurrentAssetDebt)){
+                $scope.displayOverview.ratioCurrentAssetDebt = ratioCurrentAssetDebt.toFixed(2);
+            }else{
+                $scope.displayOverview.ratioCurrentAssetDebt = 'N/A';
+            }
+            //Investment Ratio
             if(isFinite(ratioInvestment)) {
                 $scope.displayOverview.ratioInvestment = ratioInvestment.toFixed(2);
             }else{
@@ -731,119 +922,217 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
 
             
             //Set analysis for each ratio
-            //1)
+            //1) Liquidity Ratio
+            //Current Liquidity 
             if($scope.displayOverview.ratioLiquidity !== 'N/A'){
-                if($scope.displayOverview.ratioLiquidity < 3){
+                if($scope.displayOverview.ratioLiquidity < 2){
                     $scope.displayAnalysis.liquidity = $scope.analysisRatio.analysisLiquidity.unhealthy[0];
                     numUnHealthyRatio++;
-                    $scope.homeUnHealthyRatioArr.push('Liquidity Ratio');
+                    $scope.homeUnHealthyRatioArr.push('Current Liquidity Ratio');
                     $scope.liquidityHealth = 2;
-                }else if ($scope.displayOverview.ratioLiquidity >=3 && $scope.displayOverview.ratioLiquidity < 6){
+                }else if ($scope.displayOverview.ratioLiquidity >=2 && $scope.displayOverview.ratioLiquidity < 6){
                     $scope.displayAnalysis.liquidity = $scope.analysisRatio.analysisLiquidity.healthy[0];
                     numHealthyRatio++;
-                    $scope.homeHealthyRatioArr.push('Liquidity Ratio');
+                    $scope.homeHealthyRatioArr.push('Current Liquidity Ratio');
                     $scope.liquidityHealth = 1;
                 }else if ($scope.displayOverview.ratioLiquidity >=6){
                     $scope.displayAnalysis.liquidity = $scope.analysisRatio.analysisLiquidity.healthy[1];
                     numHealthyRatio++;
-                    $scope.homeHealthyRatioArr.push('Liquidity Ratio');
+                    $scope.homeHealthyRatioArr.push('Current Liquidity Ratio');
                     $scope.liquidityHealth = 1;
                 }
             }else{
                 $scope.displayAnalysis.liquidity = 'Unable to generate ratio due to missing inputs';
                 $scope.liquidityHealth = 0;
             }
-            //2)
+            //Total Liquidity 
+            if($scope.displayOverview.ratioTotalLiquidity !== 'N/A'){
+                if($scope.displayOverview.ratioTotalLiquidity < 6 ){
+                    $scope.displayAnalysis.totalLiquidity = $scope.analysisRatio.analysisTotalLiquidity.unhealthy[0];
+                    numUnHealthyRatio++;
+                    $scope.homeUnHealthyRatioArr.push('Total Liquidity Ratio');
+                    $scope.totalLiquidityHealth = 2;
+                }else if($scope.displayOverview.ratioTotalLiquidity >=6){
+                    $scope.displayAnalysis.totalLiquidity = $scope.analysisRatio.analysisTotalLiquidity.healthy[0];
+                    numHealthyRatio++;
+                    $scope.homeHealthyRatioArr.push('Total Liquidity Ratio');
+                    $scope.totalLiquidityHealth = 1;
+                }
+            }else{
+                $scope.displayAnalysis.totalLiquidity = 'Unable to generate ratio due to missing inputs';
+                $scope.totalLiquidityHealth = 0;
+            }
+
+            //2) Savings
+            //Surplus Income Ratio /Savings Ratio
+            if($scope.displayOverview.ratioSaving !== 'N/A'){
+                if($scope.displayOverview.ratioSaving <0.12){
+                    $scope.displayAnalysis.saving = $scope.analysisRatio.analysisSaving.unhealthy[0];
+                    numUnHealthyRatio++; 
+                    $scope.homeUnHealthyRatioArr.push('Surplus Income Ratio');
+                    $scope.savingHealth = 2;
+                }else if($scope.displayOverview.ratioSaving >=0.12 && $scope.displayOverview.ratioSaving <=0.7){
+                    $scope.displayAnalysis.saving = $scope.analysisRatio.analysisSaving.healthy[1];
+                    numHealthyRatio++;
+                    $scope.homeHealthyRatioArr.push('Surplus Income Ratio');
+                    $scope.savingHealth = 1;
+                }else if($scope.displayOverview.ratioSaving > 0.7){
+                    $scope.displayAnalysis.saving = $scope.analysisRatio.analysisSaving.healthy[0];
+                    numHealthyRatio++;
+                    $scope.homeHealthyRatioArr.push('Surplus Income Ratio');
+                    $scope.savingHealth = 1;
+                }
+            }else{
+                $scope.displayAnalysis.saving = 'Unable to generate ratio due to missing inputs';
+                $scope.savingHealth = 0;
+            }
+            //Basic Saving Ratio 
+            if($scope.displayOverview.ratioBasicSaving !== 'N/A'){
+                if($scope.displayOverview.ratioBasicSaving < 0.1){
+                    $scope.displayAnalysis.basicSaving = $scope.analysisRatio.analysisBasicSaving.unhealthy[0];
+                    numUnHealthyRatio++; 
+                    $scope.homeUnHealthyRatioArr.push('Basic Saving Ratio');
+                    $scope.basicSavingHealth = 2;
+                }else if($scope.displayOverview.ratioBasicSaving >= 0.1){
+                    $scope.displayAnalysis.basicSaving = $scope.analysisRatio.analysisBasicSaving.healthy[0];
+                    numHealthyRatio++;
+                    $scope.homeHealthyRatioArr.push('Basic Saving Ratio');
+                    $scope.basicSavingHealth = 1;
+                }
+            }else{
+                $scope.displayAnalysis.basicSaving = 'Unable to generate ratio due to missing inputs';
+                $scope.basicSavingHealth = 0;
+            }
+
+            //3) Expenses Ratio
+            //Essential Expenses to Income Ratio
+            if($scope.displayOverview.ratioEssentialExpenses !== 'N/A'){
+                if($scope.displayOverview.ratioEssentialExpenses >=0.5){
+                    $scope.displayAnalysis.essentialExpenses = $scope.analysisRatio.analysisEssentialExpenses.unhealthy[0];
+                    numUnHealthyRatio++; 
+                    $scope.homeUnHealthyRatioArr.push('Essential Expenses to Income Ratio');
+                    $scope.essentialExpensesHealth = 2;
+                }else if($scope.displayOverview.ratioEssentialExpenses <0.5){
+                    $scope.displayAnalysis.essentialExpenses = $scope.analysisRatio.analysisEssentialExpenses.healthy[0];
+                    numHealthyRatio++;
+                    $scope.homeHealthyRatioArr.push('Essential Expenses to Income Ratio');
+                    $scope.essentialExpensesHealth = 1;
+                }
+            }else{
+                $scope.displayAnalysis.essentialExpenses = 'Unable to generate ratio due to missing inputs';
+                $scope.essentialExpensesHealth = 0;
+            }
+            //Lifestyle Expenses to Income Ratio
+            if($scope.displayOverview.ratioLifestyleExpenses !== 'N/A'){
+                if($scope.displayOverview.ratioLifestyleExpenses >=0.3){
+                    $scope.displayAnalysis.lifestyleExpenses = $scope.analysisRatio.analysisLifestyleExpenses.unhealthy[0];
+                    numUnHealthyRatio++; 
+                    $scope.homeUnHealthyRatioArr.push('Lifestyle Expenses to Income Ratio');
+                    $scope.lifestyleExpensesHealth = 2;
+                }else if($scope.displayOverview.ratioLifestyleExpenses <0.3){
+                    $scope.displayAnalysis.lifestyleExpenses = $scope.analysisRatio.analysisLifestyleExpenses.healthy[0];
+                    numHealthyRatio++;
+                    $scope.homeHealthyRatioArr.push('Lifestyle Expenses to Income Ratio');
+                    $scope.lifestyleExpensesHealth = 1;
+                }
+            }else{
+                $scope.displayAnalysis.lifestyleExpenses = 'Unable to generate ratio due to missing inputs';
+                $scope.lifestyleExpensesHealth = 0;
+            }
+
+            //4) Debt Ratio
+            //Assets to Debt Ratio
             if($scope.displayOverview.ratioAssetDebt !== 'N/A'){
                 if($scope.displayOverview.ratioAssetDebt < 0.4){
                     $scope.displayAnalysis.assetDebt = $scope.analysisRatio.analysisAssetDebt.healthy[0];
                     numHealthyRatio++;
-                    $scope.homeHealthyRatioArr.push('Asset to Debt Ratio');
+                    $scope.homeHealthyRatioArr.push('Total Debt to Annual Income Ratio');
                     $scope.assetDebtHealth = 1;
                 }else if($scope.displayOverview.ratioAssetDebt >=0.4 && $scope.displayOverview.ratioAssetDebt < 0.6){
                     $scope.displayAnalysis.assetDebt = $scope.analysisRatio.analysisAssetDebt.healthy[1];
                     numHealthyRatio++;
-                    $scope.homeHealthyRatioArr.push('Asset to Debt Ratio');
+                    $scope.homeHealthyRatioArr.push('Total Debt to Annual Income Ratio');
                     $scope.assetDebtHealth = 1;
                 }else if($scope.displayOverview.ratioAssetDebt >=0.6){
                     $scope.displayAnalysis.assetDebt = $scope.analysisRatio.analysisAssetDebt.unhealthy[0];
                     numUnHealthyRatio++;
-                    $scope.homeUnHealthyRatioArr.push('Asset to Debt Ratio');
+                    $scope.homeUnHealthyRatioArr.push('Total Debt to Annual Income Ratio');
                     $scope.assetDebtHealth = 2;
                 }
             }else{
                 $scope.displayAnalysis.assetDebt = 'Unable to generate ratio due to missing inputs';
                 $scope.assetDebtHealth = 0;
             }
-            //3)
+            //Debt Service Ratio
             if($scope.displayOverview.ratioDebtService !== 'N/A'){
                 if($scope.displayOverview.ratioDebtService <=0.36){
                     $scope.displayAnalysis.debtService = $scope.analysisRatio.analysisDebtService.healthy[0];
                     numHealthyRatio++;
-                    $scope.homeHealthyRatioArr.push('Debt Service Ratio');
+                    $scope.homeHealthyRatioArr.push('Current Debt to Annual Income Ratio');
                     $scope.debtServiceHealth = 1;
                 }else if($scope.displayOverview.ratioDebtService > 0.36){
                     $scope.displayAnalysis.debtService = $scope.analysisRatio.analysisDebtService.unhealthy[0];
                     numUnHealthyRatio++;
-                    $scope.homeUnHealthyRatioArr.push('Debt Service Ratio');
+                    $scope.homeUnHealthyRatioArr.push('Current Debt to Annual Income Ratio');
                     $scope.debtServiceHealth = 2;
                 }
             }else{
                 $scope.displayAnalysis.debtService = 'Unable to generate ratio due to missing inputs';
                 $scope.debtServiceHealth = 0;
             }
-            //4)
+            //Housing Expense Ratio
             if($scope.displayOverview.ratioHouseExpense !== 'N/A'){
-                if($scope.displayOverview.ratioHouseExpense <=0.28){
+                if($scope.displayOverview.ratioHouseExpense <=0.35){
                     $scope.displayAnalysis.houseExpense = $scope.analysisRatio.analysisHouseExpense.healthy[0];
                     numHealthyRatio++;
-                    $scope.homeHealthyRatioArr.push('Housing Expense Ratio');
+                    $scope.homeHealthyRatioArr.push('Property Debt to Total Income Ratio');
                     $scope.houseExpenseHealth = 1;
-                }else if($scope.displayOverview.ratioHouseExpense > 0.28){
+                }else if($scope.displayOverview.ratioHouseExpense > 0.35){
                     $scope.displayAnalysis.houseExpense = $scope.analysisRatio.analysisHouseExpense.unhealthy[0];
                     numUnHealthyRatio++;
-                    $scope.homeUnHealthyRatioArr.push('Housing Expense Ratio');
+                    $scope.homeUnHealthyRatioArr.push('Property Debt to Total Income Ratio');
                     $scope.houseExpenseHealth = 2;
                 }
             }else{
                 $scope.displayAnalysis.houseExpense = 'Unable to generate ratio due to missing inputs';
                 $scope.houseExpenseHealth = 0;
             }
-            //5)
+            //Debt Income Ratio
             if($scope.displayOverview.ratioDebtIncome !== 'N/A'){
                 if($scope.displayOverview.ratioDebtIncome <=0.4){
                     $scope.displayAnalysis.debtIncome = $scope.analysisRatio.analysisDebtIncome.healthy[0];
                     numHealthyRatio++;
-                    $scope.homeHealthyRatioArr.push('Debt to Income Ratio');
+                    $scope.homeHealthyRatioArr.push('Monthly Debt Servicing to Income Ratio');
                     $scope.debtIncomeHealth = 1;
                 }else if($scope.displayOverview.ratioDebtIncome > 0.4){
                     $scope.displayAnalysis.debtIncome = $scope.analysisRatio.analysisDebtIncome.unhealthy[0];
                     numUnHealthyRatio++;
-                    $scope.homeUnHealthyRatioArr.push('Debt to Income Ratio');
+                    $scope.homeUnHealthyRatioArr.push('Monthly Debt Servicing to Income Ratio');
                     $scope.debtIncomeHealth = 2;
                 }
             }else{
                 $scope.displayAnalysis.debtIncome = 'Unable to generate ratio due to missing inputs';
                 $scope.debtIncomeHealth = 0;
             }            
-            //6)
+            //Consumer Debt Ratio
             if($scope.displayOverview.ratioConsumerDebt !== 'N/A'){
-                if($scope.displayOverview.ratioConsumerDebt <=0.2){
+                if($scope.displayOverview.ratioConsumerDebt <=0.1){
                     $scope.displayAnalysis.consumerDebt = $scope.analysisRatio.analysisConsumerDebt.healthy[0];
                     numHealthyRatio++;
-                    $scope.homeHealthyRatioArr.push('Consumer Debt Ratio');
+                    $scope.homeHealthyRatioArr.push('Monthly Credit Card Debt to Income Ratio');
                     $scope.consumerDebtHealth = 1;
-                }else if($scope.displayOverview.ratioConsumerDebt > 0.2){
+                }else if($scope.displayOverview.ratioConsumerDebt > 0.1){
                     $scope.displayAnalysis.consumerDebt = $scope.analysisRatio.analysisConsumerDebt.unhealthy[0];
                     numUnHealthyRatio++;
-                    $scope.homeUnHealthyRatioArr.push('Consumer Debt Ratio');
+                    $scope.homeUnHealthyRatioArr.push('Monthly Credit Card Debt to Income Ratio');
                     $scope.consumerDebtHealth = 2;
                 }
             }else{
                 $scope.displayAnalysis.consumerDebt = 'Unable to generate ratio due to missing inputs';
                 $scope.consumerDebtHealth = 0;
             } 
-            //7)
+            //5 Net Worth 
+            //Net WorthBenchmark Ratio
             if($scope.displayOverview.ratioNetWorthBenchmark !== 'N/A'){
                 if($scope.displayOverview.ratioNetWorthBenchmark <=0.75){
                     $scope.displayAnalysis.netWorthBenchmark = $scope.analysisRatio.analysisNetWorthBenchmark.unhealthy[0];
@@ -865,29 +1154,7 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
                 $scope.displayAnalysis.netWorthBenchmark = 'Unable to generate ratio due to missing inputs';
                 $scope.netWorthHealth = 0;
             }
-            //8)
-            if($scope.displayOverview.ratioSaving !== 'N/A'){
-                if($scope.displayOverview.ratioSaving <0.12){
-                    $scope.displayAnalysis.saving = $scope.analysisRatio.analysisSaving.unhealthy[0];
-                    numUnHealthyRatio++; 
-                    $scope.homeUnHealthyRatioArr.push('Saving Ratio');
-                    $scope.savingHealth = 2;
-                }else if($scope.displayOverview.ratioSaving >=0.12 && $scope.displayOverview.ratioSaving <=0.7){
-                    $scope.displayAnalysis.saving = $scope.analysisRatio.analysisSaving.healthy[1];
-                    numHealthyRatio++;
-                    $scope.homeHealthyRatioArr.push('Saving Ratio');
-                    $scope.savingHealth = 1;
-                }else if($scope.displayOverview.ratioSaving > 0.7){
-                    $scope.displayAnalysis.saving = $scope.analysisRatio.analysisSaving.healthy[0];
-                    numHealthyRatio++;
-                    $scope.homeHealthyRatioArr.push('Saving Ratio');
-                    $scope.savingHealth = 1;
-                }
-            }else{
-                $scope.displayAnalysis.saving = 'Unable to generate ratio due to missing inputs';
-                $scope.savingHealth = 0;
-            }
-            //9)
+            //Solvency Ratio
             if($scope.displayOverview.ratioSolvency !== 'N/A'){
                 if($scope.displayOverview.ratioSolvency <=0.2){
                     $scope.displayAnalysis.solvency = $scope.analysisRatio.analysisSolvency.unhealthy[0];
@@ -904,17 +1171,36 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
                 $scope.displayAnalysis.solvency = 'Unable to generate ratio due to missing inputs';
                 $scope.solvencyHealth = 0;
             } 
-            //10)
+            //6 Asset vs Debt
+            //Current Asset to Debt Ratio
+            if($scope.displayOverview.ratioCurrentAssetDebt !== 'N/A'){
+                if($scope.displayOverview.ratioCurrentAssetDebt <=0.2){
+                    $scope.displayAnalysis.currentAssetDebt = $scope.analysisRatio.analysisCurrentAssetDebt.unhealthy[0];
+                    numUnHealthyRatio++;
+                    $scope.homeUnHealthyRatioArr.push('Current Asset to Debt Ratio');
+                    $scope.currentAssetDebtHealth = 2;
+                }else if($scope.displayOverview.ratioInvestment > 0.2){
+                    $scope.displayAnalysis.currentAssetDebt = $scope.analysisRatio.analysisCurrentAssetDebt.healthy[0];
+                    numHealthyRatio++;
+                    $scope.homeHealthyRatioArr.push('Current Asset to Debt Ratio');
+                    $scope.currentAssetDebtHealth = 1;
+                }
+            }else{
+                $scope.displayAnalysis.currentAssetDebt = 'Unable to generate ratio due to missing inputs';
+                $scope.currentAssetDebtHealth = 0;
+            } 
+
+            //Investment Ratio
             if($scope.displayOverview.ratioInvestment !== 'N/A'){
                 if($scope.displayOverview.ratioInvestment <=0.2){
                     $scope.displayAnalysis.investment = $scope.analysisRatio.analysisInvestment.unhealthy[0];
                     numUnHealthyRatio++;
-                    $scope.homeUnHealthyRatioArr.push('Investment Ratio');
+                    $scope.homeUnHealthyRatioArr.push('Investment Assets to Total Assets Ratio');
                     $scope.investmentHealth = 2;
                 }else if($scope.displayOverview.ratioInvestment > 0.2){
                     $scope.displayAnalysis.investment = $scope.analysisRatio.analysisInvestment.healthy[0];
                     numHealthyRatio++;
-                    $scope.homeHealthyRatioArr.push('Investment Ratio');
+                    $scope.homeHealthyRatioArr.push('Investment Assets to Total Assets Ratio');
                     $scope.investmentHealth = 1;
                 }
             }else{
@@ -926,7 +1212,7 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
             
 
             $scope.homeHealthDisplay = true;
-            $scope.homeHealth = [{value: (numHealthyRatio*10), type: 'success'}, {value: (numUnHealthyRatio*10), type:'danger'}];
+            $scope.homeHealth = [{value: (numHealthyRatio*100/15), type: 'success'}, {value: (numUnHealthyRatio*100/15), type:'danger'}];
             if($scope.homeHealth[0].value === 0 && $scope.homeHealth[1].value === 0){
                 $scope.homeHealth = [{
                     value: 100,
@@ -943,15 +1229,46 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
             ieRecords = ieRecords;
             
             //Ratio Formula time
-            //1) Liquidity Ratio
+            //---Liquidity---
+            //Current Liquidity 
             var ratioLiquidityChart = aRecords.cashEquivalentsAmt / ieRecords.monthlyExpenseAmt;
-            //2) Assets to Debt Ratio
-            var ratioAssetDebtChart = aRecords.totalAmt / lRecords.totalAmt;
-            //3) Debt Service Ratio
+            //Total Liquidity Ratio
+            var ratioTotalLiquidityChart = (aRecords.cashEquivalentsAmt + aRecords.investedAssetsAmt) / ieRecords.monthlyExpenseAmt;
+
+            //---Savings---
+            //Surplus Income Ratio /Savings Ratio
+            var ratioSavingChart = ieRecords.monthlyIncomeAmt / ieRecords.netCashFlow;
+            //Basic Saving Ratio
+            var ratioBasicSavingChart = ieRecords.optionalSavingsAmt / ieRecords.monthlyIncomeAmt;
+
+            //--- Expenses Ratio
+            //Essential Expenses to Income Ratio
+            var ratioEssentialExpensesChart;
+            var publicTransportChartValue;
+            try{
+                publicTransportChartValue = ieRecords.monthlyExpense.transport.publicTransport.value;
+            }catch(e){
+                publicTransportChartValue = 0;
+            }
+            ratioEssentialExpensesChart = (ieRecords.fixedExpenseAmt + publicTransportChartValue + ieRecords.utilityHouseholdAmt + ieRecords.foodNecessitiesAmt)/ ieRecords.monthlyIncomeAmt;
+            //Lifestyle Expenses to Income Ratio
+            var ratioLifestyleExpensesChart;
+            var maidChartValue;
+            try{
+                maidChartValue = ieRecords.monthlyExpense.fixedExpense.maid.value;
+            }catch(e){
+                maidChartValue = 0;
+            }
+            ratioLifestyleExpensesChart = (maidChartValue + ieRecords.transportAmt - publicTransportChartValue + ieRecords.miscAmt) / ieRecords.monthlyIncomeAmt;
+
+            //---Debt---
+            //AssetDebt Ratio
+            var ratioAssetDebtChart = lRecords.totalAmt/ aRecords.totalAmt;
+            //Debt Service Ratio // To check short term
             var ratioDebtServiceChart = lRecords.totalAmt / ieRecords.monthlyIncomeAmt;
-            //4) Housing Expense Ratio
+            //Housing Expense Ratio
             var ratioHouseExpenseChart = (ieRecords.monthlyExpenseAmt - ieRecords.fixedExpenseAmt) / ieRecords.netCashFlow; 
-            //5) Debt Income Ratio
+            //Debt Income Ratio
             var ratioDebtIncomeChart;
             var mortgageRepaymentsChartValue;
             var rentalRepaymentsChartValue;
@@ -981,15 +1298,19 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
             // if(ieRecords.monthlyExpense && ieRecords.monthlyExpense.fixedExpense && ieRecords.monthlyExpense.transport && ieRecords.monthlyExpense.fixedExpense.mortgageRepayments && ieRecords.monthlyExpense.fixedExpense.rentalRepayments && ieRecords.monthlyExpense.transport.carLoanRepayment && ieRecords.monthlyExpense.fixedExpense.otherLoanRepayments){
             //     ratioDebtIncomeChart = (ieRecords.monthlyExpense.fixedExpense.mortgageRepayments.value + ieRecords.monthlyExpense.fixedExpense.rentalRepayments.value + ieRecords.monthlyExpense.transport.carLoanRepayment.value + ieRecords.monthlyExpense.fixedExpense.otherLoanRepayments.value)  /  ieRecords.netCashFlow;
             // }
-            //6) Consumer Debt Ratio
+            //Consumer Debt Ratio
             var ratioConsumerDebtChart = lRecords.shortTermCreditAmt / ieRecords.netCashFlow;
-            //7) Net WorthBenchmark Ratio
+
+            //---Net Worth/ Others---
+            //Net Worth Benchmark        
             var ratioNetWorthBenchmarkChart = (aRecords.totalAmt - lRecords.totalAmt) / ($scope.user.age  * ieRecords.monthlyIncomeAmt * 12 / 10);
-            //8) Saving Ratio
-            var ratioSavingChart = ieRecords.monthlyIncomeAmt / ieRecords.netCashFlow;
-            //9) Solvency Ratio
+            //Solvency Ratio
             var ratioSolvencyChart = (aRecords.totalAmt - lRecords.totalAmt) / aRecords.totalAmt;
-            //10) Investment Ratio
+
+            //---Asset vs Debts
+            //Current Asset to Debt Ratio   
+            var ratioCurrentAssetDebtChart = aRecords.cashEquivalentsAmt / lRecords.shortTermCreditAmt;
+            //Investment Ratio
             var ratioInvestmentChart;
             var privatePropertiesChartValue;
             try{
@@ -1004,15 +1325,58 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
             
 
             //Assign Ratio to Scope
-
+            //---Liquidity---
+            //Current Liquidity 
             if(isFinite(ratioLiquidityChart)) {
                 ratioLiquidityArr[ratioMthNum] = Number(ratioLiquidityChart.toFixed(2));
             } else{
                 ratioLiquidityArr[ratioMthNum] = 0;
             }
-            ratioIdealLiquidityMinArr[ratioMthNum] = 3;
+            ratioIdealLiquidityMinArr[ratioMthNum] = 2;
             ratioIdealLiquidityMaxArr[ratioMthNum] = 6;
+            //Total Liquidity Ratio
+            if(isFinite(ratioTotalLiquidityChart)){
+                ratioTotalLiquidityArr[ratioMthNum] = Number(ratioTotalLiquidityChart.toFixed(2));
+            }else{
+                ratioTotalLiquidityArr[ratioMthNum] = 0;
+            }
+            ratioIdealTotalLiquidityMinArr[ratioMthNum] = 6;
 
+            //---Savings---
+            //Surplus Income Ratio /Savings Ratio
+            if(isFinite(ratioSavingChart)) {
+                ratioSavingArr[ratioMthNum] = Number(ratioSavingChart.toFixed(2));
+            } else{
+                ratioSavingArr[ratioMthNum] = 0;
+            }
+            ratioIdealSavingMinArr[ratioMthNum] = 0.12;
+            ratioIdealSavingMaxArr[ratioMthNum] = 0.7;
+            //Basic Saving Ratio
+            if(isFinite(ratioBasicSavingChart)){
+                ratioBasicSavingArr[ratioMthNum] = Number(ratioBasicSavingChart.toFixed(2));
+            }else{
+                ratioBasicSavingArr[ratioMthNum] = 0;
+            }
+            ratioIdealBasicSavingMinArr = 0.1;
+
+            //--- Expenses Ratio
+            //Essential Expenses to Income Ratio
+            if(isFinite(ratioEssentialExpensesChart)){
+                ratioEssentialExpensesArr[ratioMthNum] = Number(ratioEssentialExpensesChart.toFixed(2));
+            }else{
+                ratioEssentialExpensesArr[ratioMthNum] = 0;
+            }
+            ratioIdealEssentialExpensesMaxArr = 0.5;
+            //Lifestyle Expenses to Income Ratio
+            if(isFinite(ratioLifestyleExpensesChart)){
+                ratioLifestyleExpensesArr[ratioMthNum] = Number(ratioLifestyleExpensesChart.toFixed(2));
+            }else{
+                ratioLifestyleExpensesArr[ratioMthNum] = 0;
+            }
+            ratioIdealLifestyleExpensesMaxArr = 0.5;
+
+            //---Debt---
+            //AssetDebt Ratio
             if(isFinite(ratioAssetDebtChart)) {
                 ratioAssetDebtArr[ratioMthNum] = Number(ratioAssetDebtChart.toFixed(2));
             } else{
@@ -1020,7 +1384,7 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
             }
             ratioIdealAssetDebtMinArr[ratioMthNum] = 0;
             ratioIdealAssetDebtMaxArr[ratioMthNum] = 0.3;
-
+            //Debt Service Ratio
             if(isFinite(ratioDebtServiceChart)) {
                 ratioDebtServiceArr[ratioMthNum] = Number(ratioDebtServiceChart.toFixed(2));
             } else {
@@ -1029,15 +1393,15 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
             }
             ratioIdealDebtServiceMinArr[ratioMthNum] = 0;
             ratioIdealDebtServiceMaxArr[ratioMthNum] = 0.36;            
-
+            //Housing Expense Ratio
             if(isFinite(ratioHouseExpenseChart)) {
                 ratioHouseExpenseArr[ratioMthNum] = Number(ratioHouseExpenseChart.toFixed(2));
             } else{
                 ratioHouseExpenseArr[ratioMthNum] = 0;
             }
             ratioIdealHouseExpenseMinArr[ratioMthNum] = 0;
-            ratioIdealHouseExpenseMaxArr[ratioMthNum] = 0.28;
-
+            ratioIdealHouseExpenseMaxArr[ratioMthNum] = 0.35;
+            //Debt Income Ratio
             if(isFinite(ratioDebtIncomeChart)) {
                 ratioDebtIncomeArr[ratioMthNum] = Number(ratioDebtIncomeChart.toFixed(2));
             } else {
@@ -1045,30 +1409,24 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
             }
             ratioIdealDebtIncomeMinArr[ratioMthNum] = 0;
             ratioIdealDebtIncomeMaxArr[ratioMthNum] = 0.4;
-
+            //Consumer Debt Ratio
             if(isFinite(ratioConsumerDebtChart)) {
                 ratioConsumerDebtArr[ratioMthNum] = Number(ratioConsumerDebtChart.toFixed(2));
             }else {
                 ratioConsumerDebtArr[ratioMthNum] = 0;
             }
             ratioIdealConsumerDebtMinArr[ratioMthNum] = 0;
-            ratioIdealConsumerDebtMaxArr[ratioMthNum] = 0.2;   
+            ratioIdealConsumerDebtMaxArr[ratioMthNum] = 0.1;   
 
+            //---Net Worth/ Others---
+            //Net Worth Benchmark    
             if(isFinite(ratioNetWorthBenchmarkChart)) {
                 ratioNetWorthBenchmarkArr[ratioMthNum] = Number(ratioNetWorthBenchmarkChart.toFixed(2));
             }else {
                 ratioNetWorthBenchmarkArr[ratioMthNum] = 0;    
             }
             ratioIdealNetWorthBenchmarkMinArr[ratioMthNum] = 0.75;
-
-            if(isFinite(ratioSavingChart)) {
-                ratioSavingArr[ratioMthNum] = Number(ratioSavingChart.toFixed(2));
-            } else{
-                ratioSavingArr[ratioMthNum] = 0;
-            }
-            ratioIdealSavingMinArr[ratioMthNum] = 0.12;
-            ratioIdealSavingMaxArr[ratioMthNum] = 0.7;
-
+            //Solvency Ratio
             if(isFinite(ratioSolvencyChart)) {
                 ratioSolvencyArr[ratioMthNum] = Number(ratioSolvencyChart.toFixed(2));
             } else {
@@ -1076,6 +1434,15 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
             }
             ratioIdealSolvencyMinArr[ratioMthNum] = 0.2;
 
+            //---Asset vs Debts
+            //Current Asset to Debt Ratio  
+            if(isFinite(ratioCurrentAssetDebtChart)) {
+                ratioCurrentAssetDebtArr[ratioMthNum] = Number(ratioCurrentAssetDebtChart.toFixed(2));
+            } else{
+                ratioCurrentAssetDebtArr[ratioMthNum] = 0;           
+            }
+            ratioIdealCurrentAssetDebtMinArr[ratioMthNum] = 0.1;            
+            //Investment Ratio
             if(isFinite(ratioInvestmentChart)) {
                 ratioInvestmentArr[ratioMthNum] = Number(ratioInvestmentChart.toFixed(2));
             } else{

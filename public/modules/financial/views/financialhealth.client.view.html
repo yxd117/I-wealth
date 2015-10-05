@@ -21,6 +21,7 @@
 			    	</div>
 			    </div>
 			</form>
+
 			<div class="row">
 				<div class="col-md-12">
 					<b>(A) Liquidity Ratios</b>	
@@ -28,7 +29,7 @@
 						<div class="col-md-12">
 							<table class="table table-striped">
 								<tr tooltips tooltip-html="{{tips.tipLiquidity}}" tooltip-size="medium" tooltip-side="top">
-									<td class="col-md-2" ><b>Liquidity Ratio:</b></td>
+									<td class="col-md-2" ><b>Current Liquidity Ratio:</b></td>
 									<td class="col-md-1">
 										{{displayOverview.ratioLiquidity}} 
 										<span class="label label-success" ng-if="liquidityHealth === 1">Healthy</span>
@@ -36,7 +37,17 @@
 									</td>
 									<td class="col-md-8">{{displayAnalysis.liquidity}}</td>
 									<td class="col-md-1"><input type="radio" ng-model="check.ratio" value="liquidity"></td>
-								</tr>					
+								</tr>		
+								<tr tooltips tooltip-html="{{tips.tipTotalLiquidity}}" tooltip-size="medium" tooltip-side="top">
+									<td class="col-md-2" ><b>Total Liquidity Ratio:</b></td>
+									<td class="col-md-1">
+										{{displayOverview.ratioTotalLiquidity}} 
+										<span class="label label-success" ng-if="totalLiquidityHealth === 1">Healthy</span>
+										<span class="label label-warning" ng-if="totalLiquidityHealth === 2">Unhealthy</span>
+									</td>
+									<td class="col-md-8">{{displayAnalysis.totalLiquidity}}</td>
+									<td class="col-md-1"><input type="radio" ng-model="check.ratio" value="totalLiquidity"></td>
+								</tr>				
 							</table>								
 						</div>		
 					</div>			
@@ -44,13 +55,78 @@
 			</div>
 
 			<div class="row">
+				<div class="col-md-12">
+					<b>(B) Savings Ratios</b>	
+					<div class="row">
+						<div class="col-md-12">
+							<table class="table table-striped">
+								<tr tooltips tooltip-html="{{tips.tipSaving}}" tooltip-size="medium" tooltip-side="top">
+									<td class="col-md-2"><b>Surplus Income Ratio:</b></td> <!-- Savings-->
+									<td class="col-md-1"> 
+										{{displayOverview.ratioSaving}}
+										<span class="label label-success" ng-if="savingHealth === 1">Healthy</span>
+										<span class="label label-warning" ng-if="savingHealth === 2">Unhealthy</span>
+									</td>
+									<td class="col-md-8">{{displayAnalysis.saving}}</td>
+									<td class="col-md-1" ><input type="radio" ng-model="check.ratio" value="saving"></td>
+								</tr>	
+								<tr tooltips tooltip-html="{{tips.tipBasicSaving}}" tooltip-size="medium" tooltip-side="top">
+									<td class="col-md-2"><b>Basic Saving Ratio:</b></td>
+									<td class="col-md-1"> 
+										{{displayOverview.ratioBasicSaving}}
+										<span class="label label-success" ng-if="basicSavingHealth === 1">Healthy</span>
+										<span class="label label-warning" ng-if="basicSavingHealth === 2">Unhealthy</span>
+									</td>
+									<td class="col-md-8">{{displayAnalysis.basicSaving}}</td>
+									<td class="col-md-1" ><input type="radio" ng-model="check.ratio" value="basicSaving"></td>
+								</tr>			
+							</table>								
+						</div>		
+					</div>			
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-md-12">
+					<b>(C) Expenses Ratios</b>	
+					<div class="row">
+						<div class="col-md-12">
+							<table class="table table-striped">
+								<tr tooltips tooltip-html="{{tips.tipEssentialExpenses}}" tooltip-size="medium" tooltip-side="top">
+									<td class="col-md-2"><b>Essential Expense to Income Ratio:</b></td>
+									<td class="col-md-1"> 
+										{{displayOverview.ratioEssentialExpenses}}
+										<span class="label label-success" ng-if="essentialExpensesHealth === 1">Healthy</span>
+										<span class="label label-warning" ng-if="essentialExpensesHealth === 2">Unhealthy</span>
+									</td>
+									<td class="col-md-8">{{displayAnalysis.essentialExpenses}}</td>
+									<td class="col-md-1" ><input type="radio" ng-model="check.ratio" value="essentialExpenses"></td>
+								</tr>	
+								<tr tooltips tooltip-html="{{tips.tipLifestyleExpenses}}" tooltip-size="medium" tooltip-side="top">
+									<td class="col-md-2"><b>Lifestyle Expenses to Income Ratio:</b></td>
+									<td class="col-md-1"> 
+										{{displayOverview.ratioLifestyleExpenses}}
+										<span class="label label-success" ng-if="lifestyleExpensesHealth === 1">Healthy</span>
+										<span class="label label-warning" ng-if="lifestyleExpensesHealth === 2">Unhealthy</span>
+									</td>
+									<td class="col-md-8">{{displayAnalysis.lifestyleExpenses}}</td>
+									<td class="col-md-1" ><input type="radio" ng-model="check.ratio" value="lifestyleExpenses"></td>
+								</tr>			
+							</table>								
+						</div>		
+					</div>			
+				</div>
+			</div>
+
+
+			<div class="row">
 				<div class='col-md-12'>
-					<b>(B) Debt Ratios</b>
+					<b>(D) Debt Ratios</b>
 					<div class="row">
 						<div class="col-md-12">
 							<table class="table table-striped">
 								<tr tooltips tooltip-html="{{tips.tipAssetDebt}}" tooltip-size="medium" tooltip-side="top"> 
-									<td class="col-md-2"><b>Asset to Debt Ratio:</b></td>
+									<td class="col-md-2"><b>Total Debt to Annual Income Ratio:</b></td> <!-- Asset to Debt Ratio-->
 									<td class="col-md-1"> 
 										{{displayOverview.ratioAssetDebt}}
 										<span class="label label-success" ng-if="assetDebtHealth === 1">Healthy</span>
@@ -60,7 +136,7 @@
 									<td class="col-md-1"><input type="radio" ng-model="check.ratio" value="assetDebt"></td>
 								</tr>
 								<tr tooltips tooltip-html="{{tips.tipDebtService}}" tooltip-size="medium" tooltip-side="top">
-									<td class="col-md-2"><b>Debt Service Ratio:</b></td>
+									<td class="col-md-2"><b>Current Debt to Annual Income Ratio:</b></td> <!-- Debt Service-->
 									<td class="col-md-1">
 										{{displayOverview.ratioDebtService}}
 										<span class="label label-success" ng-if="debtServiceHealth === 1">Healthy</span>
@@ -70,7 +146,7 @@
 									<td class="col-md-1"><input type="radio" ng-model="check.ratio" value="debtService"></td>
 								</tr>
 								<tr tooltips tooltip-html="{{tips.tipHouseExpense}}" tooltip-size="medium" tooltip-side="top">
-									<td class="col-md-2"><b>Housing Expense Ratio:</b></td>
+									<td class="col-md-2"><b>Property Debt to Total Income Ratio:</b></td> <!-- Housing Expense-->
 									<td class="col-md-1"> 
 										{{displayOverview.ratioHouseExpense}}
 										<span class="label label-success" ng-if="houseExpenseHealth === 1">Healthy</span>
@@ -80,7 +156,7 @@
 									<td class="col-md-1"><input type="radio" ng-model="check.ratio" value="houseExpense"></td>
 								</tr>
 								<tr tooltips tooltip-html="{{tips.tipDebtIncome}}" tooltip-size="medium" tooltip-side="top">
-									<td class="col-md-2"><b>Debt to Income Ratio:</b></td>
+									<td class="col-md-2"><b>Monthly Debt Servicing to Income Ratio:</b></td> <!-- Debt to Income-->
 									<td class="col-md-1"> 
 										{{displayOverview.ratioDebtIncome}}
 										<span class="label label-success" ng-if="debtIncomeHealth === 1">Healthy</span>
@@ -90,7 +166,7 @@
 									<td class="col-md-1"><input type="radio" ng-model="check.ratio" value="debtIncome"></td>
 								</tr>
 								<tr tooltips tooltip-html="{{tips.tipConsumerDebt}}" tooltip-size="medium" tooltip-side="top">
-									<td class="col-md-2"><b>Consumer Debt Ratio:</b></td>
+									<td class="col-md-2"><b>Monthly Credit Card to Income Ratio:</b></td> <!-- Consumer Debt -->
 									<td class="col-md-1"> 
 										{{displayOverview.ratioConsumerDebt}}
 										<span class="label label-success" ng-if="consumerDebtHealth === 1">Healthy</span>
@@ -107,7 +183,7 @@
 
 			<div class="row">
 				<div class="col-md-12">
-					<b>(C) Net Worth and Other Ratios</b>
+					<b>(E) Net Worth and Other Ratios</b>
 					<div class="row">
 						<div class="col-md-12">
 							<table class="table table-striped">
@@ -121,16 +197,6 @@
 									<td class="col-md-8">{{displayAnalysis.netWorthBenchmark}}</td>
 									<td class="col-md-1" ><input type="radio" ng-model="check.ratio" value="netWorthBenchmark"></td>	
 								</tr>
-								<tr tooltips tooltip-html="{{tips.tipSaving}}" tooltip-size="medium" tooltip-side="top">
-									<td class="col-md-2"><b>Saving Ratio:</b></td>
-									<td class="col-md-1"> 
-										{{displayOverview.ratioSaving}}
-										<span class="label label-success" ng-if="savingHealth === 1">Healthy</span>
-										<span class="label label-warning" ng-if="savingHealth === 2">Unhealthy</span>
-									</td>
-									<td class="col-md-8">{{displayAnalysis.saving}}</td>
-									<td class="col-md-1" ><input type="radio" ng-model="check.ratio" value="saving"></td>
-								</tr>
 								<tr tooltips tooltip-html="{{tips.tipSolvency}}" tooltip-size="medium" tooltip-side="top">
 									<td class="col-md-2"><b>Solvency Ratio:</b></td>
 									<td class="col-md-1"> 
@@ -141,8 +207,30 @@
 									<td class="col-md-8">{{displayAnalysis.solvency}}</td>
 									<td class="col-md-1" ><input type="radio" ng-model="check.ratio" value="solvency"></td>
 								</tr>
+							</table>							
+						</div>	
+					</div>
+				</div>
+			</div>
+
+			<div class="row">
+				<div class="col-md-12">
+					<b>(F) Asset vs Debt Ratios</b>
+					<div class="row">
+						<div class="col-md-12">
+							<table class="table table-striped">
+								<tr tooltips tooltip-html="{{tips.tipCurrentAssetDebt}}" tooltip-size="medium" tooltip-side="top">
+									<td class="col-md-2"><b>Current Asset to Debt Ratio:</b></td>
+									<td class="col-md-1"> 
+										{{displayOverview.ratioCurrentAssetDebt}}
+										<span class="label label-success" ng-if="currentAssetDebtHealth === 1">Healthy</span>
+										<span class="label label-warning" ng-if="currentAssetDebtHealth === 2">Unhealthy</span>
+									</td>
+									<td class="col-md-8">{{displayAnalysis.currentAssetDebt}}</td>
+									<td class="col-md-1" ><input type="radio" ng-model="check.ratio" value="currentAssetDebt"></td>
+								</tr>
 								<tr tooltips tooltip-html="{{tips.tipInvestment}}" tooltip-size="medium" tooltip-side="top">
-									<td class="col-md-2"><b>Investment Ratio:</b></td>
+									<td class="col-md-2"><b>Investment Assets to Total Assets Ratio:</b></td> <!-- Investment -->
 									<td class="col-md-1"> 
 										{{displayOverview.ratioInvestment}}
 										<span class="label label-success" ng-if="investmentHealth === 1">Healthy</span>
@@ -152,35 +240,34 @@
 									<td class="col-md-1" ><input type="radio" ng-model="check.ratio" value="investment"></td>
 								</tr>
 							</table>							
-						</div>
-							
+						</div>	
 					</div>
-				
 				</div>
-			</div>					
+			</div>
 		</div>
 
-		<div class="col-md-5">
-			<div class="row">
-				<div class="col-sm-8 text-right" >
-					<h4>Displaying For: </h4>
+		<div class="col-sm-12 col-md-5">
+			<div style="position:fixed;margin-right:10px;">
+				<div class="row">
+					<div class="col-sm-8 text-right" >
+						<h4>Displaying For: </h4>
+					</div>
+		  			<div class="col-sm-4 pull-right">
+						<select ng-model="selectedChartOption" class="form-control">
+							<option value="0">Past 3 months</option>
+							<option value="1">Past 6 months</option>
+							<option value="2">Past 12 months</option>
+						</select>
+					</div>							
 				</div>
-	  			<div class="col-sm-4 pull-right">
-					<select ng-model="selectedChartOption" class="form-control">
-						<option value="0">Past 3 months</option>
-						<option value="1">Past 6 months</option>
-						<option value="2">Past 12 months</option>
-					</select>
-				</div>							
+				</br>
+				<div class="row">
+					<div class="col-md-12">
+						<canvas id="ratioChart" class="chart chart-line" data="data" labels="labels" legend="true" series="series" options="{bezierCurve:false}" height="250"></canvas> 
+					</div>	
+				</div>				
 			</div>
-		</br>
-			<div class="row">
-				<div class="col-md-12" style="padding:0;">
-					<canvas id="ratioChart" class="chart chart-line" data="data" labels="labels" legend="true" series="series" options="{bezierCurve:false}" height="250"></canvas> 
-				</div>
-					
-			</div>
-			
+
 		</div>
 	</div>
 </section>

@@ -51,13 +51,13 @@ angular.module('financial').factory('IncomeExpenseService', ['$resource', functi
 
 	//Expense
 	var fixedExpense = {
-		savings: {
-			description: 'Savings',
-			order: 0,
-			value: 0,
-			recordsTotal: 0,
-			records: []
-		},
+		// savings: {
+		// 	description: 'Savings',
+		// 	order: 0,
+		// 	value: 0,
+		// 	recordsTotal: 0,
+		// 	records: []
+		// },
 		mortgageRepayments: {
 			description: 'Mortgage Repayments',
 			order: 1,
@@ -94,14 +94,14 @@ angular.module('financial').factory('IncomeExpenseService', ['$resource', functi
 			records: []
 		},
 		childrenEducation: {
-			description: 'Children&quot Education',
+			description: 'Children\x27s Educations',
 			order: 6,
 			value: 0,
 			recordsTotal: 0,
 			records: []
 		},
 		allowances: {
-			description: 'Allowances for parents & Children',
+			description: 'Allowances for Parents & Children',
 			order: 7,
 			value: 0,
 			recordsTotal: 0,
@@ -289,6 +289,23 @@ angular.module('financial').factory('IncomeExpenseService', ['$resource', functi
 		}
 	};
 
+	var optionalSavings = {
+		savings: {
+			description: 'Money set aside monthly for savings',
+			order: 0,
+			value: 0,
+			recordsTotal: 0,
+			records: []
+		},
+		others:{
+			description: 'Others',
+			order: 1,
+			value: 0,
+			recordsTotal: 0,
+			records: []
+		}
+	};
+
 	var monthlyIncome = {
 		incomeNormal: incomeNormal,
 		otherIncome: otherIncome
@@ -299,7 +316,8 @@ angular.module('financial').factory('IncomeExpenseService', ['$resource', functi
 		transport: transport,
 		utilityHousehold: utilityHousehold,
 		foodNecessities: foodNecessities,
-		misc: misc
+		misc: misc,
+		optionalSavings: optionalSavings
 	};
 
 	var incomeNormalAmt = 0;
@@ -310,6 +328,7 @@ angular.module('financial').factory('IncomeExpenseService', ['$resource', functi
 	var utilityHouseholdAmt = 0;
 	var foodNecessitiesAmt = 0;
 	var miscAmt = 0;
+	var optionalSavingsAmt = 0;
 
 	var monthlyIncomeAmt = 0;
 	var monthlyExpenseAmt = 0;
@@ -327,6 +346,7 @@ angular.module('financial').factory('IncomeExpenseService', ['$resource', functi
 		utilityHouseholdAmt: utilityHouseholdAmt,
 		foodNecessitiesAmt: foodNecessitiesAmt,
 		miscAmt: miscAmt,
+		optionalSavingsAmt: optionalSavingsAmt,
 
 		monthlyIncomeAmt: monthlyIncomeAmt,
 		monthlyExpenseAmt: monthlyExpenseAmt,

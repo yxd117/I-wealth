@@ -108,6 +108,10 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
 		state('socialUsers',{
 			url: '/social/users',
 			templateUrl: 'modules/social/views/socialusers.client.view.html'
+		}).
+		state('notification',{
+			url: '/settings/notification',
+			templateUrl: 'modules/core/views/notification.client.view.html'
 		});
 
 	}

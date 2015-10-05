@@ -54,8 +54,14 @@ angular.module('financial').factory('LiabilitiesService', ['$resource', function
 			value: 0,
 			minValue: 0
 		},
-		renovationLoan: {
-			description: 'Renovation Loan',
+		// renovationLoan: {
+		// 	description: 'Renovation Loan',
+		// 	order: 4,
+		// 	value: 0,
+		// 	minValue: 0
+		// },
+		shareMarginFinancingLoan: {
+			description: 'Share Margin Financing Loan',
 			order: 4,
 			value: 0,
 			minValue: 0

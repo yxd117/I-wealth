@@ -152,7 +152,7 @@
 		            </br>    
 		            <small class="list-group-item-text">
 		              Posted on
-		              <i><span data-ng-bind="post.created | date:'short'"></span></i>    
+		              <i><span data-ng-bind="post.created | date:'d/M/yy h:mm a'"></span></i>    
 		              <span data-ng-if="post.privacy === 'public'">(Public)</span> 
 		              <span data-ng-if="post.privacy === 'friends'">(Friends Only)</span> 
 		              <span data-ng-if="post.privacy === 'private'">(Private)</span>   

@@ -1,0 +1,19 @@
+<section data-ng-controller="NotificationController" ng-init="getNotification()">
+	<div class="container content">
+		<div class="row">
+			<div class="col-md-12">
+				<h3>Your Notifications</h3>
+				
+				<div class="list-group" ng-repeat="item in listAll">
+					<div class="list-group-item" >
+						<span data-ng-bind="item.date | date:'d/M/yy'"></span></br>
+						<b>{{item.title}}: </b>
+						{{item.content}}
+						
+<!-- 						{{item.date | date:'d/M/yy h:mm a'"}} -->
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>

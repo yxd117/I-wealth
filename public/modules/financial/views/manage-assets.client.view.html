@@ -29,7 +29,7 @@
 			    <accordion-group is-open="status.open" ng-click="clearSuccessMessage()">
 			        <accordion-heading>
 			            <i class="pull-left glyphicon" ng-class="{'glyphicon-minus': status.open, 'glyphicon-plus': !status.open}"></i> &nbsp;Cash & Cash Equivalents 
-			            <p class="pull-right">Total: $ {{displayAssetsRecords.cashEquivalentsAmt}}</p>
+			            <p class="pull-right">Total: {{displayAssetsRecords.cashEquivalentsAmt| currency}}</p>
 			        </accordion-heading>
 					<form name="cashEquivalentsForm" data-ng-submit="updateUserFinances(cashEquivalentsForm.$valid)">
 						<fieldset>
@@ -40,7 +40,7 @@
 								</tr>
 								<tr ng-repeat="item in displayAssetsRecords.cashEquivalents | toArray | orderBy:'order'">
 									<td><label for="'{{item.description}}'">{{item.description}}</label> </td>
-									<td>$ <input type="number" step="any" id="'{{item.description}}'" ng-model="item.value"/></td>
+									<td>$ <input type="currency" step="any" id="'{{item.description}}'" ng-model="item.value"/></td>
 								</tr>
 							</table>
 				        	<div class="form-group">
@@ -59,7 +59,7 @@
 			    <accordion-group is-open="status1.open" ng-click="clearSuccessMessage()">
 			        <accordion-heading>
 			             <i class="pull-left glyphicon" ng-class="{'glyphicon-minus': status1.open, 'glyphicon-plus': !status1.open}"></i>&nbsp;Personal Use Assets
-			            <p class="pull-right">Total: $ {{displayAssetsRecords.personalUseAssetsAmt}}</p>
+			            <p class="pull-right">Total: {{displayAssetsRecords.personalUseAssetsAmt| currency}}</p>
 			        </accordion-heading>
 					<form name="personalUseAssetsForm" data-ng-submit="updateUserFinances(personalUseAssetsForm.$valid)">
 						<fieldset>
@@ -89,7 +89,7 @@
 			   	<accordion-group is-open="status2.open" ng-click="clearSuccessMessage()">
 			        <accordion-heading>
 			             <i class="pull-left glyphicon" ng-class="{'glyphicon-minus': status2.open, 'glyphicon-plus': !status2.open}"></i>&nbsp;Invested Assets
-			            <p class="pull-right">Total: $ {{displayAssetsRecords.investedAssetsAmt}}</p>
+			            <p class="pull-right">Total: {{displayAssetsRecords.investedAssetsAmt| currency}}</p>
 			        </accordion-heading>
 			        <form name="investedAssetsForm" data-ng-submit="updateUserFinances(investedAssetsForm.$valid)">
 						<fieldset>
@@ -119,7 +119,7 @@
 			   	<accordion-group is-open="status3.open" ng-click="clearSuccessMessage()">
 			        <accordion-heading>
 			             <i class="pull-left glyphicon" ng-class="{'glyphicon-minus': status3.open, 'glyphicon-plus': !status3.open}"></i>&nbsp;CPF Savings
-			            <p class="pull-right">Total: $ {{displayAssetsRecords.cpfSavingsAmt}}</p>
+			            <p class="pull-right">Total: {{displayAssetsRecords.cpfSavingsAmt| currency}}</p>
 			        </accordion-heading>
 			        <form name="cpfSavingsForm" data-ng-submit="updateUserFinances(cpfSavingsForm.$valid)">
 						<fieldset>
@@ -148,7 +148,7 @@
 			   	<accordion-group is-open="status4.open" ng-click="clearSuccessMessage()">
 			        <accordion-heading>
 			            <i class="pull-left glyphicon" ng-class="{'glyphicon-minus': status4.open, 'glyphicon-plus': !status4.open}"></i>&nbsp;Other Assets 
-			            <p class="pull-right">Total: $ {{displayAssetsRecords.otherAssetsAmt}}</p>
+			            <p class="pull-right">Total: {{displayAssetsRecords.otherAssetsAmt| currency}}</p>
 			        </accordion-heading>
 			        <form name="otherAssetsForm" data-ng-submit="updateUserFinances(otherAssetsForm.$valid)">
 						<fieldset>
@@ -179,7 +179,7 @@
 	  	<div class="col-md-6">
 	  		<div class="row">
 	  			<div class="col-md-12 text-center">
-					<h3> Total: $ {{displayAssetsRecords.totalAmt}}</h3>
+					<h3> Total: {{displayAssetsRecords.totalAmt | currency}}</h3>
 		  			<canvas id="assetsDoughnut" class="chart chart-doughnut" data="assetsDoughnutData" labels="assetsDoughnutLabels" legend="true"></canvas> 		  				
 	  			</div>
 			

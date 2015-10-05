@@ -9,6 +9,28 @@
           <option value="personal">Personal</option>
         </select>
         <a class="btn btn-primary pull-right" role="button" ng-click="newPost()">Create New Post</a>  
+          <!-- <a data-toggle="modal" data-target="#createPost" class="btn btn-primary pull-right" role="button">Create New Post</a> -->
+          <!--
+          <div class="modal fade" id="createPost" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                  <h4 class="modal-title" id="myModalLabel">Create New Post</h4>
+                </div>
+                <div class="modal-body">
+                  <div class="row">
+                    <div class="col-md-12">
+
+                    </div>
+                  </div>
+                </div> 
+                <div class="modal-footer">
+
+                </div>
+              </div>
+            </div>
+          </div> -->
       </div>          
     </div>
   </div>   
@@ -28,7 +50,7 @@
             </br>    
             <small class="list-group-item-text">
               Posted on
-              <i><span data-ng-bind="post.created | date:'short'"></span></i>    
+              <i><span data-ng-bind="post.created | date:'d/M/yy h:mm a'"></span></i>    
               <span data-ng-if="post.privacy === 'public'">(Public)</span> 
               <span data-ng-if="post.privacy === 'friends'">(Friends Only)</span> 
               <span data-ng-if="post.privacy === 'private'">(Private)</span>   
@@ -52,7 +74,7 @@
       <div class="row">
         <div class="col-md-10">
           <h4 class="list-group-item-heading" data-ng-bind="post.title"></h4>
-          <p class="list-group-item-text" data-ng-bind="post.content"></p>           
+          <p class="list-group-item-text" data-ng-bind-html="post.content"></p>           
         </div>
       </div>
       <div class="row" style="margin-top:5px; padding:5px 0px ; margin-bottom:0px; background-color:#f6f6f6;">  
@@ -70,7 +92,7 @@
     </a>
   </div>
 
-  <div class="list-group scrollArea" ng-if="postFilter === 'friends'" data-ng-init="findPostsPublic()">
+  <div class="list-group scrollArea" ng-if="postFilter === 'friends'" data-ng-init="findPostsFriends()">
     <a data-ng-repeat="post in posts" class="panel panel-default list-group-item" style="padding-bottom:0px; margin-right:1px;">
       <div class="row">
         <div class="col-md-10">
@@ -85,7 +107,7 @@
             </br>    
             <small class="list-group-item-text">
               Posted on
-              <i><span data-ng-bind="post.created | date:'short'"></span></i>    
+              <i><span data-ng-bind="post.created | date:'d/M/yy h:mm a'"></span></i>    
               <span data-ng-if="post.privacy === 'public'">(Public)</span> 
               <span data-ng-if="post.privacy === 'friends'">(Friends Only)</span> 
               <span data-ng-if="post.privacy === 'private'">(Private)</span>   
@@ -109,7 +131,7 @@
       <div class="row">
         <div class="col-md-10">
           <h4 class="list-group-item-heading" data-ng-bind="post.title"></h4>
-          <p class="list-group-item-text" data-ng-bind="post.content"></p>           
+          <p class="list-group-item-text" data-ng-bind-html="post.content"></p>           
         </div>
       </div>
       <div class="row" style="margin-top:5px; padding:5px 0px ; margin-bottom:0px; background-color:#f6f6f6;">  
@@ -127,7 +149,7 @@
     </a>
   </div>
 
-  <div class="list-group scrollArea" ng-if="postFilter === 'personal'" data-ng-init="findPostsPublic()">
+  <div class="list-group scrollArea" ng-if="postFilter === 'personal'" data-ng-init="findPostsPersonal()">
     <a data-ng-repeat="post in posts" class="panel panel-default list-group-item" style="padding-bottom:0px; margin-right:1px;">
       <div class="row">
         <div class="col-md-10">
@@ -142,7 +164,7 @@
             </br>    
             <small class="list-group-item-text">
               Posted on
-              <i><span data-ng-bind="post.created | date:'short'"></span></i>    
+              <i><span data-ng-bind="post.created | date:'d/M/yy h:mm a'"></span></i>    
               <span data-ng-if="post.privacy === 'public'">(Public)</span> 
               <span data-ng-if="post.privacy === 'friends'">(Friends Only)</span> 
               <span data-ng-if="post.privacy === 'private'">(Private)</span>   
@@ -166,7 +188,7 @@
       <div class="row">
         <div class="col-md-10">
           <h4 class="list-group-item-heading" data-ng-bind="post.title"></h4>
-          <p class="list-group-item-text" data-ng-bind="post.content"></p>           
+          <p class="list-group-item-text" data-ng-bind-html="post.content"></p>           
         </div>
       </div>
       <div class="row" style="margin-top:5px; padding:5px 0px ; margin-bottom:0px; background-color:#f6f6f6;">  

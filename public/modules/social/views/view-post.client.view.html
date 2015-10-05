@@ -18,7 +18,7 @@
             </br>    
             <small class="list-group-item-text">
               Posted on
-              <i><span data-ng-bind="post.created | date:'short'"></span></i>  
+              <i><span data-ng-bind="post.created | date:'d/M/yy h:mm a'"></span></i>  
               <span data-ng-if="post.privacy === 'public'">(Public)</span> 
               <span data-ng-if="post.privacy === 'friends'">(Friends Only)</span> 
               <span data-ng-if="post.privacy === 'private'">(Private)</span> 
@@ -41,7 +41,7 @@
       <div class="row">
         <div class=" col-md-12">
           <h3 data-ng-bind="post.title"></h3>
-          <p data-ng-bind="post.content"></p>
+          <div ng-bind-html="post.content"></div>
         </div>
       </div>
       
@@ -89,7 +89,7 @@
                 </div>
                 <div class="row" style="margin-top:5px;">
                   <div class="col-md-12">
-                    <a role="button" class="btn btn-primary btn-sm"  data-ng-click="editComment(commentContent, comment)" class="form-control">Edit</a> 
+                    <a role="button" class="btn btn-primary btn-sm"  data-ng-click="editComment(commentContent, comment)" class="form-control">Save Changes</a> 
                   </div>                 
                 </div>       
               </div>
@@ -110,7 +110,7 @@
                 </div>  
               </div>
               <div class="col-sm-6 form-group">
-                <button type="submit" name="submitBtn" class="btn btn-large btn-primary">Comment</button>
+                <button type="submit" name="submitBtn" class="btn btn-large btn-primary">Add Comment</button>
                 <a class="btn btn-default" role="button" onclick="history.back()">Back</a>     
                 <div data-ng-show="success" class=" text-center text-success">
                     <strong>Comment Added Successfully</strong>

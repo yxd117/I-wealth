@@ -24,7 +24,7 @@ module.exports = {
 		secure: false,
 		// Only set the maxAge to null if the cookie shouldn't be expired
 		// at all. The cookie will expunge when the browser is closed.
-		maxAge: 7200000,
+		maxAge: null,
 		// To set the cookie in a specific domain uncomment the following
 		// setting:
 		// domain: 'yourdomain.com'
@@ -45,6 +45,7 @@ module.exports = {
 			css: [
 				'public/lib/bootstrap/dist/css/bootstrap.css',
 				'public/lib/bootstrap/dist/css/bootstrap-theme.css',
+				'public/lib/ngWYSIWYG/css/editor.css'	
 			],
 			js: [
 				'public/lib/angular/angular.min.js',
@@ -66,8 +67,11 @@ module.exports = {
 				'public/lib/angular-tooltips/src/js/angular-tooltips.js',
 				'public/lib/angular-route/angular-route.js',
 				'public/lib/jquery/dist/jquery.min.js',
-				'public/lib/bootstrap/dist/js/bootstrap.min.js'
-				
+				'public/lib/bootstrap/dist/js/bootstrap.min.js',
+				// 'node_modules/socket.io/node_modules/socket.io-client/lib/socket.js',
+				'public/lib/angular-sanitize/angular-sanitize.min.js',
+				'public/lib/angular-socket-io/socket.js',
+				'public/lib/ngWYSIWYG/js/wysiwyg.js'
 			]
 		},
 		css: [
@@ -75,7 +79,8 @@ module.exports = {
 			'public/lib/angular-chart.js/dist/angular-chart.css',
 			'public/lib/font-awesome/css/font-awesome.min.css',
 			'public/lib/angular-tooltips/src/css/angular-tooltips.css',
-			'public/lib/nvd3/nv.d3.css'
+			'public/lib/nvd3/nv.d3.css',
+			'public/lib/ngWYSIWYG/css/editor.css'	
 		],
 		js: [
 			'public/config.js',
