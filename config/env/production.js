@@ -19,6 +19,7 @@ module.exports = {
 			stream: 'access.log'
 		}
 	},
+	
 	assets: {
 		lib: {
 			css: [
