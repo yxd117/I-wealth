@@ -120,7 +120,7 @@
 	</div>
 
 	<!--Show milestones overview -->
-	<div class="row">
+<!-- 	<div class="row">
 		<div class="col-lg-8">
 			<div class="panel panel-default">
 				<div class="panel-heading">
@@ -141,14 +141,177 @@
 				</div>
 			</div>
 		</div>
-	</div>
+	</div> -->
+	<div class="row">
+		<div class="col-lg-8">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<i class="fa fa-flag fa-fw"></i> Milestones Overview
+				</div>
+				<div class="panel-body">					
+					<div ng-hide="user.updatedMilestones">
+					<p class="lead">You have not set any Milestones yet.<a href="#!/milestones"> Click Here </a> to create a milestone now! </p>
+					</div>
+					<div class="row">
+						<div ng-show="user.updatedMilestones">
+							<div ng-repeat="item in user.mileStones">							
+								<div class="col-xs-4">
+									 <div align="center"><a href="#!/milestones"><h4>{{item.name}}</h4></a></div>
+									 <div align="right"><b>{{item.amtSaved |currency}}</b> saved out of <b>{{item.targetAmt|currency}}</b></div>
+									 <div class="progress">
+										<div class="progress-bar" role="progressbar" aria-valuenow="{{item.progress}}" aria-valuemin="0" aria-valuemax="100" style="width:{{item.progress}}%">{{item.progress}}%			
+										</div>
+									</div>
+									<div ng-if="item.status=='In-Progress' && item.monthsLeft!=0"><i><b>{{item.monthsLeft}} month/s left to achieve your target!</b></i></div>
+									<div ng-if="item.status=='In-Progress' && item.monthsLeft==0"><i><b>{{item.daysLeftFromToday}} days/s left to achieve your target!</b></i></div>
+									<div ng-if="item.status=='Completed'">
+									<i>Status: <b>Completed</b></i>
+									</div>
+									<li><i>Started on : <b>{{item.startDate |date}}</b></i></li>
+									<div ng-if="item.status=='In-Progress'">
+									<li><i>Target Completion : <b>{{item.endDate |date}}</b></i></li>
+									</div>
+									<div ng-if="item.status=='Completed'">
+									<li><i>Completion Date : <b>{{item.completionDate |date}}</b></i></li>
+									</div>
+									<li><a href="#!/milestones">Click Here</a> for more details.</li>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>				
+			</div>
+		</div>
+		<div class="col-lg-4">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<i class="fa fa-money fa-fw"></i> Budget Overview					
+				</div>
+				<div class="panel-body">
+					<h5>Currently Displaying: <b>{{monthString}},{{thisYear}}</b></h5>									
+					<div ng-show="feBudgetSet" class="ng-show">				
+						<div class="row">
+							<div class="col-md-7">
+								<em>Fixed Expenses</em>
+							</div>
+							<div class="col-md-5">
+								<div class="ng-show" ng-show="feStatus">
+								{{displayThisMonthFixedExpenseTotal |currency }} / {{budgetLimit.fixedExpenseB|currency}}
+								</div>
+								<div class="ng-hide" ng-hide="feStatus">
+								Exceeded by {{(displayFeExceed)|currency}}
+								</div>
+							</div>
+						</div>
+			    		<progressbar class="progress-striped active" animate="true" value="dynamicE" type="{{typeE}}"><b>{{dynamicE}}%</b></progressbar>	    		
+		    		</div>
+		    		
+		    		<div ng-show="tBudgetSet" class="ng-show">
+			    		<div class="row">
+							<div class="col-md-7">
+								<em>Transport</em>
+							</div>
+							<div class="col-md-5">
+								<div class="ng-show" ng-show="tStatus">
+								{{displayThisMonthTransportTotal|currency}} / {{budgetLimit.transportB|currency}}	
+								</div>
+								<div class="ng-hide" ng-hide="tStatus">
+								Exceeded by {{displayTExceed |currency}}
+								</div>
+							</div>
+						</div>
+			    		<progressbar class="progress-striped active" animate="true" value="dynamicT" type="{{typeT}}"><b>{{dynamicT}}%</b></progressbar>
+		    		</div>
+		    		
 
+		    		<div ng-show="uBudgetSet" class="ng-show">
+			    		<div class="row">
+							<div class="col-md-7">
+								<em>Utilities &...</em>
+							</div>
+							<div class="col-md-5">
+								<div class="ng-show" ng-show="uStatus">
+								{{displayThisMonthUtilitiesTotal|currency}} / {{budgetLimit.utilitiesB|currency}}
+								</div>
+								<div class="ng-hide" ng-hide="uStatus">
+								Exceeded by {{displayUExceed|currency}}
+								</div>
+							</div>
+						</div>
+			    		<progressbar class="progress-striped active" animate="true" value="dynamicU" type="{{typeU}}"><b>{{dynamicU}}%</b></progressbar>
+		    		</div>
+		    		
+
+		    		<div ng-show="fBudgetSet" class="ng-show">
+			    		<div class="row">
+							<div class="col-md-7">
+								<em>Food & Neces...</em>
+							</div>
+							<div class="col-md-5">
+								<div class="ng-show" ng-show="fStatus">
+								{{displayThisMonthFoodTotal|currency}} / {{budgetLimit.foodB|currency}}
+								</div>
+								<div class="ng-hide" ng-hide="fStatus">
+								Exceeded by {{displayfExceed|currency}}
+								</div>
+							</div>
+						</div>
+			    		<progressbar class="progress-striped active" animate="true" value="dynamicF" type="{{typeF}}"><b>{{dynamicF}}%</b></progressbar>
+		    		</div>
+		    		
+
+		    		<div ng-show="mBudgetSet" class="ng-show">
+			    		<div class="row">
+							<div class="col-md-7">
+								<em>Miscellaneous</em>
+							</div>
+							<div class="col-md-5">
+								<div class="ng-show" ng-show="mStatus">
+								{{displayThisMonthMiscTotal|currency}} / {{budgetLimit.miscB|currency}}
+								</div>
+								<div class="ng-hide" ng-hide="mStatus">
+								Exceeded by {{displayMExceed|currency}}
+								</div>
+							</div>
+						</div>
+			    		<progressbar class="progress-striped active" animate="true" value="dynamicM" type="{{typeM}}"><b>{{dynamicM}}%</b></progressbar>
+		    		</div>
+
+		    		<div class="ng-hide" ng-hide="feBudgetSet">
+			    		<div class="row">
+			    			<ul><li><i><a href="#!/budget">Click Here</a> to set budget for <b>Fixed Expenses</b></i></li></ul>
+			    		</div>
+		    		</div>
+					<div class="ng-hide" ng-hide="tBudgetSet">
+			    		<div class="row">
+			    			<ul><li><i><a href="#!/budget">Click Here</a> to set budget for <b>Transport</b></i></li></ul>
+			    		</div>
+		    		</div>
+					<div class="ng-hide" ng-hide="uBudgetSet">
+			    		<div class="row">
+			    			<ul><li><i><a href="#!/budget">Click Here</a> to set budget for <b>Utilities & Maintanence</b></i></li></ul>
+			    		</div>
+		    		</div>
+					<div class="ng-hide" ng-hide="fBudgetSet">
+			    		<div class="row">
+			    			<ul><li><i><a href="#!/budget">Click Here</a> to set budget for <b>Food & Necessities</b></i></li></ul>
+			    		</div>
+		    		</div>
+					<div class="ng-hide" ng-hide="mBudgetSet">
+			    		<div class="row">
+			    			<ul><li><i><a href="#!/budget">Click Here</a> to set budget for <b>Miscellaneous Expenses</b></i></li></ul>
+			    		</div>
+		    		</div>
+				</div>
+			</div>
+		</div>
+	</div>
 	<!-- For advertisements-->
-	<!--
-	<div class="row">   		
-		<div class="col-xs-6 col-md-2 advertisement">
+	
+<!-- 	<div class="row">   		
+		<div class="col-xs-12 col-md-12 advertisement">
   		<h3>Advertisement here</h3>
   		</div>
-  	</div>
-  	-->
+  	</div> -->
+  	
 </section>

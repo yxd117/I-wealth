@@ -14,41 +14,51 @@ var mongoose = require('mongoose'),
 
 exports.addFriend = function(req, res){
 
-			var friendship = new Friendship(req.body);
-			friendship.userEmail= req.user.email;
-			friendship.friendEmail = req.body.friendEmail;
-			friendship.status = 1;
-			console.log('add friend: ' + req.body.friendId);
-			User.update({'email': req.user.email}, 
-				{$push: {friendList: {email: req.body.friendEmail, id: req.body.friendId, friendStatus: 1}}}, 
-				{upsert:true}, function(err){
-			        if(err){
-			                console.log(err);
-			        }else{
-			                console.log('Successfully added');
-			        }					
-				});
-			User.update({'email': req.body.friendEmail}, 
-				{$push: {friendList: {email: req.user.email, id: req.user.id, friendStatus: 2}}}, 
-				{upsert:true}, function(err){
-			        if(err){
-			                console.log(err);
-			        }else{
-			                console.log('Successfully added');
-			        }					
-				});
+	Friendship.find({'userEmail': req.user.email, 'friendEmail': req.body.friendEmail}, function(err, friendRequests1){
+		if(friendRequests1.length === 0){
+			Friendship.find({'userEmail': req.body.friendEmail, 'friendEmail': req.user.email}, function(err, friendRequests2){
+				if(friendRequests2.length  === 0){
+					var friendship = new Friendship(req.body);
+					friendship.userEmail= req.user.email;
+					friendship.friendEmail = req.body.friendEmail;
+					friendship.status = 1;
+					console.log('add friend: ' + req.body.friendId);
 
-			friendship.save(function(err) {
-				if (err) {
-					return res.status(400).send({
-						message: errorHandler.getErrorMessage(err)
-					});
-				} else {
-					console.log(friendship);
-					res.json(friendship);
-					
+					User.update({'email': req.user.email}, 
+						{$push: {friendList: {email: req.body.friendEmail, id: req.body.friendId, friendStatus: 1}}}, 
+						{upsert:true}, function(err){
+					        if(err){
+					                console.log(err);
+					        }else{
+					                console.log('Successfully added');
+					        }					
+						});
+					User.update({'email': req.body.friendEmail}, 
+						{$push: {friendList: {email: req.user.email, id: req.user.id, friendStatus: 2}}}, 
+						{upsert:true}, function(err){
+					        if(err){
+					                console.log(err);
+					        }else{
+					                console.log('Successfully added');
+					        }					
+						});
+
+					friendship.save(function(err) {
+						if (err) {
+							return res.status(400).send({
+								message: errorHandler.getErrorMessage(err)
+							});
+						} else {
+							console.log(friendship);
+							res.json(friendship);
+							
+						}
+					});					
 				}
-			});	
+			});
+		}
+	});
+	
 
 };
 

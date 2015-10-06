@@ -132,6 +132,7 @@ exports.addNewAsset = function(req, res){
 
 exports.retrieveAssets = function(req, res){
 	Asset.find({}, function(err, assets){
+
 		 res.json(assets);
 	});
 };

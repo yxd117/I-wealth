@@ -217,17 +217,25 @@ exports.removeComment = function(req, res){
  * Delete an Post
  */
 exports.delete = function(req, res) {
-	var Post = req.Post;
-
-	Post.remove(function(err) {
-		if (err) {
-			return res.status(400).send({
-				message: errorHandler.getErrorMessage(err)
-			});
-		} else {
-			res.json(Post);
-		}
+	var post = req.Post;
+	// var ObjectId = require('mongoose').Types.ObjectId; 
+	// Post._id = new ObjectId(Post._id);
+	Post.find({'_id': req.Post._id}).remove().exec(function(err, p){
+		console.log('here');
+		console.log(p);
+		res.json(p);
+		// p.remove(function(err) {
+		// 	if (err) {
+		// 		return res.status(400).send({
+		// 			message: errorHandler.getErrorMessage(err)
+		// 		});
+		// 	} else {
+		// 		res.json(Post);
+		// 	}
+		// });		
 	});
+
+
 };
 
 /**

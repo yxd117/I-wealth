@@ -1,0 +1,379 @@
+<section data-ng-controller="DebtsController" class="content"> 
+  <ul class="nav nav-tabs nav-justified">
+    <li role="presentation"><a href="/#!/financialrecord">Overview</a></li>
+    <li role="presentation"><a href="/#!/financialrecord/assets">Assets</a></li>
+    <li role="presentation"><a href="/#!/financialrecord/liabilities">Liabilities</a></li>
+    <li role="presentation"><a href="/#!/financialrecord/incomeExpense">Income & Expense</a></li>
+    <li role="presentation" class="active"><a href="/#!/financialrecord/debts">Debt</a></li>
+    <li role="presentation"><a href="/#!/financialrecord/insurances">Insurances</a></li>
+  </ul>
+  <h3>Loans & Mortgages</h3>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>No.</th>
+        <th>Name of Lender / Bank</th>
+        <th>Type</th>
+        <th>Loan Amount</th>
+        <th>Interest Rate</th>
+        <th>Date Started</th>
+        <th>Loan Tenure (months)</th>
+        <th>Linked?</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr ng-repeat='debt in user.debtsInfoArr'>
+         <!-- read-only cells -->     
+        <td>{{debt.id}}</td>
+        <td><a ng-click="contributionModal(debt)" data-toggle="modal" data-target="#infoModal">{{ debt.lender }}</a></td>
+        <td>{{ debt.type }}</td>
+        <td>${{ debt.amt }}</td>
+        <td>{{ debt.interestRate }}%</td>
+        <td>{{ debt.date }}</td>
+        <td>{{ debt.lenOfLoan }}</td>
+        <td>{{ debt.linkedStatus }}</td>
+        <td>{{debt.status}}</td>
+        <td>          
+          <button type="button"ng-click="contributionModal(debt)" data-toggle="modal" data-target="#infoModal"  aria-label="Left Align">
+            <span class="glyphicon glyphicon-pencil align-left" aria-hidden="true"></span>
+          </button>
+        
+          <button type="button" ng-click="selectDeleteRecord(debt)" data-toggle="modal" data-target="#deleteModal"  aria-label="Left Align">
+            <span class="glyphicon glyphicon-trash align-left" aria-hidden="true"></span>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#debtModal">Add Debt
+  </button>
+
+  <div class="modal fade" id="debtModal" tabindex="-0" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+
+        <!-- START OF PART 1  -->
+        <div class="ng-show" ng-show="add1show">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">Add Loan/Mortgage</h4>
+          </div>    
+            
+          <form name="addDebt" data-ng-submit="addDebtOne()">
+          <fieldset>
+            <div class="modal-body">
+              
+              <div class="row">
+                <div class="col-md-7">
+                  <div class='form-group'>
+                    <label for='name'>Name of Lender / Bank:</label>
+                    <input class='form-control' ng-model='newDebt.lender' name='lender' type='text' ng-required = "true">       
+                  </div>
+                </div>                          
+                <div class="col-md-5">
+                  <div class='form-group'>
+                    <label for='age'>Type: </label>
+                      <select class='form-control' ng-model='newDebt.type' name='type' required>
+                        <option ng-repeat="item in liabilities" selected="selected">{{item.description}}</option>
+                      </select>                    
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-7">
+                  <div class ="form-group">
+                    <label>Amount</label>
+                    <input class='form-control' ng-model='newDebt.amt' name='amt' type='number' step="any" min="0" ng-required="true"/>
+                  </div>            
+                </div>
+                <div class="col-md-5">
+                  <div class="form-group">
+                    <label>Interest Rate:</label>
+                    <div class="input-group">                                   
+                      <input type="number" min="0" class="form-control" step="any" data-ng-model="newDebt.interestRate" id="interestRate" placeholder="Amount" required="true"/>
+                      <div class="input-group-addon">%</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-7">
+                  <div class ="form-group">
+                    <label>Date Started:</label>
+                    <input class='form-control' ng-model='newDebt.date' name='amt' type='date' ng-required="true"/>
+                  </div>            
+                </div>
+                <div class="col-md-5">
+                  <div class='form-group'>
+                    <label for='name'>Length of Loan (in months):</label>
+                    <input class='form-control' ng-model='newDebt.lenOfLoan' name='lenOfLoan' type='number' min="0" ng-required="true">
+                  </div>
+                </div>
+              </div>
+
+              <div class="row">
+                <div class="col-md-7">
+                  <div class='form-group'>
+                    <label>Enter your monthly contribution:</label>
+                    <input class='form-control' ng-model='newDebt.monthly' name='lender' type='number' step="any" min=0 ng-required = "true">       
+                  </div>
+                </div>
+                <div class="col-md-5">
+                  <div class='form-group'>
+                    <label>How many times have you repaid?</label>
+                    <input class="form-control" ng-model="newDebt.repaymentNo" name="repaymentNo" type="number" min=0 ng-required ="true"/>
+                  </div>
+                </div>                           
+              </div>
+
+            </div>                        
+
+            <div class="modal-footer">
+              <div class="form-group">
+                <button type="button" ng-click ="resetModal()" class="btn btn-default" data-dismiss="modal">Cancel
+                </button>
+                <button type="submit" class="btn btn-primary">Next</button>
+
+              <div data-ng-show="error" class="text-danger">
+                <strong data-ng-bind="error"></strong>
+              </div>
+              </div>
+            </div>
+            </fieldset>
+            </form>
+
+        </div>
+        
+
+      
+        
+          <!--START OF PART 2 -->
+          <div class="ng-show" ng-show="add2show">
+            <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              <h4 class="modal-title" id="myModalLabel">Add Loan/Mortgage</h4>
+            </div>
+            <form name="createLinkedDebtForm" data-ng-submit="createLinkedDebt()">
+            <fieldset>
+            <div class="modal-body">
+              <h4 align="center">I-Wealth calculates that your loan balance is:</h4>
+              <h4 align="center">${{displayLoanBalance}}</h4>
+              <br/>
+              
+              <h5><i>Loan balance not correct? Enter the correct amount below and click submit!</i></h5>           
+
+              
+              <form class="form-inline">
+              <div class ="row">              
+                <div class= "col-md-6 col-md-offset-3">
+                  <div class="col-md-9">  
+                    <div class="form-group">            
+                      <label class="sr-only" for="fixedExpenseB">Amount (in dollars)</label>
+                      <div class="input-group">
+                        <div class="input-group-addon">$</div>
+                        <input type="number"  class="form-control" data-ng-model="newLoanBalance" id="newLoanBalance" placeholder="Amount" step="any" min="0">                  
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <button type="button" ng-click="setNewLoanBalance()" class="btn btn-primary btn-sm">Set Budget</button>
+                  </div>
+                </div>
+              </div>
+              
+              </form>
+              
+            
+
+              <h5><font color="red">Do you want to link this loan/mortgage to your liabilities and income & expense records?</font></h5>
+
+            </div>
+            
+            <div class="modal-footer">
+              <div class="form-group">
+                <button type="button" class="btn btn-link" ng-click="resetModal()" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-warning" ng-click="createNoLinkedDebt()">No
+                </button>
+                <button type="submit" class="btn btn-success">Yes</button>
+
+                <div data-ng-show="error" class="text-danger">
+                  <strong data-ng-bind="error"></strong>
+                </div>
+              </div>
+            </div>
+
+            </fieldset>
+            </form>
+          </div>
+
+          <!--START OF PART 3 -->
+          <div class="ng-show" ng-show="add3show">             
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Success!</h4>
+            </div>
+            <div class="modal-body">
+                Debt Added!
+            </div>
+            <div class="modal-footer">
+              <div class="form-group">
+                  <button type="button" class="btn btn-success" ng-click="resetModal()" data-dismiss="modal">Dismiss
+                  </button>
+              </div>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+
+  <!--- Info Modal -->
+
+  <div class="modal fade" id="infoModal" tabindex="-0" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="myModalLabel">{{debt.lender}}</h4>
+        </div>
+        <div ng-show="debtDetails" class="ng-show">
+          <div class="modal-body">
+                                              
+          <form name="dateForm" class="ng-dirty ng-valid">
+            <div class="form-group">
+              <div class="row">              
+              <div class="col-xs-3 text-center">
+                <h4>Records for: </h4>
+              </div>
+              <div class="col-xs-3">
+                  <select data-ng-options="m as m for m in mth" class="form-control ng-pristine ng-valid" data-ng-model="selectedMonth" ng-init="selectedMonth = mth[month]" style="text-align:center;">
+                   </select> 
+              </div>
+              <div class="col-xs-3">
+                  <input type="number" class="form-control text-center ng-pristine ng-valid ng-valid-number" data-ng-model="selectedYear" ng-init="selectedYear = year">
+              </div>                
+            </div>
+            </div>
+          </form>
+
+
+
+           
+            <h4 align =center>{{debt.type}}</h4>
+            <div class = "ng-hide" ng-hide="noRecordsToDisplay">
+              <div class="row">
+                <div class ="col-md-6">
+                  <h5>Loan Amount: ${{debt.amt.toFixed(2)}}</h5>
+                  <h5>No of Repayment: {{recordReq.repaymentNo}}</h5>
+                </div>
+                <div class ="col-md-6">
+                  <h5>Current Loan Balance: ${{recordReq.loanBalance.toFixed(2)}}</h5>
+                  <h5>Contribution this Month: ${{recordReq.monthly.toFixed(2)}}</h5>
+                </div>
+              </div>
+
+              <div class = "ng-hide" ng-hide = "debt.statusBoolean">
+                <div ng-hide="recordReq.monthlyPayStatus" class="ng-hide">
+                  <div ng-show="presentMonthCheck" class="ng-show">
+                    <br/>
+                    According to our records, you have not made a contribution for this month. 
+                    <br/>
+                    Select contribute to record this month's contribution.
+                    <button class="btn btn-success btn-sm" ng-click="contribute()">Contribute</button>
+                  </div>
+                  <div ng-hide="presentMonthCheck" class="ng-hide">
+                    <br/>
+                    <font color=red>According to our records, you missed payment for this month.</font>
+                  </div>
+                </div>
+                <div ng-show="recordReq.monthlyPayStatus" class="ng-show">
+                    <br/>
+                    According to our records, you have already made a contribution for this month.                 
+                </div>
+              </div>
+              <div class = "ng-show" ng-show = "debt.statusBoolean">
+                <br/>
+                <h4><font color="red">Loan Repayments Complete!</font></h4>
+              </div>
+            </div>
+            <div class = "ng-show" ng-show="noRecordsToDisplay">
+              <h4><font color="red">No Records for selected month.</font></h4>
+              <br/>
+              <font color="blue">Records start from {{mth[debt.creationRecord.month]}}, {{debt.creationRecord.year}}.</font>
+            </div>
+
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-primary" data-dismiss="modal">Done</button>                        
+          </div>
+        </div>
+
+        <div ng-show="contributionConfirm" class="ng-show">
+
+
+            <div class="modal-body">
+            
+              <h4>Confirm contribution of  ${{debt.monthly.toFixed(2)}} ?</h4>
+              <div>
+                  <br/>                
+                  <h5><i>Note: If you current debt is linked, I-Wealth automatically records your contribution in your Income & Expense records!</i></h5>
+              </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-success" ng-click="confirmContribute()">Confirm</button>                
+            </div>
+
+        </div>
+
+        <div ng-show="success" class="ng-show">
+
+
+            <div class="modal-body">
+            
+              <h4>Success</h4>
+              <div>
+                  <br/>                
+                  <h5>Contribution Added!</h5>
+              </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success" data-dismiss="modal">Dismiss</button>                
+            </div>
+
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">                     
+      <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">Warning!</h4>
+          </div>
+        <div class="modal-body">
+            <h4>Are you sure you want delete this record?</h4>
+            <br/><br/>
+            <i>Note: If your debt is linked, all previous records from Liabilities and Income & Expenses will be erased!</i>
+        </div>
+        <div class="modal-footer">
+        <div class="form-group">
+            <button type="button" class="btn btn-danger" ng-click="deleteRecord()" data-dismiss="modal">Confirm Delete
+            </button>
+            <button type="button" class="btn btn-default" ng-click="cancelDelete()" data-dismiss="modal">Cancel
+            </button>
+           </div>
+        </div>              
+      </div>
+    </div>
+  </div>
+
+
+</section>
+

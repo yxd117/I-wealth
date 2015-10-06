@@ -50,6 +50,7 @@ angular.module('financial').controller('IncomeExpenseController', ['$scope', '$r
             $scope.month = $scope.monthArr.indexOf($scope.selectedMonth);
             $scope.monthDisplay = $scope.selectedMonth;
             $scope.year = $scope.selectedYear;
+            $scope.recordFound = null;
 
             if ($scope.success || $scope.error) {
                 $scope.success = false;
@@ -66,6 +67,7 @@ angular.module('financial').controller('IncomeExpenseController', ['$scope', '$r
                 	$scope.displayIncomeExpenseRecords = angular.copy(IncomeExpenseService.incomeExpenseRecords);
                 	$scope.displayIncomeExpenseRecords.year = angular.copy($scope.year);
                 	$scope.displayIncomeExpenseRecords.month = angular.copy($scope.month);
+                    $scope.recordFound = 'No record exists for and prior to selected month/year.';
 
                 } else {
 
@@ -138,6 +140,9 @@ angular.module('financial').controller('IncomeExpenseController', ['$scope', '$r
 
                     }
                     console.log($scope.incomeDoughnutData);
+                }
+                if($scope.displayIncomeExpenseRecords.year !== $scope.selectedYear || $scope.monthArr[$scope.displayIncomeExpenseRecords.month] !== $scope.selectedMonth){
+                    $scope.recordFound = 'No record exists for selected month/year. Displaying records for ' + $scope.monthArr[$scope.displayIncomeExpenseRecords.month] + ', ' + $scope.displayIncomeExpenseRecords.year;
                 }
 
             };

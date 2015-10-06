@@ -1,5 +1,5 @@
 <section data-ng-controller="LiabilitiesController" class="content">
-	<ul class="nav nav-tabs">
+	<ul class="nav nav-tabs nav-justified">
 	  <li role="presentation"><a href="/#!/financialrecord">Overview</a></li>
 	  <li role="presentation"><a href="/#!/financialrecord/assets">Assets</a></li>
 	  <li role="presentation" class="active"><a href="/#!/financialrecord/liabilities">Liabilities</a></li>
@@ -9,7 +9,8 @@
 	</ul>
 	<div class="row">
 		<div class="col-sm-6 col-md-6">
-			<h3> Displaying Records for : <em>{{monthDisplay}}, {{year}} </em></h3>	
+			<!-- <h3> Displaying Records for : <em>{{monthDisplay}}, {{year}} </em></h3>	 -->
+			<h3>Displaying Liabilities Records: </h3>
 			<form name="dateForm">
 			    <div class="form-group">
 			    	<div class="row">
@@ -26,6 +27,9 @@
 			    	</div>
 			    </div>
 			</form>
+			<div data-ng-show="recordFound" class="text-danger">
+				<strong data-ng-bind="recordFound"></strong>
+			</div>
 		  	<accordion class="accordion" close-others="oneAtATime">
 			    <accordion-group is-open="status.open" ng-click="clearSuccessMessage()">
 			        <accordion-heading>

@@ -216,6 +216,7 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
             
             $scope.displayOverview.totalAssets = $scope.displayAssetsRecords.totalAmt;
             $scope.displayOverview.totalLiabilities = $scope.displayLiabilitiesRecords.totalAmt;
+            $scope.displayOverview.netWorth = ($scope.displayAssetsRecords.totalAmt - $scope.displayLiabilitiesRecords.totalAmt).toFixed(2);
             $scope.displayOverview.totalNetGrossIncome = $scope.displayIncomeExpenseRecords.netCashFlow;
             $scope.displayOverview.monthlyIncome = $scope.displayIncomeExpenseRecords.monthlyIncomeAmt;
             $scope.displayOverview.monthlyExpense = $scope.displayIncomeExpenseRecords.monthlyExpenseAmt;   
@@ -246,6 +247,9 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
         $scope.$watch('checkTotal.liabilities', function() {
             updateChart();
         });
+        $scope.$watch('checkTotal.netWorth', function() {
+            updateChart();
+        });
         $scope.$watch('checkTotal.netGrossIncome', function() {
             updateChart();
         });
@@ -268,6 +272,7 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
 
             var aRecordsTotalAmtArr = [];
             var lRecordsTotalAmtArr = [];
+            var netWorthTotalAmtArr = [];
             var ieRecordsTotalAmtArr = []; 
             var ieRecordsIncomeArr = [];
             var ieRecordsExpenseArr = [];         
@@ -291,6 +296,12 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
                         lRecordsTotalAmtArr[ratioMthNum] = lRecords.totalAmt; 
                     }catch (e){
                         lRecordsTotalAmtArr[ratioMthNum] = 0;
+                    }
+
+                    try{
+                        netWorthTotalAmtArr[ratioMthNum] = aRecords.totalAmt - lRecords.totalAmt;
+                    }catch(e){
+                        netWorthTotalAmtArr[ratioMthNum] = 0;
                     }
 
                     try{
@@ -338,7 +349,13 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
                     }catch(e){
                         lRecordsTotalAmtArr[ratioMthNum] = 0;
                     }
-                    
+
+                    try{
+                        netWorthTotalAmtArr[ratioMthNum] = aRecords.totalAmt - lRecords.totalAmt;
+                    }catch(e){
+                        netWorthTotalAmtArr[ratioMthNum] = 0;
+                    }
+
                     try{
                         ieRecordsTotalAmtArr[ratioMthNum] = ieRecords.netCashFlow;
                     }catch(e){
@@ -383,6 +400,13 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
                     }catch(e){
                         lRecordsTotalAmtArr[ratioMthNum] = 0;
                     }
+
+                    try{
+                        netWorthTotalAmtArr[ratioMthNum] = (aRecords.totalAmt - lRecords.totalAmt).toFixed(2);
+                    }catch(e){
+                        netWorthTotalAmtArr[ratioMthNum] = 0;
+                    }
+
                     
                     try{
                         ieRecordsTotalAmtArr[ratioMthNum] = ieRecords.netCashFlow;
@@ -515,6 +539,10 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
                 $scope.seriesOverview.push('Liabilities');
                 $scope.dataOverview.push(lRecordsTotalAmtArr);
             }
+            if($scope.checkTotal.netWorth){
+                $scope.seriesOverview.push('Net Worth');
+                $scope.dataOverview.push(netWorthTotalAmtArr);
+            }
             if($scope.checkTotal.monthlyIncome){
                 $scope.seriesOverview.push('Monthly Income');
                 $scope.dataOverview.push(ieRecordsIncomeArr);
@@ -536,7 +564,6 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
                     displayAssetsRecords = AssetsService.assetsRecords;
                     displayAssetsRecords.year = angular.copy(year);
                     displayAssetsRecords.month = angular.copy(month);
-
 
             } else {
 

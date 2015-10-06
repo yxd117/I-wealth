@@ -1,8 +1,8 @@
 'use strict';
 
 // Articles controller
-angular.module('social').controller('PostsController', ['$scope', '$stateParams','$state', '$location','$window', 'Authentication', '$http', 'Post','$anchorScroll',
-	function($scope, $stateParams,$state, $location,$window, Authentication, $http, Post,$anchorScroll) {
+angular.module('social').controller('PostsController', ['$scope', '$stateParams','$state', '$location','$window', 'Authentication', '$http', 'Post','$anchorScroll', '$q', '$timeout',
+	function($scope, $stateParams,$state, $location,$window, Authentication, $http, Post,$anchorScroll,$q, $timeout) {
 		$scope.user = Authentication.user;
 		if (!$scope.user) $location.path('/');
 
@@ -68,7 +68,7 @@ angular.module('social').controller('PostsController', ['$scope', '$stateParams'
 	    $scope.remove = function() {
 			var postURL = '/api/posts/' + $stateParams.postId;
 			$http.delete(postURL).then(function(response){
-				$location.path('/socialPost');
+				$location.path('/social/posts');
 				$scope.post = response.data;
 			});	
 	    };
@@ -136,10 +136,11 @@ angular.module('social').controller('PostsController', ['$scope', '$stateParams'
 	    };
 
 	    $scope.upPost = function(postId){
-	    	$scope.posts.forEach(function(post){
-	    		if(post._id === postId){
-	    			console.log(post.upVote);
-	    			var uidFound = false;
+
+			var checkUpVoted = function(post){
+				var uidFound = false;
+			    var deferred = $q.defer();
+			    $timeout(function() {
 	    			post.upVote.forEach(function(uId){
 	    				if($scope.user._id === uId){
 	    					uidFound = true;
@@ -150,14 +151,27 @@ angular.module('social').controller('PostsController', ['$scope', '$stateParams'
 					  			console.log('There is an error upvoting');
 					  		});
 	    				}
-	    			});
-	    			if(uidFound === false){
-	    				$http.put('/api/upPost', {postId: postId, postFilter: $scope.postFilter}).success(function(response){
-				  			$scope.posts = response;
-				  		}).error(function(){
-				  			console.log('There is an error upvoting');
-				  		});
-	    			}
+	    			});					    	
+			      deferred.resolve(uidFound);
+			    }, 2000);
+
+				return deferred.promise;
+			};	    	
+			
+	    	$scope.posts.forEach(function(post){
+	    		if(post._id === postId){
+
+					checkUpVoted(post).then(function(uidFound){
+						console.log(uidFound);
+		    			if(uidFound === false){
+		    				$http.put('/api/upPost', {postId: postId, postFilter: $scope.postFilter}).success(function(response){
+					  			$scope.posts = response;
+					  		}).error(function(){
+					  			console.log('There is an error upvoting');
+					  		});
+		    			}
+					});
+
 	    		}
 	    	});
 	    };

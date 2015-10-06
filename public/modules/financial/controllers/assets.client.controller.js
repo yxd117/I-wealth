@@ -179,6 +179,7 @@ angular.module('financial').controller('AssetsController', ['$scope', '$rootScop
                 $scope.displayAssetsRecords = angular.copy(AssetsService.assetsRecords);
                 $scope.displayAssetsRecords.year = angular.copy($scope.year);
                 $scope.displayAssetsRecords.month = angular.copy($scope.month);
+                $scope.recordFound = 'No record exists for and prior to selected month/year.';
 
             } else {
 
@@ -227,6 +228,7 @@ angular.module('financial').controller('AssetsController', ['$scope', '$rootScop
                         }
                     }
                     $scope.displayAssetsRecords = latestRecord;
+                    
                 }
             }
 
@@ -237,6 +239,11 @@ angular.module('financial').controller('AssetsController', ['$scope', '$rootScop
                 $scope.assetsDoughnutData = [$scope.displayAssetsRecords.cashEquivalentsAmt, $scope.displayAssetsRecords.personalUseAssetsAmt, $scope.displayAssetsRecords.investedAssetsAmt, $scope.displayAssetsRecords.cpfSavingsAmt, $scope.displayAssetsRecords.otherAssetsAmt]; 
                 $scope.assetsDoughnutLabels = ['Cash & Cash Equivalents', 'Personal Use Assets', 'Invested Assets', 'CPF Savings', 'Other Assets'];
             }
+
+            console.log($scope.selectedMonth);
+            if($scope.displayAssetsRecords.year !== $scope.selectedYear || $scope.monthArr[$scope.displayAssetsRecords.month] !== $scope.selectedMonth){
+                $scope.recordFound = 'No record exists for selected month/year. Displaying records for ' + $scope.monthArr[$scope.displayAssetsRecords.month] + ', ' + $scope.displayAssetsRecords.year;
+            }
         };
 
 
@@ -245,6 +252,7 @@ angular.module('financial').controller('AssetsController', ['$scope', '$rootScop
             $scope.month = $scope.monthArr.indexOf($scope.selectedMonth);
             $scope.monthDisplay = $scope.selectedMonth;
             $scope.year = $scope.selectedYear;
+            $scope.recordFound = null;
 
             if ($scope.success || $scope.error) {
                 $scope.success = false;

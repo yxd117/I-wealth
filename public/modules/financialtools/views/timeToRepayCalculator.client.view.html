@@ -1,5 +1,5 @@
 <section data-ng-controller="LoanCalculatorController" class="content">
-  <ul class="nav nav-tabs">
+  <ul class="nav nav-tabs nav-justified">
     <li role="presentation" ><a href="/#!/financialtools/loancalculator">How much will my repayments be?</a></li>
     <li role="presentation" ><a href="/#!/financialtools/amtborrow">How much can I borrow?</a></li>
     <li role="presentation" class="active"><a href="/#!/financialtools/timetorepay">How can I repay my loan sooner?</a></li>
@@ -41,7 +41,7 @@
           <div class="col-md-12">
             <button class='btn btn-primary btn-lg btn-block' ng-click='calculateTimeToRepay()' ng-disabled='CalculatorForm.$invalid'> Submit
             </button>
-            <button class='btn btn-primary btn-lg btn-block' ng-click='showCompareForm()' ng-disabled='CalculatorForm.$invalid'> Compare Alternative
+            <button class='btn btn-primary btn-lg btn-block' ng-click='showCompareForm()' ng-disabled='CalculatorForm.$invalid' ng-show="formSubmit"> Compare Alternative
           </button>  
           </div>
         </fieldset>

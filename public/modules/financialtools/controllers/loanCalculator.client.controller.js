@@ -11,6 +11,7 @@ angular.module('financial').controller('LoanCalculatorController', ['$scope', '$
 
       $scope.principalAmtToBorrow = 0;  
       $scope.interestPaid = 0;  
+      $scope.formSubmit = false;
 
       var year = 0;
       var month = 0;
@@ -130,6 +131,7 @@ angular.module('financial').controller('LoanCalculatorController', ['$scope', '$
               $scope.loanTermMonths = convertLoanTermToMonths();
               $scope.monthlyRepaymentSum = $scope.calculator.amtBorrowed / ((1-(1/Math.pow((1+(($scope.calculator.interestRate / 100) / 12)), $scope.loanTermMonths))) / (($scope.calculator.interestRate / 100) / 12));
               calculateTotalLoan();
+              $scope.formSubmit = true;
         //}
 
          
@@ -193,6 +195,7 @@ angular.module('financial').controller('LoanCalculatorController', ['$scope', '$
                                                                                                                                               
           $scope.principalAmtToBorrow = ($scope.calculator.affordableRepayment / (($scope.calculator.interestRate / 100) / 12)) * (1-(1/(Math.pow(1+(($scope.calculator.interestRate / 100) / 12), $scope.loanTermMonths))));
           calculateInterestPaid();
+          $scope.formSubmit = true;
         };
 
         var convertToYrsMths = function(){
@@ -272,7 +275,8 @@ angular.module('financial').controller('LoanCalculatorController', ['$scope', '$
           
           //$scope.timeToRepayVal = Math.log($scope.calculator.monthlyRepayment / interestRate3PerMth / (($scope.calculator.monthlyRepayment / interestRate3PerMth) - $scope.calculator.amtOwing)) / Math.log(1+interestRate3PerMth);           
           $scope.timeToRepayVal = cal1 / cal2;
-          convertToYrsMths();                 
+          convertToYrsMths();            
+          $scope.formSubmit = true;     
        
        };
 

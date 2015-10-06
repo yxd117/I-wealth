@@ -1,5 +1,5 @@
 <section data-ng-controller="IncomeExpenseController" class="content">
-	<ul class="nav nav-tabs">
+	<ul class="nav nav-tabs nav-justified">
 	  <li role="presentation"><a href="/#!/financialrecord">Overview</a></li>
 	  <li role="presentation"><a href="/#!/financialrecord/assets">Assets</a></li>
 	  <li role="presentation"><a href="/#!/financialrecord/liabilities">Liabilities</a></li>
@@ -9,7 +9,8 @@
 	</ul>
 	<div class="row">
 		<div class="col-sm-6">
-			<h3> Displaying Records for : <em>{{monthDisplay}}, {{year}} </em></h3>
+			<!-- <h3> Displaying Records for : <em>{{monthDisplay}}, {{year}} </em></h3> -->
+			<h3>Displaying Income and Expense Records: </h3>
 			<form name="dateForm">
 			    <div class="form-group">
 			    	<div class="row">
@@ -25,6 +26,9 @@
 			    	</div>
 			    </div>
 			</form>	
+			<div data-ng-show="recordFound" class="text-danger">
+				<strong data-ng-bind="recordFound"></strong>
+			</div>
 			<div class="row">
 				<div class="col-md-8">
 					<h4>Monthly Income</h4>

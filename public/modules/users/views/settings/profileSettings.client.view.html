@@ -1,6 +1,6 @@
 <section data-ng-controller="SettingsController" class="content">
     <tabset>
-      <tab heading="Personal Details" ng-click="reset()">
+      <tab heading="Personal Details" ng-click="reset()" class="col-xs-12 col-sm-12 col-md-3 text-center" style="padding:0;">
         <h4><u>Edit Personal Details</u></h4>
         <!-- Insert upload profile image here -->
       <div class="col-sm-3">
@@ -75,7 +75,7 @@
       </tab>
 
 
-      <tab heading="Education/Work" ng-click="reset()">
+      <tab heading="Education/Work" ng-click="reset()" class="col-xs-12 col-sm-12 col-md-3 text-center" style="padding:0;">
           <h4><u>Edit your Education/Work  Details</u></h4>
           <form name="workDetailsForm" id="workDetailsForm" data-ng-submit="updateUserProfileWork(workDetailsForm.$valid)" class="form-horizontal" autocomplete="off">
             <fieldset>
@@ -163,7 +163,7 @@
         </form>
       </tab>
 
-      <tab heading="Social" ng-click="reset()">
+      <tab heading="Social" ng-click="reset()" class="col-xs-12 col-sm-12 col-md-3 text-center" style="padding:0;">
           <form name="privacySettingForm" data-ng-submit="updateUserProfilePrivacy(privacySettingForm.$valid)" class="form-horizontal" autocomplete="off">
             <fieldset>
               <div class="form-group"> <!-- Consider change to Description -->
@@ -257,7 +257,7 @@
         </form>
       </tab>
 
-      <tab heading="Credit Profile" ng-click="reset()">
+      <tab heading="Credit Profile" ng-click="reset()" class="col-xs-12 col-sm-12 col-md-3 text-center" style="padding:0;">
         <div class="col-md-8" data-ng-controller="SettingsController">
           <h4><u>Credit Profile</u></h4>
 

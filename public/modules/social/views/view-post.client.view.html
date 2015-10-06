@@ -30,9 +30,33 @@
             <a class="btn btn-primary" data-ui-sref="postEdit({postId: post._id})">
               <i class="glyphicon glyphicon-edit"></i>
             </a>
-            <a class="btn btn-danger" data-ng-click="remove()">
+            <a data-toggle="modal" data-target="#myModal" class="btn btn-danger">
               <i class="glyphicon glyphicon-trash"></i>
             </a>
+
+            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Delete Post</h4>
+                  </div>
+                  <div class="modal-body">
+                    <div class="row">
+                      <div class="col-md-12">
+                          Are you sure you want to delete Post?</br>
+                        </br>
+                          <a class="btn btn-danger btn-sm" data-dismiss="modal" data-ng-click="remove()">Yes </a>
+                          <a class="btn btn-default btn-sm" role="button" data-dismiss="modal">Back</a>    
+                      </div>
+                    </div>
+                  </div> 
+                  <div class="modal-footer">
+
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 

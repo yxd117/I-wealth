@@ -9,7 +9,8 @@
 	</ul>
 	<div class="row">
 		<div class="col-sm-6">
-			<h3> Displaying Records for : <em>{{monthDisplay}}, {{year}} </em></h3>
+			<!-- <h3> Displaying Records for : <em>{{monthDisplay}}, {{year}} </em></h3> -->
+			<h3>Displaying Assets Records: </h3>
 			<form name="dateForm">
 			    <div class="form-group">
 			    	<div class="row">
@@ -25,6 +26,9 @@
 			    	</div>
 			    </div>
 			</form>
+			<div data-ng-show="recordFound" class="text-danger">
+				<strong data-ng-bind="recordFound"></strong>
+			</div>
 		  	<accordion class="accordion" close-others="oneAtATime">
 			    <accordion-group is-open="status.open" ng-click="clearSuccessMessage()">
 			        <accordion-heading>

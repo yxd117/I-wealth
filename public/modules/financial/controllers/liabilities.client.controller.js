@@ -51,6 +51,7 @@ angular.module('financial').controller('LiabilitiesController', ['$scope', '$roo
             $scope.month = $scope.monthArr.indexOf($scope.selectedMonth);
             $scope.monthDisplay = $scope.selectedMonth;
             $scope.year = $scope.selectedYear;
+            $scope.recordFound = null;
 
             if ($scope.success || $scope.error) {
                 $scope.success = false;
@@ -67,6 +68,7 @@ angular.module('financial').controller('LiabilitiesController', ['$scope', '$roo
             	$scope.displayLiabilitiesRecords = angular.copy(LiabilitiesService.liabilitiesRecords);
             	$scope.displayLiabilitiesRecords.year = angular.copy($scope.year);
             	$scope.displayLiabilitiesRecords.month = angular.copy($scope.month);
+                $scope.recordFound = 'No record exists for and prior to selected month/year.';
 
             } else {
 
@@ -123,6 +125,10 @@ angular.module('financial').controller('LiabilitiesController', ['$scope', '$roo
             } else{
                 $scope.liabilitiesDoughnutData = [$scope.displayLiabilitiesRecords.shortTermCreditAmt, $scope.displayLiabilitiesRecords.loansMortgagesAmt, $scope.displayLiabilitiesRecords.otherLiabilitiesAmt];
                 $scope.liabilitiesDoughnutLabels = ['Short-Term Credit', 'Loans & Mortgages', 'Other Liabilities'];
+            }
+
+            if($scope.displayLiabilitiesRecords.year !== $scope.selectedYear || $scope.monthArr[$scope.displayLiabilitiesRecords.month] !== $scope.selectedMonth){
+                $scope.recordFound = 'No record exists for selected month/year. Displaying records for ' + $scope.monthArr[$scope.displayLiabilitiesRecords.month] + ', ' + $scope.displayLiabilitiesRecords.year;
             }
 
         };

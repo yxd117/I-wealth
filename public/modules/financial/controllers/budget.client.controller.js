@@ -123,8 +123,7 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
         });
         
 
-        $scope.loadTables = function() {
-
+        $scope.loadTables = function() {            
 
             $scope.incomeExpenseChartDisplay = true;
             $scope.incomeExpenseDoughnutData = [1]; 
@@ -646,6 +645,9 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
                 newBudget.fixedExpenseB = $scope.fixedExpenseB;
                 $scope.user.budgetLimits.push(newBudget);
             }
+            if ($scope.user.budgetLimits.length!==0) {
+                $scope.user.updatedBudget = true;
+            }
 
             var userNow = new Users($scope.user);
             userNow.$update(function(response) {
@@ -675,6 +677,9 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
                 newBudget.transportB = $scope.transportB;
                 $scope.user.budgetLimits.push(newBudget);
             }            
+            if ($scope.user.budgetLimits.length!==0) {
+                $scope.user.updatedBudget = true;
+            }
 
             var userNow = new Users($scope.user);
             userNow.$update(function(response) {
@@ -703,6 +708,9 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
                 newBudget.month = presentMonth;
                 newBudget.utilitiesB = $scope.utilitiesB;
                 $scope.user.budgetLimits.push(newBudget);
+            }
+            if ($scope.user.budgetLimits.length!==0) {
+                $scope.user.updatedBudget = true;
             }
 
             var userNow = new Users($scope.user);
@@ -733,6 +741,9 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
                 newBudget.foodB = $scope.foodB;
                 $scope.user.budgetLimits.push(newBudget);
             }
+            if ($scope.user.budgetLimits.length!==0) {
+                $scope.user.updatedBudget = true;
+            }
 
             var userNow = new Users($scope.user);
             userNow.$update(function(response) {
@@ -761,6 +772,9 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
                 newBudget.month = presentMonth;
                 newBudget.miscB = $scope.miscB;
                 $scope.user.budgetLimits.push(newBudget);
+            }
+            if ($scope.user.budgetLimits.length!==0) {
+                $scope.user.updatedBudget = true;
             }
 
             var userNow = new Users($scope.user);
