@@ -119,7 +119,7 @@ angular.module('milestones').controller('MilestonesController', ['$scope', '$sta
 							mileStone.dateProgress = Math.floor(Math.abs((((startDate.getTime()-today.getTime())/(oneDay))/mileStone.totalDurationDays)*100));
 							
 							//This scenario arises when someone completes a goal after contributing
-							if (typeof mileStone.completionDate === 'undefined' ||$scope.goal.completionDate ==='undefined') {
+							if (typeof mileStone.completionDate === 'undefined' ||mileStone.completionDate ==='undefined') {
 								var month = $scope.getMonthString(today.getMonth());
 								mileStone.completionDate = today.getDate()+'-'+month+'-'+today.getFullYear();
 							}							
@@ -212,6 +212,11 @@ angular.module('milestones').controller('MilestonesController', ['$scope', '$sta
 		    	
 		    	
 				$scope.user.mileStones.push($scope.goal);
+
+				if ($scope.user.mileStones.length!==0) {
+					$scope.user.updatedMilestones = true;
+				}
+
 				$scope.success = $scope.error = null;			
 				var user = new Users($scope.user);
 				user.$update(function(response) {
@@ -451,8 +456,12 @@ angular.module('milestones').controller('MilestonesController', ['$scope', '$sta
     			if (mileStone.uniqueId===$scope.goal.uniqueId) {
     			   				
     				$scope.user.mileStones.splice(i,1);
+    				console.log('WHAAAATT!');
     			}
-			}								
+			}
+			if ($scope.user.mileStones.length===0) {
+				$scope.user.updatedMilestones = false;
+			}
 			
 			$scope.success = $scope.error = null;			
 
@@ -464,6 +473,9 @@ angular.module('milestones').controller('MilestonesController', ['$scope', '$sta
 
 			}, function(response) {
 				$scope.error = response.data.message;
+				console.log($scope.error);
+				alert('Error Deleting. Try Delete Again');
+				location.reload();
 
 			});
 			$scope.goal = '';
