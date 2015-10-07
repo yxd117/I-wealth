@@ -132,7 +132,6 @@ exports.addNewAsset = function(req, res){
 
 exports.retrieveAssets = function(req, res){
 	Asset.find({}, function(err, assets){
-
 		 res.json(assets);
 	});
 };
@@ -168,3 +167,10 @@ exports.deleteAsset = function(req, res){
 	});
 };
 
+exports.retrieveCurrentAd = function(req, res){
+	Asset.find({'display': true}, function(err, assets){
+		var randPos = _.random(0, assets.length-1);
+		res.json(assets[randPos]);
+
+	});
+};

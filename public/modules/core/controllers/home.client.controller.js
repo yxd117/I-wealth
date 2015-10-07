@@ -199,20 +199,21 @@ if (typeof $scope.budgetLimit !== 'undefined') {
     }       
 }
 		$scope.decachedAdvUrl = false;
-		// if($scope.user.profilePic){
-		// 	var advImageUrl = 'https://hexapic.s3.amazonaws.com/';
-		// 	$scope.decachedImageUrl = advImageUrl + '?decache=' + Math.random();
-		// }
-		// var getLatestAdv = function(){
-		// 	$http.get('/admin/retrieveAssets').success(function(response){
-		// 		console.log(response);
 
-		// 	}).error(function(){
+		var getLatestAdv = function(){
+            var advImageUrl = 'https://hexapic.s3.amazonaws.com/assets/';
+            
+			$http.get('/admin/retrieveCurrentAd').success(function(response){
+				console.log(response);
+                if(response.length === 0) $scope.adHidden = false;
+                $scope.decachedImageUrl = advImageUrl + response.name + '?decache=' + Math.random();
 
-		// 	});
-		// };
+			}).error(function(){
 
-		// getLatestAdv();
-		
+			});
+		};
+
+		getLatestAdv();
+		$scope.adHidden = true;
 	}
 ]);

@@ -1,6 +1,6 @@
 <section data-ng-controller="PostsController" class="content">
   <div class="row">
-    <div class="col-md-offset-1 col-md-10 panel panel-default">
+    <div class="col-md-12 panel panel-default">
       <h1>New Post</h1>
       <div class="col-md-12">
         <form name="postForm" class="form-horizontal" data-ng-submit="createPost()" novalidate>
@@ -14,9 +14,11 @@
             <div class="form-group">
               <label class="control-label" for="content">Content</label>
               <div class="col-md-12">
-                
-                <wysiwyg-edit content="content" ng-model="content">
-                </wysiwyg-edit>
+                <div class="row">
+                  <wysiwyg-edit content="content" ng-model="content">
+                  </wysiwyg-edit>                  
+                </div>
+
 <!--                   <textarea name="content" ng-bind-html="post.content" ng-model="content" id="content" class="form-control" cols="30" rows="10" placeholder="Content"></textarea> -->
                
               </div>

@@ -4,13 +4,13 @@
 			<div class="col-md-12 panel panel-home panel-profile" >
 				<div>
 					<div class="row">
-						<div class="col-sm-4 col-md-4">
+						<div class="col-sm-6 col-md-6">
 							</br>
 							<img style="border:1px solid gray; max-width:100%; max-height:100%;width:150px;height:150px;"  id="preview" ng-src="{{imageUrl}}{{userProfile.profilePic}}" /> 	
 
 
 						</div>
-						<div class="col-sm-8 col-md-8">
+						<div class="col-sm-6 col-md-6">
 							</br>
 							<div class="row">
 									<!-- <div class="col-md-3">Name:</div> -->
@@ -37,7 +37,7 @@
 							<div class="row">
 								<div class="col-md-12">
 									<a class="btn btn-primary" role="button" ng-click="addFriend(userProfile.email, userProfile._id)" ng-show="userProfile.friendStatus === 0 && userProfile.email !== user.email">Add Friend</a>
-									<a class="btn btn-default" role="button" ng-click="" ng-show="userProfile.friendStatus === 1">Sent Friend Request</a>
+									<a class="btn btn-default" role="button" ng-click="" ng-show="userProfile.friendStatus === 1" style="color:black;">Sent Friend Request</a>
 									<a class="btn btn-warning" role="button" ng-click="acceptFriend(userProfile.email, userProfile._id)" ng-show="userProfile.friendStatus === 2">Accept Friend Request</a>
 									<a class="btn btn-success" role="button" ng-click="" ng-show="userProfile.friendStatus === 3">Friends</a>										
 								</div>

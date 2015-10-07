@@ -27,6 +27,8 @@ module.exports = function(app) {
 
 	app.route('/admin/deleteAsset').put(admin.deleteAsset);
 
+	app.route('/admin/retrieveCurrentAd').get(admin.retrieveCurrentAd);
+
 	// app.route('/friendship/acceptFriend').put(friendship.acceptFriend);
 
 	// app.route('/friendship/retrieveUsers').get(friendship.retrieveUserList);
