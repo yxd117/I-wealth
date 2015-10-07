@@ -137,64 +137,77 @@ angular.module('social').controller('PostsController', ['$scope', '$stateParams'
 
 	    $scope.upPost = function(postId){
 
-			var checkUpVoted = function(post){
-				var uidFound = false;
-			    var deferred = $q.defer();
-			    $timeout(function() {
-	    			post.upVote.forEach(function(uId){
-	    				if($scope.user._id === uId){
-	    					uidFound = true;
-		    				$http.put('/api/downPost', {postId: postId, postFilter: $scope.postFilter}).success(function(response){
-					  			$scope.posts = response;
+			$http.put('/api/upPoints', {postId: postId, postFilter: $scope.postFilter}).success(function(response){
+	  			$scope.posts = response;
 
-					  		}).error(function(){
-					  			console.log('There is an error upvoting');
-					  		});
-	    				}
-	    			});					    	
-			      deferred.resolve(uidFound);
-			    }, 2000);
+	  		}).error(function(){
+	  			console.log('There is an error upvoting');
+	  		});	    	
 
-				return deferred.promise;
-			};	    	
+			// var checkUpVoted = function(post){
+			// 	var uidFound = false;
+			//     var deferred = $q.defer();
+			//     $timeout(function() {
+	  //   			post.upVote.forEach(function(uId){
+	  //   				if($scope.user._id === uId){
+	  //   					uidFound = true;
+		 //    				$http.put('/api/downPost', {postId: postId, postFilter: $scope.postFilter}).success(function(response){
+			// 		  			$scope.posts = response;
+
+			// 		  		}).error(function(){
+			// 		  			console.log('There is an error upvoting');
+			// 		  		});
+	  //   				}
+	  //   			});					    	
+			//       deferred.resolve(uidFound);
+			//     }, 500);
+
+			// 	return deferred.promise;
+			// };	    	
 			
-	    	$scope.posts.forEach(function(post){
-	    		if(post._id === postId){
+	  //   	$scope.posts.forEach(function(post){
+	  //   		if(post._id === postId){
 
-					checkUpVoted(post).then(function(uidFound){
-						console.log(uidFound);
-		    			if(uidFound === false){
-		    				$http.put('/api/upPost', {postId: postId, postFilter: $scope.postFilter}).success(function(response){
-					  			$scope.posts = response;
-					  		}).error(function(){
-					  			console.log('There is an error upvoting');
-					  		});
-		    			}
-					});
+			// 		checkUpVoted(post).then(function(uidFound){
+			// 			console.log(uidFound);
+		 //    			if(uidFound === false){
+		 //    				$http.put('/api/upPost', {postId: postId, postFilter: $scope.postFilter}).success(function(response){
+			// 		  			$scope.posts = response;
+			// 		  		}).error(function(){
+			// 		  			console.log('There is an error upvoting');
+			// 		  		});
+		 //    			}
+			// 		});
 
-	    		}
-	    	});
+	  //   		}
+	  //   	});
 	    };
 
 	    $scope.upOnePost = function(postId){
-			var uidFound = false;
-			$scope.post.upVote.forEach(function(uId){
-				if($scope.user._id === uId){
-					uidFound = true;
-    				$http.put('/api/downOnePost', {postId: postId, postFilter: $scope.postFilter}).success(function(response){
-			  			$scope.post = response;
-			  		}).error(function(){
-			  			console.log('There is an error upvoting');
-			  		});
-				}
-			});
-			if(uidFound === false){
-				$http.put('/api/upOnePost', {postId: postId, postFilter: $scope.postFilter}).success(function(response){
-		  			$scope.post = response;
-		  		}).error(function(){
-		  			console.log('There is an error upvoting');
-		  		});
-			}
+			$http.put('/api/upOnePoints', {postId: postId, postFilter: $scope.postFilter}).success(function(response){
+	  			$scope.post = response;
+
+	  		}).error(function(){
+	  			console.log('There is an error upvoting');
+	  		});	
+			// var uidFound = false;
+			// $scope.post.upVote.forEach(function(uId){
+			// 	if($scope.user._id === uId){
+			// 		uidFound = true;
+   //  				$http.put('/api/downOnePost', {postId: postId, postFilter: $scope.postFilter}).success(function(response){
+			//   			$scope.post = response;
+			//   		}).error(function(){
+			//   			console.log('There is an error upvoting');
+			//   		});
+			// 	}
+			// });
+			// if(uidFound === false){
+			// 	$http.put('/api/upOnePost', {postId: postId, postFilter: $scope.postFilter}).success(function(response){
+		 //  			$scope.post = response;
+		 //  		}).error(function(){
+		 //  			console.log('There is an error upvoting');
+		 //  		});
+			// }
 	    };
 
 	}

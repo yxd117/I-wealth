@@ -121,30 +121,36 @@ angular.module('social').controller('SocialController', ['$scope', '$window','$s
 		};
 
 	    $scope.upPost = function(postId, userProfile){
-	    	$scope.posts.forEach(function(post){
-	    		if(post._id === postId){
-	    			console.log(post.upVote);
-	    			var uidFound = false;
-	    			post.upVote.forEach(function(uId){
-	    				if($scope.user._id === uId){
-	    					uidFound = true;
-		    				$http.put('/api/downUserPosts', {_id: userProfile._id, postId: postId}).success(function(response){
-					  			$scope.posts = response;
-					  			console.log(response);
-					  		}).error(function(){
-					  			console.log('There is an error upvoting');
-					  		});
-	    				}
-	    			});
-	    			if(uidFound === false){
-	    				$http.put('/api/upUserPosts', {_id: userProfile._id,postId: postId}).success(function(response){
-				  			$scope.posts = response;
-				  		}).error(function(){
-				  			console.log('There is an error upvoting');
-				  		});
-	    			}
-	    		}
-	    	});
+	    	console.log('here');
+			$http.put('/api/upUserPoints', {_id: userProfile._id,postId: postId}).success(function(response){
+	  			$scope.posts = response;
+	  		}).error(function(){
+	  			console.log('There is an error upvoting');
+	  		});
+	    	// $scope.posts.forEach(function(post){
+	    	// 	if(post._id === postId){
+	    	// 		console.log(post.upVote);
+	    	// 		var uidFound = false;
+	    	// 		post.upVote.forEach(function(uId){
+	    	// 			if($scope.user._id === uId){
+	    	// 				uidFound = true;
+		    // 				$http.put('/api/downUserPosts', {_id: userProfile._id, postId: postId}).success(function(response){
+					 //  			$scope.posts = response;
+					 //  			console.log(response);
+					 //  		}).error(function(){
+					 //  			console.log('There is an error upvoting');
+					 //  		});
+	    	// 			}
+	    	// 		});
+	    	// 		if(uidFound === false){
+	    	// 			$http.put('/api/upUserPosts', {_id: userProfile._id,postId: postId}).success(function(response){
+				  // 			$scope.posts = response;
+				  // 		}).error(function(){
+				  // 			console.log('There is an error upvoting');
+				  // 		});
+	    	// 		}
+	    	// 	}
+	    	// });
 	    };
 
 	    

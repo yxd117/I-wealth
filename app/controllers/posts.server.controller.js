@@ -7,7 +7,8 @@ var mongoose = require('mongoose'),
 	errorHandler = require('./errors.server.controller'),
 	Post = mongoose.model('Post'),
 	User = mongoose.model('User'),
-	_ = require('lodash');
+	_ = require('lodash'),
+	async = require('async');
 
 
 
@@ -373,7 +374,6 @@ var listUserPostsFn = function(req, res){
 				});
 				if(post.user._id.equals(req.query._id)){
 					postToReturn.push(post);
-					console.log(postToReturn);
 				}else if(post.user._id.equals(req.query.userId)){
 					if(post.privacy ===' public'){
 						postToReturn.push(post);
@@ -424,7 +424,6 @@ exports.postByID = function(req, res, next, id) {
 				}
 			});
 			req.Post = p;
-			console.log(p);
 			next();
     	});
     	
@@ -435,9 +434,6 @@ exports.postByID = function(req, res, next, id) {
  * Post authorization middleware
  */
 exports.hasAuthorization = function(req, res, next) {
-	console.log('here');
-	console.log(req.Post.user._id);
-	console.log(req.user._id);
 	if (!req.Post.user._id.equals(req.user._id)) {
 		return res.status(403).send({
 			message: 'User is not authorized'
@@ -446,41 +442,94 @@ exports.hasAuthorization = function(req, res, next) {
 	next();
 };
 
+exports.upPoints = function(req, res){
+	Post.find({'_id': req.body.postId}).exec(function(err, post){
+		var idExist = false;
+		async.series([
+			function(callback){
+				post[0].upVote.forEach(function(id){
+					if(req.user._id.equals(id)){
+						idExist = true;
+					}
+				});
+				callback();		
+			}
+			], function(err){
+				console.log('here');
+				if(err) console.log('Problem iterating upvotelist');
 
-exports.upPost = function(req, res){
-	Post.update({'_id': req.body.postId}, {$push: {upVote: req.user.id}}, function(err){
-        if(err){
-            console.log(err);
-        }else{
-            console.log('Successfully upPost');
-            if(req.body.postFilter === 'public'){
-            	listAllPosts(req, res);
-            }else if(req.body.postFilter === 'friends'){
-            	listFriendsPost(req, res);
-            }else if(req.body.postFilter === 'personal'){
-            	listPersonalPosts(req, res);
-            }
-        }			
+				if(idExist === true){
+					Post.update({'_id': req.body.postId}, {$pull: {upVote: req.user.id}}, function(err){
+				        if(err){
+				            console.log(err);
+				        }else{
+				            console.log('Successfully upPost');
+				            if(req.body.postFilter === 'public'){
+				            	listAllPosts(req, res);
+				            }else if(req.body.postFilter === 'friends'){
+				            	listFriendsPost(req, res);
+				            }else if(req.body.postFilter === 'personal'){
+				            	listPersonalPosts(req, res);
+				            }
+				 
+				        }			
+					});				
+				}else{
+					Post.update({'_id': req.body.postId}, {$push: {upVote: req.user.id}}, function(err){
+				        if(err){
+				            console.log(err);
+				        }else{
+				            console.log('Successfully upPost');
+				            if(req.body.postFilter === 'public'){
+				            	listAllPosts(req, res);
+				            }else if(req.body.postFilter === 'friends'){
+				            	listFriendsPost(req, res);
+				            }else if(req.body.postFilter === 'personal'){
+				            	listPersonalPosts(req, res);
+				            }
+				        }			
+					});	
+				}
+			
+		});
+
 	});
 };
 
-exports.downPost = function(req, res){
-	Post.update({'_id': req.body.postId}, {$pull: {upVote: req.user.id}}, function(err){
-        if(err){
-            console.log(err);
-        }else{
-            console.log('Successfully upPost');
-            if(req.body.postFilter === 'public'){
-            	listAllPosts(req, res);
-            }else if(req.body.postFilter === 'friends'){
-            	listFriendsPost(req, res);
-            }else if(req.body.postFilter === 'personal'){
-            	listPersonalPosts(req, res);
-            }
+// exports.upPost = function(req, res){
+// 	Post.update({'_id': req.body.postId}, {$push: {upVote: req.user.id}}, function(err){
+//         if(err){
+//             console.log(err);
+//         }else{
+//             console.log('Successfully upPost');
+//             if(req.body.postFilter === 'public'){
+//             	listAllPosts(req, res);
+//             }else if(req.body.postFilter === 'friends'){
+//             	listFriendsPost(req, res);
+//             }else if(req.body.postFilter === 'personal'){
+//             	listPersonalPosts(req, res);
+//             }
+//         }			
+// 	});
+// };
+
+// exports.downPost = function(req, res){
+// 	Post.update({'_id': req.body.postId}, {$pull: {upVote: req.user.id}}, function(err){
+//         if(err){
+//             console.log(err);
+//         }else{
+//             console.log('Successfully upPost');
+//             if(req.body.postFilter === 'public'){
+//             	listAllPosts(req, res);
+//             }else if(req.body.postFilter === 'friends'){
+//             	listFriendsPost(req, res);
+//             }else if(req.body.postFilter === 'personal'){
+//             	listPersonalPosts(req, res);
+//             }
  
-        }			
-	});
-};
+//         }			
+// 	});
+// };
 
 var findOnePost = function(req, res){
 	Post.findById(req.body.postId).populate([{path: 'comments'}, {path: 'user', select: '_id firstName lastName profilePic'}]).lean().exec(function(err, post){
@@ -507,27 +556,68 @@ var findOnePost = function(req, res){
     	
 };
 
-exports.upOnePost = function(req, res){
-	Post.update({'_id': req.body.postId}, {$push: {upVote: req.user.id}}, function(err){
-        if(err){
-            console.log(err);
-        }else{
-            console.log('Successfully upPost');
-            findOnePost(req, res);
-        }			
+// exports.upOnePost = function(req, res){
+// 	Post.update({'_id': req.body.postId}, {$push: {upVote: req.user.id}}, function(err){
+//         if(err){
+//             console.log(err);
+//         }else{
+//             console.log('Successfully upPost');
+//             findOnePost(req, res);
+//         }			
+// 	});
+// };
+
+// exports.downOnePost = function(req, res){
+// 	Post.update({'_id': req.body.postId}, {$pull: {upVote: req.user.id}}, function(err){
+//         if(err){
+//             console.log(err);
+//         }else{
+//             console.log('Successfully upPost');
+//             findOnePost(req, res);
+//         }			
+// 	});
+// };
+
+exports.upOnePoints = function(req, res){
+	Post.find({'_id': req.body.postId}).exec(function(err, post){
+		var idExist = false;
+		async.series([
+			function(callback){
+				post[0].upVote.forEach(function(id){
+					if(req.user._id.equals(id)){
+						idExist = true;
+					}
+				});
+				callback();		
+			}
+			], function(err){
+				console.log('here');
+				if(err) console.log('Problem iterating upvotelist');
+
+				if(idExist === true){
+					Post.update({'_id': req.body.postId}, {$pull: {upVote: req.user.id}}, function(err){
+				        if(err){
+				            console.log(err);
+				        }else{
+				 			findOnePost(req, res);
+				        }			
+					});				
+				}else{
+					Post.update({'_id': req.body.postId}, {$push: {upVote: req.user.id}}, function(err){
+				        if(err){
+				            console.log(err);
+				        }else{
+				            console.log('Successfully upPost');
+				            findOnePost(req, res);
+				        }			
+					});	
+				}
+			
+		});
+
 	});
 };
 
-exports.downOnePost = function(req, res){
-	Post.update({'_id': req.body.postId}, {$pull: {upVote: req.user.id}}, function(err){
-        if(err){
-            console.log(err);
-        }else{
-            console.log('Successfully upPost');
-            findOnePost(req, res);
-        }			
-	});
-};
 
 var listUserPostsUpdateFn = function(req, res){
 	var friendIdList = [];
@@ -571,24 +661,64 @@ var listUserPostsUpdateFn = function(req, res){
 		}
 	});
 };
-exports.upUserPosts = function(req, res){
-	Post.update({'_id': req.body.postId}, {$push: {upVote: req.user.id}}, function(err){
-        if(err){
-            console.log(err);
-        }else{
-            console.log('Successfully upPost');
-            listUserPostsUpdateFn(req, res);
-        }			
-	});
-};
+// exports.upUserPosts = function(req, res){
+// 	Post.update({'_id': req.body.postId}, {$push: {upVote: req.user.id}}, function(err){
+//         if(err){
+//             console.log(err);
+//         }else{
+//             console.log('Successfully upPost');
+//             listUserPostsUpdateFn(req, res);
+//         }			
+// 	});
+// };
 
-exports.downUserPosts = function(req, res){
-	Post.update({'_id': req.body.postId}, {$pull: {upVote: req.user.id}}, function(err){
-        if(err){
-            console.log(err);
-        }else{
-            console.log('Successfully upPost');
-            listUserPostsUpdateFn(req, res);
-        }			
+// exports.downUserPosts = function(req, res){
+// 	Post.update({'_id': req.body.postId}, {$pull: {upVote: req.user.id}}, function(err){
+//         if(err){
+//             console.log(err);
+//         }else{
+//             console.log('Successfully upPost');
+//             listUserPostsUpdateFn(req, res);
+//         }			
+// 	});
+// };
+
+exports.upUserPoints = function(req, res){
+	Post.find({'_id': req.body.postId}).exec(function(err, post){
+		var idExist = false;
+		async.series([
+			function(callback){
+				post[0].upVote.forEach(function(id){
+					if(req.user._id.equals(id)){
+						idExist = true;
+					}
+				});
+				callback();		
+			}
+			], function(err){
+				console.log('here');
+				if(err) console.log('Problem iterating upvotelist');
+
+				if(idExist === true){
+					Post.update({'_id': req.body.postId}, {$pull: {upVote: req.user.id}}, function(err){
+				        if(err){
+				            console.log(err);
+				        }else{
+				 			listUserPostsUpdateFn(req, res);
+				        }			
+					});				
+				}else{
+					Post.update({'_id': req.body.postId}, {$push: {upVote: req.user.id}}, function(err){
+				        if(err){
+				            console.log(err);
+				        }else{
+				            console.log('Successfully upPost');
+				            listUserPostsUpdateFn(req, res);
+				        }			
+					});	
+				}
+			
+		});
+
 	});
 };

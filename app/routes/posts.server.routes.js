@@ -35,20 +35,33 @@ module.exports = function(app) {
 	app.route('/api/removeComment')
 		.put(posts.removeComment);
 
-	app.route('/api/upPost')
-		.put(posts.upPost);
-	app.route('/api/downPost')
-		.put(posts.downPost);
+	//Post Lists
+	// app.route('/api/upPost')
+	// 	.put(posts.upPost);
+	// app.route('/api/downPost')
+	// 	.put(posts.downPost);
+	//NEW
+	app.route('/api/upPoints')
+		.put(posts.upPoints);
 
-	app.route('/api/upOnePost')
-		.put(posts.upOnePost);
-	app.route('/api/downOnePost')
-		.put(posts.downOnePost);
+	//View One Post
+	// app.route('/api/upOnePost')
+	// 	.put(posts.upOnePost);
+	// app.route('/api/downOnePost')
+	// 	.put(posts.downOnePost);
+	//NEW
+	app.route('/api/upOnePoints')
+		.put(posts.upOnePoints);
 
-	app.route('/api/upUserPosts')
-		.put(posts.upUserPosts);
-	app.route('/api/downUserPosts')
-		.put(posts.downUserPosts);
+	//View Profile Posts 
+	// app.route('/api/upUserPosts')
+	// 	.put(posts.upUserPosts);
+	// app.route('/api/downUserPosts')
+	// 	.put(posts.downUserPosts);
+
+	app.route('/api/upUserPoints')
+		.put(posts.upUserPoints);
+
 
 	// Finish by binding the article middleware
 	app.param('postId', posts.postByID);

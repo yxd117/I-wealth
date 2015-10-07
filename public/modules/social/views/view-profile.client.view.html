@@ -184,15 +184,17 @@
 		      </div>
 		      <div class="row" style="margin-top:5px; padding:5px 0px ; margin-bottom:0px; background-color:#f6f6f6;">  
 		        <div class="col-md-2" style="margin:0px; ">
-		          <div ng-click="upPost(post._id, userProfile)" ng-class="{selectedPost: post.up === true}">
+		          <div ng-click="upPost(post._id, userProfile)" class="btn btn-xs btn-default" ng-class="{selectedPost: post.up === true}">
 		            <span class="glyphicon glyphicon glyphicon-arrow-up"></span>
 		            <span>{{post.upVote.length}} Points</span>
 		          </div>
 		        </div>
 		        <div class="col-md-3" style="margin:0px;">
-		          <span class="glyphicon glyphicon-comment"></span>
-		          <span>Comments (<span data-ng-bind="post.comments.length"></span>)</span>
-		        </div>  
+		          <div class="btn btn-xs btn-default" data-ui-sref="postView({postId: post._id})">
+		            <span class="glyphicon glyphicon-comment"></span>
+		            <span>Comments (<span data-ng-bind="post.comments.length"></span>)</span>            
+		          </div>
+		        </div> 
 		      </div>
 		    </a>
 	  	</div>
