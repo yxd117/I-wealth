@@ -15,6 +15,26 @@ angular.module('core').controller('NotificationController', ['$rootScope', '$sco
 
 		// 
 
+		$scope.$watch('authentication.user', function(){
+			$scope.user = Authentication.user;
+
+			if($scope.authentication.user){
+				$http.get('/notification/retrieveAll').then(function(response){
+					var notificationAll = response.data.notificationListAll;
+					var notificationListNew = response.data.notificationListNew;
+					$scope.numNotification = notificationListNew.length;
+					$scope.list = notificationListNew;
+					$scope.listAll = notificationAll;
+					if(notificationListNew.length === 0){
+						$scope.list[0] = {
+							title: 'No new notification'
+						};
+					}
+					console.log($scope.listAll);
+				});					
+			}
+		
+		});
 		$scope.getNotification = function(){
 			$http.get('/notification/retrieveAll').then(function(response){
 				var notificationAll = response.data.notificationListAll;

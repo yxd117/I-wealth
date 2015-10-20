@@ -14,7 +14,7 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$http
 
 				// And redirect to the index page
 				$location.path('/settings/questionnaire');
-				$window.location.reload();
+				// $window.location.reload();
 
 			}).error(function(response) {
 				
@@ -30,7 +30,6 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$http
 				// If successful we assign the response to the global user model
 				$scope.authentication.user = response;
 				var completeQns = $scope.authentication.user.completeQns;
-
 				// And redirect to the index page
 				var userType = $scope.authentication.user.roles;
 				if (userType[0].localeCompare('admin') === 0) {
@@ -39,7 +38,8 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$http
 					if (!completeQns)$location.path('/settings/questionnaire');
 					else $location.path('/home');					
 				}
-				$window.location.reload();
+
+				// $window.location.reload();
 				// getNotification();
 			}).error(function(response) {
 				
@@ -54,5 +54,7 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$http
 				$location.path('/signin');
 			}, 5000);
 		};
+
+
 	}
 ]);

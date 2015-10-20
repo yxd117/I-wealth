@@ -41,7 +41,7 @@
 			</ul>
 			<ul class="nav navbar-nav navbar-right" data-ng-show="authentication.user">
 				
-				<li class="dropdown" dropdown data-ng-controller="NotificationController" ng-init="getNotification()" data-ng-show="authentication.user.roles[0] === 'user'">
+				<li class="dropdown" dropdown data-ng-controller="NotificationController" data-ng-show="authentication.user.roles[0] === 'user'">
 					<a class="dropdown-toggle" dropdown-toggle style="padding-right:5px;padding-left:5px;" ng-click="viewNotification()">
 						<span class="glyphicon glyphicon-bell" style="font-size: 1.5em;padding-top:4px;"></span>
 						<span class="badge badge-notify" style="top:-15px;left:-15px;position:relative;background:red;margin:0px;" ng-hide="numNotification === 0">{{numNotification}}</span>

@@ -777,6 +777,26 @@ angular.module('core').controller('NotificationController', ['$rootScope', '$sco
 
 		// 
 
+		$scope.$watch('authentication.user', function(){
+			$scope.user = Authentication.user;
+
+			if($scope.authentication.user){
+				$http.get('/notification/retrieveAll').then(function(response){
+					var notificationAll = response.data.notificationListAll;
+					var notificationListNew = response.data.notificationListNew;
+					$scope.numNotification = notificationListNew.length;
+					$scope.list = notificationListNew;
+					$scope.listAll = notificationAll;
+					if(notificationListNew.length === 0){
+						$scope.list[0] = {
+							title: 'No new notification'
+						};
+					}
+					console.log($scope.listAll);
+				});					
+			}
+		
+		});
 		$scope.getNotification = function(){
 			$http.get('/notification/retrieveAll').then(function(response){
 				var notificationAll = response.data.notificationListAll;
@@ -10384,7 +10404,7 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$http
 
 				// And redirect to the index page
 				$location.path('/settings/questionnaire');
-				$window.location.reload();
+				// $window.location.reload();
 
 			}).error(function(response) {
 				
@@ -10400,7 +10420,6 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$http
 				// If successful we assign the response to the global user model
 				$scope.authentication.user = response;
 				var completeQns = $scope.authentication.user.completeQns;
-
 				// And redirect to the index page
 				var userType = $scope.authentication.user.roles;
 				if (userType[0].localeCompare('admin') === 0) {
@@ -10409,7 +10428,8 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$http
 					if (!completeQns)$location.path('/settings/questionnaire');
 					else $location.path('/home');					
 				}
-				$window.location.reload();
+
+				// $window.location.reload();
 				// getNotification();
 			}).error(function(response) {
 				
@@ -10424,6 +10444,8 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$http
 				$location.path('/signin');
 			}, 5000);
 		};
+
+
 	}
 ]);
 'use strict';
