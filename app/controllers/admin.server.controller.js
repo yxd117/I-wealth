@@ -351,9 +351,7 @@ exports.retrieveStatisticsCreditProfile = function(req, res){
 
 
 exports.retrieveFinancialUsage = function(req, res){
-	console.log(req.body);
 	var selectedMonthArr = req.body.selectedMonthArr;
-	console.log(selectedMonthArr[0][0]);
 	var assetsArr = new Array(req.body.numMonths);
 	for(var i = 0; i < req.body.numMonths; i++){
 		assetsArr[i] = 0;
@@ -418,9 +416,7 @@ exports.retrieveFinancialUsage = function(req, res){
 };
 
 exports.retrieveSocialActivity = function(req, res){
-	console.log(req.body);
 	var selectedMonthArr = req.body.selectedMonthArr;
-	console.log(selectedMonthArr[0][0]);
 	var postsArr = new Array(req.body.numMonths);
 	for(var i = 0; i < req.body.numMonths; i++){
 		postsArr[i] = 0;
