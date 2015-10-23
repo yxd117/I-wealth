@@ -8,9 +8,9 @@ angular.module('core').run(['Menus',
 		//Menus.addSubMenuItem('topbar', 'creditworthiness', 'view Creditworthiness', 'creditworthiness');
 		Menus.addMenuItem('topbar', 'Financial Health', 'financialhealth', '/financialhealth');
 
-		Menus.addMenuItem('topbar', 'Manage Finances', 'financialrecord','/financialrecord');
+		Menus.addMenuItem('topbar', 'Financial Summary', 'financialrecord','/financialrecord');
 
-		Menus.addMenuItem('topbar', 'Budget', 'budget', '/budget');
+		Menus.addMenuItem('topbar', 'Cash Expense Tracker', 'budget', '/budget');
 		// Menus.addSubMenuItem('topbar', 'financial', 'Manage Debt', 'financial/debt');
 		// Menus.addSubMenuItem('topbar', 'financial', 'Manage Insurance', 'financial/insurance');
 		// Menus.addSubMenuItem('topbar', 'financial', 'Manage Investment', 'financial/investment');
