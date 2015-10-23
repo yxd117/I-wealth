@@ -33,6 +33,8 @@ module.exports = function(app) {
 
 	app.route('/admin/retrieveFinancialUsage').put(admin.retrieveFinancialUsage);
 
+	app.route('/admin/retrieveSocialActivity').put(admin.retrieveSocialActivity);
+
 	// app.route('/friendship/acceptFriend').put(friendship.acceptFriend);
 
 	// app.route('/friendship/retrieveUsers').get(friendship.retrieveUserList);

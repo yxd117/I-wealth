@@ -362,16 +362,11 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', '$loca
 	        $scope.year = Number($scope.dt.getFullYear());    
 	        $scope.selectedYearTo = $scope.year;
 
-	        var monthMinusTwo = $scope.month - 2;
-	        $scope.monthFrom = monthMinusTwo;
+	        $scope.monthFrom = $scope.month - 2;
 	        $scope.selectedYearFrom = $scope.year;  
-	        if(monthMinusTwo < 0){
-	        	$scope.monthFrom = 12 + monthMinusTwo;
-	        	$scope.selectedYearFrom = $scope.year - 1;
-	        }
-	        $scope.monthMid = $scope.month - 1;
-	        if($scope.monthMid < 0){
-	        	$scope.monthMid = 11;
+	        if($scope.monthFrom < 0){
+	        	$scope.monthFrom = 12 + $scope.month - 2;
+	        	$scope.selectedYearFrom = $scope.year;
 	        }
 	        
 	          	
@@ -384,18 +379,51 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', '$loca
 
 		//3 Demographics Financial Usage
 		var retrieveFinancialUsage = function(){
-			var numMonths;
+			var numMonths = 0;
+			var mthStart;
+			var selectedMonthArr = [];
 			if($scope.selectedYearFrom === $scope.selectedYearTo){
 				numMonths = $scope.month - $scope.monthFrom + 1;
+				mthStart = $scope.monthFrom;
+				while(mthStart <= $scope.month){
+					selectedMonthArr.push([mthStart, $scope.selectedYearFrom]);
+					mthStart++;
+				}
 				
+			}else {
+				try{
+					numMonths += 11 - $scope.monthFrom + 1;
+					mthStart = $scope.monthFrom;
+					while(mthStart < 12){
+						selectedMonthArr.push([mthStart, $scope.selectedYearFrom]);
+						mthStart++;
+					}					
+					$scope.selectedYearFrom += 1;
+					while($scope.selectedYearFrom !== $scope.selectedYearTo){
+						numMonths += 12;
+						for(var i = 0; i < 12; i++){
+							selectedMonthArr.push([i, $scope.selectedYearFrom]);
+						}						
+						$scope.selectedYearFrom ++;
+					}
+					numMonths += $scope.month + 1;
+					mthStart = 0;
+					while(mthStart <= $scope.month){
+						selectedMonthArr.push([mthStart, $scope.selectedYearFrom]);
+						mthStart++;
+					}	
+				}catch(err){
+					console.log(err);
+				}
 			}
-			console.log(numMonths);
-			$http.put('/admin/retrieveFinancialUsage', {monthFrom: $scope.monthFrom, yearFrom: $scope.selectedYearFrom, monthTo: $scope.month, yearTo: $scope.selectedYearTo}).success(function(response){
-				console.log(response);
+			$http.put('/admin/retrieveFinancialUsage', {monthFrom: $scope.monthFrom, yearFrom: $scope.selectedYearFrom, monthTo: $scope.month, yearTo: $scope.selectedYearTo, numMonths:numMonths, selectedMonthArr: selectedMonthArr}).success(function(response){
 				$scope.userFinancialUsageData = response;
-				console.log(response);
+				
 
-				$scope.labelsFinancialUsage = [$scope.monthArr[$scope.monthFrom], $scope.monthArr[$scope.monthMid], $scope.monthArr[$scope.month]];
+				selectedMonthArr.forEach(function(monthYearArr){
+					monthYearArr[0] = $scope.monthArr[monthYearArr[0]];
+				});
+				$scope.labelsFinancialUsage = selectedMonthArr;
 				$scope.seriesFinancialUsage = ['Updated Assets', 'Updated Liabilities', 'Updated Income'];
 				$scope.dataFinancialUsage = [$scope.userFinancialUsageData.assetsArr, $scope.userFinancialUsageData.liabilitiesArr, $scope.userFinancialUsageData.incomeExpenseArr];
 			
@@ -406,10 +434,92 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', '$loca
 		};
 		retrieveFinancialUsage();
 
-
+		$scope.reloadFinancialUsage = function(){
+			console.log('reload');
+			var yearFrom = angular.copy($scope.selectedYearFrom);
+			for(var i = 0; i < $scope.monthArr.length; i++){
+				if($scope.monthArr[i] === $scope.selectedMonthFrom){
+					$scope.monthFrom = i;
+				}
+				if($scope.monthArr[i] === $scope.selectedMonthTo){
+					$scope.month = i;
+				}
+			}
+			retrieveFinancialUsage();
+			$scope.selectedYearFrom = yearFrom;
+		};
 		//4 Demographcis Milestones Completion
 
 		//5 Demographics Social Activity 
+		var retrieveSocialActivity = function(){
+			var numMonths = 0;
+			var mthStart;
+			var selectedMonthArr = [];
+			if($scope.selectedYearFrom === $scope.selectedYearTo){
+				numMonths = $scope.month - $scope.monthFrom + 1;
+				mthStart = $scope.monthFrom;
+				while(mthStart <= $scope.month){
+					selectedMonthArr.push([mthStart, $scope.selectedYearFrom]);
+					mthStart++;
+				}
+				
+			}else {
+				try{
+					numMonths += 11 - $scope.monthFrom + 1;
+					mthStart = $scope.monthFrom;
+					while(mthStart < 12){
+						selectedMonthArr.push([mthStart, $scope.selectedYearFrom]);
+						mthStart++;
+					}					
+					$scope.selectedYearFrom += 1;
+					while($scope.selectedYearFrom !== $scope.selectedYearTo){
+						numMonths += 12;
+						for(var i = 0; i < 12; i++){
+							selectedMonthArr.push([i, $scope.selectedYearFrom]);
+						}						
+						$scope.selectedYearFrom ++;
+					}
+					numMonths += $scope.month + 1;
+					mthStart = 0;
+					while(mthStart <= $scope.month){
+						selectedMonthArr.push([mthStart, $scope.selectedYearFrom]);
+						mthStart++;
+					}	
+				}catch(err){
+					console.log(err);
+				}
+			}
+			$http.put('/admin/retrieveSocialActivity', {monthFrom: $scope.monthFrom, yearFrom: $scope.selectedYearFrom, monthTo: $scope.month, yearTo: $scope.selectedYearTo, numMonths:numMonths, selectedMonthArr: selectedMonthArr}).success(function(response){
+				$scope.userSocialActivityData = response;
+				
 
+				selectedMonthArr.forEach(function(monthYearArr){
+					monthYearArr[0] = $scope.monthArr[monthYearArr[0]];
+				});
+				$scope.labelsSocialActivity = selectedMonthArr;
+				$scope.seriesSocialActivity = ['Posts Created', 'Comments Created'];
+				$scope.dataSocialActivity = [$scope.userSocialActivityData.postsArr, $scope.userSocialActivityData.commentsArr];
+			
+				
+			}).error(function(response){
+				console.log(response);
+			});
+		};
+		retrieveSocialActivity();
+
+		$scope.reloadSocialActivity = function(){
+			console.log('reload');
+			var yearFrom = angular.copy($scope.selectedYearFrom);
+			for(var i = 0; i < $scope.monthArr.length; i++){
+				if($scope.monthArr[i] === $scope.selectedMonthFrom){
+					$scope.monthFrom = i;
+				}
+				if($scope.monthArr[i] === $scope.selectedMonthTo){
+					$scope.month = i;
+				}
+			}
+			retrieveSocialActivity();
+			$scope.selectedYearFrom = yearFrom;
+		};
 	}
 ]);

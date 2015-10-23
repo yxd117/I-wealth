@@ -9,7 +9,8 @@ var mongoose = require('mongoose'),
 	User = mongoose.model('User'),
 	Asset = mongoose.model('Asset'),
 	_ = require('lodash'),
-	aws = require('aws-sdk');
+	aws = require('aws-sdk'),
+	async = require('async');
 
 var AWS_ACCESS_KEY = process.env.AWS_ACCESS_KEY;
 var AWS_SECRET_KEY = process.env.AWS_SECRET_KEY;
@@ -351,18 +352,109 @@ exports.retrieveStatisticsCreditProfile = function(req, res){
 
 exports.retrieveFinancialUsage = function(req, res){
 	console.log(req.body);
-
-	var assetsArr = [0,0,0];
-	var liabilitiesArr = [0,0,0];
-	var incomeExpenseArr = [0,0,0];
+	var selectedMonthArr = req.body.selectedMonthArr;
+	console.log(selectedMonthArr[0][0]);
+	var assetsArr = new Array(req.body.numMonths);
+	for(var i = 0; i < req.body.numMonths; i++){
+		assetsArr[i] = 0;
+	}
+	var liabilitiesArr = new Array(req.body.numMonths);
+	for(var j = 0; j < req.body.numMonths; j++){
+		liabilitiesArr[j] = 0;
+	}	
+	var incomeExpenseArr = new Array(req.body.numMonths);
+	for(var k = 0; k < req.body.numMonths; k++){
+		incomeExpenseArr[k] = 0;
+	}		
 	User.find({}, function(err, users){
+		async.series([
+			function(callback){
+				users.forEach(function(user){
+					if(user.assetsRecords){
+						user.assetsRecords.forEach(function(aRecord){
+							for(var a = 0; a < selectedMonthArr.length; a++){
+								if(aRecord.month === selectedMonthArr[a][0] && aRecord.year === selectedMonthArr[a][1]){
+									assetsArr[a]++;
+								}
+							}
+						});
+					}
+					if(user.liabilitiesRecords){
+						user.liabilitiesRecords.forEach(function(lRecord){
+							for(var a = 0; a < selectedMonthArr.length; a++){
+								if(lRecord.month === selectedMonthArr[a][0] && lRecord.year === selectedMonthArr[a][1]){
+									liabilitiesArr[a]++;
+								}
+							}
+						});
+					}
+					if(user.incomeExpenseRecords){
+						user.incomeExpenseRecords.forEach(function(ieRecord){
+							for(var a = 0; a < selectedMonthArr.length; a++){
+								if(ieRecord.month === selectedMonthArr[a][0] && ieRecord.year === selectedMonthArr[a][1]){
+									incomeExpenseArr[a]++;
+								}
+							}
+						});
+					}
 
-		var statisticsFinancialUsage = {
-			assetsArr: assetsArr,
-			liabilitiesArr: liabilitiesArr,
-			incomeExpenseArr: incomeExpenseArr
+					
+			});
+			callback();		
+		}
+		], function(err){
+			console.log('here');
+			if(err) console.log('Problem iterating user array');
+
+			var statisticsFinancialUsage = {
+				assetsArr: assetsArr,
+				liabilitiesArr: liabilitiesArr,
+				incomeExpenseArr: incomeExpenseArr
+			};
+			res.json(statisticsFinancialUsage);
+		});
+		
+	});
+};
+
+exports.retrieveSocialActivity = function(req, res){
+	console.log(req.body);
+	var selectedMonthArr = req.body.selectedMonthArr;
+	console.log(selectedMonthArr[0][0]);
+	var postsArr = new Array(req.body.numMonths);
+	for(var i = 0; i < req.body.numMonths; i++){
+		postsArr[i] = 0;
+	}
+	var commentsArr = new Array(req.body.numMonths);
+	for(var j = 0; j < req.body.numMonths; j++){
+		commentsArr[j] = 0;
+	}	
+
+	Post.find({}, function(err, posts){
+		posts.forEach(function(post){
+			for(var a = 0; a < selectedMonthArr.length; a++){
+				if(post.created.getMonth() === selectedMonthArr[a][0] && post.created.getFullYear() === selectedMonthArr[a][1]){
+					postsArr[a]++;
+				}
+			}
+			if(post.comments){
+				post.comments.forEach(function(comments){
+					for(var a = 0; a < selectedMonthArr.length; a++){
+						if(comments.created.getMonth() === selectedMonthArr[a][0] && comments.created.getFullYear() === selectedMonthArr[a][1]){
+							commentsArr[a]++;
+						}
+					}					
+				});
+			}
+		});
+
+
+		var statisticsSocialActivity = {
+			postsArr: postsArr,
+			commentsArr: commentsArr
 		};
-		res.json(statisticsFinancialUsage);
+
+		res.json(statisticsSocialActivity);
 	});
 
 };

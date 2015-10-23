@@ -20,30 +20,31 @@
 				</div>	
 			</div>
 			<div class="row">
-				<div class="col-md-6">
+				<div class="col-md-11">
 					<div class="row">
-			    		<div class="col-sm-4 text-center">
+			    		<div class="col-sm-3 text-right">
 			    			<h4>Select From: </h4>
 			    		</div>
-					    <div class="col-sm-4">
+					    <div class="col-sm-3">
 					        <select data-ng-options="m as m for m in monthArr" class="form-control" data-ng-model="selectedMonthFrom" ng-init="selectedMonthFrom = monthArr[monthFrom]"></select>
 					    </div>
-					    <div class="col-sm-4">
+					    <div class="col-sm-2">
 					        <input type="number" class="form-control" data-ng-model="selectedYearFrom">
-					    </div>							
+					    </div>	
 					</div>
-				</div>
-				<div class="col-md-6">
 					<div class="row">
-			    		<div class="col-sm-4 text-center">
-			    			<h4>To</h4>
+			    		<div class="col-sm-3 text-right">
+			    			<h4>To:</h4>
 			    		</div>
-					    <div class="col-sm-4">
+					    <div class="col-sm-3">
 					        <select data-ng-options="m as m for m in monthArr" class="form-control" data-ng-model="selectedMonthTo" ng-init="selectedMonthTo = monthArr[month]"></select>
 					    </div>
-					    <div class="col-sm-4">
+					    <div class="col-sm-2">
 					        <input type="number" class="form-control" data-ng-model="selectedYearTo">
-					    </div>							
+					    </div>	
+					    <div class="col-sm-2">
+					    	<button class="btn btn-primary" ng-click="reloadFinancialUsage()">Reload Graph</button>
+					    </div>						
 					</div>
 				</div>
 			</div>
