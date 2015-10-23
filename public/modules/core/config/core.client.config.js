@@ -21,6 +21,9 @@ angular.module('core').run(['Menus',
 
 		Menus.addMenuItem('topbar', 'Financial Tools', 'financialtools', 'dropdown', '/financialtools');
 		Menus.addSubMenuItem('topbar', 'financialtools', 'Loan Calculator', 'financialtools/loancalculator');
+		Menus.addSubMenuItem('topbar', 'financialtools', 'Retirement Planning Calculator', 'financialtools/retirementCalculator');
+
+		Menus.addMenuItem('topbar', 'Financial Education', 'financialEducation', '/financialEducation');
 
 		Menus.addMenuItem('topbar', 'Social', 'social', 'dropdown','/social');
 		Menus.addSubMenuItem('topbar', 'social', 'View Posts', 'social/posts');

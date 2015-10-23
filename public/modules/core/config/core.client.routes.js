@@ -112,6 +112,23 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
 		state('notification',{
 			url: '/settings/notification',
 			templateUrl: 'modules/core/views/notification.client.view.html'
+		}).
+		state('financialEducation',{
+			url: '/financialEducation',
+			templateUrl: 'modules/financialEducation/views/financialEducation.client.view.html'
+		}).
+		state('retirementCalculator', {
+			url:'/financialtools/retirementCalculator',
+			templateUrl:'modules/financialtools/views/retirementPlanningCalculator.client.view.html'
+		}).
+		state('retirementCompoundCalculator', {
+			url:'/financialtools/retirementCalculatorWithCompounding',
+			templateUrl:'modules/financialtools/views/retirementCompoundCalculator.client.view.html'
+		}).
+
+		state('forum',{
+			url: '/social',
+			templateUrl: 'modules/social/views/social.client.view.html'
 		});
 
 	}

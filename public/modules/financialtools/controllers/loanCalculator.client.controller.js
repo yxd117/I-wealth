@@ -1,7 +1,7 @@
 'use strict';
 
 // Articles controller
-angular.module('financial').controller('LoanCalculatorController', ['$scope', '$rootScope', '$stateParams', '$location', 'Authentication', 'Users', '$q', 
+angular.module('financialtools').controller('LoanCalculatorController', ['$scope', '$rootScope', '$stateParams', '$location', 'Authentication', 'Users', '$q', 
   function($scope, $rootScope, $stateParams, $location, Authentication, Users, $q) {
       $scope.user = Authentication.user;
 
