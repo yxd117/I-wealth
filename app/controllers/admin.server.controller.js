@@ -174,3 +174,195 @@ exports.retrieveCurrentAd = function(req, res){
 
 	});
 };
+
+exports.retrieveStatisticsCreditProfile = function(req, res){
+	var totalUsers = 0;
+	var numCompletedCreditProfile = 0;
+	var numIncompleteCreditProfile = 0;
+	var ageArr = [0,0,0,0,0];
+	var educationLevelArr = [0,0,0,0,0,0];
+	var currentEmploymentArr = [0,0,0,0];
+	var housingOwnedArr = [0,0,0,0,0,0];
+	var avgIncomeArr = [0,0,0,0,0,0,0];
+	var avgExpenseArr = [0,0,0,0,0,0,0];
+	var avgSavingsArr = [0,0,0,0,0,0,0];
+	var creditHistoryArr = [0,0,0,0];
+	var bankruptStatusArr = [0,0];
+	var numCreditCardArr = [0,0,0,0,0];
+
+	User.find({}, function(err, users){
+		totalUsers = users.length;
+		users.forEach(function(user){
+			if(user.completeQns === false){
+				numIncompleteCreditProfile++;
+			}else{
+				numCompletedCreditProfile++;
+			}
+			if(user.creditProfileScore){
+				//Basic Demographics
+				if(user.creditProfileScore.sAge === '4'){
+					ageArr[0]++;
+				}else if(user.creditProfileScore.sAge === '3'){
+					ageArr[1]++;
+				}else if(user.creditProfileScore.sAge === '2'){
+					ageArr[2]++;
+				}else if(user.creditProfileScore.sAge === '1'){
+					ageArr[3]++;
+				}else if(user.creditProfileScore.sAge === '0'){
+					ageArr[4]++;
+				}	
+
+				if(user.creditProfileScore.sEducationLevel === '5'){
+					educationLevelArr[0]++;
+				}else if(user.creditProfileScore.sEducationLevel === '4'){
+					educationLevelArr[1]++;
+				}else if(user.creditProfileScore.sEducationLevel === '3'){
+					educationLevelArr[2]++;
+				}else if(user.creditProfileScore.sEducationLevel === '2'){
+					educationLevelArr[3]++;
+				}else if(user.creditProfileScore.sEducationLevel === '1'){
+					educationLevelArr[4]++;
+				}else if(user.creditProfileScore.sEducationLevel === '0'){
+					educationLevelArr[5]++;
+				}	
+
+				if(user.creditProfileScore.sCurrentOccupation === '3'){
+					currentEmploymentArr[0]++;
+				}else if(user.creditProfileScore.sCurrentOccupation === '2'){
+					currentEmploymentArr[1]++;
+				}else if(user.creditProfileScore.sCurrentOccupation === '1'){
+					currentEmploymentArr[2]++;
+				}else if(user.creditProfileScore.sCurrentOccupation === '0'){
+					currentEmploymentArr[3]++;
+				}
+
+				if(user.creditProfileScore.sLocativeType === '5'){
+					housingOwnedArr[0]++;
+				}else if(user.creditProfileScore.sLocativeType === '4'){
+					housingOwnedArr[1]++;
+				}else if(user.creditProfileScore.sLocativeType === '3'){
+					housingOwnedArr[2]++;
+				}else if(user.creditProfileScore.sLocativeType === '2'){
+					housingOwnedArr[3]++;
+				}else if(user.creditProfileScore.sLocativeType === '1'){
+					housingOwnedArr[4]++;
+				}else if(user.creditProfileScore.sLocativeType === '0'){
+					housingOwnedArr[5]++;
+				}
+
+				//Financial demographics
+				if(user.creditProfileScore.sMonthlyIncome === '6'){
+					avgIncomeArr[0]++;
+				}else if(user.creditProfileScore.sMonthlyIncome === '5'){
+					avgIncomeArr[1]++;
+				}else if(user.creditProfileScore.sMonthlyIncome === '4'){
+					avgIncomeArr[1]++;
+				}else if(user.creditProfileScore.sMonthlyIncome === '3'){
+					avgIncomeArr[2]++;
+				}else if(user.creditProfileScore.sMonthlyIncome === '2'){
+					avgIncomeArr[3]++;
+				}else if(user.creditProfileScore.sMonthlyIncome === '1'){
+					avgIncomeArr[4]++;
+				}else if(user.creditProfileScore.sMonthlyIncome === '0'){
+					avgIncomeArr[5]++;
+				}
+
+				if(user.creditProfileScore.sMonthlyExpense === '6'){
+					avgExpenseArr[0]++;
+				}else if(user.creditProfileScore.sMonthlyExpense === '5'){
+					avgExpenseArr[1]++;
+				}else if(user.creditProfileScore.sMonthlyExpense === '4'){
+					avgExpenseArr[1]++;
+				}else if(user.creditProfileScore.sMonthlyExpense === '3'){
+					avgExpenseArr[2]++;
+				}else if(user.creditProfileScore.sMonthlyExpense === '2'){
+					avgExpenseArr[3]++;
+				}else if(user.creditProfileScore.sMonthlyExpense === '1'){
+					avgExpenseArr[4]++;
+				}else if(user.creditProfileScore.sMonthlyExpense === '0'){
+					avgExpenseArr[5]++;
+				}
+
+				if(user.creditProfileScore.sMonthlySavings === '6'){
+					avgSavingsArr[0]++;
+				}else if(user.creditProfileScore.sMonthlySavings === '5'){
+					avgSavingsArr[1]++;
+				}else if(user.creditProfileScore.sMonthlySavings === '4'){
+					avgSavingsArr[1]++;
+				}else if(user.creditProfileScore.sMonthlySavings === '3'){
+					avgSavingsArr[2]++;
+				}else if(user.creditProfileScore.sMonthlySavings === '2'){
+					avgSavingsArr[3]++;
+				}else if(user.creditProfileScore.sMonthlySavings === '1'){
+					avgSavingsArr[4]++;
+				}else if(user.creditProfileScore.sMonthlySavings === '0'){
+					avgSavingsArr[5]++;
+				}
+
+				if(user.creditProfileScore.sCreditHistory === '1'){
+					creditHistoryArr[0]++;
+				}else if(user.creditProfileScore.sCreditHistory === '2'){
+					creditHistoryArr[1]++;
+				}else if(user.creditProfileScore.sCreditHistory === '3'){
+					creditHistoryArr[2]++;
+				}else if(user.creditProfileScore.sCreditHistory === '4'){
+					creditHistoryArr[3]++;
+				}
+
+				if(user.creditProfileScore.sBankruptStatus === '0'){
+					bankruptStatusArr[0]++;
+				}else if(user.creditProfileScore.sBankruptStatus === '4'){
+					bankruptStatusArr[1]++;
+				}
+
+				if(user.creditProfileScore.sNumberOfCreditCards === '4'){
+					numCreditCardArr[0]++;
+				}else if(user.creditProfileScore.sNumberOfCreditCards === '3'){
+					numCreditCardArr[1]++;
+				}else if(user.creditProfileScore.sNumberOfCreditCards === '2'){
+					numCreditCardArr[2]++;
+				}else if(user.creditProfileScore.sNumberOfCreditCards === '1'){
+					numCreditCardArr[3]++;
+				}else if(user.creditProfileScore.sNumberOfCreditCards === '0'){
+					numCreditCardArr[4]++;
+				}
+			}
+
+		});
+		var statisticsCreditProfile = {
+			totalUsers: totalUsers,
+			numCompletedCreditProfile: numCompletedCreditProfile,
+			numIncompleteCreditProfile: numIncompleteCreditProfile,
+			ageArr: ageArr,
+			educationLevelArr: educationLevelArr,
+			currentEmploymentArr: currentEmploymentArr,
+			housingOwnedArr: housingOwnedArr,
+			avgIncomeArr: avgIncomeArr,
+			avgExpenseArr: avgExpenseArr,
+			avgSavingsArr: avgSavingsArr,
+			creditHistoryArr: creditHistoryArr,
+			bankruptStatusArr: bankruptStatusArr,
+			numCreditCardArr: numCreditCardArr
+		};
+		res.json(statisticsCreditProfile);
+	});
+};
+
+
+exports.retrieveFinancialUsage = function(req, res){
+	console.log(req.body);
+
+	var assetsArr = [0,0,0];
+	var liabilitiesArr = [0,0,0];
+	var incomeExpenseArr = [0,0,0];
+	User.find({}, function(err, users){
+
+		var statisticsFinancialUsage = {
+			assetsArr: assetsArr,
+			liabilitiesArr: liabilitiesArr,
+			incomeExpenseArr: incomeExpenseArr
+		};
+		res.json(statisticsFinancialUsage);
+	});
+
+};

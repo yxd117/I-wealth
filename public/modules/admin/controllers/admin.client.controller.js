@@ -231,5 +231,185 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', '$loca
 				$scope.errorAssetDelete = response.data.message;
 			});	
 		};
+
+
+		//Statistic functions
+		//1 Demographcis Credit Profile
+		$scope.demographicsOption = [
+		'Age of Users',
+		'Education Level',
+		'Current Employment',
+		'Highest Value of House Owned'
+		];
+
+		$scope.demographicsOptionFinancial = [
+		'Average Monthly Net Income',
+		'Average Monthly Net Expenditure',
+		'Average Monthly Savings',
+		'History of Credit Defaults',
+		'Bankruptcy in past 6 years',
+		'No. of Credit Cards owned'
+		];
+
+		var retrieveUserDemographics = function(){
+			$http.get('/admin/retrieveStatisticsCreditProfile').then(function(response){
+				console.log(response);
+				$scope.userDemographicsData = response.data;
+				$scope.labelsUsers = ['Completed', 'Incomplete'];
+  				$scope.dataUsers = [$scope.userDemographicsData.numCompletedCreditProfile, $scope.userDemographicsData.numIncompleteCreditProfile];
+  				$scope.totalNumUsers = $scope.userDemographicsData.totalUsers;
+  				$scope.usersComplete = $scope.userDemographicsData.numCompletedCreditProfile;
+  				$scope.usersIncomplete = $scope.userDemographicsData.numIncompleteCreditProfile;
+
+				$scope.labels = ['20-30', '31-40', '41-50', '51-60', '> 60'];
+				$scope.series = ['User age'];
+				$scope.data = [$scope.userDemographicsData.ageArr];
+
+				$scope.labelsFinancial = ['> $10,000', '$8,000 - $10,000', '$6,000 - $8,000', '$4,000 - $6,000', '$1,000 - $4,000', '< $1,000', 'NA'];
+				$scope.seriesFinancial = ['Average Monthly Net Income'];
+				$scope.dataFinancial = [$scope.userDemographicsData.avgIncomeArr];				
+				
+			});
+		};
+		retrieveUserDemographics();
+
+		$scope.$watch('selectedDemographicsOption', function(){
+			if($scope.selectedDemographicsOption === $scope.demographicsOption[0]){
+				$scope.labels = ['20-30', '31-40', '41-50', '51-60', '> 60'];
+				$scope.series = ['User Age'];
+				if($scope.userDemographicsData){
+					$scope.data = [$scope.userDemographicsData.ageArr];
+				}
+			}else if($scope.selectedDemographicsOption === $scope.demographicsOption[1]){
+				$scope.labels = ['PhD', 'Masters', 'Graduate', 'Undergraduate', 'A/O/N Levels', 'PSLE & Below'];
+				$scope.series = ['User Education Level'];
+				if($scope.userDemographicsData){
+					$scope.data = [$scope.userDemographicsData.educationLevelArr];
+				}
+			}else if($scope.selectedDemographicsOption === $scope.demographicsOption[2]){
+				$scope.labels = ['Salaried Employee', 'Businessman/Self-employed', 'Student', 'Unemployed'];
+				$scope.series = ['User Current Employment'];
+				if($scope.userDemographicsData){
+					$scope.data = [$scope.userDemographicsData.currentEmploymentArr];
+				}
+			}else if($scope.selectedDemographicsOption === $scope.demographicsOption[3]){
+				$scope.labels = ['Landed Property', 'Condo/ Private Apartments', 'HDB Executive Flats/ HUDC Flats/ Studio Apartments', 'HDB (Others)', 'Shop houses/ other housing units', 'N/A'];
+				$scope.series = ['User Highest Value of House Owned'];
+				if($scope.userDemographicsData){
+					$scope.data = [$scope.userDemographicsData.housingOwnedArr];
+				}
+			}
+		});
+
+		$scope.$watch('selectedDemographicsOptionFinancial', function(){
+			if($scope.selectedDemographicsOptionFinancial === $scope.demographicsOptionFinancial[0]){
+				$scope.labelsFinancial = ['> $10,000', '$8,000 - $10,000', '$6,000 - $8,000', '$4,000 - $6,000', '$1,000 - $4,000', '< $1,000', 'NA'];
+				$scope.seriesFinancial = ['Average Monthly Net Income'];
+				if($scope.userDemographicsData){
+					$scope.dataFinancial = [$scope.userDemographicsData.avgIncomeArr];
+				}
+			}else if($scope.selectedDemographicsOptionFinancial === $scope.demographicsOptionFinancial[1]){
+				$scope.labelsFinancial = ['> $10,000', '$8,000 - $10,000', '$6,000 - $8,000', '$4,000 - $6,000', '$1,000 - $4,000', '< $1,000', 'NA'];
+				$scope.seriesFinancial = ['Average Monthly Net Expenditure'];
+				if($scope.userDemographicsData){
+					$scope.dataFinancial = [$scope.userDemographicsData.avgExpenseArr];
+				}
+			}else if($scope.selectedDemographicsOptionFinancial === $scope.demographicsOptionFinancial[2]){
+				$scope.labelsFinancial = ['> $10,000', '$8,000 - $10,000', '$6,000 - $8,000', '$4,000 - $6,000', '$1,000 - $4,000', '< $1,000', 'NA'];
+				$scope.seriesFinancial = ['Average Monthly Net Savings'];
+				if($scope.userDemographicsData){
+					$scope.dataFinancial = [$scope.userDemographicsData.avgSavingsArr];
+				}
+			}else if($scope.selectedDemographicsOptionFinancial === $scope.demographicsOptionFinancial[3]){
+				$scope.labelsFinancial = ['90 days default', '60 days default', '30 days default', 'NA'];
+				$scope.seriesFinancial = ['History of Credit Defaults'];
+				if($scope.userDemographicsData){
+					$scope.dataFinancial = [$scope.userDemographicsData.creditHistoryArr];
+				}
+			}else if($scope.selectedDemographicsOptionFinancial === $scope.demographicsOptionFinancial[4]){
+				$scope.labelsFinancial = ['Yes', 'No'];
+				$scope.seriesFinancial = ['Bankruptcy in past 6 years'];
+				if($scope.userDemographicsData){
+					$scope.dataFinancial = [$scope.userDemographicsData.bankruptStatusArr];
+				}
+			}else if($scope.selectedDemographicsOptionFinancial === $scope.demographicsOptionFinancial[5]){
+				$scope.labelsFinancial = ['5 or more', '3 - 4', '2', '1', '0'];
+				$scope.seriesFinancial = ['No. of Credit Cards owned'];
+				if($scope.userDemographicsData){
+					$scope.dataFinancial = [$scope.userDemographicsData.numCreditCardArr];
+				}
+			}
+		});
+		//End 1
+
+		$scope.monthArr = [
+            'January',
+            'February',
+            'March',
+            'April',
+            'May',
+            'June',
+            'July',
+            'August',
+            'September',
+            'October',
+            'November',
+            'December'
+            ];
+        var initiateCurrentDate = function(){
+	        $scope.dt = new Date();
+	        $scope.month = $scope.dt.getMonth();
+	        $scope.year = Number($scope.dt.getFullYear());    
+	        $scope.selectedYearTo = $scope.year;
+
+	        var monthMinusTwo = $scope.month - 2;
+	        $scope.monthFrom = monthMinusTwo;
+	        $scope.selectedYearFrom = $scope.year;  
+	        if(monthMinusTwo < 0){
+	        	$scope.monthFrom = 12 + monthMinusTwo;
+	        	$scope.selectedYearFrom = $scope.year - 1;
+	        }
+	        $scope.monthMid = $scope.month - 1;
+	        if($scope.monthMid < 0){
+	        	$scope.monthMid = 11;
+	        }
+	        
+	          	
+        };
+        initiateCurrentDate();
+
+
+		//2 Demographics Financial Health
+
+
+		//3 Demographics Financial Usage
+		var retrieveFinancialUsage = function(){
+			var numMonths;
+			if($scope.selectedYearFrom === $scope.selectedYearTo){
+				numMonths = $scope.month - $scope.monthFrom + 1;
+				
+			}
+			console.log(numMonths);
+			$http.put('/admin/retrieveFinancialUsage', {monthFrom: $scope.monthFrom, yearFrom: $scope.selectedYearFrom, monthTo: $scope.month, yearTo: $scope.selectedYearTo}).success(function(response){
+				console.log(response);
+				$scope.userFinancialUsageData = response;
+				console.log(response);
+
+				$scope.labelsFinancialUsage = [$scope.monthArr[$scope.monthFrom], $scope.monthArr[$scope.monthMid], $scope.monthArr[$scope.month]];
+				$scope.seriesFinancialUsage = ['Updated Assets', 'Updated Liabilities', 'Updated Income'];
+				$scope.dataFinancialUsage = [$scope.userFinancialUsageData.assetsArr, $scope.userFinancialUsageData.liabilitiesArr, $scope.userFinancialUsageData.incomeExpenseArr];
+			
+				
+			}).error(function(response){
+				console.log(response);
+			});
+		};
+		retrieveFinancialUsage();
+
+
+		//4 Demographcis Milestones Completion
+
+		//5 Demographics Social Activity 
+
 	}
 ]);

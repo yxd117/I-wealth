@@ -29,6 +29,10 @@ module.exports = function(app) {
 
 	app.route('/admin/retrieveCurrentAd').get(admin.retrieveCurrentAd);
 
+	app.route('/admin/retrieveStatisticsCreditProfile').get(admin.retrieveStatisticsCreditProfile);
+
+	app.route('/admin/retrieveFinancialUsage').put(admin.retrieveFinancialUsage);
+
 	// app.route('/friendship/acceptFriend').put(friendship.acceptFriend);
 
 	// app.route('/friendship/retrieveUsers').get(friendship.retrieveUserList);
