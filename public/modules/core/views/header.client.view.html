@@ -48,7 +48,7 @@
 						<span class="badge badge-notify" style="top:-15px;left:-15px;position:relative;background:transparent;margin:0px;color:transparent;" ng-show="numNotification === 0">{{numNotification}}</span>
 					</a>
 					<ul class="dropdown-menu">
-						<li ng-repeat="item in list" style="padding:5px;width:200px;">
+						<li ng-repeat="item in list" style="padding:5px;width:200px;text-align:center;">
 							<b>{{item.title}}</b><br>
 							{{item.content}}
 						</li>
@@ -62,10 +62,14 @@
 				<li class="dropdown" dropdown>
 					<a class="dropdown-toggle" dropdown-toggle>
 						<img ng-if="imageReady" style="border:1px solid gray;width:30px;height:30px;border-radius: 50%;" ng-src="{{imageUrl}}" />
-						<span data-ng-bind="authentication.user.displayName"></span> 
-						<b class="caret"></b>
+						<!-- <span data-ng-bind="authentication.user.displayName"></span>  -->
+						<!-- <b class="caret"></b> -->
 					</a>
 					<ul class="dropdown-menu">
+						<li style="text-align:center;">
+							<b><span data-ng-bind="authentication.user.displayName"></span></b>
+						</li>
+						<li class="divider"></li>
 						<li>
 							<a href="/#!/settings/profile">Edit Profile</a>
 						</li>

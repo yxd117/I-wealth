@@ -819,7 +819,6 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
 
             //5 Net Worth 
             //Net WorthBenchmark Ratio
-            // var ratioNetWorthBenchmark = ($scope.displayAssetsRecords.totalAmt - $scope.displayLiabilitiesRecords.totalAmt) / ($scope.user.age  * $scope.displayIncomeExpenseRecords.monthlyIncomeAmt * 12 / 10);
             var netWorthBenchmark = (Number($scope.user.age) * Number($scope.displayIncomeExpenseRecords.monthlyIncomeAmt))/ 10;
             var ratioNetWorthBenchmark = (Number($scope.displayAssetsRecords.totalAmt) - Number($scope.displayLiabilitiesRecords.totalAmt)) / netWorthBenchmark;
             
@@ -839,9 +838,7 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
                 privatePropertiesValue = 0;
             }      
             ratioInvestment = (Number($scope.displayAssetsRecords.cashEquivalentsAmt) + Number($scope.displayAssetsRecords.investedAssetsAmt) - Number(privatePropertiesValue)) / $scope.displayAssetsRecords.totalAmt;    
-            // if($scope.displayAssetsRecords.investedAssets && $scope.displayAssetsRecords.investedAssets.privateProperties){
-            //     ratioInvestment = ($scope.displayAssetsRecords.cashEquivalentsAmt + $scope.displayAssetsRecords.investedAssetsAmt - $scope.displayAssetsRecords.investedAssets.privateProperties.value) / $scope.displayAssetsRecords.totalAmt;
-            // }
+
 
 
 

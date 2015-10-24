@@ -253,7 +253,6 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', '$loca
 
 		var retrieveUserDemographics = function(){
 			$http.get('/admin/retrieveStatisticsCreditProfile').then(function(response){
-				console.log(response);
 				$scope.userDemographicsData = response.data;
 				$scope.labelsUsers = ['Completed', 'Incomplete'];
   				$scope.dataUsers = [$scope.userDemographicsData.numCompletedCreditProfile, $scope.userDemographicsData.numIncompleteCreditProfile];
@@ -368,6 +367,9 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', '$loca
 	        	$scope.monthFrom = 12 + $scope.month - 2;
 	        	$scope.selectedYearFrom = $scope.year;
 	        }
+
+	        $scope.selectedMonth = $scope.dt.getMonth();
+	        $scope.selectedYear = Number($scope.dt.getFullYear());
 	        
 	          	
         };
@@ -375,7 +377,84 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', '$loca
 
 
 		//2 Demographics Financial Health
+		$scope.optionFinancialHealth = [
+			'Current Liquidity',
+			'Total Liquidity',
+			'Surplus Income',
+			'Basic Saving',
+			'Essential Expenses to Income',
+			'Lifestyle Expenses to Income',
+			'Total Debt to Annual Income',
+			'Current Debt to Annual Income',
+			'Property Debt to Total Income',
+			'Monthly Debt Servicing to Income',
+			'Monthly Credit Card Debt to Income',
+			'Net Worth Benchmark',
+			'Solvency',
+			'Current Asset to Debt',
+			'Investment Assets to Total Assets'
+		];
+		var displayFinancialHealth = function(){
+			if($scope.selectedOptionFinancialHealth === $scope.optionFinancialHealth[0]){
+				if($scope.userFinancialHealth){
+					$scope.dataFinancialHealth = [$scope.userFinancialHealth.currentLiquidityArr];
+				}	
+			}else if($scope.selectedOptionFinancialHealth === $scope.optionFinancialHealth[1]){
+				$scope.dataFinancialHealth = [$scope.userFinancialHealth.totalLiquidityArr];				
+			}else if($scope.selectedOptionFinancialHealth === $scope.optionFinancialHealth[2]){
+				$scope.dataFinancialHealth = [$scope.userFinancialHealth.surplusIncomeArr];				
+			}else if($scope.selectedOptionFinancialHealth === $scope.optionFinancialHealth[3]){
+				$scope.dataFinancialHealth = [$scope.userFinancialHealth.basicSavingArr];				
+			}else if($scope.selectedOptionFinancialHealth === $scope.optionFinancialHealth[4]){
+				$scope.dataFinancialHealth = [$scope.userFinancialHealth.essentialExpensesArr];				
+			}else if($scope.selectedOptionFinancialHealth === $scope.optionFinancialHealth[5]){
+				$scope.dataFinancialHealth = [$scope.userFinancialHealth.lifestyleExpensesArr];				
+			}else if($scope.selectedOptionFinancialHealth === $scope.optionFinancialHealth[6]){
+				$scope.dataFinancialHealth = [$scope.userFinancialHealth.totalDebtArr];				
+			}else if($scope.selectedOptionFinancialHealth === $scope.optionFinancialHealth[7]){
+				$scope.dataFinancialHealth = [$scope.userFinancialHealth.currentDebtArr];				
+			}else if($scope.selectedOptionFinancialHealth === $scope.optionFinancialHealth[8]){
+				$scope.dataFinancialHealth = [$scope.userFinancialHealth.propertyDebtArr];				
+			}else if($scope.selectedOptionFinancialHealth === $scope.optionFinancialHealth[9]){
+				$scope.dataFinancialHealth = [$scope.userFinancialHealth.monthlyDebtServiceArr];				
+			}else if($scope.selectedOptionFinancialHealth === $scope.optionFinancialHealth[10]){
+				$scope.dataFinancialHealth = [$scope.userFinancialHealth.monthlyCreditCardArr];				
+			}else if($scope.selectedOptionFinancialHealth === $scope.optionFinancialHealth[11]){
+				$scope.dataFinancialHealth = [$scope.userFinancialHealth.netWorthBenchmarkArr];				
+			}else if($scope.selectedOptionFinancialHealth === $scope.optionFinancialHealth[12]){
+				$scope.dataFinancialHealth = [$scope.userFinancialHealth.solvencyArr];				
+			}else if($scope.selectedOptionFinancialHealth === $scope.optionFinancialHealth[13]){
+				$scope.dataFinancialHealth = [$scope.userFinancialHealth.currentAssetDebtArr];				
+			}else if($scope.selectedOptionFinancialHealth === $scope.optionFinancialHealth[14]){
+				$scope.dataFinancialHealth = [$scope.userFinancialHealth.investmentAssetsArr];				
+			}
+		};
+		var retrieveFinancialHealth = function(){
+			$http.put('/admin/retrieveFinancialHealth', {month:$scope.month, year: $scope.selectedYear}).success(function(response){
+				$scope.userFinancialHealth = response;
+				console.log($scope.userFinancialHealth);
+				
+				$scope.labelsFinancialHealth = ['Healthy', 'Unhealthy', 'N/A'];
+				displayFinancialHealth();
+			
+			}).error(function(response){
+				console.log(response);
+			});
+		};
+		retrieveFinancialHealth();
 
+		$scope.reloadFinancialHealth = function(){
+			for(var i = 0; i < $scope.monthArr.length; i++){
+				if($scope.monthArr[i] === $scope.selectedMonth){
+					$scope.month = i;
+				}
+			}
+			retrieveFinancialHealth();
+		};
+
+		$scope.$watch('selectedOptionFinancialHealth', function(){
+			displayFinancialHealth();
+		});
 
 		//3 Demographics Financial Usage
 		var retrieveFinancialUsage = function(){
@@ -451,7 +530,6 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', '$loca
 		//4 Demographcis Milestones Completion
 		var retrieveMilestones = function(){
 			$http.get('/admin/retrieveMilestones').then(function(response){
-				console.log(response);
 				$scope.userMilestonesData = response.data;
 
 				$scope.labelsMilestones = ['Total', 'Completed'];

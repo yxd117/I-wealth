@@ -481,3 +481,379 @@ exports.retrieveMilestones = function(req, res){
 		res.json(statisticsMilestones);
 	});
 };
+
+exports.retrieveFinancialHealth = function(req, res){
+	console.log(req.body);
+	var currentLiquidityArr = [0,0,0]; //1
+	var totalLiquidityArr = [0,0,0]; //2
+	var surplusIncomeArr = [0,0,0]; //3
+	var basicSavingArr = [0,0,0]; //4
+	var essentialExpensesArr = [0,0,0]; //5
+	var lifestyleExpensesArr = [0,0,0]; //6 
+	var totalDebtArr = [0,0,0]; //7
+	var currentDebtArr = [0,0,0]; //8
+	var propertyDebtArr = [0,0,0]; //9
+	var monthlyDebtServiceArr = [0,0,0]; //10
+	var monthlyCreditCardArr = [0,0,0]; //11
+	var netWorthBenchmarkArr = [0,0,0]; //12
+	var solvencyArr = [0,0,0]; //13
+	var currentAssetDebtArr = [0,0,0]; //14
+	var investmentAssetsArr = [0,0,0]; //15
+
+
+	User.find({}, function(err, users){
+
+		users.forEach(function(user){
+			//retrieve all records
+			var selectedAssetRecord = [];
+			var selectedLiabilitiesRecord = [];
+			var selectedIncomeExpenseRecord = [];
+			if(user.assetsRecords){
+				user.assetsRecords.forEach(function(aRecord){
+					if(aRecord.month === req.body.month && aRecord.year === req.body.year){
+						selectedAssetRecord = aRecord;
+					}
+				});
+			}
+			if(user.liabilitiesRecords){
+				user.liabilitiesRecords.forEach(function(lRecord){
+					if(lRecord.month === req.body.month && lRecord.year === req.body.year){
+						selectedLiabilitiesRecord = lRecord;
+					}
+				});
+			}
+			if(user.incomeExpenseRecords){
+				user.incomeExpenseRecords.forEach(function(ieRecord){
+					if(ieRecord.month === req.body.month && ieRecord.year === req.body.year){
+						selectedIncomeExpenseRecord = ieRecord;
+					}
+				});
+			}
+			//calculate ratios
+            //1) Liquidity Ratio
+            //Current Liquidity - 1
+            var ratioLiquidity = selectedAssetRecord.cashEquivalentsAmt / selectedIncomeExpenseRecord.monthlyExpenseAmt;
+            //Total Liquidity - 2
+            var ratioTotalLiquidity = (Number(selectedAssetRecord.cashEquivalentsAmt) + Number(selectedAssetRecord.investedAssetsAmt)) / selectedIncomeExpenseRecord.monthlyExpenseAmt;
+
+            //2) Savings
+            //Surplus Income Ratio /Savings Ratio //To review -- net gross/ monthly gross income - 3
+            var ratioSaving = selectedIncomeExpenseRecord.netCashFlow / selectedIncomeExpenseRecord.monthlyIncomeAmt;
+            //Basic Saving Ratio - 4
+            var ratioBasicSaving = selectedIncomeExpenseRecord.optionalSavingsAmt / selectedIncomeExpenseRecord.monthlyIncomeAmt;
+
+            //3) Expenses Ratio
+            //Essential Expenses to Income Ratio - 5
+            var ratioEssentialExpenses;
+            var publicTransportValue;
+            try{
+                publicTransportValue = selectedIncomeExpenseRecord.monthlyExpense.transport.publicTransport.value;
+            }catch(e){
+                publicTransportValue = 0;
+            }
+            var maidValue;
+
+            try{
+                maidValue = selectedIncomeExpenseRecord.monthlyExpense.fixedExpense.maid.value;
+            }catch(e){
+                maidValue = 0;
+            }            
+
+            ratioEssentialExpenses = (Number(selectedIncomeExpenseRecord.fixedExpenseAmt) + Number(publicTransportValue) + Number(selectedIncomeExpenseRecord.utilityHouseholdAmt) + Number(selectedIncomeExpenseRecord.foodNecessitiesAmt) - Number(maidValue))/ selectedIncomeExpenseRecord.monthlyIncomeAmt;
+
+            //Lifestyle Expenses to Income Ratio - 6
+            var ratioLifestyleExpenses;
+
+            ratioLifestyleExpenses = (Number(maidValue) + Number(selectedIncomeExpenseRecord.transportAmt) - Number(publicTransportValue) + Number(selectedIncomeExpenseRecord.miscAmt)) / selectedIncomeExpenseRecord.monthlyIncomeAmt;
+
+            //4 Debt Ratio
+            //Assets to Debt Ratio - 7 
+            var ratioAssetDebt = selectedLiabilitiesRecord.totalAmt / selectedAssetRecord.totalAmt;
+            //Debt Service Ratio - 8
+            var ratioDebtService = selectedLiabilitiesRecord.totalAmt / selectedIncomeExpenseRecord.monthlyIncomeAmt;
+            //Housing Expense Ratio - 9 
+            var ratioHouseExpense = (selectedIncomeExpenseRecord.monthlyExpenseAmt - selectedIncomeExpenseRecord.fixedExpenseAmt) / selectedIncomeExpenseRecord.monthlyIncomeAmt; 
+            //Debt Income Ratio - 10
+            var ratioDebtIncome;
+            var mortgageRepaymentsValue;
+            var rentalRepaymentsValue;
+            var carLoanRepaymentValue;
+            var otherLoanRepaymentsValue;
+
+            try {
+                mortgageRepaymentsValue = selectedIncomeExpenseRecord.monthlyExpense.fixedExpense.mortgageRepayments.value;
+            }catch (e){
+                mortgageRepaymentsValue = 0;
+            }
+            try{
+                rentalRepaymentsValue = selectedIncomeExpenseRecord.monthlyExpense.fixedExpense.rentalRepaymentsValue.value;
+            }catch(e){
+                rentalRepaymentsValue = 0;
+            }
+            try{
+                carLoanRepaymentValue = selectedIncomeExpenseRecord.monthlyExpense.transport.carLoanRepayment.value;
+            }catch (e) {
+                carLoanRepaymentValue = 0;
+            }
+            try{
+                otherLoanRepaymentsValue = selectedIncomeExpenseRecord.monthlyExpense.fixedExpense.otherLoanRepayments.value;
+            }catch(e){
+                otherLoanRepaymentsValue = 0;
+            }
+
+            ratioDebtIncome = (Number(mortgageRepaymentsValue) + Number(rentalRepaymentsValue) + Number(carLoanRepaymentValue) + Number(otherLoanRepaymentsValue)) / selectedIncomeExpenseRecord.monthlyIncomeAmt;
+            
+            //Consumer Debt Ratio - 11
+            var ratioConsumerDebt = selectedLiabilitiesRecord.shortTermCreditAmt / selectedIncomeExpenseRecord.monthlyIncomeAmt;
+
+            //5 Net Worth 
+            //Net WorthBenchmark Ratio - 12
+            var netWorthBenchmark;
+          	if(isNaN(user.age)){
+          		netWorthBenchmark = 'N/A';
+          		
+          	}else{
+          		netWorthBenchmark = (Number(user.age) * Number(selectedIncomeExpenseRecord.monthlyIncomeAmt))/ 10;
+          	}
+            
+            var ratioNetWorthBenchmark = (Number(selectedAssetRecord.totalAmt) - Number(selectedLiabilitiesRecord.totalAmt)) / netWorthBenchmark;
+            
+            //Solvency Ratio - 13
+            var ratioSolvency = (selectedAssetRecord.totalAmt - selectedLiabilitiesRecord.totalAmt) / selectedAssetRecord.totalAmt;
+
+            //6 Asset vs Debt
+            //Current Asset to Debt Ratio - 14
+            var ratioCurrentAssetDebt = selectedAssetRecord.cashEquivalentsAmt / selectedLiabilitiesRecord.shortTermCreditAmt;
+
+            //Investment Ratio - 15
+            var ratioInvestment;
+            var privatePropertiesValue;
+            try{
+                privatePropertiesValue = selectedAssetRecord.investedAssets.privateProperties.value;
+            }catch(e){
+                privatePropertiesValue = 0;
+            }      
+            ratioInvestment = (Number(selectedAssetRecord.cashEquivalentsAmt) + Number(selectedAssetRecord.investedAssetsAmt) - Number(privatePropertiesValue)) / selectedAssetRecord.totalAmt;    
+
+			//analyze
+            //Assign Ratio to Scope
+            //1) Liquidity Ratio
+            //Current Liquidity 
+            if(isFinite(ratioLiquidity)) {
+                ratioLiquidity = ratioLiquidity.toFixed(2);
+                if(ratioLiquidity < 2){
+                	currentLiquidityArr[1]++;
+                }else{
+                	currentLiquidityArr[0]++;
+                }
+            }else {
+                ratioLiquidity = 'N/A';
+                currentLiquidityArr[2]++;
+            }
+            //Total Liquidity 
+            if(isFinite(ratioTotalLiquidity)){
+                ratioTotalLiquidity = ratioTotalLiquidity.toFixed(2);
+                if(ratioTotalLiquidity< 0.1){
+                	totalLiquidityArr[1]++;
+                }else{
+                	totalLiquidityArr[0]++;
+                }
+            }else{
+                ratioTotalLiquidity = 'N/A';
+                totalLiquidityArr[2]++;
+            }
+
+            //2) Savings
+            //Surplus Income Ratio /Savings Ratio
+            if(isFinite(ratioSaving)) {
+                ratioSaving = ratioSaving.toFixed(2);
+                if(ratioSaving < 0.12){
+                	surplusIncomeArr[1]++;
+                }else{
+                	surplusIncomeArr[0]++;
+                }
+            }else{
+                ratioSaving = 'N/A';
+                surplusIncomeArr[2]++;
+            }
+            //Basic Saving Ratio 
+            if(isFinite(ratioBasicSaving)){
+                ratioBasicSaving = ratioBasicSaving.toFixed(2);
+                if(ratioBasicSaving < 0.1){
+                	basicSavingArr[1]++;
+                }else{
+                	basicSavingArr[0]++;
+                }
+            }else{
+                ratioBasicSaving = 'N/A';
+                basicSavingArr[2]++;
+            }
+
+            //3) Expenses Ratio
+            //Essential Expenses to Income Ratio
+            if(isFinite(ratioEssentialExpenses)){
+                ratioEssentialExpenses = ratioEssentialExpenses.toFixed(2);
+                if(ratioEssentialExpenses >=0.5){
+                	essentialExpensesArr[1]++;
+                }else{
+                	essentialExpensesArr[0]++;
+                }
+            }else{
+                ratioEssentialExpenses = 'N/A';
+                essentialExpensesArr[2]++;
+            }
+            //Lifestyle Expenses to Income Ratio
+            if(isFinite(ratioLifestyleExpenses)){
+                ratioLifestyleExpenses = ratioLifestyleExpenses.toFixed(2);
+                if(ratioLifestyleExpenses >=0.3){
+                	lifestyleExpensesArr[1]++;
+                }else{
+                	lifestyleExpensesArr[0]++;
+                }
+            }else{
+                ratioLifestyleExpenses = 'N/A';
+                lifestyleExpensesArr[2]++;
+            }
+
+
+            //4) Debt Ratio
+            //Assets to Debt Ratio
+            if(isFinite(ratioAssetDebt)) {
+                ratioAssetDebt = ratioAssetDebt.toFixed(2);
+                if(ratioAssetDebt >=0.6){
+                	totalDebtArr[1]++;
+                }else{
+                	totalDebtArr[0]++;
+                }
+            }else {
+                ratioAssetDebt = 'N/A';
+                totalDebtArr[2]++;
+            }
+            //Debt Service Ratio
+            if(isFinite(ratioDebtService)) {
+                ratioDebtService = ratioDebtService.toFixed(2);
+                if(ratioDebtService > 0.36){
+                	currentDebtArr[1]++;
+                }else{
+                	currentDebtArr[0]++;
+                }
+            }else {
+                ratioDebtService ='N/A';
+                currentDebtArr[2]++;
+            }
+            //Housing Expense Ratio
+            if(isFinite(ratioHouseExpense)) {
+                ratioHouseExpense = ratioHouseExpense.toFixed(2);
+                if(ratioHouseExpense >0.35){
+                	propertyDebtArr[1]++;
+                }else{
+                	propertyDebtArr[0]++;
+                }
+            } else {
+                ratioHouseExpense = 'N/A';
+                propertyDebtArr[2]++;
+            }
+            //Debt Income Ratio
+            if(isFinite(ratioDebtIncome)) {
+                ratioDebtIncome = ratioDebtIncome.toFixed(2);
+                if(ratioDebtIncome > 0.4){
+                	monthlyDebtServiceArr[1]++;
+                }else{
+                	monthlyDebtServiceArr[0]++;
+                }
+            }else{
+                ratioDebtIncome = 'N/A';
+                monthlyDebtServiceArr[2]++;
+            }
+            //Consumer Debt Ratio
+            if(isFinite(ratioConsumerDebt)) {
+                ratioConsumerDebt = ratioConsumerDebt.toFixed(2);
+                if(ratioConsumerDebt > 0.1){
+                	monthlyCreditCardArr[1]++;
+                }else{
+                	monthlyCreditCardArr[0]++;
+                }
+            }else{
+                ratioConsumerDebt = 'N/A';
+                monthlyCreditCardArr[2]++;
+            }
+            //5 Net Worth 
+            //Net WorthBenchmark Ratio
+            if(isNaN(ratioNetWorthBenchmark)){
+            	ratioNetWorthBenchmark = 'N/A';
+                netWorthBenchmarkArr[2]++;
+            }else if(isFinite(ratioNetWorthBenchmark)) {
+                ratioNetWorthBenchmark = ratioNetWorthBenchmark.toFixed(2);
+                if(ratioNetWorthBenchmark <=0.75){
+                	netWorthBenchmarkArr[1]++;
+                }else{
+                	netWorthBenchmarkArr[0]++;
+                }
+            } else {
+                ratioNetWorthBenchmark = 'N/A';
+                netWorthBenchmarkArr[2]++;
+            }
+            //Solvency Ratio
+            if(isFinite(ratioSolvency)) {
+                ratioSolvency = ratioSolvency.toFixed(2);
+                if(ratioSolvency <=0.2){
+                	solvencyArr[1]++;
+                }else{
+                	solvencyArr[0]++;
+                }
+            }else{
+                ratioSolvency = 'N/A';
+                solvencyArr[2]++;
+            }
+
+            //6 Asset vs Debt
+            //Current Asset to Debt Ratio
+            if(isFinite(ratioCurrentAssetDebt)){
+                ratioCurrentAssetDebt = ratioCurrentAssetDebt.toFixed(2);
+                if(ratioCurrentAssetDebt <=0.2){
+                	currentAssetDebtArr[1]++;
+                }else{
+                	currentAssetDebtArr[0]++;
+                }
+            }else{
+                ratioCurrentAssetDebt = 'N/A';
+                currentAssetDebtArr[2]++;
+            }
+            //Investment Ratio
+            if(isFinite(ratioInvestment)) {
+                ratioInvestment = ratioInvestment.toFixed(2);
+                if(ratioInvestment <=0.2){
+                	investmentAssetsArr[1]++;
+                }else{
+                	investmentAssetsArr[0]++;
+                }
+            }else{
+               	ratioInvestment = 'N/A';
+               	investmentAssetsArr[2]++;
+            }
+
+
+			//return result
+		});
+
+		var statisticsFinancialHealth = {
+			currentLiquidityArr: currentLiquidityArr,
+			totalLiquidityArr: totalLiquidityArr,
+			surplusIncomeArr: surplusIncomeArr,
+			basicSavingArr: basicSavingArr,
+			essentialExpensesArr: essentialExpensesArr,
+			lifestyleExpensesArr: lifestyleExpensesArr,
+			totalDebtArr: totalDebtArr,
+			currentDebtArr: currentDebtArr,
+			propertyDebtArr: propertyDebtArr,
+			monthlyDebtServiceArr: monthlyDebtServiceArr,
+			monthlyCreditCardArr: monthlyCreditCardArr,
+			netWorthBenchmarkArr: netWorthBenchmarkArr,
+			solvencyArr: solvencyArr,
+			currentAssetDebtArr: currentAssetDebtArr,
+			investmentAssetsArr: investmentAssetsArr
+		};
+
+		res.json(statisticsFinancialHealth);
+	});
+};
