@@ -35,6 +35,8 @@ module.exports = function(app) {
 
 	app.route('/admin/retrieveSocialActivity').put(admin.retrieveSocialActivity);
 
+	app.route('/admin/retrieveMilestones').get(admin.retrieveMilestones);
+
 	// app.route('/friendship/acceptFriend').put(friendship.acceptFriend);
 
 	// app.route('/friendship/retrieveUsers').get(friendship.retrieveUserList);

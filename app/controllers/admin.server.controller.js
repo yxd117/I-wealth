@@ -452,5 +452,32 @@ exports.retrieveSocialActivity = function(req, res){
 
 		res.json(statisticsSocialActivity);
 	});
+};
 
+exports.retrieveMilestones = function(req, res){
+	var milestonesArr = [0,0];
+	User.find({}, function(err, users){
+		users.forEach(function(user){
+			if(user.mileStones.length !== 0){
+				user.mileStones.forEach(function(milestone){
+					milestonesArr[0]++;
+				});
+				
+			}
+			if(user.completedMilestones.length !== 0){
+				user.completedMilestones.forEach(function(mileStones){
+					milestonesArr[0]++;
+					milestonesArr[1]++;
+				});
+
+			}
+		});
+
+
+		var statisticsMilestones = {
+			milestonesArr: milestonesArr
+		};
+
+		res.json(statisticsMilestones);
+	});
 };

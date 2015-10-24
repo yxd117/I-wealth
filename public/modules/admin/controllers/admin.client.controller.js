@@ -449,6 +449,18 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', '$loca
 			$scope.selectedYearFrom = yearFrom;
 		};
 		//4 Demographcis Milestones Completion
+		var retrieveMilestones = function(){
+			$http.get('/admin/retrieveMilestones').then(function(response){
+				console.log(response);
+				$scope.userMilestonesData = response.data;
+
+				$scope.labelsMilestones = ['Total', 'Completed'];
+				$scope.seriesMilestones = ['Milestones Overview'];
+				$scope.dataMilestones = [$scope.userMilestonesData.milestonesArr];	
+				
+			});
+		};
+		retrieveMilestones();
 
 		//5 Demographics Social Activity 
 		var retrieveSocialActivity = function(){
