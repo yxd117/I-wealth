@@ -31,17 +31,16 @@ h6 {
 
 .intro-header {
     padding-top: 80px; /* If you're making other pages, make sure there is 50px of padding to make sure the navbar doesn't overlap content! */
-    padding-bottom: 50px;
+    padding-bottom: 10px;
     text-align: center;
     color: #ffffff;
-    background: url(/img/bg/city1_edited.jpg) no-repeat center center;
-    /*background: url('https://s3-ap-southeast-1.amazonaws.com/hexapic/city2.jpg')no-repeat center center;*/
+    /*background: url(/img/bg/city1_edited.jpg) no-repeat center center;
+    background: url('https://s3-ap-southeast-1.amazonaws.com/hexapic/city2.jpg')no-repeat center center;*/
     background-size: cover;
 }
 
 .intro-message {
     position: relative;
-    padding-top: 10%;
     padding-bottom: 20%;
     padding-left:10%;
 }
@@ -56,11 +55,14 @@ h6 {
     text-shadow: 1px 1px 1px rgba(0,0,0,0.6);
     font-size: 5em;
 }
+.intro-message > h3 {
+    color: grey;
+    font-weight: 300;
+}
 
 .intro-message > h4 {
-    margin: 0;
-    text-shadow: 1px 1px 2px #666666;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.6);
+    color: grey;
+    font-weight: 400;
 }
 
 .service-list {
@@ -81,15 +83,26 @@ h6 {
     border-bottom: 1px solid #E5E5E5;
     border-bottom: 1px solid rgba(0,0,0,0.2);
 }
-.intro-message > h3 {
-    text-shadow: 1px 1px 1px #666666;
-    text-shadow: 1px 1px 1px rgba(0,0,0,0.6);
-}
 
 .content-section-a {
     padding: 50px 0;
+    background-color: #f8f8f8;
+}
+
+.content-section-b {
+    padding: 50px 0;
     border-top: 1px solid #e7e7e7;
     border-bottom: 1px solid #e7e7e7;
+}
+
+.section-heading {
+    margin-bottom: 30px;
+}
+
+.section-heading-spacer {
+    float: left;
+    width: 200px;
+    border-top: 3px solid #e7e7e7;
 }
 
 .undecorated-link:hover {
@@ -114,6 +127,85 @@ h6 {
 }
 .landing-signup{
   padding-top:90px;
+}
+
+.banner {
+    padding: 100px 0;
+    color: #f8f8f8;
+    background: url(/img/bg/banner-bg.jpg) no-repeat center center;
+    background-size: cover;
+}
+
+.banner h2 {
+    margin: 0;
+    text-shadow: 2px 2px 3px rgba(0,0,0,0.6);
+    font-size: 3em;
+}
+
+.banner ul {
+    margin-bottom: 0;
+}
+
+.banner-social-buttons {
+    float: left;
+    margin-top: 0;
+}
+
+@media(max-width:1199px) {
+    ul.banner-social-buttons {
+        float: left;
+        margin-top: 15px;
+    }
+}
+
+@media(max-width:767px) {
+    .banner h2 {
+        margin: 0;
+        text-shadow: 2px 2px 3px rgba(0,0,0,0.6);
+        font-size: 3em;
+    }
+
+    ul.banner-social-buttons > li {
+        display: block;
+        margin-bottom: 20px;
+        padding: 0;
+    }
+
+    ul.banner-social-buttons > li:last-child {
+        margin-bottom: 0;
+    }
+}
+
+.undecorated-link:hover {
+  text-decoration: none;
+}
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important;
+}
+.ng-invalid.ng-dirty {
+  border-color: #FA787E;
+}
+.ng-valid.ng-dirty {
+  border-color: #78FA89;
+}
+
+.landing{
+  height: 100vh;
+  width: 100vw;
+  padding: 80px;
+  border:none;
+  margin: 0;
+  font-family: helvetica;
+}
+.landing-signup{
+  padding-top:20px;
+  background-color: #194775;
+  border-left: 50px solid #194775;
+  border-right: 50px solid #194775;
+  border-bottom: 20px solid #194775;
+  -webkit-box-shadow: 10px 10px 14px -6px rgba(0,0,0,0.75);
+  -moz-box-shadow: 10px 10px 14px -6px rgba(0,0,0,0.75);
+  box-shadow: 10px 10px 14px -6px rgba(0,0,0,0.75);
 }
 .bg1 {
 	background: url(/img/bg/city1.jpeg) no-repeat center;

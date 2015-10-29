@@ -42,32 +42,34 @@
 				<table class="table table-striped">
 					<tr>
 						<th class="col-sm-8">Total Monthly Assets: </th>
-						<td class="col-sm-3"> $ {{displayOverview.totalAssets}}</td>
+						<td class="col-sm-3"> $ {{displayOverview.totalAssets| currency}}</td>
 						<td class="col-sm-1"><input type="checkbox" ng-model="checkTotal.assets"></td>
 					</tr>
 					<tr>
 						<th class="col-sm-8">Total Monthly Liabilities: </th>
-						<td class="col-sm-3"> $ {{displayOverview.totalLiabilities}}</td>
+						<td class="col-sm-3"> $ {{displayOverview.totalLiabilities| currency}}</td>
 						<td class="col-sm-1"><input type="checkbox" ng-model="checkTotal.liabilities"></td>
 					</tr>
 					<tr>
 						<th class="col-sm-8">Total Net Worth (Assets - Liabilities): </th>
-						<td class="col-sm-3"> $ {{displayOverview.netWorth}}</td>
+						<td class="col-sm-3" ng-if="displayOverview.netWorth < 0" style="color:red"> $ {{displayOverview.netWorth| currency}}</td>
+						<td class="col-sm-3" ng-if="displayOverview.netWorth >= 0"> $ {{displayOverview.netWorth| currency}}</td>
 						<td class="col-sm-1"><input type="checkbox" ng-model="checkTotal.netWorth"></td>
 					</tr>
 					<tr>
 						<th class="col-sm-8">Total Monthly Income: </th>
-						<td class="col-sm-3"> $ {{displayOverview.monthlyIncome}}</td>
+						<td class="col-sm-3"> $ {{displayOverview.monthlyIncome| currency}}</td>
 						<td class="col-sm-1"><input type="checkbox" ng-model="checkTotal.monthlyIncome"></td>
 					</tr>
 					<tr>
 						<th class="col-sm-8">Total Monthly Expense: </th>
-						<td class="col-sm-3"> $ {{displayOverview.monthlyExpense}}</td>
+						<td class="col-sm-3"> $ {{displayOverview.monthlyExpense| currency}}</td>
 						<td class="col-sm-1"><input type="checkbox" ng-model="checkTotal.monthlyExpense"></td>
 					</tr>
 					<tr>
 						<th class="col-sm-8">Total Net Gross Income (Income - Expense): </th>
-						<td class="col-sm-3"> $ {{displayOverview.totalNetGrossIncome}}</td>
+						<td class="col-sm-3" ng-if="displayOverview.totalNetGrossIncome < 0" style="color:red"> $ {{displayOverview.totalNetGrossIncome| currency}}</td>
+						<td class="col-sm-3" ng-if="displayOverview.totalNetGrossIncome >= 0"> $ {{displayOverview.totalNetGrossIncome| currency}}</td>
 						<td class="col-sm-1"><input type="checkbox" ng-model="checkTotal.netGrossIncome"></td>
 					</tr>
 				</table>

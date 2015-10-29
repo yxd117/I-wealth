@@ -36,10 +36,14 @@
 							</br>
 							<div class="row">
 								<div class="col-md-12">
-									<a class="btn btn-primary" role="button" ng-click="addFriend(userProfile.email, userProfile._id)" ng-show="userProfile.friendStatus === 0 && userProfile.email !== user.email">Add Friend</a>
+<!-- 									<a class="btn btn-primary" role="button" ng-click="addFriend(userProfile.email, userProfile._id)" ng-show="userProfile.friendStatus === 0 && userProfile.email !== user.email">Add Friend</a>
 									<a class="btn btn-default" role="button" ng-click="" ng-show="userProfile.friendStatus === 1" style="color:black;">Sent Friend Request</a>
 									<a class="btn btn-warning" role="button" ng-click="acceptFriend(userProfile.email, userProfile._id)" ng-show="userProfile.friendStatus === 2">Accept Friend Request</a>
-									<a class="btn btn-success" role="button" ng-click="" ng-show="userProfile.friendStatus === 3">Friends</a>										
+									<a class="btn btn-success" role="button" ng-click="" ng-show="userProfile.friendStatus === 3">Friends</a>		 -->			
+									<a role="button" ng-click="addFriend(userProfile.email, userProfile._id)" ng-show="userProfile.friendStatus === 0 && userProfile.email !== user.email"><img src="/img/buttons/social/addfriend.png" style="height:40px;width:150px"/></a>
+									<a role="button" ng-click="" ng-show="userProfile.friendStatus === 1"><img src="/img/buttons/social/requestsent.png" style="height:40px;width:150px"/></a>
+									<a role="button" ng-click="acceptFriend(userProfile.email, userProfile._id)" ng-show="userProfile.friendStatus === 2"><img src="/img/buttons/social/acceptrequest.png" style="height:40px;width:150px"/></a>
+									<a role="button" ng-click="" ng-show="userProfile.friendStatus === 3"><img src="/img/buttons/social/friends.png" style="height:40px;width:150px"/></a> 					
 								</div>
 							</div>				
 							</br>
