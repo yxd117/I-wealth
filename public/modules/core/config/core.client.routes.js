@@ -27,6 +27,10 @@ angular.module('core').config(['$stateProvider', '$urlRouterProvider',
 			url: '/financialrecord',
 			templateUrl: 'modules/financial/views/overview.client.view.html'
 		}).
+		state('financialPDF', {
+			url:'/financial/pdf',
+			templateUrl: 'modules/financial/views/pdf-report.client.view.html'
+		}).
 
 		state('manageAssets', {
 			url: '/financialrecord/assets',

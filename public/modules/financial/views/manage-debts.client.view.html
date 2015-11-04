@@ -500,7 +500,7 @@
                   <td>                                            
                       {{mth[item.month]}}, {{item.year}}                      
                   </td>
-                  <td>{{item.loanBalance | currency}}</td>
+                  <td>{{item.loanBalance | currency}}&nbsp;<a ng-click="setLoanBalance(item)" data-target="#loanBalanceChange" data-toggle="modal"><span ng-if="!debt.completeTable" class="fa fa-pencil"></span></a></td>
                   <td>{{item.monthly | currency}}</td>                  
                   <td>
                       <div ng-if="item.monthlyPayStatus">
@@ -514,9 +514,11 @@
                       <div ng-if="item.monthlyPayStatus">
                           Paid
                       </div>
+                      <!--
                       <div ng-if="item.monthlyPayStatus==false && debt.status=='Completed'">
                           Completed                     
                       </div>
+                      -->
                       <div ng-if="item.monthlyPayStatus==false && debt.status=='In Progress'">
                           <button class="btn-default" ng-click="getItem(item)" data-target="#contributeModal" data-toggle="modal">Pay Now</button>
                       </div>
@@ -571,6 +573,46 @@
       <div class="modal-footer">
         <div class="form-group">
             <button type="button" class="btn btn-success" ng-click="confirmContribute()" data-dismiss="modal">Pay Now
+            </button>
+            <button type="button" class="btn btn-default" ng-click="cancelDelete()" data-dismiss="modal">Cancel
+            </button>
+           </div>
+        </div>              
+      </div>
+    </div>
+  </div>
+
+  <!-- Change loan balance --> 
+  <div class="modal fade" id="loanBalanceChange" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">                     
+      <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">Loan Balance Inaccurate?</h4>
+      </div>
+      <div class="modal-body">          
+        <h5><i>Change your loan balance for the month: {{mth[itemSelected.month]}}, {{itemSelected.year}} </i></h5>           
+        <form class="form-inline">
+        <div class ="row">              
+          <div class= "col-md-6 col-md-offset-3">
+            <div class="col-md-9">  
+              <div class="form-group">            
+                <label class="sr-only">Amount (in dollars)</label>
+                <div class="input-group">
+                  <div class="input-group-addon">$</div>
+                  <input type="number"  class="form-control" data-ng-model="changeLoanBalance"  placeholder="Amount" step="any" min="0">                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        </form>
+        <h5><font color="red">Note: I-Wealth automatically links this debt to your liabilities and income & expense records.</font></h5>
+      </div>
+      <div class="modal-footer">
+        <div class="form-group">
+            <button type="button" class="btn btn-success" ng-click="updateLoanBalance()" data-dismiss="modal">Update Now
             </button>
             <button type="button" class="btn btn-default" ng-click="cancelDelete()" data-dismiss="modal">Cancel
             </button>

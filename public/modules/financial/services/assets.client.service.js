@@ -96,17 +96,20 @@ angular.module('financial').factory('AssetsService', ['$resource', function($res
 		lifeInsurance: {
 			description: 'Life Insurance',
 			order: 8,
-			value: 0
+			value: 0,
+			minValue: 0
 		},
 		investmentInsurance: {
 			description: 'Investment Insurance',
 			order: 9,
-			value: 0
+			value: 0,
+			minValue: 0
 		},
 		others: {
 			description: 'Others',
 			order: 10,
-			value: 0
+			value: 0,
+			minValue: 0
 		}
 	};
 

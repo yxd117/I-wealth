@@ -20,6 +20,7 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
         $scope.utilityExpense = $scope.displayIncomeExpenseRecords.monthlyExpense.utilityHousehold;
         $scope.foodExpense = $scope.displayIncomeExpenseRecords.monthlyExpense.foodNecessities;
         $scope.miscExpense = $scope.displayIncomeExpenseRecords.monthlyExpense.misc;
+        $scope.optionalExpense = $scope.displayIncomeExpenseRecords.monthlyExpense.optionalSavings;
         
         //actual copy
         var incomeExpense = $scope.user.incomeExpenseRecords;       
@@ -48,6 +49,7 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
         $scope.fStatus =true;
         $scope.uStatus =true;
         $scope.mStatus =true;
+        $scope.oStatus = true;
 
         $scope.formSubmitted = false;
         
@@ -134,12 +136,14 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
             $scope.foodB = 0;
             $scope.miscB = 0;
             $scope.utilitiesB = 0;
+            $scope.optionalB = 0;
 
             $scope.feBudgetSet = false;
             $scope.tBudgetSet = false;
             $scope.fBudgetSet = false;
             $scope.mBudgetSet = false;
             $scope.uBudgetSet = false;
+            $scope.oBudgetSet = false;
             $scope.allBudgetSet = false;
 
 
@@ -157,6 +161,7 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
                     $scope.foodB = budgetLimit.foodB;
                     $scope.miscB = budgetLimit.miscB;
                     $scope.utilitiesB = budgetLimit.utilitiesB;
+                    $scope.optionalB = budgetLimit.optionalB;
 
                     if (budgetLimit.fixedExpenseB!==0) {
                         $scope.feBudgetSet = true;
@@ -173,7 +178,10 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
                     if (budgetLimit.utilitiesB!==0) {
                         $scope.uBudgetSet = true;
                     }
-                    if($scope.feBudgetSet && $scope.tBudgetSet && $scope.fBudgetSet && $scope.mBudgetSet && $scope.uBudgetSet) {
+                    if (budgetLimit.optionalB!==0) {
+                        $scope.oBudgetSet = true;
+                    }
+                    if($scope.feBudgetSet && $scope.tBudgetSet && $scope.fBudgetSet && $scope.mBudgetSet && $scope.uBudgetSet && $scope.oBudgetSet) {
                         $scope.allBudgetSet = true;
                     }
 
@@ -182,6 +190,7 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
                     $scope.displayFoodB = budgetLimit.foodB;
                     $scope.displayUtilitiesB = budgetLimit.utilitiesB;
                     $scope.displayMiscB = budgetLimit.miscB;
+                    $scope.displayOptionalB = budgetLimit.optionalB;
                 }
             }
 
@@ -192,6 +201,7 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
             $scope.thisMonthMiscTotal = '0.00';
             $scope.thisMonthUtilitiesTotal = '0.00';
             $scope.thisMonthFoodTotal = '0.00';
+            $scope.thisMonthOptionalTotal = '0.00';            
             $scope.totalExpense = '0.00';            
 
             $scope.displayThisMonthFixedExpenseTotal = 0;
@@ -199,18 +209,21 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
             $scope.displayThisMonthFoodTotal = 0;
             $scope.displayThisMonthUtilitiesTotal = 0;
             $scope.displayThisMonthMiscTotal = 0;
+            $scope.displayThisMonthOptionalTotal = 0;
 
             $scope.feDiffTable = [];
             $scope.tDiffTable = [];
             $scope.fDiffTable = [];
             $scope.mDiffTable =[];
             $scope.uDiffTable = [];
+            $scope.oDiffTable = [];
 
             $scope.fixedExpenseTable = [];
             $scope.transportTable = [];
             $scope.foodTable = [];
             $scope.miscTable = [];
             $scope.utilitiesTable = [];
+            $scope.optionalTable = [];
             
             for(var i=0;i<$scope.userExpenseCopy.length; i++) {            
                 var record = $scope.userExpenseCopy[i];
@@ -276,16 +289,28 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
                     $scope.typeM =typeM;
                     $scope.mStatus = standingCheck($scope.thisMonthMiscTotal,$scope.miscB);
                     $scope.displayMExceed = ($scope.displayThisMonthMiscTotal-$scope.miscB).toFixed(2);
+
+                    //Load OptionalTable Expense Table
+                    var optionalArr = record.monthlyExpense.optionalSavings;
+                    $scope.thisMonthOptionalTotal = record.optionalSavingsAmt;
+                    $scope.displayThisMonthOptionalTotal = Number(record.optionalSavingsAmt);
+
+                    var valueO = ($scope.thisMonthOptionalTotal/$scope.optionalB)*100;
+                    var typeO = progressInfo(valueO);
+                    $scope.dynamicO = Math.floor(valueO);
+                    $scope.typeO =typeO;
+                    $scope.oStatus = standingCheck($scope.thisMonthOptionalTotal,$scope.optionalB);
+                    $scope.displayOExceed = ($scope.displayThisMonthOptionalTotal-$scope.optionalB).toFixed(2);
                     //Load Charts
 
-                    if(!record.fixedExpenseAmt && !record.transportAmt && !record.utilityHouseholdAmt && !record.foodNecessitiesAmt && !record.miscAmt) {
+                    if(!record.fixedExpenseAmt && !record.transportAmt && !record.utilityHouseholdAmt && !record.foodNecessitiesAmt && !record.miscAmt && !record.optionalSavingsAmt) {
                         $scope.incomeExpenseDoughnutData = [1]; 
                         $scope.incomeExpenseDoughnutLabels = ['No Data'];
                                                 
                         
                     } else {
-                        $scope.incomeExpenseDoughnutData = [record.fixedExpenseAmt, record.transportAmt, record.utilityHouseholdAmt, record.foodNecessitiesAmt, record.miscAmt]; 
-                        $scope.incomeExpenseDoughnutLabels = ['Fixed Expense', 'Transport', 'Utilities & Household Maintenance', 'Food & Necessities', 'Miscellaneous'];                        
+                        $scope.incomeExpenseDoughnutData = [record.fixedExpenseAmt, record.transportAmt, record.utilityHouseholdAmt, record.foodNecessitiesAmt, record.miscAmt, record.optionalSavingsAmt];
+                        $scope.incomeExpenseDoughnutLabels = ['Fixed Expense', 'Transport', 'Utilities & Household Maintenance', 'Food & Necessities', 'Miscellaneous', 'Optional Savings'];                        
                         $scope.totalExpense = record.monthlyExpenseAmt;                        
                     }
 
@@ -456,6 +481,38 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
                             $scope.miscTable.push(modRecord);
                         }
                     }
+
+                    for (rt in optionalArr) {
+                        feType = optionalArr[rt];
+                        feRecords = feType.records;
+                        recordsTotal = feType.recordsTotal;                       
+                        
+                        if (feType.value>feType.recordsTotal) {
+                            diff = (feType.value-feType.recordsTotal).toFixed(2);                                
+                            diffObj = {
+                                type : feType.description,
+                                diff : diff
+                            };
+                            $scope.oDiffTable.push(diffObj);
+                        }
+                        
+
+                        for(a=0; a<feRecords.length;a++) {
+                            indRecord = feRecords[a];
+                            dateFormatted = dateFormatter(new Date(feRecords[a].date));                        
+                            amount = feRecords[a].amount.toFixed(2);
+                            //var modRecord = {feRecords[a].detail,}
+                            //console.log(typeof feRecords[a].date); 
+
+                            modRecord = {
+                                detail: feRecords[a].detail,
+                                date: dateFormatted,
+                                amount: amount,
+                                description:feType.description
+                            };
+                            $scope.optionalTable.push(modRecord);
+                        }
+                    }
                 }
             }
                     
@@ -527,6 +584,8 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
                         thisMonthSpecExpense = expenseRecord.monthlyExpense.foodNecessities;
                     } else if ($scope.formRef==='misc') {
                         thisMonthSpecExpense = expenseRecord.monthlyExpense.misc;
+                    } else if ($scope.formRef==='optionalSavings') {
+                        thisMonthSpecExpense = expenseRecord.monthlyExpense.optionalSavings;
                     }
 
                     var record = {
@@ -591,8 +650,18 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
                 }
                 expenseRecord.miscAmt = miscTotal.toFixed(2);
 
+                var optionalArr = expenseRecord.monthlyExpense.optionalSavings;
+                var optionalTotal = 0;
+                for (var rt5 in optionalArr) {
+                    var obj6 = optionalArr[rt5];
+                    optionalTotal += obj6.value;
+                }
+                expenseRecord.optionalSavingsAmt = optionalTotal.toFixed(2);
+
+
+
                 var monthlyIncomeAmt = Number(expenseRecord.monthlyIncomeAmt);                
-                var monthlyExpenseAmt = fixedExpenseTotal + transportTotal + utilityHouseholdTotal + foodNecessitiesTotal + miscTotal;
+                var monthlyExpenseAmt = fixedExpenseTotal + transportTotal + utilityHouseholdTotal + foodNecessitiesTotal + miscTotal + optionalTotal;
                 var netCashFlow = monthlyIncomeAmt - monthlyExpenseAmt;                
                 expenseRecord.monthlyIncomeAmt = monthlyIncomeAmt.toFixed(2);                
                 expenseRecord.monthlyExpenseAmt = monthlyExpenseAmt.toFixed(2);
@@ -627,7 +696,7 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
             console.log('watching feForm' + $scope.forms.addFixedExpenseForm.$valid); 
          });
 
-        $scope.setFixedExpenseBudget = function() {
+        $scope.setBudget = function() {
 
             
             var checker = 0;
@@ -635,6 +704,11 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
                 var budgetLimit = $scope.user.budgetLimits[ab];
                 if (budgetLimit.year===presentYear && budgetLimit.month ===presentMonth) {
                     budgetLimit.fixedExpenseB = $scope.fixedExpenseB;
+                    budgetLimit.transportB = $scope.transportB;
+                    budgetLimit.utilitiesB = $scope.utilitiesB;
+                    budgetLimit.foodB = $scope.foodB;
+                    budgetLimit.miscB = $scope.miscB;
+                    budgetLimit.optionalB = $scope.optionalB; 
                     checker++;
                 }
             }
@@ -643,6 +717,11 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
                 newBudget.year = presentYear;
                 newBudget.month = presentMonth;
                 newBudget.fixedExpenseB = $scope.fixedExpenseB;
+                newBudget.transportB = $scope.transportB;
+                newBudget.utilitiesB = $scope.utilitiesB;
+                newBudget.foodB = $scope.foodB;
+                newBudget.miscB = $scope.miscB;
+                newBudget.optionalB = $scope.optionalB;
                 $scope.user.budgetLimits.push(newBudget);
             }
             if ($scope.user.budgetLimits.length!==0) {
@@ -657,7 +736,6 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
             }, function(response) {
                 $scope.error = response.data.message;
             });
-            alert('Budget Set!');
             $scope.loadTables();
          };
         $scope.setTransportBudget = function() {                      
@@ -823,6 +901,9 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
                     } else if($scope.expenseType==='misc') {
                         expenseSelected = expenseRecord.monthlyExpense.misc;
                         console.log('level2.5');
+                    } else if($scope.expenseType==='optionalSavings') {
+                        expenseSelected = expenseRecord.monthlyExpense.optionalSavings;
+                        console.log('level2.6');
                     }
 
                     for (var get in expenseSelected) {                        
@@ -884,8 +965,16 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
                     }
                     expenseRecord.miscAmt = miscTotal.toFixed(2);
 
+                    var optionalArr = expenseRecord.monthlyExpense.optionalSavings;
+                    var optionalTotal = 0;
+                    for (var rt5 in optionalArr) {
+                        var obj6 = optionalArr[rt5];
+                        optionalTotal += obj6.value;
+                    }
+                    expenseRecord.optionalSavingsAmt = optionalTotal.toFixed(2);                    
+
                     var monthlyIncomeAmt = Number(expenseRecord.monthlyIncomeAmt);                
-                    var monthlyExpenseAmt = fixedExpenseTotal + transportTotal + utilityHouseholdTotal + foodNecessitiesTotal + miscTotal;
+                    var monthlyExpenseAmt = fixedExpenseTotal + transportTotal + utilityHouseholdTotal + foodNecessitiesTotal + miscTotal +optionalTotal;
                     var netCashFlow = monthlyIncomeAmt - monthlyExpenseAmt;                
                     expenseRecord.monthlyIncomeAmt = monthlyIncomeAmt.toFixed(2);                
                     expenseRecord.monthlyExpenseAmt = monthlyExpenseAmt.toFixed(2);
@@ -927,6 +1016,45 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
             $scope.selectedExpense = $scope.miscExpense;            
             $scope.formRef = 'misc';
         };
+        $scope.setOptionalExpense = function() {
+            $scope.selectedExpense = $scope.optionalExpense;            
+            $scope.formRef = 'optionalSavings';
+        };
+        $scope.budgetView = function() {
+            if ($scope.clickShow) {
+                $scope.clickShow = false;
+            }
+            else {
+                $scope.clickShow = true;
+            }
+        };
+        $scope.$watch('category',function() {
+            console.log('mati');
+            if($scope.category==='Fixed Expense') {                
+                $scope.selectedExpense = $scope.fixedExpense;
+                $scope.formRef = 'fixedExpense';
+            }
+            if($scope.category==='Transport') {
+                $scope.selectedExpense = $scope.transportExpense;
+                $scope.formRef = 'transport';
+            }
+            if($scope.category==='Food & Neccessities') {
+                $scope.selectedExpense = $scope.foodExpense;
+                $scope.formRef = 'food';
+            }
+            if($scope.category==='Miscellaneous') {
+                $scope.selectedExpense = $scope.miscExpense; 
+                $scope.formRef = 'misc';           
+            }
+            if($scope.category==='Utilities & Household Maintanence') {
+                $scope.selectedExpense = $scope.utilityExpense;
+                $scope.formRef = 'utility';
+            }
+            if($scope.category==='Optional Savings') {
+                $scope.selectedExpense = $scope.optionalExpense;
+                $scope.formRef = 'optionalSavings';
+            }
+        });
      }
 
 ]);

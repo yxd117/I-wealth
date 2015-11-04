@@ -50,7 +50,8 @@ module.exports = {
 				'public/lib/bootstrap/dist/js/bootstrap.min.js',
 				'public/lib/angular-sanitize/angular-sanitize.min.js',
 				'public/lib/angular-socket-io/socket.js',
-				'public/lib/ngWYSIWYG/js/wysiwyg.js'
+				'public/lib/ngWYSIWYG/js/wysiwyg.js',
+				'public/lib/angular-pdf/dist/angular-pdf.min.js'
 				
 			]
 		},

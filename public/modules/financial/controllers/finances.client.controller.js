@@ -1,8 +1,8 @@
 'use strict';
 
 // Articles controller
-angular.module('financial').controller('FinancesController', ['$scope', '$rootScope', '$stateParams', '$location', 'Authentication', 'LiabilitiesService', 'AssetsService', 'IncomeExpenseService','Users', '$q', 'FinancialHealthService',
-	function($scope, $rootScope, $stateParams, $location, Authentication, LiabilitiesService, AssetsService, IncomeExpenseService,Users, $q, FinancialHealthService) {
+angular.module('financial').controller('FinancesController', ['$scope', '$rootScope', '$stateParams', '$location', 'Authentication', 'LiabilitiesService', 'AssetsService', 'IncomeExpenseService','Users', '$q', 'FinancialHealthService', '$window',
+	function($scope, $rootScope, $stateParams, $location, Authentication, LiabilitiesService, AssetsService, IncomeExpenseService,Users, $q, FinancialHealthService, $window) {
 		$scope.user = Authentication.user;
         //Check authentication
         if (!$scope.user) $location.path('/');
@@ -80,6 +80,11 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
 
         //Set display analysis
         $scope.displayAnalysis = {};
+
+        //PRINT
+        $scope.print = function(){
+            $window.print();
+        };
 
         this.$setScope = function(context) {
             $scope = context;

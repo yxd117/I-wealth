@@ -1,153 +1,333 @@
 <section data-ng-controller="HomeController" class="content">
 	<div class="row">
-	  		<div class="col-lg-4 col-md-6">
-	  			<div class="panel panel-home">
-		  			<div class="panel-heading">
-		  				<div class="row">
-		  					<div class="col-xs-3">
-		  						<i class="fa fa-user fa-3x"></i>
-		  					</div>
-		  					<div class="col-xs-9 text-left">
-                                <div class="huge">Profile</div>
-                                
-                            </div>
-		  				</div>
-		  			</div>			
-					<div class="panel-footer">
-						<div class="row">	
-							<div class="col-md-12">
-								<p>Profile Completion Status:</p>
-                                <progressbar value="completeBar">{{completeBar}}%</progressbar>
+		<!-- First container (Completion and Credit Worthiness)--> 
+  		<div class="col-sm-6 col-md-4 col-lg-4">
+  			<div class="row">
+  				<div class="col-sm-12 col-md-12 col-lg-12">
+		  			<div class="panel panel-home">
+			  			<div class="panel-heading">
+			  				<div class="row">
+			  					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center huge">
+			  							<!-- <i class="fa fa-user fa-1x pull-left" ></i>  -->
+			  							Profile
+	                            </div>
+			  				</div>
+			  			</div>			
+						<div class="panel-footer profileCompletion">
+							<div class="row">	
+								<div class="col-md-12">
+									<p>Profile Completion Status:</p>
+	                                <progressbar value="completeBar">{{completeBar}}%</progressbar>
+								</div>
 							</div>
-						</div>
-						<div class="row" ng-hide="profileCompleteness">
-							<div class="col-md-12">						
-								<b>To complete your Profile: </b>	
-								<li ng-hide="user.completeQns"><em>Update your </em><a href="#!/settings/questionnaire">Credit Profile</a></li>
-								<li ng-hide="user.updatedAssets"><em>Update your </em><a href="#!/financialrecord/assets">Assets records</a></li>
-								<li ng-hide="user.updatedLiabilities"><em>Update your </em><a href="#!/financialrecord/liabilities">Liabilities records</a></li>
-								<li ng-hide="user.updatedIncomeExpense"><em>Update your </em><a href="#!/financialrecord/incomeExpense">Income & Expense records</a></li>
-								<li ng-hide="user.updatedManageDebt"><em>Update your </em><a href="#!/financialrecord/debts">Debt Management record</a></li>
-								<li ng-hide="user.updatedMilestones"><em>Update your </em><a href="#!/milestones">Milestones records</a></li>				
-								<li ng-hide="user.updatedProfileSettings"><em>Update your </em><a href="#!/settings/profile">Profile Settings</a></li>
-								<li ng-hide="user.updatedBudget"><em>Update your </em><a href="#!/budget">Budgets</a></li>
-				<!-- 			<li ng-hide="user.updatedBudget"> Budget record not updated</li>
-								<li ng-hide="user.updatedAddFriend"> Add Frienc record not updated</li> -->
-							</div>
-						</div>	
-						<div class="row" ng-show="profileCompleteness">	
-							<div class="col-md-12">	
-								<b>Next Steps: </b><em>Expand your network!</em> </br>
-								Feature available soon
-									
-							</div>
-						</div>
-					</div>
-				</div>
-	  		</div>
-
-	  		<div class="col-lg-4 col-md-6">
-	  			<div class="panel panel-home">
-	  				<div class="panel-heading">
-		  				<div class="row">
-		  					<div class="col-xs-3">
-		  						<i class="fa fa-trophy fa-3x"></i>
-		  					</div>
-		  					<div class="col-xs-9 text-left">
-                                <div class="huge">Credit Worthiness</div>
-                            </div>
-		  				</div>
-		  			</div>
-		  			<div class="panel-footer">	
-				  		<div class="row">
-				  			<div class="col-md-12">
-				  				<img src="{{rankIcon}}" style="max-width:100px; height:auto;" class="img-responsive center-block">
-				  			</div>
-				  		</div>
-				  		<div class="row text-center">
-				  			<div class="col-md-12">
-								<strong>Credit Rating:</strong> <em>{{creditGrade[0]}} </em><br>
-								<br>
-								<strong>Credit Analysis</strong></br>
-								<em>{{creditGrade[1]}} </em><br>
+							<div class="row" ng-hide="profileCompleteness">
+								<div class="col-md-12">						
+									<b>To complete your Profile: </b>	
+									<li ng-hide="user.completeQns"><em>Update your </em><a href="#!/settings/questionnaire">Credit Profile</a></li>
+									<li ng-hide="user.updatedAssets"><em>Update your </em><a href="#!/financialrecord/assets">Assets records</a></li>
+									<li ng-hide="user.updatedLiabilities"><em>Update your </em><a href="#!/financialrecord/liabilities">Liabilities records</a></li>
+									<li ng-hide="user.updatedIncomeExpense"><em>Update your </em><a href="#!/financialrecord/incomeExpense">Income & Expense records</a></li>
+									<li ng-hide="user.updatedManageDebt"><em>Update your </em><a href="#!/financialrecord/debts">Debt Management record</a></li>
+									<li ng-hide="user.updatedMilestones"><em>Update your </em><a href="#!/milestones">Milestones records</a></li>				
+									<li ng-hide="user.updatedProfileSettings"><em>Update your </em><a href="#!/settings/profile">Profile Settings</a></li>
+									<li ng-hide="user.updatedBudget"><em>Update your </em><a href="#!/budget">Budgets</a></li>
+					<!-- 			<li ng-hide="user.updatedBudget"> Budget record not updated</li>
+									<li ng-hide="user.updatedAddFriend"> Add Frienc record not updated</li> -->
+								</div>
+							</div>	
+							<div class="row" ng-show="profileCompleteness">	
+								<div class="col-md-12">	
+									<b>Next Steps: </b><em>Expand your network!</em> </br>
+									Feature available soon
+										
+								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-	  		</div>
-
-	  		<div class="col-lg-4 col-md-6" data-ng-controller="FinancesController" >
-	  			<!-- <div class="panel panel-home" ng-init="selectedMonth = monthArr[month]"> -->
-	  			<div class="panel panel-home">
-		  			<div class="panel-heading">
-		  				<div class="row">
-		  					<div class="col-xs-3">
-		  						<i class="fa fa-medkit fa-3x"></i>
-		  					</div>
-		  					<div class="col-xs-9 text-left">
-                                <div class="huge">Financial Health</div>
-                            </div>
-		  				</div>
-		  			</div>
-		  			<div class="panel-footer">
-						<div class="row">
-							<div class="col-md-12">
-								<p>Ratio Overview:	</p>
-								<progress><bar ng-repeat="bar in homeHealth track by $index" value="bar.value" type="{{bar.type}}"></bar></progress>
+  				</div>
+  				<div class="col-sm-12 col-md-12 col-lg-12">
+  					<div class="panel panel-home">
+		  				<div class="panel-heading">
+			  				<div class="row">
+<!-- 			  					<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+			  						<i class="fa fa-trophy fa-3x"></i>
+			  					</div> -->
+			  					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center huge">
+	                                Credit Worthiness
+	                            </div>
+			  				</div>
+			  			</div>
+			  			<div class="panel-footer">	
+					  		<div class="row">
+					  			<div class="col-md-12">
+					  				<img src="{{rankIcon}}" style="max-width:80px; height:auto;" class="img-responsive center-block">
+					  			</div>
+					  		</div>
+					  		<div class="row text-center">
+					  			<div class="col-md-12">
+									<strong>Credit Rating:</strong> <em>{{creditGrade[0]}} </em><br>
+									<br>
+									<strong>Credit Analysis</strong></br>
+									<em>{{creditGrade[1]}} </em><br>
+								</div>
 							</div>
 						</div>
-						<div class="row">
-							<div class="col-md-12">
-								<span ng-hide="homeHealthDisplay">No data available</span>
-							</div>	 
-							<span ng-show="homeHealthDisplay">
-							 	<div class="col-md-6">
-							 		<h4>Healthy Ratios</h4>
-									<div ng-repeat="item in homeHealthyRatioArr track by $index">							
-										<li><em>{{item}}</em></li>
+					</div>
+  				</div>
+  			</div>
+  		</div>
+		<!-- Second container (Financial Health)--> 
+  		<div class="col-sm-6 col-md-4 col-lg-4" data-ng-controller="FinancesController">
+  			<div class="row">
+  				<div class="col-sm-12 col-md-12 col-lg-12">
+		  			<div class="panel panel-home">
+			  			<div class="panel-heading">
+			  				<div class="row">
+<!-- 			  					<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+			  						<i class="fa fa-medkit fa-3x"></i>
+			  					</div> -->
+			  					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center huge">
+	                                Financial Health
+	                            </div>
+			  				</div>
+			  			</div>
+			  			<div class="panel-footer financialHealth" >
+							<div class="row">
+								<div class="col-sm-12 col-md-12 col-lg-12">
+									<p>Ratio Overview:</p>
+									<progress><bar ng-repeat="bar in homeHealth track by $index" value="bar.value" type="{{bar.type}}"></bar></progress>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-sm-12 col-md-12 col-lg-12">
+									<div class="row">
+										<span ng-hide="homeHealthDisplay">
+											<div class="col-sm-12 col-md-12 col-lg-12">
+												<h4>No data available</h4> 
+											</div>
+										</span>
+								 
+										<span ng-show="homeHealthDisplay">								
+										 	<div class="col-sm-6 col-md-6 col-lg-6">
+										 		<h4>Healthy Ratios</h4>
+												<div ng-repeat="item in homeHealthyRatioArr track by $index">							
+													<li><em>{{item}}</em></li>
+												</div>
+											</div>
+										 	<div class="col-sm-6 col-md-6 col-lg-6">
+										 		<h4>Unhealthy Ratios</h4>
+												<div ng-repeat="item in homeUnHealthyRatioArr track by $index">							
+													<li><em>{{item}}</em></li>
+												</div>
+
+											</div>									
+										</span>	
+									</div>
+								</div>				
+							</div>
+						</div>
+					</div>	  					
+  				</div>
+  			</div>
+		</div>
+		<!-- Third container (Financial Health and Budget )--> 
+  		<div class="col-sm-6 col-md-4 col-lg-4">
+  			<div class="row">
+  				<!--Show milestones overview -->
+  				<div class="col-sm-12 col-md-12 col-lg-12">
+  					<div class="panel panel-home">
+						<div class="panel-heading">
+			  				<div class="row">
+<!-- 			  					<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+			  						<i class="fa fa-money fa-3x"></i>
+			  					</div> -->
+			  					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center huge">
+	                                Budget Overview
+	                            </div>
+			  				</div>					
+						</div>
+						<div class="panel-footer budgetOverview">
+							<p>Currently Displaying: <b>{{monthString}},{{thisYear}}</b></p>									
+							<div ng-show="feBudgetSet" class="ng-show">				
+								<div class="row">
+									<div class="col-md-7">
+										<em>Fixed Expenses</em>
+									</div>
+									<div class="col-md-5">
+										<div class="ng-show" ng-show="feStatus">
+										{{displayThisMonthFixedExpenseTotal |currency }} / {{budgetLimit.fixedExpenseB|currency}}
+										</div>
+										<div class="ng-hide" ng-hide="feStatus">
+										Exceeded by {{(displayFeExceed)|currency}}
+										</div>
 									</div>
 								</div>
-							 	<div class="col-md-6">
-							 		<h4>Unhealthy Ratios</h4>
-									<div ng-repeat="item in homeUnHealthyRatioArr track by $index">							
-										<li><em>{{item}}</em></li>
+					    		<progressbar class="progress-striped active" animate="true" value="dynamicE" type="{{typeE}}"><b>{{dynamicE}}%</b></progressbar>	    		
+				    		</div>
+				    		
+				    		<div ng-show="tBudgetSet" class="ng-show">
+					    		<div class="row">
+									<div class="col-md-7">
+										<em>Transport</em>
+									</div>
+									<div class="col-md-5">
+										<div class="ng-show" ng-show="tStatus">
+										{{displayThisMonthTransportTotal|currency}} / {{budgetLimit.transportB|currency}}	
+										</div>
+										<div class="ng-hide" ng-hide="tStatus">
+										Exceeded by {{displayTExceed |currency}}
+										</div>
 									</div>
 								</div>
-							</span>					
+					    		<progressbar class="progress-striped active" animate="true" value="dynamicT" type="{{typeT}}"><b>{{dynamicT}}%</b></progressbar>
+				    		</div>
+				    		
+
+				    		<div ng-show="uBudgetSet" class="ng-show">
+					    		<div class="row">
+									<div class="col-md-7">
+										<em>Utilities &...</em>
+									</div>
+									<div class="col-md-5">
+										<div class="ng-show" ng-show="uStatus">
+										{{displayThisMonthUtilitiesTotal|currency}} / {{budgetLimit.utilitiesB|currency}}
+										</div>
+										<div class="ng-hide" ng-hide="uStatus">
+										Exceeded by {{displayUExceed|currency}}
+										</div>
+									</div>
+								</div>
+					    		<progressbar class="progress-striped active" animate="true" value="dynamicU" type="{{typeU}}"><b>{{dynamicU}}%</b></progressbar>
+				    		</div>
+				    		
+
+				    		<div ng-show="fBudgetSet" class="ng-show">
+					    		<div class="row">
+									<div class="col-md-7">
+										<em>Food & Neces...</em>
+									</div>
+									<div class="col-md-5">
+										<div class="ng-show" ng-show="fStatus">
+										{{displayThisMonthFoodTotal|currency}} / {{budgetLimit.foodB|currency}}
+										</div>
+										<div class="ng-hide" ng-hide="fStatus">
+										Exceeded by {{displayfExceed|currency}}
+										</div>
+									</div>
+								</div>
+					    		<progressbar class="progress-striped active" animate="true" value="dynamicF" type="{{typeF}}"><b>{{dynamicF}}%</b></progressbar>
+				    		</div>
+				    		
+
+				    		<div ng-show="mBudgetSet" class="ng-show">
+					    		<div class="row">
+									<div class="col-md-7">
+										<em>Miscellaneous</em>
+									</div>
+									<div class="col-md-5">
+										<div class="ng-show" ng-show="mStatus">
+										{{displayThisMonthMiscTotal|currency}} / {{budgetLimit.miscB|currency}}
+										</div>
+										<div class="ng-hide" ng-hide="mStatus">
+										Exceeded by {{displayMExceed|currency}}
+										</div>
+									</div>
+								</div>
+					    		<progressbar class="progress-striped active" animate="true" value="dynamicM" type="{{typeM}}"><b>{{dynamicM}}%</b></progressbar>
+				    		</div>
+
+				    		<div class="ng-hide" ng-hide="feBudgetSet">
+					    		<div class="row">
+					    			<ul><li><i><a href="#!/budget">Click Here</a> to set budget for <b>Fixed Expenses</b></i></li></ul>
+					    		</div>
+				    		</div>
+							<div class="ng-hide" ng-hide="tBudgetSet">
+					    		<div class="row">
+					    			<ul><li><i><a href="#!/budget">Click Here</a> to set budget for <b>Transport</b></i></li></ul>
+					    		</div>
+				    		</div>
+							<div class="ng-hide" ng-hide="uBudgetSet">
+					    		<div class="row">
+					    			<ul><li><i><a href="#!/budget">Click Here</a> to set budget for <b>Utilities & Maintanence</b></i></li></ul>
+					    		</div>
+				    		</div>
+							<div class="ng-hide" ng-hide="fBudgetSet">
+					    		<div class="row">
+					    			<ul><li><i><a href="#!/budget">Click Here</a> to set budget for <b>Food & Necessities</b></i></li></ul>
+					    		</div>
+				    		</div>
+							<div class="ng-hide" ng-hide="mBudgetSet">
+					    		<div class="row">
+					    			<ul><li><i><a href="#!/budget">Click Here</a> to set budget for <b>Miscellaneous Expenses</b></i></li></ul>
+					    		</div>
+				    		</div>
 						</div>
 					</div>
-				</div>
-			</div>
+  				</div>
+  				<!-- Generate PDF -->
+ 				<div class="col-sm-12 col-md-12 col-lg-12" data-ng-controller="ReportGenerationController">
+  					<div class="panel panel-home">
+		  				<div class="panel-heading">
+			  				<div class="row">
+<!-- 			  					<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
+			  						<i class="fa fa-file-pdf-o fa-3x"></i>
+			  					</div> -->
+			  					<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center huge">
+	                                Generate Report
+	                            </div>
+			  				</div>
+			  			</div>
+			  			<div class="panel-footer reportGenerate">	
+					  		<div class="row">
+					  			<div class="col-md-12">
+									<div class="row">
+							    		<div class="col-md-4">
+							    			<h5>Select Date: </h5>
+							    		</div>
+									    <div class="col-md-4">
+									        <select data-ng-options="m as m for m in monthArr" class="form-control" data-ng-model="selectedMonth" ng-init="selectedMonth = monthArr[month]"></select>
+									    </div>
+									    <div class="col-md-3">
+									        <input type="number" data-ng-model="selectedYear" class="form-control" ng-init="selectedYear = year" size="1">
+									    </div>				    		
+							    	</div>
+									</br>
+							    	<div class="row">
+							    		<div class="col-md-4" >
+											<h5>Select Period: </h5>
+										</div>
+							  			<div class="col-md-5">
+											<select ng-model="selectedReportOption" class="form-control" ng-init="selectedReportOption = 0">
+												<option value="0">Past 3 months</option>
+												<option value="1">Past 6 months</option>
+												<option value="2">Past 12 months</option>
+											</select>
+										</div>	
+										<div class="col-md-3">
+											<!-- <a role="button" class="btn btn-default" data-ng-click="">Generate</a> -->
+											<a role="button" class="btn btn-default" ng-click="print()">Generate</a>
+										</div>
+							    	</div>
+								</div>
+							</div>
+						</div>
+					</div>
+  				</div>
+  			</div> 			
+  		</div>
 	</div>
 
-	<!--Show milestones overview -->
-<!-- 	<div class="row">
-		<div class="col-lg-8">
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<i class="fa fa-money fa-fw"></i> Budget Overview
-				</div>
-				<div class="panel-body">
-					<p class="lead">To input progress of budgets here</p>
-				</div>
-			</div>
-		</div>
-		<div class="col-lg-4">
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<i class="fa fa-flag fa-fw"></i> Milestones Overview
-				</div>
-				<div class="panel-body">
-					<p class="lead">To input progress of milestones here</p>
-				</div>
-			</div>
-		</div>
-	</div> -->
+	<!-- New Row --> 
 	<div class="row">
-		<div class="col-lg-8">
-			<div class="panel panel-default">
+		<div class="col-sm-12 col-md-12 col-lg-12">
+			<div class="panel panel-home">
 				<div class="panel-heading">
-					<i class="fa fa-flag fa-fw"></i> Milestones Overview
+					<!-- <i class="fa fa-flag fa-fw"></i>  -->
+					<div class="row">
+						<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-center huge">
+							Milestones Overview
+						</div>
+					</div>
 				</div>
 				<div class="panel-body">					
 					<div ng-hide="user.updatedMilestones">
@@ -156,7 +336,7 @@
 					<div class="row">
 						<div ng-show="user.updatedMilestones">
 							<div ng-repeat="item in user.mileStones">							
-								<div class="col-xs-4">
+								<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3">
 									 <div align="center"><a href="#!/milestones"><h4>{{item.name}}</h4></a></div>
 									 <div align="right"><b>{{item.amtSaved |currency}}</b> saved out of <b>{{item.targetAmt|currency}}</b></div>
 									 <div class="progress">
@@ -184,127 +364,6 @@
 			</div>
 		</div>
 		<div class="col-lg-4">
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<i class="fa fa-money fa-fw"></i> Budget Overview					
-				</div>
-				<div class="panel-body">
-					<h5>Currently Displaying: <b>{{monthString}},{{thisYear}}</b></h5>									
-					<div ng-show="feBudgetSet" class="ng-show">				
-						<div class="row">
-							<div class="col-md-7">
-								<em>Fixed Expenses</em>
-							</div>
-							<div class="col-md-5">
-								<div class="ng-show" ng-show="feStatus">
-								{{displayThisMonthFixedExpenseTotal |currency }} / {{budgetLimit.fixedExpenseB|currency}}
-								</div>
-								<div class="ng-hide" ng-hide="feStatus">
-								Exceeded by {{(displayFeExceed)|currency}}
-								</div>
-							</div>
-						</div>
-			    		<progressbar class="progress-striped active" animate="true" value="dynamicE" type="{{typeE}}"><b>{{dynamicE}}%</b></progressbar>	    		
-		    		</div>
-		    		
-		    		<div ng-show="tBudgetSet" class="ng-show">
-			    		<div class="row">
-							<div class="col-md-7">
-								<em>Transport</em>
-							</div>
-							<div class="col-md-5">
-								<div class="ng-show" ng-show="tStatus">
-								{{displayThisMonthTransportTotal|currency}} / {{budgetLimit.transportB|currency}}	
-								</div>
-								<div class="ng-hide" ng-hide="tStatus">
-								Exceeded by {{displayTExceed |currency}}
-								</div>
-							</div>
-						</div>
-			    		<progressbar class="progress-striped active" animate="true" value="dynamicT" type="{{typeT}}"><b>{{dynamicT}}%</b></progressbar>
-		    		</div>
-		    		
-
-		    		<div ng-show="uBudgetSet" class="ng-show">
-			    		<div class="row">
-							<div class="col-md-7">
-								<em>Utilities &...</em>
-							</div>
-							<div class="col-md-5">
-								<div class="ng-show" ng-show="uStatus">
-								{{displayThisMonthUtilitiesTotal|currency}} / {{budgetLimit.utilitiesB|currency}}
-								</div>
-								<div class="ng-hide" ng-hide="uStatus">
-								Exceeded by {{displayUExceed|currency}}
-								</div>
-							</div>
-						</div>
-			    		<progressbar class="progress-striped active" animate="true" value="dynamicU" type="{{typeU}}"><b>{{dynamicU}}%</b></progressbar>
-		    		</div>
-		    		
-
-		    		<div ng-show="fBudgetSet" class="ng-show">
-			    		<div class="row">
-							<div class="col-md-7">
-								<em>Food & Neces...</em>
-							</div>
-							<div class="col-md-5">
-								<div class="ng-show" ng-show="fStatus">
-								{{displayThisMonthFoodTotal|currency}} / {{budgetLimit.foodB|currency}}
-								</div>
-								<div class="ng-hide" ng-hide="fStatus">
-								Exceeded by {{displayfExceed|currency}}
-								</div>
-							</div>
-						</div>
-			    		<progressbar class="progress-striped active" animate="true" value="dynamicF" type="{{typeF}}"><b>{{dynamicF}}%</b></progressbar>
-		    		</div>
-		    		
-
-		    		<div ng-show="mBudgetSet" class="ng-show">
-			    		<div class="row">
-							<div class="col-md-7">
-								<em>Miscellaneous</em>
-							</div>
-							<div class="col-md-5">
-								<div class="ng-show" ng-show="mStatus">
-								{{displayThisMonthMiscTotal|currency}} / {{budgetLimit.miscB|currency}}
-								</div>
-								<div class="ng-hide" ng-hide="mStatus">
-								Exceeded by {{displayMExceed|currency}}
-								</div>
-							</div>
-						</div>
-			    		<progressbar class="progress-striped active" animate="true" value="dynamicM" type="{{typeM}}"><b>{{dynamicM}}%</b></progressbar>
-		    		</div>
-
-		    		<div class="ng-hide" ng-hide="feBudgetSet">
-			    		<div class="row">
-			    			<ul><li><i><a href="#!/budget">Click Here</a> to set budget for <b>Fixed Expenses</b></i></li></ul>
-			    		</div>
-		    		</div>
-					<div class="ng-hide" ng-hide="tBudgetSet">
-			    		<div class="row">
-			    			<ul><li><i><a href="#!/budget">Click Here</a> to set budget for <b>Transport</b></i></li></ul>
-			    		</div>
-		    		</div>
-					<div class="ng-hide" ng-hide="uBudgetSet">
-			    		<div class="row">
-			    			<ul><li><i><a href="#!/budget">Click Here</a> to set budget for <b>Utilities & Maintanence</b></i></li></ul>
-			    		</div>
-		    		</div>
-					<div class="ng-hide" ng-hide="fBudgetSet">
-			    		<div class="row">
-			    			<ul><li><i><a href="#!/budget">Click Here</a> to set budget for <b>Food & Necessities</b></i></li></ul>
-			    		</div>
-		    		</div>
-					<div class="ng-hide" ng-hide="mBudgetSet">
-			    		<div class="row">
-			    			<ul><li><i><a href="#!/budget">Click Here</a> to set budget for <b>Miscellaneous Expenses</b></i></li></ul>
-			    		</div>
-		    		</div>
-				</div>
-			</div>
 		</div>
 	</div>
 	<!-- For advertisements-->

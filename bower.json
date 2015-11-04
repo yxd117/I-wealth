@@ -26,6 +26,7 @@
 		"jquery": "1.11.3",
 		"socket.io-client": "*",
 		"angular-socket-io": "*",
-		"ngWYSIWYG": "*"
+		"ngWYSIWYG": "*",
+		"angular-pdf": "*"
 	}
 }

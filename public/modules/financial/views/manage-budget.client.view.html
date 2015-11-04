@@ -1,4 +1,4 @@
-	<section data-ng-controller="BudgetController" class="content"> 
+<section data-ng-controller="BudgetController" class="content"> 
   <div class="row">
 		<div class="col-md-4">
 			<div class="col-md-11">
@@ -22,6 +22,11 @@
 			    	</div>
 			    </div>
 			</div>
+			<div ng-hide="clickShow" align="left">
+				<a ng-click="budgetView()">+Display Budget</a>
+			</div>
+			<div ng-show="clickShow" class="ng-show">
+				<a ng-click="budgetView()">-Collapse</a>
 			<div ng-show="feBudgetSet" class="ng-show">				
 				<div class="row">
 					<div class="col-md-7">
@@ -111,6 +116,23 @@
     		<progressbar class="progress-striped active" animate="true" value="dynamicM" type="{{typeM}}"><b>{{dynamicM}}%</b></progressbar>
     		</div>
 
+    		<div ng-show="oBudgetSet" class="ng-show">
+    		<div class="row">
+				<div class="col-md-7">
+					<em>Optional Savings</em>
+				</div>
+				<div class="col-md-5">
+					<div class="ng-show" ng-show="oStatus">
+					${{displayThisMonthOptionalTotal}} / ${{displayOptionalB}}
+					</div>
+					<div class="ng-hide" ng-hide="oStatus">
+					Exceeded by ${{displayOExceed}}
+					</div>
+				</div>
+			</div>
+    		<progressbar class="progress-striped active" animate="true" value="dynamicO" type="{{typeO}}"><b>{{dynamicO}}%</b></progressbar>
+    		</div>
+
     		<div class="ng-hide" ng-hide="feBudgetSet">
 	    		<div class="row">
 	    			<ul><li><font color=red>No Budget Set for Fixed Expenses</font></li></ul>
@@ -136,10 +158,15 @@
 	    			<ul><li><font color=red>No Budget Set for Miscellaneous Expenses</font></li></ul>
 	    		</div>
     		</div>
-    		<div class="ng-show" ng-show="allBudgetSet">
-    			<div align = center>
-    			Need to change your budget limits? <button type="submit" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal5">Click Here</button>
-    			</div>
+    		<div class="ng-hide" ng-hide="oBudgetSet">
+	    		<div class="row">
+	    			<ul><li><font color=red>No Budget Set for Optional Savings</font></li></ul>
+	    		</div>
+    		</div>
+    		
+			<div align = left>
+			Need to Set your Budget Limits? <button type="submit" class="btn btn-danger btn-sm" data-toggle="modal" data-target="#myModal5">Click Here</button>
+			</div>
     		</div>
 
     		<h4>Total Expenses: ${{totalExpense}}</h4>
@@ -159,10 +186,11 @@
 			        <button type="button" class="close" data-dismiss="modal5" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 			        <h4 class="modal-title" id="myModalLabel">Update Budget Limit</h4>
 			      </div>
+			      <form data-ng-submit="setBudget()">
 			      <div class="modal-body">
 				  
 			    <span>Fixed Expense:</span>
-				<form class="form-inline" ng-submit="setFixedExpenseBudget()">
+				<div class="form-inline">
 			  		<div class="form-group">				  	
 			    		<label class="sr-only" for="fixedExpenseB">Amount (in dollars)</label>
 				    <div class="input-group">
@@ -170,12 +198,11 @@
 				      <input type="number"  class="form-control" data-ng-model="fixedExpenseB" id="fixedExpenseB" placeholder="Amount" value="fixedExpenseB" min="0" required=true>
 				      <div class="input-group-addon">.00</div>
 				    </div>
-				  </div>
-			  	<button type="submit" class="btn btn-primary btn-sm">Set Budget</button>
-			  	</form>
+				  </div>			  	
+			  	</div>
 				
 				<span>Transport:</span>
-				<form class="form-inline" ng-submit="setTransportBudget()">
+				<div class="form-inline">
 				  <div class="form-group">				  	
 				    <label class="sr-only" for="transportB">Amount (in dollars)</label>
 				    <div class="input-group">
@@ -183,12 +210,11 @@
 				      <input type="number" min="0" class="form-control" data-ng-model="transportB" id="transportB" placeholder="Amount" required=true>
 				      <div class="input-group-addon">.00</div>
 				    </div>
-				  </div>
-				  <button type="submit" class="btn btn-primary btn-sm">Set Budget</button>
-				</form>
+				  </div>				  
+				</div>
 
 				<span>Utilities & Household Maintenance:</span>
-				<form class="form-inline" ng-submit="setUtilitiestBudget()">
+				<div class="form-inline">
 				  <div class="form-group">				  	
 				    <label class="sr-only" for="utilitiesB">Amount (in dollars)</label>
 				    <div class="input-group">
@@ -196,12 +222,11 @@
 				      <input type="number" min="0" class="form-control" data-ng-model="utilitiesB" id="utilitiesB" placeholder="Amount" required=true>
 				      <div class="input-group-addon">.00</div>
 				    </div>
-				  </div>
-				  <button type="submit" class="btn btn-primary btn-sm">Set Budget</button>
-				</form>
+				  </div>				  
+				</div>
 				
 				<span>Food & Necessities:</span>
-				<form class="form-inline" ng-submit="setFoodBudget()">
+				<div class="form-inline">
 				  <div class="form-group">				  	
 				    <label class="sr-only" for="foodB">Amount (in dollars)</label>
 				    <div class="input-group">
@@ -209,12 +234,11 @@
 				      <input type="number" min="0" class="form-control" data-ng-model="foodB" id="foodB" placeholder="Amount" required=true>
 				      <div class="input-group-addon">.00</div>
 				    </div>
-				  </div>
-				  <button type="submit" class="btn btn-primary btn-sm">Set Budget</button>
-				</form>
+				  </div>				  
+				</div>
 
 				<span>Miscellaneous:</span>
-				<form class="form-inline" ng-submit="setMiscBudget()">
+				<div class="form-inline">
 				  <div class="form-group">				  	
 				    <label class="sr-only" for="miscB">Amount (in dollars)</label>
 				    <div class="input-group">
@@ -222,123 +246,50 @@
 				      <input type="number" min="0" class="form-control" data-ng-model="miscB" id="miscB" placeholder="Amount" required=true>
 				      <div class="input-group-addon">.00</div>
 				    </div>
-				  </div>
-				  <button type="submit" class="btn btn-primary btn-sm">Set Budget</button>
-				</form>
+				  </div>				  
+				</div>
 
-			      </div>							      
-			      <label><i>&nbsp &nbsp* Click on "Set Budget" to confirm your changes.</i></label>
+				<span>Optional Savings:</span>
+				<div class="form-inline">
+				  <div class="form-group">				  	
+				    <label class="sr-only" for="miscB">Amount (in dollars)</label>
+				    <div class="input-group">
+				      <div class="input-group-addon">$</div>
+				      <input type="number" min="0" class="form-control" data-ng-model="optionalB" id="optionalB" placeholder="Amount" required=true>
+				      <div class="input-group-addon">.00</div>
+				    </div>
+				  </div>				  
+				</div>
+
+			      </div>
+			      <label><i>&nbsp; &nbsp;* Click on "Set Budget" to confirm your changes.</i></label>			      
+
 			      <div class="modal-footer">
 			      <div align=center>
-			      <div class="form-group">			        
-			        <button type="button" class="btn btn-success btn-block" data-dismiss="modal">Done</button>  
+			      <div class="form-group">	
+			      	<button type="submit" data-target="#budgetSetModal" data-toggle="modal" class="btn btn-success btn-block">Set Budget</button><br/>		        
+			        <button type="button" class="btn btn-default btn-block" data-dismiss="modal">Close</button>  
 					<div data-ng-show="error" class="text-danger">
 						<strong data-ng-bind="error"></strong>
 					</div>
 			      </div>
 			      </div>
-			      </div>									      
+			      </div>
+			      </form>									      
 			    </div>
 			  </div>
 			</div>
 
 
 		</div>		
-		<div class="col-md-8">
-			<div class="ng-hide" ng-hide="allBudgetSet">
-			<div class="row">
-			
-			<h4 align=left>Set Budget Limits to track your expenditure now!</h4>	
-			<br/>		
-			
-				<div class="row">
-				
-				<div class = "col-md-6">
-				<span>Fixed Expense:</span>
-				<form class="form-inline" ng-submit="setFixedExpenseBudget()">
-				  <div class="form-group">				  	
-				    <label class="sr-only" for="fixedExpenseB">Amount (in dollars)</label>
-				    <div class="input-group">
-				      <div class="input-group-addon">$</div>
-				      <input type="number" min="0" class="form-control" data-ng-model="fixedExpenseB" id="fixedExpenseB" placeholder="Amount" value="fixedExpenseB" required=true>
-				      <div class="input-group-addon">.00</div>
-				    </div>
-				  </div>
-				  <button type="submit" class="btn btn-default btn-sm">Set Budget</button>
-				</form>
-				</div>
-				
-				
-				<div class = "col-md-6">
-				<span>Transport:</span>
-				<form class="form-inline" ng-submit="setTransportBudget()">
-				  <div class="form-group">				  	
-				    <label class="sr-only" for="transportB">Amount (in dollars)</label>
-				    <div class="input-group">
-				      <div class="input-group-addon">$</div>
-				      <input type="number" min="0" class="form-control" data-ng-model="transportB" id="transportB" placeholder="Amount" required=true>
-				      <div class="input-group-addon">.00</div>
-				    </div>
-				  </div>
-				  <button type="submit" class="btn btn-default btn-sm">Set Budget</button>
-				</form>
-				</div>
-				</div>
-				
-				<div class="row">
-				
-				<div class = "col-md-6">
-				<span>Utilities & Household Maintenance:</span>
-				<form class="form-inline" ng-submit="setUtilitiestBudget()">
-				  <div class="form-group">				  	
-				    <label class="sr-only" for="utilitiesB">Amount (in dollars)</label>
-				    <div class="input-group">
-				      <div class="input-group-addon">$</div>
-				      <input type="number" min="0" class="form-control" data-ng-model="utilitiesB" id="utilitiesB" placeholder="Amount" required=true>
-				      <div class="input-group-addon">.00</div>
-				    </div>
-				  </div>
-				  <button type="submit" class="btn btn-default btn-sm">Set Budget</button>
-				</form>				
-				</div>
-				
-				<div class = "col-md-6">
-				<span>Food & Necessities:</span>
-				<form class="form-inline" ng-submit="setFoodBudget()">
-				  <div class="form-group">				  	
-				    <label class="sr-only" for="foodB">Amount (in dollars)</label>
-				    <div class="input-group">
-				      <div class="input-group-addon">$</div>
-				      <input type="number" min="0" class="form-control" data-ng-model="foodB" id="foodB" placeholder="Amount" required=true>
-				      <div class="input-group-addon">.00</div>
-				    </div>
-				  </div>
-				  <button type="submit" class="btn btn-default btn-sm">Set Budget</button>
-				</form>
-				</div>
-
-				</div>
-				
-				
-				<span>Miscellaneous:</span>
-				<form class="form-inline" ng-submit="setMiscBudget()">
-				  <div class="form-group">				  	
-				    <label class="sr-only" for="miscB">Amount (in dollars)</label>
-				    <div class="input-group">
-				      <div class="input-group-addon">$</div>
-				      <input type="number" min="0" class="form-control" data-ng-model="miscB" id="miscB" placeholder="Amount" required=true>
-				      <div class="input-group-addon">.00</div>
-				    </div>
-				  </div>
-				  <button type="submit" class="btn btn-default btn-sm">Set Budget</button>
-				</form>
-				
-				</div>
-			</div>
-			<br/>
+		<div class="col-md-8">					
 			<div class="row">			
 			<h4>Monthly Expenses</h4>
-			
+			<br/>
+			<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModalStar">
+			  Add Expense
+			</button>
+			<br/><br/>				
 			<accordion class="accordion" close-others="oneAtATime">
 
 
@@ -596,6 +547,55 @@
 							
 				    </accordion-group>
 
+				    <!-- Optional Savings -->
+
+			    <accordion-group is-open="status5.open">
+				        <accordion-heading>
+				            <i class="pull-left glyphicon" ng-class="{'glyphicon-minus': status5.open, 'glyphicon-plus': !status5.open}"></i>&nbsp;Optional Savings 
+				            <p class="pull-right">Total: $ {{thisMonthOptionalTotal}}</p>
+				        </accordion-heading>
+						<p ng>You have indicated under the 'Optional Savings' tab a total Expense of ${{thisMonthOptionalTotal}}</p>
+							<p>Add Expenses below to account your expenditure for the month.</p> 
+							<table class="form-group table table">
+								<tr>
+									<th>Details</th>
+									<th>Type</th>
+									<th>Amount</th>
+									<th>Date</th>
+									<th></th>
+									
+								</tr>
+								<tr ng-repeat = "x in oDiffTable" bgcolor="#F3F018"> 
+									<td>Unassigned</td>
+									<td>{{x.type}}</td>
+									<td>${{x.diff}}</td>
+									<td></td>
+									<td><button type="button" class="btn btn-danger" ng-click="setOptionalExpense()" data-toggle="modal" data-target="#myModal">
+									  Assign Expense
+									</button>
+							        </td>
+								</tr>
+								<tr ng-repeat="item in optionalTable">
+									<td>{{item.detail}}</td>
+									<td>{{item.description}}</td>
+									<td>${{item.amount}}</td>
+									<td>{{item.date}}</td>
+									<td>
+									<button type="button" ng-click="standbyForDelete(item,'optionalSavings')" class="btn btn-default btn-xs" data-toggle="modal" data-target="#myModal10">
+				  							<span class="glyphicon glyphicon-remove"></span>
+									</button>
+									</td>
+								</tr>
+					
+							</table>
+							<!-- Button trigger modal -->
+							<button type="button" ng-click="setOptionalExpense()" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+							  Add Expense
+							</button>
+
+							
+				    </accordion-group>
+
 			</accordion>
 			<form name="forms.addFixedExpenseForm" data-ng-submit="addNewExpense()">
 			<fieldset>
@@ -707,5 +707,120 @@
 
 			</div>
 		</div>
-	</div>	
+	</div>
+	<div class="modal fade" id="budgetSetModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">                     
+      <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">Success!</h4>
+          </div>
+        <div class="modal-body">
+            <h4>Budget Set!</h4>                       
+        </div>
+        <div class="modal-footer">
+        <div class="form-group">
+            <button type="button" class="btn btn-success" data-dismiss="modal">Dismiss
+            </button>
+           </div>
+        </div>              
+      </div>
+    </div>
+  </div>
+  			<form name="forms.addFixedExpenseForm" data-ng-submit="addNewExpense()">
+			<fieldset>
+			<div class="modal fade" id="myModalStar" tabindex="-0" role="dialog" aria-labelledby="myModalLabel">
+			  <div class="modal-dialog" role="document">
+			    <div class="modal-content">
+				  <div ng-hide="formSubmitted" class="ng-hide">
+			      <div class="modal-header">
+			        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+			        <h4 class="modal-title" id="myModalLabel">New Expense</h4>
+			      </div>
+
+			      <div class="modal-body">
+				      <div class="row">
+					      <div class="col-md-7">
+						      	<label>Description:</label>				      
+						      	<div class="form-group">									      	
+									<input type="text" name="detail" id="detail" data-ng-model="detail" class ="form-control" ng-required="true"/>
+								</div>
+							</div>
+					  </div>
+					  <div class="row">
+					      	<div class="col-md-7">
+						      	<div class="form-group">
+							      <label for="type">Category (select one):</label>
+							      <select class="form-control" name="category" id="category" ng-model="category" ng-required="true">
+							        <option>Fixed Expense</option>        
+							        <option>Transport</option>
+							        <option>Utilities & Household Maintanence</option>
+							        <option>Food & Neccessities</option>
+							        <option>Miscellaneous</option>
+							        <option>Optional Savings</option>
+							      </select>
+								</div>
+							</div>
+					  </div>
+					  <div class="row">
+					      	<div class="col-md-7">
+						      	<div class="form-group">
+							      <label for="type">Type (select one):</label>
+							      <select class="form-control" name="type" id="type" data-ng-model="type" ng-required="true">
+							        <option ng-repeat="item in selectedExpense">{{item.description}}
+							        </option>        
+							      </select>
+								</div>
+							</div>
+					  </div>
+					  <div class="row">
+					      	<div class="col-md-7">
+						      	<div class ="form-group">
+						      	<label for="expenseAmt">Amount Spent:</label>
+	    						<input type="number" min="0" step="any" name="expenseAmt" id="expenseAmt"class ="form-control" data-ng-model="expenseAmt" ng-required="true"/>	</div>
+							</div>
+					  </div>
+					  <div class="row">
+					      	<div class="col-md-7">
+						      	<p class="input-group">
+						      		<label for="date">Date of Expense:</label>
+	            					<input type="date" class="form-control" min="{{firstDay}}" max="{{lastDay}}" name="date" id="date" data-ng-model="date" ng-required="true"/>						        
+	        					</p>
+							</div>
+					  </div>
+					  <input type="hidden" name="formRef" ng-model="formRef">
+			      </div>							      
+			      <div class="modal-footer">
+			      <div class="form-group">
+			        <button type="button" ng-click ="resetModal()" class="btn btn-default" data-dismiss="modal">Cancel
+			        </button>
+			        <button type="submit" class="btn btn-primary">Create</button>
+			        
+					<div data-ng-show="error" class="text-danger">
+						<strong data-ng-bind="error"></strong>
+					</div>
+			      </div>
+			      </div>
+				  </div>	
+				  <div ng-show="formSubmitted" class="ng-show">
+					  <div class="modal-header">
+				        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				        <h4 class="modal-title" id="myModalLabel">Success!</h4>
+				      </div>
+					  <div class="modal-body">
+					      Expense Added!
+					  </div>
+					  <div class="modal-footer">
+					  <div class="form-group">
+				        <button type="button" class="btn btn-success" ng-click="resetModal()" data-dismiss="modal">Dismiss
+				        </button>
+				       </div>
+				      </div>
+			      </div>
+
+			    </div>
+			  </div>
+			</div>
+			</fieldset>
+			</form>	
  </section>

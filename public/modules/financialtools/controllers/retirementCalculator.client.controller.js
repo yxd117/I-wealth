@@ -102,7 +102,7 @@ angular.module('financialtools').controller('RetirementPlanningController', ['$s
             }
             $scope.monthlyIncomeAmt = $scope.displayIncomeExpenseRecords.monthlyIncomeAmt;
             $scope.annualIncome = $scope.monthlyIncomeAmt *12;
-            console.log($scope.annualIncome);
+            
         }
       };
       current();
@@ -166,7 +166,13 @@ angular.module('financialtools').controller('RetirementPlanningController', ['$s
       };
 
       var calculateRetirementAmtCompoundedAt55 = function(){
-        $scope.retirementAmtCompoundedAt55 = 12 * $scope.retirementMonthlyIncomeWithInterest * (55 - $scope.calculator.currentAge);
+        var i = $scope.calculator.interestRate/100;
+        var p1 = 1 + (i/annualCompounding);
+        var p2 = annualCompounding * (55 - $scope.calculator.currentAge);
+        var pt1 = Math.pow(p1, p2) - 1;
+        var pt2 = i/annualCompounding;
+        console.log($scope.savingsPerYearTillRetirement);
+        $scope.retirementAmtCompoundedAt55 = ($scope.savingsPerYearTillRetirement) * (pt1/pt2) ;
       };
 
       var calculateCurrentSavingToIncomeRatio = function(){

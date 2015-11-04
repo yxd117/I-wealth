@@ -8,21 +8,22 @@
 	  <li role="presentation" class="active"><a href="/#!/financialrecord/insurances">Insurances</a></li>
 	</ul>
 	<h3>Insurance Policies</h3>
-	<table class="table">
+
+    <br/><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addModal">Add New Insurance
+  	</button><br/><br/>
+
+	<table class="table table-striped table-bordered" style="text-align:center;">
 	    <thead>
-	      <tr>
-	        <th>No.</th>
-	        <th>Policy Name</th>
-	        <th>Provider</th>
-	        <th>Year</th>
-	        <th>Policy No</th>
-	        <th>Term</th>
-	        <th>Details</th>
-	        <th></th>	        
-	      </tr>
-	    </thead>
-	    <tbody>
-	      <tr ng-repeat='insurance in displayInsuranceInfo'>
+	      <td><i class="fa fa-list-ol fa-1x"></i></td>
+	      <td><i class="fa fa-book fa-1x"></i>Policy Name</td>
+	      <td><i class="fa fa-university fa-1x"></i>Provider</td>
+	      <td><i class="fa fa-clock-0 fa-1x"></i>Year</td>
+	      <td><i class="fa fa-star fa-1x"></i>Policy No</td>
+	      <td><i class="fa fa-calendar fa-1x"></i>Term</td>
+	      <td><i class="fa fa-info fa-1x"></i>Details</td>      	      
+	      <td><i class="fa fa-cogs"></i></td>      
+	    </thead>                
+	     <tr ng-repeat='insurance in displayInsuranceInfo'>
 	         <!-- read-only cells -->     
 	        <td>{{insurance.id}}</td>
 	        <td><a ng-click="viewModal(insurance)" data-toggle="modal" data-target="#viewModal">{{ insurance.policyName }}</a></td>
@@ -33,7 +34,7 @@
 	        <td><button class="btn btn-success btn-sm" type="button" ng-click="viewModal(insurance)" data-toggle="modal" data-target="#viewModal">View More</button></td>
 	        <td>          
 	          <button type="button"ng-click="editModal(insurance)" data-toggle="modal" data-target="#editModal"  aria-label="Left Align">
-	            <span class="glyphicon glyphicon-pencil align-left" aria-hidden="true"></span>
+	            <span class="glyphicon glyphicon-edit align-left" aria-hidden="true"></span>
 	          </button>
 	        
 	          <button type="button" ng-click="deleteModal(insurance)" data-toggle="modal" data-target="#deleteModal"  aria-label="Left Align">
@@ -41,11 +42,7 @@
 	          </button>
 	        </td>
 	      </tr>
-	    </tbody>
-    </table>
-    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addModal">Add New Insurance
-  </button>
-
+	  </table>
 
   	<!-- Add new insurance Modal !-->
     <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -59,7 +56,7 @@
 			       	<fieldset>
 			        <div class="modal-body">
 			        	<div class = "ng-hide" ng-hide="success">	
-			        		<div class="scroll">
+			        		<div class="scrollInsurance">
 			            
 				            	<h4 align="center"><u>Your Policy</u></h4><br/>
 							    <div class="form-group">
@@ -216,14 +213,14 @@
 		       	</div>
 			    <div class="modal-body">
 					<h4>Your Policy</h4>			    				        	
-			    	<table class="table">
-					    <thead>
-					    	<tr font-color="red">					        
-						        <th>Policy Name</th>
-						        <th>Provider</th>
-						        <th>Year</th>
-						        <th>Policy No</th>
-						        <th>Term</th>						        
+			    	<table class="table table-striped table-bordered" style="text-align:center;"> 
+					    <thead>	
+					    	<tr>					        
+						        <td>Policy Name</td>
+						        <td>Provider</td>
+						        <td>Year</td>
+						        <td>Policy No</td>
+						        <td>Term</td>						        
 					      	</tr>
 					    </thead>
 					    <tbody>
@@ -238,48 +235,48 @@
 					</table>
 					<br/>
 					<h4>Your Coverage</h4>	
-					<table class="table">
+					<table class="table table-striped table-bordered" style="text-align:center;"> 
 					    <thead>					    
 					    	<tr>					        						        
-						        <th>Death/TPD</th>						        	        
-						        <th>Critical Illness</th>
-						        <th>Accident</th>
-						        <th>Hospitalization</th>
-						        <th>Medical Reimbursement</th>
-						        <th>Disability Income</th>
-						        <th>Hospitalization Income</th>
+						        <td>Death/TPD</td>						        	        
+						        <td>Critical Illness</td>
+						        <td>Accident</td>
+						        <td>Hospitalization</td>
+						        <td>Medical Reimbursement</td>
+						        <td>Disability Income</td>
+						        <td>Hospitalization Income</td>
 					      	</tr>
 					    </thead>
 					    <tbody>
 					    	<tr>
-					    		<td>${{insurance.coverage.death.toFixed(2)}}</td>
-					    		<td>${{insurance.coverage.critical.toFixed(2)}}</td>
-					    		<td>${{insurance.coverage.accident.toFixed(2)}}</td>
-					    		<td>${{insurance.coverage.hospitalization.toFixed(2)}}</td>
-					    		<td>${{insurance.coverage.reimbursement.toFixed(2)}}</td>
-					    		<td>${{insurance.coverage.disability.toFixed(2)}}</td>
-					    		<td>${{insurance.coverage.hospitalIncome.toFixed(2)}}</td>
+					    		<td>{{insurance.coverage.death|currency}}</td>
+					    		<td>{{insurance.coverage.critical|currency}}</td>
+					    		<td>{{insurance.coverage.accident|currency}}</td>
+					    		<td>{{insurance.coverage.hospitalization|currency}}</td>
+					    		<td>{{insurance.coverage.reimbursement|currency}}</td>
+					    		<td>{{insurance.coverage.disability|currency}}</td>
+					    		<td>{{insurance.coverage.hospitalIncome|currency}}</td>
 					    	</tr>
 					    </tbody>
 					</table>
 					<br/>
 					<h4>Premium</h4>	
-					<table class="table">
+					<table class="table table-striped table-bordered" style="text-align:center;"> 
 					    <thead>
 					    	<tr>
-					    		<th>Monthly/Yearly Payment</th>					        						        
-						        <th>Premiums Payable</th>
-						        <th>Premiums Payable(by CPF)</th>
-						        <th>Agent Name</th>
-						        <th>Agent Contact No</th>
-						        <th>Remarks</th>
+					    		<td>Monthly/Yearly Payment</td>					        						        
+						        <td>Premiums Payable</td>
+						        <td>Premiums Payable(by CPF)</td>
+						        <td>Agent Name</td>
+						        <td>Agent Contact No</td>
+						        <td>Remarks</td>
 					      	</tr>
 					    </thead>
 					    <tbody>
 					    	<tr>
 					    		<td>{{insurance.premiums.payStyle}}</td>
-					    		<td>${{insurance.premiums.amt}}</td>
-					    		<td>${{insurance.premiums.cpfAmt}}</td>
+					    		<td>{{insurance.premiums.amt |currency}}</td>
+					    		<td>{{insurance.premiums.cpfAmt |currency}}</td>
 					    		<td>{{insurance.agent.name}}</td>
 					    		<td>{{insurance.agent.number}}</td>
 					    		<td>{{insurance.remarks}}</td>
@@ -310,7 +307,7 @@
 		       	
 			        <div class="modal-body">
 			        	<div class = "ng-hide" ng-hide="success">	
-			        		<div class="scroll">
+			        		<div class="scrollInsurance">
 			            
 				            	<h4 align="center"><u>Your Policy</u></h4><br/>
 							    <div class="form-group">

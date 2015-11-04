@@ -1,0 +1,479 @@
+<section data-ng-controller="reportController"> 
+	<body>
+		<!-- <page size="A4"> -->
+		<div class="page">
+			<div class="panel panel-home" style = "width:100%">
+	  			<div class="panel-heading">
+	  				<div class="row">
+		  				<div class="col-xs-10">
+			                <div class="huge">Financial Summary - {{selectedMonth}}, {{selectedYear}}</div>                                    
+		  				</div>
+	  				</div>  				
+	  			</div>
+	  		</div>
+	  		
+			<!-- <div class = "A4border"> -->
+			<div>
+				<div class = "container-fluid">
+					<div class = "row">
+						<b><div class = "col-xs-3">
+						Net Worth:
+						</div>
+						<div class = "col-xs-3 col-xs-offset-6">
+							$ {{displayOverview.netWorth ||Currency}}
+						</div></b>
+						<br/>
+					</div>
+					<div class = "row">
+						<div class = "col-xs-3">
+						Total Assets:
+						</div>
+						<div class = "col-xs-3 col-xs-offset-6">
+							$ {{displayOverview.totalAssets ||currency}}
+						</div>
+					</div>
+					<div class = "row">
+						<div class = "col-xs-3">
+						Total Liabilities:
+						</div>
+						<div class = "col-xs-3 col-xs-offset-6">
+							$ {{displayOverview.totalLiabilities ||currency}}
+						</div>
+					</div>
+				</div>
+			</div>
+			<br/>
+			<!-- <div class = "A4border"> -->
+			<div>
+				<div class = "container-fluid">
+					<div class = "row">				
+						<b><div class = "col-xs-3">
+						Total Net Gross Income:
+						</div>
+						<div class = "col-xs-3 col-xs-offset-6">
+							$ {{displayOverview.totalNetGrossIncome ||Currency}}
+						</div></b>
+						<br/>
+					</div>
+					<div class = "row">
+						<div class = "col-xs-3">
+						Monthly Income:
+						</div>
+						<div class = "col-xs-3 col-xs-offset-6">
+							$ {{displayOverview.monthlyIncome ||Currency}}
+						</div>
+					</div>
+					<div class = "row">
+						<div class = "col-xs-3">
+						Monthly Expenses:
+						</div>
+						<div class = "col-xs-3 col-xs-offset-6">
+							$ {{displayOverview.monthlyExpense ||Currency}}
+						</div>
+					</div>
+				</div>
+			</div>
+			<br/><br/>
+			<div class = "row">
+				<div class="col-xs-6">
+						<canvas id="ratioChart" class="chart chart-line" data="dataOverview1" labels="labelsOverview" legend="true" series="seriesOverview1" options="{bezierCurve:false, animation:false}"></canvas> 
+				</div>
+				<div class="col-xs-6">
+						<canvas id="ratioChart" class="chart chart-line" data="dataOverview2" labels="labelsOverview" legend="true" series="seriesOverview2" options="{bezierCurve:false, animation:false}"></canvas> 
+				</div>
+			</div>
+
+			<div class="panel panel-home" style = "width:100%">
+	  			<div class="panel-heading">
+	  				<div class="row">
+		  				<div class="col-xs-12">
+			                <div class="huge">Financial Health Overview</div>                                    
+		  				</div>
+	  				</div>  				
+	  			</div>
+	  		</div>
+	  		<div class ="row" style="font-size:125%">
+		  		<span ng-hide="homeHealthDisplay">No data available</span>
+<!-- 						<div class="col-xs-12">
+							<p><b>Ratio Overview:</b></p>
+							<progress><bar ng-repeat="bar in homeHealth track by $index" value="bar.value" type="{{bar.type}}"></bar></progress>
+						</div> -->
+<!-- 					</div>
+					<div class="row"> -->
+
+				<span ng-show="homeHealthDisplay"> 
+				 	<div class="col-xs-6">
+				 		<h4 class="text-center">Healthy Ratios</h4>
+						<div ng-repeat="item in homeHealthyRatioArr track by $index">							
+							<li><em>{{item}}</em></li>
+						</div>
+					</div>
+				 	<div class="col-xs-6">
+				 		<h4 class="text-center">Unhealthy Ratios</h4>
+						<div ng-repeat="item in homeUnHealthyRatioArr track by $index">							
+							<li><em>{{item}}</em></li>
+						</div>
+					</div>
+				</span>		
+
+<!-- 				<div class = "col-xs-4">
+					<div class = "row">
+						<div class="row">
+							<div class="col-xs-11">
+								<canvas id="ratioChart" class="chart chart-line" data="data" labels="labels" legend="true" series="series" options="{bezierCurve:false}" height="150px" width="250px"></canvas> 
+							</div>	
+						</div>
+					</div>
+				</div> -->
+			</div>
+		</br>
+			<div class="panel panel-home" style = "width:100%">
+	  			<div class="panel-heading">
+	  				<div class="row">
+		  				<div class="col-xs-12">
+			                <div class="huge">Credit Worthiness</div>                                    
+		  				</div>
+	  				</div>  				
+	  			</div>
+	  		</div>
+	  		<div class="row text-center">
+				<div class="col-xs-12">
+					<img src="{{rankIcon}}" style="max-width:100px; height:75px;" class="img-responsive center-block">
+				</div>
+			</div>
+			<div class="row text-center">
+				<div class="col-xs-12" style="font-size:125%">
+					<strong>Credit Rating:</strong> <em>{{creditGrade[0]}} </em><br>
+					<br>
+					<strong>Credit Analysis</strong></br>
+					<em>{{creditGrade[1]}} </em><br>
+				</div>
+			</div>
+		</div>
+		<div class="page">			
+	  		<div class="col-xs-6">
+	  			<div class="panel panel-home" width="50px">
+		  			<div class="panel-heading">
+		  				<div class="row">
+		  					<div class="col-xs-12">
+                                <div class="huge">Assets</div>
+                            </div>
+		  				</div>
+		  			</div>
+		  			<div class="panel-body" style="min-height:200px; max-width: 320px;">
+						<div class="row">
+							<div class="col-xs-12" style="font-size:100%">
+								<div class = "row">
+									<div class = "col-xs-8">
+										<b>Total Assets:</b>
+									</div>
+									<div class = "col-xs-4">
+										<b>{{displayAssetsRecords.totalAmt | currency}}</b>
+									</div>
+								</div>
+								<br/>
+								<div class = "row">
+									<div class = "col-xs-8">
+										Cash & Cash Equivalents:
+									</div>
+									<div class = "col-xs-4 ">
+										{{displayAssetsRecords.cashEquivalentsAmt | currency}}
+									</div>
+								</div>
+								<div class = "row">
+									<div class = "col-xs-8">
+										Personal Use Assets:
+									</div>
+									<div class = "col-xs-4">
+										{{displayAssetsRecords.personalUseAssetsAmt | currency}}
+									</div>
+								</div>
+								<div class = "row">
+									<div class = "col-xs-8">
+										Invested Assets:
+									</div>
+									<div class = "col-xs-4">
+										{{displayAssetsRecords.investedAssetsAmt | currency}}
+									</div>
+								</div>
+								<div class = "row">
+									<div class = "col-xs-8">
+										CPF Savings:
+									</div>
+									<div class = "col-xs-4">
+										{{displayAssetsRecords.cpfSavingsAmt | currency}}
+									</div>
+								</div>
+								<div class = "row">
+									<div class = "col-xs-8">
+										Other Assets:
+									</div>
+									<div class = "col-xs-4">
+										{{displayAssetsRecords.otherAssetsAmt | currency}}
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-xs-6">
+	  			<div class="panel panel-home">
+		  			<div class="panel-heading">
+		  				<div class="row">
+		  					<div class="col-xs-12">
+                                <div class="huge">Liabilities</div>
+                            </div>
+		  				</div>
+		  			</div>
+		  			<div class="panel-body" style="min-height:200px; max-width: 320px;">
+						<div class="row">
+							<div class="col-xs-12" style="font-size:100%">
+								<div class = "row">
+									<div class = "col-xs-8">
+										<b>Total Liabilities:</b>
+									</div>
+									<div class = "col-xs-4 ">
+										<b>{{displayLiabilitiesRecords.totalAmt | currency}}</b>
+									</div>
+								</div>
+								<br/>
+								<div class = "row">
+									<div class = "col-xs-8">
+										Short Term Credit:
+									</div>
+									<div class = "col-xs-4">
+										{{displayLiabilitiesRecords.shortTermCreditAmt | currency}}
+									</div>
+								</div>
+								<div class = "row">
+									<div class = "col-xs-8">
+										Loans & Mortgages:
+									</div>
+									<div class = "col-xs-4">
+										{{displayLiabilitiesRecords.loansMortgagesAmt | currency}}
+									</div>
+								</div>
+								<div class = "row">
+									<div class = "col-xs-8">
+										Other Liabilities:
+									</div>
+									<div class = "col-xs-4">
+										{{displayLiabilitiesRecords.otherLiabilitiesAmt | currency}}
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-xs-6">
+	  			<div class="panel panel-home">
+		  			<div class="panel-heading">
+		  				<div class="row">
+		  					<div class="col-xs-12">
+                                <div class="huge">Income</div>
+                            </div>
+		  				</div>
+		  			</div>
+		  			<div class="panel-body" style="min-height:200px; max-width: 320px;">
+						<div class="row">
+							<div class="col-xs-12" style="font-size:100%">
+								<div class = "row">
+									<div class = "col-xs-8">
+										<b>Monthly Income:</b>
+									</div>
+									<div class = "col-xs-4">
+										<b>{{displayIncomeExpenseRecords.monthlyIncomeAmt| currency}}</b>
+									</div>
+								</div>
+								<br/>
+								<div class = "row">
+									<div class = "col-xs-8">
+										Employment Income:
+									</div>
+									<div class = "col-xs-4">
+										{{displayIncomeExpenseRecords.incomeNormalAmt | currency}}
+									</div>
+								</div>
+								<div class = "row">
+									<div class = "col-xs-8">
+										Other Income:
+									</div>
+									<div class = "col-xs-4">
+										{{displayIncomeExpenseRecords.otherIncomeAmt | currency}}
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-xs-6">
+	  			<div class="panel panel-home">
+		  			<div class="panel-heading">
+		  				<div class="row">
+		  					<div class="col-xs-12">
+                                <div class="huge">Expenses</div>
+                            </div>
+		  				</div>
+		  			</div>
+		  			<div class="panel-body" style="min-height:200px; max-width: 320px;">
+						<div class="row">
+							<div class="col-xs-12" style="font-size:100%">
+								<div class = "row">
+									<div class = "col-xs-8">
+										<b>Monthly Expenses:</b>
+									</div>
+									<div class = "col-xs-4">
+										<b>{{displayIncomeExpenseRecords.monthlyExpenseAmt | currency}}</b>
+									</div>
+								</div>
+								<br/>
+								<div class = "row">
+									<div class = "col-xs-8">
+										Fixed Expense:
+									</div>
+									<div class = "col-xs-4">
+										{{displayIncomeExpenseRecords.fixedExpenseAmt| currency}}
+									</div>
+								</div>
+								<div class = "row">
+									<div class = "col-xs-8">
+										Transport:
+									</div>
+									<div class = "col-xs-4">
+										{{displayIncomeExpenseRecords.transportAmt | currency}}
+									</div>
+								</div>
+								<div class = "row">
+									<div class = "col-xs-8">
+										Utilities & Household:
+									</div>
+									<div class = "col-xs-4">
+										{{displayIncomeExpenseRecords.utilityHouseholdAmt | currency}}
+									</div>
+								</div>
+								<div class = "row">
+									<div class = "col-xs-8">
+										Food & Necessities
+									</div>
+									<div class = "col-xs-4">
+										{{displayIncomeExpenseRecords.foodNecessitiesAmt | currency}}
+									</div>
+								</div>
+								<div class = "row">
+									<div class = "col-xs-8">
+										Miscellaneous:
+									</div>
+									<div class = "col-xs-4">
+										{{displayIncomeExpenseRecords.miscAmt | currency}}
+									</div>
+								</div>
+								<div class = "row">
+									<div class = "col-xs-8">
+										Optional Savings:
+									</div>
+									<div class = "col-xs-4">
+										{{displayIncomeExpenseRecords.optionalSavingsAmt | currency}}
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<h3>Financial Ratios & Financial Health Analysis - (last 12 Months)</h3>
+			<table class="table table-bordered" style="width:100%">
+				<tr bgcolor="#B8A631" style="color:white">
+					<td>Ratios</td>
+					<td ng-repeat = "date in dateRecords">{{date}}</td>					
+				</tr>
+				<tr bgcolor="#F8E670">
+					<th colspan="13"><b>Liquidity Ratio</b></th>
+				</tr>
+				<tr style="text-align:center">
+					<td>Current Liquidity Ratio</td>
+					<td ng-repeat = "liquidRatio in liquidityRatioTable track by $index">{{liquidRatio}}</td>					
+				</tr>
+				<tr style="text-align:center">
+					<td>Total Liquidity Ratio</td>
+					<td ng-repeat = "liquidRatio in liquidityTotalTable track by $index">{{liquidRatio}}</td>					
+				</tr>
+				<tr bgcolor="#F8E670">
+					<th colspan="13"><b>Savings Ratios</b></th>
+				</tr>
+				<tr style="text-align:center">
+					<td>Surplus Income Ratio</td>
+					<td ng-repeat = "surplus in surplusIncomeTable track by $index">{{surplus}}</td>					
+				</tr>
+				<tr style="text-align:center">
+					<td>Basic Saving Ratio</td>
+					<td ng-repeat = "basicSaving in basicSavingTable track by $index">{{basicSaving}}</td>					
+				</tr>
+				<tr bgcolor="#F8E670">
+					<th colspan="13"><b>Expenses Ratio</b></th>
+				</tr>
+				<tr style="text-align:center">
+					<td>Essential Expense to Income Ratio</td>
+					<td ng-repeat = "essentialExpense in essentialExpensesTable track by $index">{{essentialExpense}}</td>					
+				</tr>
+				<tr style="text-align:center">
+					<td>Lifestyle Expenses to Income Ratio</td>
+					<td ng-repeat = "lifestyleExpense in lifestyleExpensesTable track by $index">{{lifestyleExpense}}</td>					
+				</tr>
+				<tr bgcolor="#F8E670">
+					<th colspan="13"><b>Debt Ratios</b></th>
+				</tr>
+				<tr style="text-align:center">
+					<td>Total Debt to Annual Income Ratio</td>
+					<td ng-repeat = "totalDebtToAnnualIncome in totalDebtToAnnualIncomeTable track by $index">{{totalDebtToAnnualIncome}}</td>					
+				</tr>				
+<!-- 			</table>
+		</div>
+
+		<div class= "page">
+			<table class="table table-bordered"> -->
+				<tr style="text-align:center">
+					<td style = "width:125px">Current Debt to Annual Income Ratio</td>
+					<td ng-repeat = "currentDebtToAnnualIncome in currentDebtToAnnualIncomeTable track by $index">{{currentDebtToAnnualIncome}}</td>					
+				</tr>
+				<tr style="text-align:center">
+					<td>Property Debt to Total Income Ratio</td>
+					<td ng-repeat = "propertyDebtToTotalIncome in propertyDebtToTotalIncomeTable track by $index">{{propertyDebtToTotalIncome}}</td>					
+				</tr>
+				<tr style="text-align:center">
+					<td>Monthly Debt Servicing to Income Ratio</td>
+					<td ng-repeat = "monthlyDebtServicingToIncome in monthlyDebtServicingToIncomeTable track by $index">{{monthlyDebtServicingToIncome}}</td>					
+				</tr>
+				<tr style="text-align:center">
+					<td>Monthly Credit Card to Income Ratio</td>
+					<td ng-repeat = "monthlyCreditCardToIncome in monthlyCreditCardToIncomeTable track by $index">{{monthlyCreditCardToIncome}}</td>					
+				</tr>
+				<tr bgcolor="#F8E670">
+					<th colspan="13"><b>Net Worth & Other Ratios</b></th>
+				</tr>
+				<tr style="text-align:center">
+					<td>Net Worth Benchmark</td>
+					<td ng-repeat = "netWorthBenchmark in netWorthBenchmarkTable track by $index">{{netWorthBenchmark}}</td>					
+				</tr>
+				<tr style="text-align:center">
+					<td>Solvency Ratio</td>
+					<td ng-repeat = "solvency in solvencyTable track by $index">{{solvency}}</td>					
+				</tr>
+				<tr bgcolor="#F8E670">
+					<th colspan="13"><b>Asset vs Debt Ratios</b></th>
+				</tr>
+				<tr style="text-align:center">
+					<td>Current Asset to Debt Ratio</td>
+					<td ng-repeat = "assetToDebt in assetToDebtTable track by $index">{{assetToDebt}}</td>					
+				</tr>
+				<tr style="text-align:center">
+					<td>Investment Assets to Total Assets Ratio</td>
+					<td ng-repeat = "investment in investmentTable track by $index">{{investment}}</td>					
+				</tr>
+			</table>
+		</div>
+	</body>
+
+</section>

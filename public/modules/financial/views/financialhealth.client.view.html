@@ -1,13 +1,13 @@
 <section data-ng-controller="FinancesController" class="content">
 	<div class="row">
-		<div class="col-md-12">
+		<div class="col-xs-12 col-md-12">
 			<h3 style="margin-top:0;"> Your Financial Ratios & Financial Health Analysis</h3>
 		</div>
 	</div>
 	<div class="container-fluid">
 		<div class="row">
 			<!-- Graph Column -->
-			<div class="col-md-5 col-md-push-7">
+			<div class="col-xs-5 col-xs-push-7 col-md-5 col-md-push-7">
 				<div >
 					<div class="row">
 						<div class="col-sm-8 text-right" >
@@ -26,6 +26,8 @@
 						<div class="col-md-12">
 							<canvas id="ratioChart" class="chart chart-line" data="data" labels="labels" legend="true" series="series" options="{bezierCurve:false}" height="200"></canvas> 
 						</div>	
+						<!-- <a href="/#!/financial/pdf">PDF</a> -->
+<!-- 						<a ng-click="print()">PRINT</a> -->
 					</div>				
 				</div>
 			</div>
