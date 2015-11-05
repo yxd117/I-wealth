@@ -1,12 +1,15 @@
-<section data-ng-controller="reportController"> 
+<section data-ng-controller="ReportGenerationController" ng-init="reportOptions()"> 
 	<body>
 		<!-- <page size="A4"> -->
+<!-- 		<div data-ng-controller="reportController">
+			
+		</div> -->
 		<div class="page">
 			<div class="panel panel-home" style = "width:100%">
 	  			<div class="panel-heading">
 	  				<div class="row">
 		  				<div class="col-xs-10">
-			                <div class="huge">Financial Summary - {{selectedMonth}}, {{selectedYear}}</div>                                    
+			                <div class="huge">Financial Summary - {{selectedMonthReport}}, {{selectedYearReport}}</div>                                    
 		  				</div>
 	  				</div>  				
 	  			</div>
@@ -383,7 +386,7 @@
 					</div>
 				</div>
 			</div>
-			<h3>Financial Ratios & Financial Health Analysis - (last 12 Months)</h3>
+			<h3>Financial Ratios & Financial Health Analysis - (last {{periodNum}} Months)</h3>
 			<table class="table table-bordered" style="width:100%">
 				<tr bgcolor="#B8A631" style="color:white">
 					<td>Ratios</td>

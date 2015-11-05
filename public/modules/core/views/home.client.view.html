@@ -265,7 +265,7 @@
 					</div>
   				</div>
   				<!-- Generate PDF -->
- 				<div class="col-sm-12 col-md-12 col-lg-12" data-ng-controller="ReportGenerationController">
+ 				<div class="col-sm-12 col-md-12 col-lg-12" data-ng-controller="ReportGenerationController" data-ng-init="current()">
   					<div class="panel panel-home">
 		  				<div class="panel-heading">
 			  				<div class="row">
@@ -285,10 +285,10 @@
 							    			<h5>Select Date: </h5>
 							    		</div>
 									    <div class="col-md-4">
-									        <select data-ng-options="m as m for m in monthArr" class="form-control" data-ng-model="selectedMonth" ng-init="selectedMonth = monthArr[month]"></select>
+									        <select data-ng-options="m as m for m in monthArr" class="form-control" data-ng-model="selectedMonthReport" ng-init="selectedMonthReport = monthArr[month]"></select>
 									    </div>
 									    <div class="col-md-3">
-									        <input type="number" data-ng-model="selectedYear" class="form-control" ng-init="selectedYear = year" size="1">
+									        <input type="number" data-ng-model="selectedYearReport" class="form-control" ng-init="selectedYearReport = year" size="1">
 									    </div>				    		
 							    	</div>
 									</br>
@@ -297,7 +297,7 @@
 											<h5>Select Period: </h5>
 										</div>
 							  			<div class="col-md-5">
-											<select ng-model="selectedReportOption" class="form-control" ng-init="selectedReportOption = 0">
+											<select ng-model="selectedReportOption" class="form-control" ng-init="selectedReportOption = 2">
 												<option value="0">Past 3 months</option>
 												<option value="1">Past 6 months</option>
 												<option value="2">Past 12 months</option>

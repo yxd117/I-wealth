@@ -23,4 +23,6 @@ angular.module('core').factory('ReportGenerationService', function($rootScope, $
       state: state,
       listen: onUpdate
     };
+
+    
 });
