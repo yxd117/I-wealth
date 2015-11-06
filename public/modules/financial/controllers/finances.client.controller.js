@@ -786,7 +786,7 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
             //Assets to Debt Ratio
             var ratioAssetDebt = $scope.displayLiabilitiesRecords.totalAmt / $scope.displayAssetsRecords.totalAmt;
             //Debt Service Ratio
-            var ratioDebtService = $scope.displayLiabilitiesRecords.totalAmt / $scope.displayIncomeExpenseRecords.monthlyIncomeAmt;
+            var ratioDebtService = $scope.displayLiabilitiesRecords.shortTermCreditAmt / ($scope.displayIncomeExpenseRecords.monthlyIncomeAmt * 12);
             //Housing Expense Ratio
             var ratioHouseExpense = ($scope.displayIncomeExpenseRecords.monthlyExpenseAmt - $scope.displayIncomeExpenseRecords.fixedExpenseAmt) / $scope.displayIncomeExpenseRecords.monthlyIncomeAmt; 
             //Debt Income Ratio
@@ -1209,7 +1209,7 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
                     numUnHealthyRatio++;
                     $scope.homeUnHealthyRatioArr.push('Current Asset to Debt Ratio');
                     $scope.currentAssetDebtHealth = 2;
-                }else if($scope.displayOverview.ratioInvestment > 0.2){
+                }else if($scope.displayOverview.ratioCurrentAssetDebt > 0.2){
                     $scope.displayAnalysis.currentAssetDebt = $scope.analysisRatio.analysisCurrentAssetDebt.healthy[0];
                     numHealthyRatio++;
                     $scope.homeHealthyRatioArr.push('Current Asset to Debt Ratio');

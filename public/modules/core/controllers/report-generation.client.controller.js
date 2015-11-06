@@ -770,7 +770,7 @@ angular.module('core').controller('ReportGenerationController', ['$rootScope', '
             //Assets to Debt Ratio
             var ratioAssetDebt = $scope.displayLiabilitiesRecords.totalAmt / $scope.displayAssetsRecords.totalAmt;
             //Debt Service Ratio
-            var ratioDebtService = $scope.displayLiabilitiesRecords.totalAmt / $scope.displayIncomeExpenseRecords.monthlyIncomeAmt;
+            var ratioDebtService = $scope.displayLiabilitiesRecords.shortTermCreditAmt / ($scope.displayIncomeExpenseRecords.monthlyIncomeAmt * 12);
             //Housing Expense Ratio
             var ratioHouseExpense = ($scope.displayIncomeExpenseRecords.monthlyExpenseAmt - $scope.displayIncomeExpenseRecords.fixedExpenseAmt) / $scope.displayIncomeExpenseRecords.monthlyIncomeAmt; 
             //Debt Income Ratio
