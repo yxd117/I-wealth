@@ -1297,7 +1297,7 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
             //AssetDebt Ratio
             var ratioAssetDebtChart = lRecords.totalAmt/ aRecords.totalAmt;
             //Debt Service Ratio // To check short term
-            var ratioDebtServiceChart = lRecords.totalAmt / ieRecords.monthlyIncomeAmt;
+            var ratioDebtServiceChart = lRecords.shortTermCreditAmt / (ieRecords.monthlyIncomeAmt * 12);
             //Housing Expense Ratio
             var ratioHouseExpenseChart = (Number(ieRecords.monthlyExpenseAmt) - Number(ieRecords.fixedExpenseAmt)) / ieRecords.monthlyIncomeAmt; 
             //Debt Income Ratio

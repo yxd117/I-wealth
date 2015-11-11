@@ -45,7 +45,7 @@
 								</tr>
 								<tr ng-repeat="item in displayLiabilitiesRecords.shortTermCredit | toArray | orderBy:'order'">
 									<td><label for="'{{item.description}}'">{{item.description}}</label> </td>
-									<td>$ <input type="number" step="any" id="'{{item.description}}'" ng-model="item.value"/></td>
+									<td>$ <input type="currency" step="any" id="'{{item.description}}'" ng-model="item.value" min="0"/></td>
 								</tr>
 							</table>
 				        	<div class="form-group">
@@ -75,7 +75,7 @@
 								</tr>
 								<tr ng-repeat="item in displayLiabilitiesRecords.loansMortgages | toArray | orderBy:'order'">
 									<td><label for="'{{item.description}}'">{{item.description}}</label> </td>
-									<td>$ <input type="number" step="any" id="'{{item.description}}'" ng-model="item.value"/></td>
+									<td>$ <input type="currency" step="any" min="0" id="'{{item.description}}'" ng-model="item.value"/></td>
 								</tr>
 							</table>
 				        	<div class="form-group">
@@ -105,7 +105,7 @@
 								</tr>
 								<tr ng-repeat="item in displayLiabilitiesRecords.otherLiabilities | toArray | orderBy:'order'">
 									<td><label for="'{{item.description}}'">{{item.description}}</label> </td>
-									<td>$ <input type="number" step="any" id="'{{item.description}}'" ng-model="item.value"/></td>
+									<td>$ <input type="currency" step="any" min="0" id="'{{item.description}}'" ng-model="item.value"/></td>
 								</tr>
 							</table>
 				        	<div class="form-group">

@@ -275,6 +275,7 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', '$loca
 					$scope.assetList = response.data;
 					$scope.assetSelected = null;
 					$scope.assetRecord = null;
+					$scope.assetDetails = null;
 				});
 			}).error(function(response) {
 				$scope.errorAddAsset = response.message;
@@ -340,6 +341,7 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', '$loca
 				$scope.successAssetDelete = true;
 				$scope.assetRecord = null;
 				$scope.assetSelected = null;
+				$scope.assetRecordShow = false;
 				// $scope.assetRecordShow = false;
 				
 			}).error(function(response){
@@ -9446,7 +9448,7 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
             //AssetDebt Ratio
             var ratioAssetDebtChart = lRecords.totalAmt/ aRecords.totalAmt;
             //Debt Service Ratio // To check short term
-            var ratioDebtServiceChart = lRecords.totalAmt / ieRecords.monthlyIncomeAmt;
+            var ratioDebtServiceChart = lRecords.shortTermCreditAmt / (ieRecords.monthlyIncomeAmt * 12);
             //Housing Expense Ratio
             var ratioHouseExpenseChart = (Number(ieRecords.monthlyExpenseAmt) - Number(ieRecords.fixedExpenseAmt)) / ieRecords.monthlyIncomeAmt; 
             //Debt Income Ratio

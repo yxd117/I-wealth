@@ -379,7 +379,7 @@ h6 {
 }
 
 .panel-profile{
-  height: 150px;
+  height: 200px;
   background-color: #FFFEFB;
 }
 
@@ -569,6 +569,7 @@ padding-left: 52px;
   overflow: scroll;
   overflow-x:hidden;
 }
+
 /*.btn-social {
   display: inline-block;
   padding: 6px 12px;

@@ -44,14 +44,14 @@
 								</tr>
 								<tr ng-repeat="item in displayAssetsRecords.cashEquivalents | toArray | orderBy:'order'">
 									<td><label for="'{{item.description}}'">{{item.description}}</label> </td>
-									<td>$ <input type="currency" step="any" id="'{{item.description}}'" ng-model="item.value"/></td>
+									<td>$ <input type="currency" step="any" min="0" id="'{{item.description}}'" ng-model="item.value"/></td>
 								</tr>
 							</table>
 				        	<div class="form-group">
 								<button type="submit" class="btn btn-large btn-primary">Save Profile</button>
 							</div>
 							<div data-ng-show="success" class="text-success">
-								<strong>Assets updated Successfully</strong>
+								<strong>Assets Updated Successfully</strong>
 							</div>
 							<div data-ng-show="error" class="text-danger">
 								<strong data-ng-bind="error"></strong>
@@ -74,14 +74,14 @@
 								</tr>
 								<tr ng-repeat="item in displayAssetsRecords.personalUseAssets | toArray | orderBy:'order'">
 									<td><label for="'{{item.description}}'">{{item.description}}</label> </td>
-									<td>$ <input type="number" step="any" id="'{{item.description}}'" ng-model="item.value"/></td>
+									<td>$ <input type="currency" step="any" min="0" id="'{{item.description}}'" ng-model="item.value"/></td>
 								</tr>
 							</table>
 				        	<div class="form-group">
 								<button type="submit" class="btn btn-large btn-primary">Save Profile</button>
 							</div>
 							<div data-ng-show="success" class="text-success">
-								<strong>Profile Saved Successfully</strong>
+								<strong>Assets updated successfully</strong>
 							</div>
 							<div data-ng-show="error" class="text-danger">
 								<strong data-ng-bind="error"></strong>
@@ -104,14 +104,14 @@
 								</tr>
 								<tr ng-repeat="item in displayAssetsRecords.investedAssets | toArray | orderBy:'order'">
 									<td><label for="'{{item.description}}'">{{item.description}}</label> </td>
-									<td>$ <input type="number" step="any" id="'{{item.description}}'" ng-model="item.value"/></td>
+									<td>$ <input type="currency" step="any" min="0" id="'{{item.description}}'" ng-model="item.value"/></td>
 								</tr>
 							</table>
 				        	<div class="form-group">
 								<button type="submit" class="btn btn-large btn-primary">Save Profile</button>
 							</div>
 							<div data-ng-show="success" class="text-success">
-								<strong>Profile Saved Successfully</strong>
+								<strong>Assets Updated Successfully</strong>
 							</div>
 							<div data-ng-show="error" class="text-danger">
 								<strong data-ng-bind="error"></strong>
@@ -134,14 +134,14 @@
 								</tr>
 								<tr ng-repeat="item in displayAssetsRecords.cpfSavings | toArray | orderBy:'order'">
 									<td><label for="'{{item.description}}'">{{item.description}}</label> </td>
-									<td>$ <input type="number" step="any" id="'{{item.description}}'" ng-model="item.value"/></td>
+									<td>$ <input type="currency" step="any" min="0" id="'{{item.description}}'" ng-model="item.value"/></td>
 								</tr>
 							</table>
 				        	<div class="form-group">
 								<button type="submit" class="btn btn-large btn-primary">Save Profile</button>
 							</div>
 							<div data-ng-show="success" class="text-success">
-								<strong>Profile Saved Successfully</strong>
+								<strong>Assets Updated Successfully</strong>
 							</div>
 							<div data-ng-show="error" class="text-danger">
 								<strong data-ng-bind="error"></strong>
@@ -163,14 +163,14 @@
 								</tr>
 								<tr ng-repeat="item in displayAssetsRecords.otherAssets | toArray | orderBy:'order'">
 									<td><label for="'{{item.description}}'">{{item.description}}</label> </td>
-									<td>$ <input type="number" step="any" id="'{{item.description}}'" ng-model="item.value"/></td>
+									<td>$ <input type="currency" step="any" min="0" id="'{{item.description}}'" ng-model="item.value"/></td>
 								</tr>
 							</table>
 				        	<div class="form-group">
 								<button type="submit" class="btn btn-large btn-primary">Save Profile</button>
 							</div>
 							<div data-ng-show="success" class="text-success">
-								<strong>Profile Saved Successfully</strong>
+								<strong>Assets Updated Successfully</strong>
 							</div>
 							<div data-ng-show="error" class="text-danger">
 								<strong data-ng-bind="error"></strong>

@@ -52,7 +52,7 @@
 								</tr>
 								<tr ng-repeat="item in displayIncomeExpenseRecords.monthlyIncome.incomeNormal | toArray | orderBy:'order'">
 									<td><label for="'{{item.description}}'">{{item.description}}</label> </td>
-									<td>$ <input type="number" step="any" id="'{{item.description}}'" ng-model="item.value"/></td>
+									<td>$ <input type="currency" step="any" min="0" id="'{{item.description}}'" ng-model="item.value"/></td>
 								</tr>
 							</table>
 				        	<div class="form-group">
@@ -82,7 +82,7 @@
 								</tr>
 								<tr ng-repeat="item in displayIncomeExpenseRecords.monthlyIncome.otherIncome | toArray | orderBy:'order'">
 									<td><label for="'{{item.description}}'">{{item.description}}</label> </td>
-									<td>$ <input type="number" step="any" id="'{{item.description}}'" ng-model="item.value"/></td>
+									<td>$ <input type="currency" step="any" min="0" id="'{{item.description}}'" ng-model="item.value"/></td>
 								</tr>
 							</table>
 				        	<div class="form-group">
@@ -121,7 +121,7 @@
 								</tr>
 								<tr ng-repeat="item in displayIncomeExpenseRecords.monthlyExpense.fixedExpense | toArray | orderBy:'order'">
 									<td><label for="'{{item.description}}'">{{item.description}}</label> </td>
-									<td>$ <input type="number" step="any" id="'{{item.description}}'" ng-model="item.value"/></td>
+									<td>$ <input type="currency" step="any" min="0" id="'{{item.description}}'" ng-model="item.value"/></td>
 								</tr>
 							</table>
 				        	<div class="form-group">
@@ -151,7 +151,7 @@
 								</tr>
 								<tr ng-repeat="item in displayIncomeExpenseRecords.monthlyExpense.transport | toArray | orderBy:'order'">
 									<td><label for="'{{item.description}}'">{{item.description}}</label> </td>
-									<td>$ <input type="number" step="any" id="'{{item.description}}'" ng-model="item.value"/></td>
+									<td>$ <input type="currency" step="any" min="0" id="'{{item.description}}'" ng-model="item.value"/></td>
 								</tr>
 							</table>
 				        	<div class="form-group">
@@ -181,7 +181,7 @@
 								</tr>
 								<tr ng-repeat="item in displayIncomeExpenseRecords.monthlyExpense.utilityHousehold | toArray | orderBy:'order'">
 									<td><label for="'{{item.description}}'">{{item.description}}</label> </td>
-									<td>$ <input type="number" step="any" id="'{{item.description}}'" ng-model="item.value"/></td>
+									<td>$ <input type="currency" step="any" min="0" id="'{{item.description}}'" ng-model="item.value"/></td>
 								</tr>
 							</table>
 				        	<div class="form-group">
@@ -211,7 +211,7 @@
 								</tr>
 								<tr ng-repeat="item in displayIncomeExpenseRecords.monthlyExpense.foodNecessities | toArray | orderBy:'order'">
 									<td><label for="'{{item.description}}'">{{item.description}}</label> </td>
-									<td>$ <input type="number" step="any" id="'{{item.description}}'" ng-model="item.value"/></td>
+									<td>$ <input type="currency" step="any" min="0" id="'{{item.description}}'" ng-model="item.value"/></td>
 								</tr>
 							</table>
 				        	<div class="form-group">
@@ -241,7 +241,7 @@
 								</tr>
 								<tr ng-repeat="item in displayIncomeExpenseRecords.monthlyExpense.misc | toArray | orderBy:'order'">
 									<td><label for="'{{item.description}}'">{{item.description}}</label> </td>
-									<td>$ <input type="number" step="any" id="'{{item.description}}'" ng-model="item.value"/></td>
+									<td>$ <input type="currency" step="any" min="0" id="'{{item.description}}'" ng-model="item.value"/></td>
 								</tr>
 							</table>
 				        	<div class="form-group">
@@ -271,7 +271,7 @@
 								</tr>
 								<tr ng-repeat="item in displayIncomeExpenseRecords.monthlyExpense.optionalSavings | toArray | orderBy:'order'">
 									<td><label for="'{{item.description}}'">{{item.description}}</label> </td>
-									<td>$ <input type="number" step="any" id="'{{item.description}}'" ng-model="item.value"/></td>
+									<td>$ <input type="currency" step="any" min="0" id="'{{item.description}}'" ng-model="item.value"/></td>
 								</tr>
 							</table>
 				        	<div class="form-group">

@@ -160,6 +160,7 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', '$loca
 					$scope.assetList = response.data;
 					$scope.assetSelected = null;
 					$scope.assetRecord = null;
+					$scope.assetDetails = null;
 				});
 			}).error(function(response) {
 				$scope.errorAddAsset = response.message;
@@ -225,6 +226,7 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', '$loca
 				$scope.successAssetDelete = true;
 				$scope.assetRecord = null;
 				$scope.assetSelected = null;
+				$scope.assetRecordShow = false;
 				// $scope.assetRecordShow = false;
 				
 			}).error(function(response){
