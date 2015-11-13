@@ -13,15 +13,15 @@
   	</button><br/><br/>
 
 	<table class="table table-striped table-bordered" style="text-align:center;">
-	    <thead>
-	      <td><i class="fa fa-list-ol fa-1x"></i></td>
-	      <td><i class="fa fa-book fa-1x"></i>Policy Name</td>
-	      <td><i class="fa fa-university fa-1x"></i>Provider</td>
-	      <td><i class="fa fa-clock-0 fa-1x"></i>Year</td>
-	      <td><i class="fa fa-star fa-1x"></i>Policy No</td>
-	      <td><i class="fa fa-calendar fa-1x"></i>Term</td>
-	      <td><i class="fa fa-info fa-1x"></i>Details</td>      	      
-	      <td><i class="fa fa-cogs"></i></td>      
+	    <thead style="background-color:#B8A631; color:white;">
+	      <td>No.</td>
+	      <td>Policy Name</td>
+	      <td>Provider</td>
+	      <td>Year</td>
+	      <td>Policy No.</td>
+	      <td>Term</td>
+	      <td>Details</td>      	      
+	      <td>Edit</td>      
 	    </thead>                
 	     <tr ng-repeat='insurance in displayInsuranceInfo'>
 	         <!-- read-only cells -->     
@@ -180,7 +180,11 @@
 			        	</div>
 			        </div>
 			        <div class = "ng-show" ng-show="success">
-			        <h4>Policy successfully Added!</h4>
+			        	<div class="row">
+			        		<div class="col-md-12">
+			        			<h4>Policy successfully Added!</h4>
+			        		</div>
+			        	</div>
 			        </div>
 		        
 			        <div class="modal-footer">
@@ -214,7 +218,7 @@
 			    <div class="modal-body">
 					<h4>Your Policy</h4>			    				        	
 			    	<table class="table table-striped table-bordered" style="text-align:center;"> 
-					    <thead>	
+					    <thead style="background-color:#B8A631; color:white;">	
 					    	<tr>					        
 						        <td>Policy Name</td>
 						        <td>Provider</td>
@@ -236,7 +240,7 @@
 					<br/>
 					<h4>Your Coverage</h4>	
 					<table class="table table-striped table-bordered" style="text-align:center;"> 
-					    <thead>					    
+					    <thead style="background-color:#B8A631; color:white;">					    
 					    	<tr>					        						        
 						        <td>Death/TPD</td>						        	        
 						        <td>Critical Illness</td>
@@ -262,7 +266,7 @@
 					<br/>
 					<h4>Premium</h4>	
 					<table class="table table-striped table-bordered" style="text-align:center;"> 
-					    <thead>
+					    <thead style="background-color:#B8A631; color:white;">
 					    	<tr>
 					    		<td>Monthly/Yearly Payment</td>					        						        
 						        <td>Premiums Payable</td>

@@ -31,7 +31,8 @@ angular.module('users').controller('AuthenticationController', ['$scope', '$http
 				$scope.authentication.user = response;
 				var completeQns = $scope.authentication.user.completeQns;
 				// And redirect to the index page
-				var userType = $scope.authentication.user.roles;
+				var userType = ['user'];
+				if($scope.authentication.user.roles) userType = $scope.authentication.user.roles;
 				if (userType[0].localeCompare('admin') === 0) {
 					$location.path('/admin/home');
 				}else{

@@ -134,6 +134,7 @@ angular.module('financial').controller('AssetsController', ['$scope', '$rootScop
                     $scope.success = true;
                     Authentication.user = response;
                     $scope.user = Authentication.user;  
+                    $scope.recordFound = null;
 
                 }, function(response) {
                     console.log(response);

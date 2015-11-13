@@ -326,6 +326,7 @@ angular.module('financial').controller('IncomeExpenseController', ['$scope', '$r
 
                         Authentication.user = response;
                         $scope.user = Authentication.user;
+                        $scope.recordFound = null;
                     }, function(response) {
                         $scope.error = response.data.message;
                     });

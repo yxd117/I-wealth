@@ -240,6 +240,7 @@ angular.module('financial').controller('LiabilitiesController', ['$scope', '$roo
 
                     Authentication.user = response;
                     $scope.user = Authentication.user;
+                    $scope.recordFound = null;
                 }, function(response) {
                     $scope.error = response.data.message;
                 });

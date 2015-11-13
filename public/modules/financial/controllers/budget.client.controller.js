@@ -611,18 +611,19 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
                                            
                 }
                 var fixedExpenseArr = expenseRecord.monthlyExpense.fixedExpense;
-                var fixedExpenseTotal = 0;
+                var fixedExpenseTotal = 0.00;
                 for (var rt in fixedExpenseArr) {
                     var obj1 = fixedExpenseArr[rt];
-                    fixedExpenseTotal += obj1.value;
+                    fixedExpenseTotal += Number(obj1.value);
                 }
+                console.log(fixedExpenseTotal);
                 expenseRecord.fixedExpenseAmt = fixedExpenseTotal.toFixed(2);
 
                 var transportArr = expenseRecord.monthlyExpense.transport;
                 var transportTotal = 0;
                 for (var rt1 in transportArr) {
                     var obj2 = transportArr[rt1];
-                    transportTotal += obj2.value;
+                    transportTotal += Number(obj2.value);
                 }
                 expenseRecord.transportAmt = transportTotal.toFixed(2);
 
@@ -630,7 +631,7 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
                 var utilityHouseholdTotal = 0;
                 for (var rt2 in utilityHouseholdArr) {
                     var obj3 = utilityHouseholdArr[rt2];
-                    utilityHouseholdTotal += obj3.value;
+                    utilityHouseholdTotal += Number(obj3.value);
                 }
                 expenseRecord.utilityHouseholdAmt = utilityHouseholdTotal.toFixed(2);
 
@@ -638,7 +639,7 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
                 var foodNecessitiesTotal = 0;
                 for (var rt3 in foodNecessitiesArr) {
                     var obj4 = foodNecessitiesArr[rt3];
-                    foodNecessitiesTotal += obj4.value;
+                    foodNecessitiesTotal += Number(obj4.value);
                 }
                 expenseRecord.foodNecessitiesAmt = foodNecessitiesTotal.toFixed(2);
 
@@ -646,7 +647,7 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
                 var miscTotal = 0;
                 for (var rt4 in miscArr) {
                     var obj5 = miscArr[rt4];
-                    miscTotal += obj5.value;
+                    miscTotal += Number(obj5.value);
                 }
                 expenseRecord.miscAmt = miscTotal.toFixed(2);
 
@@ -654,7 +655,7 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
                 var optionalTotal = 0;
                 for (var rt5 in optionalArr) {
                     var obj6 = optionalArr[rt5];
-                    optionalTotal += obj6.value;
+                    optionalTotal += Number(obj6.value);
                 }
                 expenseRecord.optionalSavingsAmt = optionalTotal.toFixed(2);
 

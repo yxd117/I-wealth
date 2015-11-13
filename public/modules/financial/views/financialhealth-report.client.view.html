@@ -95,8 +95,12 @@
 	  				</div>  				
 	  			</div>
 	  		</div>
-	  		<div class ="row" style="font-size:125%">
-		  		<span ng-hide="homeHealthDisplay">No data available</span>
+	  		<div class ="row" style="font-size:125%; min-height:200px;">
+		  		<span ng-hide="homeHealthDisplay">
+		  			<div class="col-xs-12">
+		  				<h4 class="text-center">No data available</h4>
+		  			</div>  			
+		  		</span>
 <!-- 						<div class="col-xs-12">
 							<p><b>Ratio Overview:</b></p>
 							<progress><bar ng-repeat="bar in homeHealth track by $index" value="bar.value" type="{{bar.type}}"></bar></progress>

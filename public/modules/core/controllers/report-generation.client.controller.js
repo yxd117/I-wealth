@@ -273,12 +273,12 @@ angular.module('core').controller('ReportGenerationController', ['$rootScope', '
             $scope.displayLiabilitiesRecords = retrieveLiabilitiesRecords($scope.month, $scope.year);
             $scope.displayIncomeExpenseRecords = retrieveIncomeExpenseRecords($scope.month, $scope.year);
             
-            $scope.displayOverview.totalAssets = $scope.displayAssetsRecords.totalAmt;
-            $scope.displayOverview.totalLiabilities = $scope.displayLiabilitiesRecords.totalAmt;
+            $scope.displayOverview.totalAssets = $scope.displayAssetsRecords.totalAmt.toFixed(2);
+            $scope.displayOverview.totalLiabilities = $scope.displayLiabilitiesRecords.totalAmt.toFixed(2);
             $scope.displayOverview.netWorth = ($scope.displayAssetsRecords.totalAmt - $scope.displayLiabilitiesRecords.totalAmt).toFixed(2);
-            $scope.displayOverview.totalNetGrossIncome = $scope.displayIncomeExpenseRecords.netCashFlow;
-            $scope.displayOverview.monthlyIncome = $scope.displayIncomeExpenseRecords.monthlyIncomeAmt;
-            $scope.displayOverview.monthlyExpense = $scope.displayIncomeExpenseRecords.monthlyExpenseAmt;   
+            $scope.displayOverview.totalNetGrossIncome = $scope.displayIncomeExpenseRecords.netCashFlow.toFixed(2);
+            $scope.displayOverview.monthlyIncome = $scope.displayIncomeExpenseRecords.monthlyIncomeAmt.toFixed(2);
+            $scope.displayOverview.monthlyExpense = $scope.displayIncomeExpenseRecords.monthlyExpenseAmt.toFixed(2);   
             calculateRatios();
 
         };
@@ -1636,11 +1636,11 @@ angular.module('core').controller('ReportGenerationController', ['$rootScope', '
 			$scope.selectedYearReport = $rootScope.selectedYearReport;
 			$scope.selectedReportOption = $rootScope.selectedReportOption;
 
-			if($scope.selectedReportOption === 0){
+			if($scope.selectedReportOption === '0'){
 				$scope.periodNum = 3;
-			}else if($scope.selectedReportOption === 1){
+			}else if($scope.selectedReportOption === '1'){
 				$scope.periodNum = 6;
-			}else if($scope.selectedReportOption === 2){
+			}else if($scope.selectedReportOption === '2'){
 				$scope.periodNum = 12;
 			}
 			console.log($scope.selectedReportOption);
