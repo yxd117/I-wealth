@@ -273,12 +273,12 @@ angular.module('core').controller('ReportGenerationController', ['$rootScope', '
             $scope.displayLiabilitiesRecords = retrieveLiabilitiesRecords($scope.month, $scope.year);
             $scope.displayIncomeExpenseRecords = retrieveIncomeExpenseRecords($scope.month, $scope.year);
             
-            $scope.displayOverview.totalAssets = $scope.displayAssetsRecords.totalAmt.toFixed(2);
-            $scope.displayOverview.totalLiabilities = $scope.displayLiabilitiesRecords.totalAmt.toFixed(2);
-            $scope.displayOverview.netWorth = ($scope.displayAssetsRecords.totalAmt - $scope.displayLiabilitiesRecords.totalAmt).toFixed(2);
-            $scope.displayOverview.totalNetGrossIncome = $scope.displayIncomeExpenseRecords.netCashFlow.toFixed(2);
-            $scope.displayOverview.monthlyIncome = $scope.displayIncomeExpenseRecords.monthlyIncomeAmt.toFixed(2);
-            $scope.displayOverview.monthlyExpense = $scope.displayIncomeExpenseRecords.monthlyExpenseAmt.toFixed(2);   
+            $scope.displayOverview.totalAssets = Number($scope.displayAssetsRecords.totalAmt).toFixed(2);
+            $scope.displayOverview.totalLiabilities = Number($scope.displayLiabilitiesRecords.totalAmt).toFixed(2);
+            $scope.displayOverview.netWorth = Number($scope.displayAssetsRecords.totalAmt - $scope.displayLiabilitiesRecords.totalAmt).toFixed(2);
+            $scope.displayOverview.totalNetGrossIncome = Number($scope.displayIncomeExpenseRecords.netCashFlow).toFixed(2);
+            $scope.displayOverview.monthlyIncome = Number($scope.displayIncomeExpenseRecords.monthlyIncomeAmt).toFixed(2);
+            $scope.displayOverview.monthlyExpense = Number($scope.displayIncomeExpenseRecords.monthlyExpenseAmt).toFixed(2);   
             calculateRatios();
 
         };
