@@ -6686,8 +6686,8 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
         $scope.mth[10] = 'November';
         $scope.mth[11] = 'December';
 
-  		//var dt = new Date();
-      	var dt = new Date(2016,1,25);
+  		var dt = new Date();
+      	// var dt = new Date(2016,1,25);
         
 		var month = dt.getMonth();
 		$scope.month = dt.getMonth();
