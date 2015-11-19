@@ -1,0 +1,25 @@
+{
+  "name": "angular-pdf",
+  "version": "1.2.5",
+  "description": "An Angularjs directive <ng-pdf> to display PDF in the browser with PDFJS.",
+  "main": "./dist/angular-pdf.js",
+  "license": "MIT",
+  "homepage": "http://github.com/sayanee/angularjs-pdf",
+  "dependencies": {
+    "angular": "1.4.7",
+    "pdfjs-dist": "1.2.131"
+  },
+  "ignore": [
+    "**/.*",
+    "package.json"
+  ],
+  "_release": "1.2.5",
+  "_resolution": {
+    "type": "version",
+    "tag": "1.2.5",
+    "commit": "83621cf6a656015b867d3c0e4c1ddb8642e28105"
+  },
+  "_source": "git://github.com/sayanee/angularjs-pdf.git",
+  "_target": "*",
+  "_originalSource": "angular-pdf"
+}
