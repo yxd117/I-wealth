@@ -42,11 +42,11 @@
     "angular": "~1.2.0",
     "angular-sanitize": "~1.2.0"
   },
-  "_release": "d54a28b079",
+  "_release": "35968fc4c4",
   "_resolution": {
     "type": "branch",
     "branch": "master",
-    "commit": "d54a28b07950d6809f5124df7b80a6302d84b6a4"
+    "commit": "35968fc4c438a2f51a98cdda0ef088335e39f87d"
   },
   "_source": "git://github.com/psergus/ngWYSIWYG.git",
   "_target": "*",

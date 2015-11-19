@@ -37,7 +37,7 @@
 						${{displayThisMonthFixedExpenseTotal}} / ${{displayFixedExpenseB}}
 						</div>
 						<div class="ng-hide" ng-hide="feStatus">
-						Exceeded by ${{(displayFeExceed)}}
+						<div ng-if = "dynamicE>190">({{dynamicE}}%)</div>Exceeded by ${{(displayFeExceed)}}
 						</div>
 					</div>
 				</div>
@@ -55,7 +55,7 @@
 					${{displayThisMonthTransportTotal}} / ${{displayTransportB}}
 					</div>
 					<div class="ng-hide" ng-hide="tStatus">
-					Exceeded by ${{displayTExceed}}
+					<div ng-if = "dynamicT>190">({{dynamicT}}%)</div>Exceeded by ${{displayTExceed}} 
 					</div>
 				</div>
 			</div>
@@ -73,7 +73,7 @@
 					${{displayThisMonthUtilitiesTotal}} / ${{displayUtilitiesB}}
 					</div>
 					<div class="ng-hide" ng-hide="uStatus">
-					Exceeded by ${{displayUExceed}}
+					<div ng-if = "dynamicU>190">({{dynamicU}}%)</div>Exceeded by ${{displayUExceed}}
 					</div>
 				</div>
 			</div>
@@ -91,7 +91,7 @@
 					${{displayThisMonthFoodTotal}} / ${{displayFoodB}}
 					</div>
 					<div class="ng-hide" ng-hide="fStatus">
-					Exceeded by ${{displayfExceed}}
+					<div ng-if = "dynamicF>190">({{dynamicF}}%)</div>Exceeded by ${{displayfExceed}}
 					</div>
 				</div>
 			</div>
@@ -109,8 +109,8 @@
 					${{displayThisMonthMiscTotal}} / ${{displayMiscB}}
 					</div>
 					<div class="ng-hide" ng-hide="mStatus">
-					Exceeded by ${{displayMExceed}}
-					</div>
+					<div ng-if = "dynamicM>190">({{dynamicM}}%)</div>Exceeded by ${{displayMExceed}}
+					</div>					
 				</div>
 			</div>
     		<progressbar class="progress-striped active" animate="true" value="dynamicM" type="{{typeM}}"><b>{{dynamicM}}%</b></progressbar>
@@ -126,7 +126,7 @@
 					${{displayThisMonthOptionalTotal}} / ${{displayOptionalB}}
 					</div>
 					<div class="ng-hide" ng-hide="oStatus">
-					Exceeded by ${{displayOExceed}}
+					<div ng-if = "dynamicO>190">({{dynamicO}}%)</div>Exceeded by ${{displayOExceed}}
 					</div>
 				</div>
 			</div>
@@ -297,9 +297,9 @@
 			    <accordion-group is-open="status.open">
 			        <accordion-heading>
 			           <i class="pull-left glyphicon" ng-class="{'glyphicon-minus': status.open, 'glyphicon-plus': !status.open}"></i>&nbsp;Fixed Expense 
-			            <p class="pull-right">Total: $ {{thisMonthFixedExpenseTotal}}</p>
+			            <p class="pull-right">Total: {{thisMonthFixedExpenseTotal | currency}}</p>
 			        </accordion-heading>
-							<p ng>You have indicated under the 'Income & Expense' tab a total Fixed Expense of ${{thisMonthFixedExpenseTotal}}</p>
+							<p ng>You have indicated under the 'Income & Expense' tab a total Fixed Expense of {{thisMonthFixedExpenseTotal | currency}}</p>
 							<p>Add Expenses below to account your expenditure for the month.</p> 
 							<table class="form-group table table">
 								<tr>
@@ -315,7 +315,7 @@
 									<td>{{x.type}}</td>
 									<td>${{x.diff}}</td>
 									<td></td>
-									<td><button type="button" class="btn btn-danger" ng-click="setFixedExpense()" data-toggle="modal" data-target="#myModal">
+									<td><button type="button" class="btn btn-danger" ng-click="setFixedExpense(x.type,x.diff)" data-toggle="modal" data-target="#myModal">
 									  Assign Expense
 									</button>
 							        </td>
@@ -352,9 +352,9 @@
 			    <accordion-group is-open="status1.open">
 				        <accordion-heading>
 				            <i class="pull-left glyphicon" ng-class="{'glyphicon-minus': status1.open, 'glyphicon-plus': !status1.open}"></i>&nbsp;Transport
-				            <p class="pull-right">Total: $ {{thisMonthTransportTotal}}</p>
+				            <p class="pull-right">Total: {{thisMonthTransportTotal | currency}}</p>
 				        </accordion-heading>
-						<p ng>You have indicated under the 'Transport' tab a total Expense of ${{thisMonthTransportTotal}}</p>
+						<p ng>You have indicated under the 'Transport' tab a total Expense of {{thisMonthTransportTotal | currency}}</p>
 							<p>Add Expenses below to account your expenditure for the month.</p> 
 							<table class="form-group table table">
 								<tr>
@@ -370,7 +370,7 @@
 									<td>{{x.type}}</td>
 									<td>${{x.diff}}</td>
 									<td></td>
-									<td><button type="button" class="btn btn-danger" ng-click="setTransportExpense()" data-toggle="modal" data-target="#myModal">
+									<td><button type="button" class="btn btn-danger" ng-click="setTransportExpense(x.type,x.diff)" data-toggle="modal" data-target="#myModal">
 									  Assign Expense
 									</button>
 							        </td>
@@ -403,9 +403,9 @@
 			    <accordion-group is-open="status2.open">
 				        <accordion-heading>
 				            <i class="pull-left glyphicon" ng-class="{'glyphicon-minus': status2.open, 'glyphicon-plus': !status2.open}"></i>&nbsp;Utilities & Household Maintanence
-				            <p class="pull-right">Total: $ {{thisMonthUtilitiesTotal}}</p>
+				            <p class="pull-right">Total: {{thisMonthUtilitiesTotal | currency}}</p>
 				        </accordion-heading>
-						<p ng>You have indicated under the 'Utilities & Household Maintanence' tab a total Expense of ${{thisMonthUtilitiesTotal}}</p>
+						<p ng>You have indicated under the 'Utilities & Household Maintanence' tab a total Expense of {{thisMonthUtilitiesTotal | currency}}</p>
 							<p>Add Expenses below to account your expenditure for the month.</p> 
 							<table class="form-group table table">
 								<tr>
@@ -420,7 +420,7 @@
 									<td>{{x.type}}</td>
 									<td>${{x.diff}}</td>
 									<td></td>
-									<td><button type="button" class="btn btn-danger" ng-click="setUtilityExpense()" data-toggle="modal" data-target="#myModal">
+									<td><button type="button" class="btn btn-danger" ng-click="setUtilityExpense(x.type,x.diff)" data-toggle="modal" data-target="#myModal">
 									  Assign Expense
 									</button>
 							        </td>
@@ -453,9 +453,9 @@
 			    <accordion-group is-open="status3.open">
 				        <accordion-heading>
 				            <i class="pull-left glyphicon" ng-class="{'glyphicon-minus': status3.open, 'glyphicon-plus': !status3.open}"></i>&nbsp;Food & Neccessities 
-				            <p class="pull-right">Total: $ {{thisMonthFoodTotal}}</p>
+				            <p class="pull-right">Total: {{thisMonthFoodTotal | currency}}</p>
 				        </accordion-heading>
-						<p ng>You have indicated under the 'Food & Neccessities' tab a total Expense of ${{thisMonthFoodTotal}}</p>
+						<p ng>You have indicated under the 'Food & Neccessities' tab a total Expense of {{thisMonthFoodTotal | currency}}</p>
 							<p>Add Expenses below to account your expenditure for the month.</p> 
 							<table class="form-group table table">
 								<tr>
@@ -471,7 +471,7 @@
 									<td>{{x.type}}</td>
 									<td>${{x.diff}}</td>
 									<td></td>
-									<td><button type="button" class="btn btn-danger" ng-click="setFoodExpense()" data-toggle="modal" data-target="#myModal">
+									<td><button type="button" class="btn btn-danger" ng-click="setFoodExpense(x.type,x.diff)" data-toggle="modal" data-target="#myModal">
 									  Assign Expense
 									</button>
 							        </td>
@@ -504,9 +504,9 @@
 			    <accordion-group is-open="status4.open">
 				        <accordion-heading>
 				            <i class="pull-left glyphicon" ng-class="{'glyphicon-minus': status4.open, 'glyphicon-plus': !status4.open}"></i>&nbsp;Miscellaneous 
-				            <p class="pull-right">Total: $ {{thisMonthMiscTotal}}</p>
+				            <p class="pull-right">Total: {{thisMonthMiscTotal | currency}}</p>
 				        </accordion-heading>
-						<p ng>You have indicated under the 'Miscellaneous' tab a total Expense of ${{thisMonthMiscTotal}}</p>
+						<p ng>You have indicated under the 'Miscellaneous' tab a total Expense of {{thisMonthMiscTotal | currency}}</p>
 							<p>Add Expenses below to account your expenditure for the month.</p> 
 							<table class="form-group table table">
 								<tr>
@@ -522,7 +522,7 @@
 									<td>{{x.type}}</td>
 									<td>${{x.diff}}</td>
 									<td></td>
-									<td><button type="button" class="btn btn-danger" ng-click="setMiscExpense()" data-toggle="modal" data-target="#myModal">
+									<td><button type="button" class="btn btn-danger" ng-click="setMiscExpense(x.type,x.diff)" data-toggle="modal" data-target="#myModal">
 									  Assign Expense
 									</button>
 							        </td>
@@ -553,9 +553,9 @@
 			    <accordion-group is-open="status5.open">
 				        <accordion-heading>
 				            <i class="pull-left glyphicon" ng-class="{'glyphicon-minus': status5.open, 'glyphicon-plus': !status5.open}"></i>&nbsp;Optional Savings 
-				            <p class="pull-right">Total: $ {{thisMonthOptionalTotal}}</p>
+				            <p class="pull-right">Total: {{thisMonthOptionalTotal | currency}}</p>
 				        </accordion-heading>
-						<p ng>You have indicated under the 'Optional Savings' tab a total Expense of ${{thisMonthOptionalTotal}}</p>
+						<p ng>You have indicated under the 'Optional Savings' tab a total Expense of {{thisMonthOptionalTotal | currency}}</p>
 							<p>Add Expenses below to account your expenditure for the month.</p> 
 							<table class="form-group table table">
 								<tr>
@@ -571,7 +571,7 @@
 									<td>{{x.type}}</td>
 									<td>${{x.diff}}</td>
 									<td></td>
-									<td><button type="button" class="btn btn-danger" ng-click="setOptionalExpense()" data-toggle="modal" data-target="#myModal">
+									<td><button type="button" class="btn btn-danger" ng-click="setOptionalExpense(x.type,x.diff)" data-toggle="modal" data-target="#myModal">
 									  Assign Expense
 									</button>
 							        </td>
@@ -623,7 +623,7 @@
 						      	<div class="form-group">
 							      <label for="type">Type (select one):</label>
 							      <select class="form-control" name="type" id="type" data-ng-model="type" ng-required="true">
-							        <option ng-repeat="item in selectedExpense">{{item.description}}
+							        <option ng-repeat="item in selectedExpense"  ng-selected = "{{type == item.description}}">{{item.description}}
 							        </option>        
 							      </select>
 								</div>

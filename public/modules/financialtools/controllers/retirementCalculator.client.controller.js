@@ -25,10 +25,24 @@ angular.module('financialtools').controller('RetirementPlanningController', ['$s
       //CPF Retirement Benchmark Calculation results
       $scope.retirementAmtAt55 = 0;
       $scope.retirementAmtCompoundedAt55 = 0; //for compounding calculator
+      //Minimum amount for Basic Retirement Sum
+      $scope.minBrsInflationAdjusted = 0;
+      $scope.minBrsRealReturnsAdjusted = 0;
+      //Minimum amount for Full Retirement Sum
       $scope.minFrsInflationAdjusted = 0;
       $scope.minFrsRealReturnsAdjusted = 0;
+      //Minimum amount for Enhanced Retirement Sum
+      $scope.minErsInflationAdjusted = 0;
+      $scope.minErsRealReturnsAdjusted = 0;
+      //Basic Retirement Sum Analysis
+      $scope.minBrsInflationAdjustedAnalysis = 'unhealthy';
+      $scope.minBrsRealReturnsAdjustedAnalysis = 'unhealthy';
+      //Full Retirement Sum Analysis
       $scope.minFrsInflationAdjustedAnalysis = 'unhealthy';
       $scope.minFrsRealReturnsAdjustedAnalysis = 'unhealthy';
+      //Enhanced Retirement Sum Analysis
+      $scope.minErsInflationAdjustedAnalysis = 'unhealthy';
+      $scope.minErsRealReturnsAdjustedAnalysis = 'unhealthy';
 
       //Additional Details
       $scope.interestEarned = 0;
@@ -36,6 +50,8 @@ angular.module('financialtools').controller('RetirementPlanningController', ['$s
 
       //current Minimum Full Retirement Sum required at age 55 as of 2015
       var currentFRS = 161000;
+      var currentBRS = 80500;
+      var currentERS = 241500;
 
       //variables for compounding calculation
       var annualCompounding = 1;
@@ -107,74 +123,31 @@ angular.module('financialtools').controller('RetirementPlanningController', ['$s
       };
       current();
 
+      //Amount of Cash at Retirement Age
       var calculateCashAtRetirementAge = function(){
         $scope.amtOfCashAtRetirementAge = $scope.calculator.monthlyRetirementAmt * 12 * $scope.calculator.yearsOfRetirementIncome;
       };
 
+      //Number of years until Retirement
       var calculateYearsToRetirement = function(){
         $scope.yearsToRetirement = $scope.calculator.retirementAge - $scope.calculator.currentAge;
       };
 
+      //Required Savings per Month until Retirement
       var calculateSavingsPerMonthTillRetire = function(){
         $scope.savingsPerMonthTillRetirement = $scope.amtOfCashAtRetirementAge / ($scope.yearsToRetirement * 12);
       };
 
+      //Current Saving to Retirement Saving Surplus/Shortfall 
       var calculateCurrentSavingsToRetirementSavings = function(){
         $scope.currentSavingToRetirementSaving = $scope.calculator.currentMthSavings - $scope.savingsPerMonthTillRetirement;
 
-        if ($scope.currentSavingToRetirementSaving > 0) {
+        if ($scope.currentSavingToRetirementSaving >= 0) {
           $scope.currentSavingToRetirementSavingAnalysis = 'healthy';
         } 
       };
 
-      var calculateInterestEarned = function(){
-        $scope.interestEarned = $scope.savingsPerMonthTillRetirement * 12 * sgsYield;
-      };
-
-      var calculateRetirementAmtAt55 = function(){
-        $scope.retirementAmtAt55 = 12 * $scope.calculator.monthlyRetirementAmt * (55 - $scope.calculator.currentAge);
-      };
-
-      var calculateCPFRetirementBenchmark = function(){
-        $scope.minFrsInflationAdjusted = currentFRS * Math.pow((1 + $scope.calculator.inflationRate/100), (55 - $scope.calculator.currentAge));
-        $scope.minFrsRealReturnsAdjusted = currentFRS * Math.pow((1 + ($scope.calculator.returnRate/100 - $scope.calculator.inflationRate/100)),(55 - $scope.calculator.currentAge));
-
-        if ($scope.minFrsInflationAdjusted < $scope.retirementAmtAt55) {
-          $scope.minFrsInflationAdjustedAnalysis = 'healthy';
-        }
-
-        if ($scope.minFrsRealReturnsAdjusted < $scope.retirementAmtAt55) {
-          $scope.minFrsRealReturnsAdjustedAnalysis = 'healthy';
-        } 
-      };
-
-      var calculateSavingsPerYearTillRetirement = function(){
-        $scope.savingsPerYearTillRetirement = $scope.savingsPerMonthTillRetirement * 12;
-      };
-
-      var calculateTotalAmtWithCompounding = function(){
-        var i = $scope.calculator.interestRate/100;
-        var p1 = 1+(i/annualCompounding);
-        var p2 = (annualCompounding * $scope.yearsToRetirement);
-        var pt1 = Math.pow(p1, p2) - 1;
-        var pt2 = i/annualCompounding;
-        $scope.totalAmtSavedWithCompounding = $scope.savingsPerYearTillRetirement * (pt1/pt2);
-      };
-
-      var calculateRetirementMonthlyIncomeWithInterest = function(){
-        $scope.retirementMonthlyIncomeWithInterest = $scope.totalAmtSavedWithCompounding / (12*$scope.calculator.yearsOfRetirementIncome);
-      };
-
-      var calculateRetirementAmtCompoundedAt55 = function(){
-        var i = $scope.calculator.interestRate/100;
-        var p1 = 1 + (i/annualCompounding);
-        var p2 = annualCompounding * (55 - $scope.calculator.currentAge);
-        var pt1 = Math.pow(p1, p2) - 1;
-        var pt2 = i/annualCompounding;
-        console.log($scope.savingsPerYearTillRetirement);
-        $scope.retirementAmtCompoundedAt55 = ($scope.savingsPerYearTillRetirement) * (pt1/pt2) ;
-      };
-
+      //Your Current Saving to Income Ratio
       var calculateCurrentSavingToIncomeRatio = function(){
         $scope.currentSavingToIncomeRatio = ($scope.calculator.currentMthSavings / ($scope.calculator.annualIncome/12)).toFixed(2);
 
@@ -184,13 +157,133 @@ angular.module('financialtools').controller('RetirementPlanningController', ['$s
 
       };
 
+      //Your Retirement Saving To Income Ratio
       var calculateRetirementSavingToIncomeRatio = function(){
        $scope.retirementSavingToIncomeRatio = ($scope.savingsPerMonthTillRetirement / ($scope.calculator.annualIncome/12)).toFixed(2);
 
        if ($scope.retirementSavingToIncomeRatio > 0.12) {
           $scope.retirementSavingToIncomeRatioAnalysis = 'healthy';
         }
+      };      
+
+      //Interest earned on amount saved after 1st Year
+      var calculateInterestEarned = function(){
+        $scope.interestEarned = $scope.savingsPerMonthTillRetirement * 12 * sgsYield;
       };
+
+      //Retirement Amount Required at age 55
+      var calculateRetirementAmtAt55 = function(){
+        $scope.retirementAmtAt55 = $scope.calculator.currentMthSavings * 12 * (55 - $scope.calculator.currentAge);
+      };
+
+      //Calculate CPF Retirement Benchmark for Inflation and Real Return for BRS
+      var calculateBRSBenchmark = function(){
+        $scope.minBrsInflationAdjusted = currentBRS * Math.pow((1 + $scope.calculator.inflationRate/100), (55 - $scope.calculator.currentAge));
+        $scope.minBrsRealReturnsAdjusted = currentBRS * Math.pow((1 + ($scope.calculator.returnRate/100 - $scope.calculator.inflationRate/100)),(55 - $scope.calculator.currentAge));
+        
+      };
+
+      //Calculate CPF Retirement Benchmark for Inflation and Real Return for FRS
+      var calculateFRSBenchmark = function(){
+        $scope.minFrsInflationAdjusted = currentFRS * Math.pow((1 + $scope.calculator.inflationRate/100), (55 - $scope.calculator.currentAge));
+        $scope.minFrsRealReturnsAdjusted = currentFRS * Math.pow((1 + ($scope.calculator.returnRate/100 - $scope.calculator.inflationRate/100)),(55 - $scope.calculator.currentAge));
+        
+      };
+
+      //Calculate CPF Retirement Benchmark for Inflation and Real Return for ERS
+      var calculateERSBenchmark = function(){
+        $scope.minErsInflationAdjusted = currentERS * Math.pow((1 + $scope.calculator.inflationRate/100), (55 - $scope.calculator.currentAge));
+        $scope.minErsRealReturnsAdjusted = currentERS * Math.pow((1 + ($scope.calculator.returnRate/100 - $scope.calculator.inflationRate/100)),(55 - $scope.calculator.currentAge));
+        
+      };
+
+      //Calculate whether user is above/below CPF benchmark
+      var calculateAnalysis = function(){
+        if ($scope.minBrsInflationAdjusted < $scope.retirementAmtAt55) {
+          $scope.minBrsInflationAdjustedAnalysis = 'healthy';
+        }
+
+        if ($scope.minBrsRealReturnsAdjusted < $scope.retirementAmtAt55) {
+          $scope.minBrsRealReturnsAdjustedAnalysis = 'healthy';
+        } 
+
+        if ($scope.minFrsInflationAdjusted < $scope.retirementAmtAt55) {
+          $scope.minFrsInflationAdjustedAnalysis = 'healthy';
+        }
+
+        if ($scope.minFrsRealReturnsAdjusted < $scope.retirementAmtAt55) {
+          $scope.minFrsRealReturnsAdjustedAnalysis = 'healthy';
+        } 
+
+        if ($scope.minErsInflationAdjusted < $scope.retirementAmtAt55) {
+          $scope.minErsInflationAdjustedAnalysis = 'healthy';
+        }
+
+        if ($scope.minErsRealReturnsAdjusted < $scope.retirementAmtAt55) {
+          $scope.minErsRealReturnsAdjustedAnalysis = 'healthy';
+        } 
+
+      };
+
+      //Calculate whether user is above/below CPF benchmark
+      var calculateAnalysisCompounded = function(){
+        if ($scope.minBrsInflationAdjusted < $scope.retirementAmtCompoundedAt55) {
+          $scope.minBrsInflationAdjustedAnalysis = 'healthy';
+        }
+
+        if ($scope.minBrsRealReturnsAdjusted < $scope.retirementAmtCompoundedAt55) {
+          $scope.minBrsRealReturnsAdjustedAnalysis = 'healthy';
+        } 
+
+        if ($scope.minFrsInflationAdjusted < $scope.retirementAmtCompoundedAt55) {
+          $scope.minFrsInflationAdjustedAnalysis = 'healthy';
+        }
+
+        if ($scope.minFrsRealReturnsAdjusted < $scope.retirementAmtCompoundedAt55) {
+          $scope.minFrsRealReturnsAdjustedAnalysis = 'healthy';
+        } 
+
+        if ($scope.minErsInflationAdjusted < $scope.retirementAmtCompoundedAt55) {
+          $scope.minErsInflationAdjustedAnalysis = 'healthy';
+        }
+
+        if ($scope.minErsRealReturnsAdjusted < $scope.retirementAmtCompoundedAt55) {
+          $scope.minErsRealReturnsAdjustedAnalysis = 'healthy';
+        } 
+
+      };
+
+      //Calculating amount of savings user will have per year until retirement based on current monthly
+      var calculateSavingsPerYearTillRetirement = function(){
+        $scope.savingsPerYearTillRetirement = $scope.savingsPerMonthTillRetirement * 12;
+      };
+
+      //Total Amount Saved with Compounding Interest at _ years old  
+      var calculateTotalAmtWithCompounding = function(){
+        var i = $scope.calculator.interestRate/100;
+        var p1 = 1+(i/annualCompounding);
+        var p2 = (annualCompounding * $scope.yearsToRetirement);
+        var pt1 = Math.pow(p1, p2) - 1;
+        var pt2 = i/annualCompounding;
+        $scope.totalAmtSavedWithCompounding = $scope.savingsPerYearTillRetirement * (pt1/pt2);
+      };
+
+      //Retirement Monthly Income if Annual Return is _%
+      var calculateRetirementMonthlyIncomeWithInterest = function(){
+        $scope.retirementMonthlyIncomeWithInterest = $scope.totalAmtSavedWithCompounding / (12*$scope.calculator.yearsOfRetirementIncome);
+      };
+
+      //Retirement Amount Required at age _ (compounded)
+      var calculateRetirementAmtCompoundedAt55 = function(){
+        var i = $scope.calculator.interestRate/100;
+        var p1 = 1 + (i/annualCompounding);
+        var p2 = annualCompounding * (55 - $scope.calculator.currentAge);
+        var pt1 = Math.pow(p1, p2) - 1;
+        var pt2 = i/annualCompounding;
+        $scope.retirementAmtCompoundedAt55 = ($scope.savingsPerYearTillRetirement) * (pt1/pt2) ;
+      };
+
+
 
       $scope.calculateRetirement = function(){
         //Retirement Savings Calculator results
@@ -205,8 +298,10 @@ angular.module('financialtools').controller('RetirementPlanningController', ['$s
 
         //CPF Retirement Benchmark
         calculateRetirementAmtAt55();
-        calculateCPFRetirementBenchmark();
-
+        calculateBRSBenchmark();
+        calculateFRSBenchmark();
+        calculateERSBenchmark();
+        calculateAnalysis();
       };
 
       //to calculate results for y% interest and compounding factor
@@ -224,7 +319,10 @@ angular.module('financialtools').controller('RetirementPlanningController', ['$s
 
         //CPF Retirement Benchmark
         calculateRetirementAmtCompoundedAt55();
-        calculateCPFRetirementBenchmark();
+        calculateBRSBenchmark();
+        calculateFRSBenchmark();
+        calculateERSBenchmark();
+        calculateAnalysisCompounded();
 
 
       };

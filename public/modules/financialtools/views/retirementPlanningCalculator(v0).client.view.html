@@ -1,0 +1,247 @@
+<section data-ng-controller="RetirementPlanningController" class="content">
+  <div class="container-fluid"> 
+    <div class="row">
+      <div class="col-md-12">
+        <h3>Retirement Planning Calculator</h3>
+        <p>This calculator calculates the amount you have to save per month in order to achieve your desired monthly income after retirement. We have 2 different calculators that calculates your results on assumption of (A) there is zero interest and without a compounding factor and (B) there is an interest of y% with compounding factor. Do try out our calculators to see if you are on track for planning your retirement!</p>
+      </div>    
+    </div>
+    <br>
+
+    <div class="row">
+      <ul class="nav nav-tabs nav-justified">
+        <li role="presentation" class="active"><a href="/#!/financialtools/retirementCalculator">Based on zero interest and no compounding factor</a></li>
+        <li role="presentation"><a href="/#!/financialtools/retirementCalculatorWithCompounding">Based on interest of y% with compounding factor</a></li>
+      </ul>
+      <br>
+      <h4>(A) Based on monthly saving of $x and zero interest and no compounding factor </h4>
+      <p><small>Note: All fields are compulsory for calculation.</small></p>
+
+      <!-- with zero interset and compounding factor Calculator -->
+      <div class="col-md-5">
+        <form name='retirementCalculator' class="form-horizontal" novalidate role='form'>
+          <fieldset>
+            <div class='form-group'>
+              <label for='currentAge' class="col-md-6" style="text-align:right">Current Age: </label>
+              <div class="col-md-6">
+                <input class='form-control' ng-model='calculator.currentAge' name='currentAge' type='number' min="1" required>
+              </div>        
+            </div>
+            <div class='form-group'>
+              <label for='retirementAge' class="col-md-6" style="text-align:right">Ideal Retirement Age: </label>
+              <div class="col-md-6">
+                <input class='form-control' ng-model='calculator.retirementAge' name='retirementAge' type='number' ng-init='calculator.retirementAge = 60' min="1" required>
+              </div>
+            </div>
+            <div class='form-group'>
+              <label for='currentMthSavings' class="col-md-6" style="text-align:right">Current Monthly Savings: </label>
+              <div class="col-md-6">
+                <input class='form-control' ng-model='calculator.currentMthSavings' name='currentMthSavings' type='number' min="1" required>
+              </div>
+            </div>
+            <!--to include ng-init for latest monthly income record * 12 -->
+            <div class='form-group'>
+              <label for='annualIncome' class="col-md-6" style="text-align:right">Current Annual Income: <br> <p><small>Default input is your last recorded Monthly Income x 12</small></p> </label>
+              <div class="col-md-6">
+                <input class='form-control' ng-model='calculator.annualIncome' name='annualIncome' type='number' min="0.01" ng-init='calculator.annualIncome = annualIncome' required>
+              </div>
+            </div>
+            <div class='form-group'>
+              <label for='monthlyRetirementAmt' class="col-md-6" style="text-align:right">Desired Monthly Retirement Income: </label>
+              <div class="col-md-6">
+                <input class='form-control' ng-model='calculator.monthlyRetirementAmt' name='monthlyRetirementAmt' type='number' min="0.01" required>
+              </div>
+            </div>
+            <div class='form-group'>
+              <label for='yearsOfRetirementIncome' class="col-md-6" style="text-align:right">Number of years of having retirement Income</label>
+              <div class="col-md-6">
+                <input class='form-control' ng-model='calculator.yearsOfRetirementIncome' name='yearsOfRetirementIncome' ng-init='calculator.yearsOfRetirementIncome = 20' type='number' min="1" required>
+              </div>
+            </div>
+            <div class='form-group'>
+              <label for='inflationRate' class="col-md-6" style="text-align:right">Inflation Rate (%) <p><small>Default rate for inflation is 3% as stated in the CPF inflation rate</small></p></label>
+              <div class="col-md-6">
+                <input class='form-control' ng-model='calculator.inflationRate' name='inflationRate' type='number' min="0" ng-init='calculator.inflationRate=3' required>
+              </div>
+            </div>
+            <div class='form-group'>
+              <label for='returnRate' class="col-md-6" style="text-align:right">Return Rate (%)</label>
+              <div class="col-md-6">
+                <input class='form-control' ng-model='calculator.returnRate' name='returnRate' type='number' min="0" ng-init='calculator.returnRate=5' required>
+              </div>
+            </div>
+            <div class="col-md-12">  
+             <button class='btn btn-primary btn-lg btn-block' ng-click='calculateRetirement()' ng-disabled='retirementCalculator.$invalid'> Show Results
+              </button> 
+            </div>
+          </fieldset>
+        </form>
+        <br/><br/>
+      </div>
+
+      <div class="col-md-7">
+      <!-- to input results for zero interest and no compounding factor -->
+          <table class="table table-bordered table-hover">
+            <thead>
+              <tr>
+                <th colspan="2" style="background-color:#f0f0f0;">
+                  Retirement Savings Calculator Results
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="col-md-7">
+                  Amount of Cash at Retirement Age <b>{{calculator.retirementAge}}</b>
+                </td>
+                <td class="col-md-5">
+                  {{amtOfCashAtRetirementAge | currency}}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Number of years until Retirement
+                </td>
+                <td>
+                  {{yearsToRetirement}}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Required Savings per Month until Retirement
+                </td>
+                <td>
+                  {{savingsPerMonthTillRetirement | currency}}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Current Saving to Retirement Saving Surplus/Shortfall
+                </td>
+                <td>
+                  <div ng-if="currentSavingToRetirementSavingAnalysis === 'unhealthy'">
+                    {{currentSavingToRetirementSaving | currency}}&nbsp;<i class="fa fa-frown-o" style="color:red"></i> <br>
+                    You have a shortfall in your current savings to what you need to save in order to achieve your retirement goal.
+                  </div>
+                  <div ng-if="currentSavingToRetirementSavingAnalysis === 'healthy'">
+                    {{currentSavingToRetirementSaving | currency}}&nbsp;<i class="fa fa-smile-o" style="color:green"></i><br>
+                    You have a surplus in your current savings to what you need to save in order to achieve your retirement goal. Keep it up!
+                  </div> 
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Your Current Saving to Income Ratio
+                </td>
+                <td>
+                  <div ng-if="currentSavingToIncomeRatioAnalysis === 'unhealthy'">
+                    {{currentSavingToIncomeRatio}}&nbsp;<i class="fa fa-frown-o" style="color:red"></i> <br>
+                    You have an unhealthy current saving to income ratio. Work hard to save more.
+                  </div>
+                  <div ng-if="currentSavingToIncomeRatioAnalysis === 'healthy'">
+                    {{currentSavingToIncomeRatio}}&nbsp;<i class="fa fa-smile-o" style="color:green"></i><br>
+                    You have a healthy current saving to income ratio. Keep up this healthy saving habit!
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Your Retirement Saving To Income Ratio
+                </td>
+                <td>
+                  <div ng-if="retirementSavingToIncomeRatioAnalysis === 'unhealthy'">
+                    {{retirementSavingToIncomeRatio}}&nbsp;<i class="fa fa-frown-o" style="color:red"></i> <br>
+                    You have a unhealthy retirement saving to income ratio. You should aim to save more.
+                  </div>
+                  <div ng-if="retirementSavingToIncomeRatioAnalysis === 'healthy'">
+                    {{retirementSavingToIncomeRatio}}&nbsp;<i class="fa fa-smile-o" style="color:green"></i><br>
+                    You have a healthy retirement saving to income ratio. Work on maintaining this healthy saving goal!
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          
+          <table class="table table-bordered table-hover">
+             <thead>
+              <tr>
+                <th colspan="2" style="background-color:#f0f0f0;">
+                  Additional Information
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="col-md-7">
+                  Based on Average Singapore Goverment Securities Yield <br>
+                  <small>The range has been between 2% to 3%</small>
+                </td>
+                <td class="col-md-5">
+                  2.00%
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Interest earned on amount saved after 1st Year
+                </td>
+                <td>
+                  {{interestEarned | currency}}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          
+          <table class="table table-bordered table-hover">
+            <thead>
+              <tr>
+                <th colspan="2" style="background-color:#f0f0f0;">
+                  CPF Retirement Benchmark Calculation
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="col-md-7">
+                  Retirement Amount Required at age <b>55</b>
+                </td>
+                <td class="col-md-5">
+                  {{retirementAmtAt55 | currency}}
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Minimum Full Retirement Sum required at age <b>55</b> (adjusted for inflation)
+                </td>
+                <td>
+                  <div ng-if="minFrsInflationAdjustedAnalysis === 'unhealthy'">
+                    {{minFrsInflationAdjusted | currency}}&nbsp;<i class="fa fa-frown-o" style="color:red"></i> <br>
+                    Your planned retirement savings (inflation adjusted) at age 55 is <b>below</b> the required Minimum Full Retirement Sum to be eligible for CPF Retirement Account.
+                  </div>
+                  <div ng-if="minFrsInflationAdjustedAnalysis === 'healthy'">
+                    {{minFrsInflationAdjusted | currency}}&nbsp;<i class="fa fa-smile-o" style="color:green"></i> <br>
+                    Your planned retirement savings (inflation adjusted) at age 55 is <b>above</b> the required Minimum Full Retirement Sum to be eligible for CPF Retirement Account.
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Minimum Full Retirement Sum required at age <b>55</b> (adjusted for real returns)
+                </td>
+                <td>
+                  
+                  <div ng-if="minFrsRealReturnsAdjustedAnalysis === 'unhealthy'">
+                    {{minFrsRealReturnsAdjusted | currency}}&nbsp;<i class="fa fa-frown-o" style="color:red"></i><br>
+                    Your planned retirement savings (real returns adjusted) at age 55 is <b>below</b> the required Minimum Full Retirement Sum to be eligible for CPF Retirement Account.
+                  </div>
+                  <div ng-if="minFrsRealReturnsAdjustedAnalysis === 'healthy'">
+                    {{minFrsRealReturnsAdjusted | currency}}&nbsp;<i class="fa fa-smile-o" style="color:green"></i><br>
+                    Your planned retirement savings (real returns adjusted) at age 55 is <b>above</b> the required Minimum Full Retirement Sum to be eligible for CPF Retirement Account.
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+      </div>
+  </div>  <!-- ROW  -->
+</div>
+</section>

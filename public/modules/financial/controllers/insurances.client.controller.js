@@ -96,6 +96,7 @@ angular.module('financial').controller('InsurancesController', ['$scope', '$root
 
             for(var i=0;i<$scope.user.assetsRecords.length; i++) {            
                 var assetRecord = $scope.user.assetsRecords[i];  
+                $scope.toBeUpdatedAssets = $scope.user.assetsRecords[i];
                 console.log('hello');
                 if (assetRecord.month===$scope.month&&assetRecord.year===$scope.year) {
                     var specAsset;
@@ -108,13 +109,13 @@ angular.module('financial').controller('InsurancesController', ['$scope', '$root
                         specAsset = assetRecord.investedAssets.others;
                     }
                     
-                    var critical = $scope.insurance.coverage.critical;
-                    var death = $scope.insurance.coverage.death;
-                    var accident = $scope.insurance.coverage.accident;
-                    var hospitalization =$scope.insurance.coverage.hospitalization;
-                    var reimbursement =$scope.insurance.coverage.reimbursement;
-                    var disability = $scope.insurance.coverage.disability;
-                    var hospitalIncome = $scope.insurance.coverage.hospitalIncome;
+                    var critical;
+                    var death;
+                    var accident;
+                    var hospitalization;
+                    var reimbursement;
+                    var disability;
+                    var hospitalIncome;
 
                     if(typeof $scope.insurance.coverage.critical ==='undefined') {
                         critical = 0;
@@ -138,10 +139,19 @@ angular.module('financial').controller('InsurancesController', ['$scope', '$root
                         hospitalIncome = 0;
                     }
 
+                    critical = $scope.insurance.coverage.critical;
+                    death = $scope.insurance.coverage.death;
+                    accident = $scope.insurance.coverage.accident;
+                    hospitalization =$scope.insurance.coverage.hospitalization;
+                    reimbursement =$scope.insurance.coverage.reimbursement;
+                    disability = $scope.insurance.coverage.disability;
+                    hospitalIncome = $scope.insurance.coverage.hospitalIncome;
                     var total = critical+death+accident+hospitalization+reimbursement+disability+hospitalIncome;
+                    console.log('total is: '+total);
                     specAsset.value += total;
                     specAsset.minValue += total;
                     $scope.insurance.totalTracker = total;
+                    console.log(assetRecord.investedAssets.lifeInsurance);
                     /*
                     for (var get in thisMonthSpecExpense) {                        
                         var obj = thisMonthSpecExpense[get];
@@ -157,31 +167,31 @@ angular.module('financial').controller('InsurancesController', ['$scope', '$root
                     */
                 }
             }
-            var cashEquivalentsArr = $scope.displayAssetsRecords.cashEquivalents;
+            var cashEquivalentsArr = $scope.toBeUpdatedAssets.cashEquivalents;
             var cashEquivalentsTotal = 0;
             angular.forEach(cashEquivalentsArr, function(value, key){
                 cashEquivalentsTotal = cashEquivalentsTotal + Number(value.value);
             });
 
-            var personalUseAssetsArr = $scope.displayAssetsRecords.personalUseAssets;
+            var personalUseAssetsArr = $scope.toBeUpdatedAssets.personalUseAssets;
             var personalUseAssetsTotal = 0;
             angular.forEach(personalUseAssetsArr, function(value, key){
                 personalUseAssetsTotal = personalUseAssetsTotal + Number(value.value);
             });
 
-            var investedAssetsArr = $scope.displayAssetsRecords.investedAssets;
+            var investedAssetsArr = $scope.toBeUpdatedAssets.investedAssets;
             var investedAssetsTotal = 0;
             angular.forEach(investedAssetsArr, function(value, key){
                 investedAssetsTotal = investedAssetsTotal + Number(value.value);
             });
 
-            var cpfSavingsArr = $scope.displayAssetsRecords.cpfSavings;
+            var cpfSavingsArr = $scope.toBeUpdatedAssets.cpfSavings;
             var cpfSavingsTotal = 0;
             angular.forEach(cpfSavingsArr, function(value, key){
                 cpfSavingsTotal = cpfSavingsTotal + Number(value.value);
             });
 
-            var otherAssetsArr = $scope.displayAssetsRecords.otherAssets;
+            var otherAssetsArr = $scope.toBeUpdatedAssets.otherAssets;
             var otherAssetsTotal = 0;
             angular.forEach(otherAssetsArr, function(value, key){
                 otherAssetsTotal = otherAssetsTotal  + Number(value.value);
@@ -189,12 +199,12 @@ angular.module('financial').controller('InsurancesController', ['$scope', '$root
 
             var assetsTotal = cashEquivalentsTotal + personalUseAssetsTotal + investedAssetsTotal + cpfSavingsTotal + otherAssetsTotal;
 
-            $scope.displayAssetsRecords.cashEquivalentsAmt = cashEquivalentsTotal.toFixed(2);
-            $scope.displayAssetsRecords.personalUseAssetsAmt = personalUseAssetsTotal.toFixed(2);
-            $scope.displayAssetsRecords.investedAssetsAmt = investedAssetsTotal.toFixed(2);
-            $scope.displayAssetsRecords.cpfSavingsAmt = cpfSavingsTotal.toFixed(2);
-            $scope.displayAssetsRecords.otherAssetsAmt = otherAssetsTotal.toFixed(2);
-            $scope.displayAssetsRecords.totalAmt = assetsTotal.toFixed(2);
+            $scope.toBeUpdatedAssets.cashEquivalentsAmt = cashEquivalentsTotal.toFixed(2);
+            $scope.toBeUpdatedAssets.personalUseAssetsAmt = personalUseAssetsTotal.toFixed(2);
+            $scope.toBeUpdatedAssets.investedAssetsAmt = investedAssetsTotal.toFixed(2);
+            $scope.toBeUpdatedAssets.cpfSavingsAmt = cpfSavingsTotal.toFixed(2);
+            $scope.toBeUpdatedAssets.otherAssetsAmt = otherAssetsTotal.toFixed(2);
+            $scope.toBeUpdatedAssets.totalAmt = assetsTotal.toFixed(2);
 
             var userNow = new Users($scope.user);
             userNow.$update(function(response) {
@@ -388,8 +398,27 @@ angular.module('financial').controller('InsurancesController', ['$scope', '$root
             $scope.insurance = insurance;
         };
 
-        $scope.deletePolicy = function() {
+        $scope.deletePolicy = function() {            
 
+            var assetRecord;
+            for(var i=0;i<$scope.user.assetsRecords.length; i++) {            
+                assetRecord = $scope.user.assetsRecords[i];  
+                $scope.toBeUpdatedAssets = $scope.user.assetsRecords[i];
+                if (assetRecord.month===$scope.month&&assetRecord.year===$scope.year) {
+                    var specAsset;
+                    if ($scope.insurance.term==='Life') {
+                        specAsset = assetRecord.investedAssets.lifeInsurance;
+                    }
+                    else if ($scope.insurance.term==='Investment') {
+                        specAsset = assetRecord.investedAssets.investmentInsurance;
+                    } else {
+                        specAsset = assetRecord.investedAssets.others;
+                    }
+
+                    specAsset.value -= $scope.insurance.totalTracker;
+                    specAsset.minValue -= $scope.insurance.totalTracker;                                        
+                }
+            }
             var index = $scope.user.insurancesInfoArr.indexOf($scope.insurance);
             $scope.user.insurancesInfoArr.splice(index, 1);
 
@@ -397,6 +426,47 @@ angular.module('financial').controller('InsurancesController', ['$scope', '$root
                 var insuranceRe = $scope.user.insurancesInfoArr[b];
                 insuranceRe.id = $scope.user.insurancesInfoArr.indexOf(insuranceRe)+1;
             }
+
+            var cashEquivalentsArr = assetRecord.cashEquivalents;
+            var cashEquivalentsTotal = 0;
+            angular.forEach(cashEquivalentsArr, function(value, key){
+                cashEquivalentsTotal = cashEquivalentsTotal + Number(value.value);
+            });
+
+            var personalUseAssetsArr = assetRecord.personalUseAssets;
+            var personalUseAssetsTotal = 0;
+            angular.forEach(personalUseAssetsArr, function(value, key){
+                personalUseAssetsTotal = personalUseAssetsTotal + Number(value.value);
+            });
+
+            var investedAssetsArr = assetRecord.investedAssets;
+            var investedAssetsTotal = 0;
+            angular.forEach(investedAssetsArr, function(value, key){
+                investedAssetsTotal = investedAssetsTotal + Number(value.value);
+                console.log(value.value);
+            });
+
+            var cpfSavingsArr = assetRecord.cpfSavings;
+            var cpfSavingsTotal = 0;
+            angular.forEach(cpfSavingsArr, function(value, key){
+                cpfSavingsTotal = cpfSavingsTotal + Number(value.value);
+            });
+
+            var otherAssetsArr = assetRecord.otherAssets;
+            var otherAssetsTotal = 0;
+            angular.forEach(otherAssetsArr, function(value, key){
+                otherAssetsTotal = otherAssetsTotal  + Number(value.value);
+            });
+
+            var assetsTotal = cashEquivalentsTotal + personalUseAssetsTotal + investedAssetsTotal + cpfSavingsTotal + otherAssetsTotal;
+
+            assetRecord.cashEquivalentsAmt = cashEquivalentsTotal.toFixed(2);
+            assetRecord.personalUseAssetsAmt = personalUseAssetsTotal.toFixed(2);
+            assetRecord.investedAssetsAmt = investedAssetsTotal.toFixed(2);
+            assetRecord.cpfSavingsAmt = cpfSavingsTotal.toFixed(2);
+            assetRecord.otherAssetsAmt = otherAssetsTotal.toFixed(2);
+            assetRecord.totalAmt = assetsTotal.toFixed(2);
+
             
             var user = new Users($scope.user);
             user.$update(function(response) {
@@ -413,7 +483,8 @@ angular.module('financial').controller('InsurancesController', ['$scope', '$root
 
         $scope.cancel = function() {
             $scope.success = false;
-            $scope.insurance = null;
+            $scope.insurance = '';
+            console.log('RUN');
             $scope.error = '';
         };
 

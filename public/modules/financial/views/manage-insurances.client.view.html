@@ -96,44 +96,44 @@
 							    <h4 align="center"><u>Your Coverage</u></h4><br/>
 							    <div class="form-group">
 							      <label class="control-label col-sm-3">Death/TPD:</label>
-							      <div class="col-sm-6">          
-							        <input class='form-control' type="number" step="any" ng-model='insurance.coverage.death' placeholder="$10,000">					        
+							       <div class="col-sm-6">          
+							        <input class='form-control' type="number" ng-init = "insurance.coverage.death=0" step="any" ng-model='insurance.coverage.death' min = '0' required>					        
 							      </div>
 							    </div>
 							    <div class="form-group">
 							      <label class="control-label col-sm-3">Critical Illness:</label>
 							      <div class="col-sm-6">          
-							        <input class='form-control' type="number" step="any" ng-model='insurance.coverage.critical' placeholder="$10,000">					        
+							        <input class='form-control' type="number" step="any" ng-init="insurance.coverage.critical=0" ng-model='insurance.coverage.critical' min = '0' required>					        
 							      </div>
 							    </div>
 							    <div class="form-group">
 							      <label class="control-label col-sm-3">Accident:</label>
 							      <div class="col-sm-6">          
-							        <input class='form-control' type="number" step="any" ng-model='insurance.coverage.accident' placeholder="$10,000">					        
+							        <input class='form-control' type="number" step="any" ng-init="insurance.coverage.accident=0" ng-model='insurance.coverage.accident' min = '0' required>					        
 							      </div>
 							    </div>
 							    <div class="form-group">
 							      <label class="control-label col-sm-3">Hospitalization:</label>
 							      <div class="col-sm-6">          
-							        <input class='form-control' type="number" step="any" ng-model='insurance.coverage.hospitalization' placeholder="$10,000">					        
+							        <input class='form-control' type="number" step="any" ng-init="insurance.coverage.hospitalization=0" ng-model='insurance.coverage.hospitalization' min = '0' required>					        
 							      </div>
 							    </div>
 							    <div class="form-group">
 							      <label class="control-label col-sm-3">Medical Reimbursement:</label>
 							      <div class="col-sm-6">          
-							        <input class='form-control' type="number" step="any" ng-model='insurance.coverage.reimbursement' placeholder="$10,000">					        
+							        <input class='form-control' type="number" step="any"ng-init="insurance.coverage.reimbursement=0"  ng-model='insurance.coverage.reimbursement' min = '0' required>					        
 							      </div>
 							    </div>
 							    <div class="form-group">
 							      <label class="control-label col-sm-3">Disability Income (Monthly Benefit):</label>
 							      <div class="col-sm-6">          
-							        <input class='form-control' type="number" step="any" ng-model='insurance.coverage.disability' placeholder="$10,000">					        
+							        <input class='form-control' type="number" step="any" ng-init="insurance.coverage.disability=0" ng-model='insurance.coverage.disability' min = '0' required>					        
 							      </div>
 							    </div>
 							    <div class="form-group">
 							      <label class="control-label col-sm-3">Hospital Income (Daily Benefit):</label>
 							      <div class="col-sm-6">          
-							        <input class='form-control' type="number" step="any" ng-model='insurance.coverage.hospitalIncome' placeholder="$10,000">					        
+							        <input class='form-control' type="number" step="any" ng-init="insurance.coverage.hospitalIncome=0" ng-model='insurance.coverage.hospitalIncome' min = '0' required>					        
 							      </div>
 							    </div>
 							    <h4 align="center"><u>Premiums</u></h4><br/>
@@ -149,13 +149,13 @@
 							    <div class="form-group">
 							      <label class="control-label col-sm-3">Premiums Payable:</label>
 							      <div class="col-sm-6">          
-							        <input class='form-control' type="number" step="any" ng-model='insurance.premiums.amt' placeholder="$10,000">					        
+							        <input class='form-control' min = '0' type="number" step="any" ng-model='insurance.premiums.amt' placeholder="$10,000">					        
 							      </div>
 							    </div>
 							    <div class="form-group">
 							      <label class="control-label col-sm-3">Premiums Payable by CPF:</label>
 							      <div class="col-sm-6">          
-							        <input class='form-control' type="number" step="any" ng-model='insurance.premiums.cpfAmt' placeholder="$10,000">					        
+							        <input class='form-control' min = '0' type="number" step="any" ng-model='insurance.premiums.cpfAmt' placeholder="$10,000">					        
 							      </div>
 							    </div>
 							    <div class="form-group">
@@ -289,7 +289,7 @@
 					</table>
 		        </div>
 			     <div class="modal-footer">
-			        <button type="submit" class="btn btn-success align=center" data-dismiss="modal">Dismiss
+			        <button type="submit" class="btn btn-success align=center" ng-click = "cancel()" data-dismiss="modal">Dismiss
 			        </button>			        	
 		    	</div>
 
@@ -352,43 +352,43 @@
 							    <div class="form-group">
 							      <label class="control-label col-sm-3">Death/TPD:</label>
 							      <div class="col-sm-6">          
-							        <input class='form-control' type="number" step="any" ng-model='insurance.coverage.death' placeholder="$10,000">					        
+							        <input class='form-control' min='0' type="number" step="any" ng-model='insurance.coverage.death' placeholder="$10,000">					        
 							      </div>
 							    </div>
 							    <div class="form-group">
 							      <label class="control-label col-sm-3">Critical Illness:</label>
 							      <div class="col-sm-6">          
-							        <input class='form-control' type="number" step="any" ng-model='insurance.coverage.critical' placeholder="$10,000">					        
+							        <input class='form-control' min='0' type="number" step="any" ng-model='insurance.coverage.critical' placeholder="$10,000">					        
 							      </div>
 							    </div>
 							    <div class="form-group">
 							      <label class="control-label col-sm-3">Accident:</label>
 							      <div class="col-sm-6">          
-							        <input class='form-control' type="number" step="any" ng-model='insurance.coverage.accident' placeholder="$10,000">					        
+							        <input class='form-control' min='0' type="number" step="any" ng-model='insurance.coverage.accident' placeholder="$10,000">					        
 							      </div>
 							    </div>
 							    <div class="form-group">
 							      <label class="control-label col-sm-3">Hospitalization:</label>
 							      <div class="col-sm-6">          
-							        <input class='form-control' type="number" step="any" ng-model='insurance.coverage.hospitalization' placeholder="$10,000">					        
+							        <input class='form-control' min='0' type="number" step="any" ng-model='insurance.coverage.hospitalization' placeholder="$10,000">					        
 							      </div>
 							    </div>
 							    <div class="form-group">
 							      <label class="control-label col-sm-3">Medical Reimbursement:</label>
 							      <div class="col-sm-6">          
-							        <input class='form-control' type="number" step="any" ng-model='insurance.coverage.reimbursement' placeholder="$10,000">					        
+							        <input class='form-control' min='0' type="number" step="any" ng-model='insurance.coverage.reimbursement' placeholder="$10,000">					        
 							      </div>
 							    </div>
 							    <div class="form-group">
 							      <label class="control-label col-sm-3">Disability Income (Monthly Benefit):</label>
 							      <div class="col-sm-6">          
-							        <input class='form-control' type="number" step="any" ng-model='insurance.coverage.disability' placeholder="$10,000">					        
+							        <input class='form-control' min='0' type="number" step="any" ng-model='insurance.coverage.disability' placeholder="$10,000">					        
 							      </div>
 							    </div>
 							    <div class="form-group">
 							      <label class="control-label col-sm-3">Hospital Income (Daily Benefit):</label>
 							      <div class="col-sm-6">          
-							        <input class='form-control' type="number" step="any" ng-model='insurance.coverage.hospitalIncome' placeholder="$10,000">					        
+							        <input class='form-control' min='0' type="number" step="any" ng-model='insurance.coverage.hospitalIncome' placeholder="$10,000">					        
 							      </div>
 							    </div>
 							    <h4 align="center"><u>Premiums</u></h4><br/>
@@ -404,13 +404,13 @@
 							    <div class="form-group">
 							      <label class="control-label col-sm-3">Premiums Payable:</label>
 							      <div class="col-sm-6">          
-							        <input class='form-control' type="number" step="any" ng-model='insurance.premiums.amt' placeholder="$10,000">					        
+							        <input class='form-control' min='0' type="number" step="any" ng-model='insurance.premiums.amt' placeholder="$10,000">					        
 							      </div>
 							    </div>
 							    <div class="form-group">
 							      <label class="control-label col-sm-3">Premiums Payable by CPF:</label>
 							      <div class="col-sm-6">          
-							        <input class='form-control' type="number" step="any" ng-model='insurance.premiums.cpfAmt' placeholder="$10,000">					        
+							        <input class='form-control' min='0' type="number" step="any" ng-model='insurance.premiums.cpfAmt' placeholder="$10,000">					        
 							      </div>
 							    </div>
 							    <div class="form-group">

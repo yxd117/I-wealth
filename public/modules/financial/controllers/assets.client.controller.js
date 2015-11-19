@@ -79,6 +79,11 @@ angular.module('financial').controller('AssetsController', ['$scope', '$rootScop
                 var investedAssetsArr = $scope.displayAssetsRecords.investedAssets;
                 var investedAssetsTotal = 0;
                 angular.forEach(investedAssetsArr, function(value, key){
+                    if(value.value<value.minValue) {
+                        value.value = value.minValue; 
+                        alert('Minimum Invested Asset value for '+value.description+' is: $'+value.value);
+                        location.reload();
+                    }
                     investedAssetsTotal = investedAssetsTotal + Number(value.value);
                 });
 

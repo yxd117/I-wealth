@@ -195,7 +195,7 @@
             <thead>
               <tr>
                 <th colspan="2" style="background-color:#f0f0f0;">
-                  CPF Retirement Benchmark Calculation
+                  CPF Retirement Benchmark Calculation <br><small><a href="https://www.cpf.gov.sg/members/schemes/schemes/retirement/retirement-sum-scheme" target="_blank">Find out more</a></small>
                 </th>
               </tr>
             </thead>
@@ -210,32 +210,94 @@
               </tr>
               <tr>
                 <td>
-                  Minimum Full Retirement Sum required at age <b>55</b> (adjusted for inflation)
+                  Minimum <b>Basic</b> Retirement Sum required at age <b>55</b> (adjusted for inflation)
                 </td>
                 <td>
-                  <div ng-if="minFrsInflationAdjustedAnalysis === 'unhealthy'">
-                    {{minFrsInflationAdjusted | currency}}&nbsp;<i class="fa fa-frown-o" style="color:red"></i> <br>
-                    Your planned retirement savings (inflation adjusted) at age 55 is <b>below</b> the required Minimum Full Retirement Sum to be eligible for CPF Retirement Account.
+                  <div ng-if="minBrsInflationAdjustedAnalysis === 'unhealthy'">
+                    {{minBrsInflationAdjusted | currency}}&nbsp;<i class="fa fa-frown-o" style="color:red"></i> <br>
+                    Your planned retirement savings (inflation adjusted) at age 55 is <b>below</b> the required Minimum <b>Basic</b> Retirement Sum.
                   </div>
-                  <div ng-if="minFrsInflationAdjustedAnalysis === 'healthy'">
-                    {{minFrsInflationAdjusted | currency}}&nbsp;<i class="fa fa-smile-o" style="color:green"></i> <br>
-                    Your planned retirement savings (inflation adjusted) at age 55 is <b>above</b> the required Minimum Full Retirement Sum to be eligible for CPF Retirement Account.
+                  <div ng-if="minBrsInflationAdjustedAnalysis === 'healthy'">
+                    {{minBrsInflationAdjusted | currency}}&nbsp;<i class="fa fa-smile-o" style="color:green"></i> <br>
+                    Your planned retirement savings (inflation adjusted) at age 55 is <b>above</b> the required Minimum <b>Basic</b> Retirement Sum.
                   </div>
                 </td>
               </tr>
               <tr>
                 <td>
-                  Minimum Full Retirement Sum required at age <b>55</b> (adjusted for real returns)
+                  Minimum <b>Basic</b> Retirement Sum required at age <b>55</b> (adjusted for real returns)
+                </td>
+                <td>
+                  
+                  <div ng-if="minBrsRealReturnsAdjustedAnalysis === 'unhealthy'">
+                    {{minBrsRealReturnsAdjusted | currency}}&nbsp;<i class="fa fa-frown-o" style="color:red"></i><br>
+                    Your planned retirement savings (real returns adjusted) at age 55 is <b>below</b> the required Minimum <b>Full</b> Retirement Sum.
+                  </div>
+                  <div ng-if="minBrsRealReturnsAdjustedAnalysis === 'healthy'">
+                    {{minBrsRealReturnsAdjusted | currency}}&nbsp;<i class="fa fa-smile-o" style="color:green"></i><br>
+                    Your planned retirement savings (real returns adjusted) at age 55 is <b>above</b> the required Minimum <b>Full</b> Retirement Sum.
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Minimum <b>Full</b> Retirement Sum required at age <b>55</b> (adjusted for inflation)
+                </td>
+                <td>
+                  <div ng-if="minFrsInflationAdjustedAnalysis === 'unhealthy'">
+                    {{minFrsInflationAdjusted | currency}}&nbsp;<i class="fa fa-frown-o" style="color:red"></i> <br>
+                    Your planned retirement savings (inflation adjusted) at age 55 is <b>below</b> the required Minimum <b>Full</b> Retirement Sum.
+                  </div>
+                  <div ng-if="minFrsInflationAdjustedAnalysis === 'healthy'">
+                    {{minFrsInflationAdjusted | currency}}&nbsp;<i class="fa fa-smile-o" style="color:green"></i> <br>
+                    Your planned retirement savings (inflation adjusted) at age 55 is <b>above</b> the required Minimum <b>Full</b> Retirement Sum.
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Minimum <b>Full</b> Retirement Sum required at age <b>55</b> (adjusted for real returns)
                 </td>
                 <td>
                   
                   <div ng-if="minFrsRealReturnsAdjustedAnalysis === 'unhealthy'">
                     {{minFrsRealReturnsAdjusted | currency}}&nbsp;<i class="fa fa-frown-o" style="color:red"></i><br>
-                    Your planned retirement savings (real returns adjusted) at age 55 is <b>below</b> the required Minimum Full Retirement Sum to be eligible for CPF Retirement Account.
+                    Your planned retirement savings (real returns adjusted) at age 55 is <b>below</b> the required Minimum <b>Full</b> Retirement Sum.
                   </div>
                   <div ng-if="minFrsRealReturnsAdjustedAnalysis === 'healthy'">
                     {{minFrsRealReturnsAdjusted | currency}}&nbsp;<i class="fa fa-smile-o" style="color:green"></i><br>
-                    Your planned retirement savings (real returns adjusted) at age 55 is <b>above</b> the required Minimum Full Retirement Sum to be eligible for CPF Retirement Account.
+                    Your planned retirement savings (real returns adjusted) at age 55 is <b>above</b> the required Minimum <b>Full</b> Retirement Sum.
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Minimum <b>Enhanced</b> Retirement Sum required at age <b>55</b> (adjusted for inflation)
+                </td>
+                <td>
+                  <div ng-if="minErsInflationAdjustedAnalysis === 'unhealthy'">
+                    {{minErsInflationAdjusted | currency}}&nbsp;<i class="fa fa-frown-o" style="color:red"></i> <br>
+                    Your planned retirement savings (inflation adjusted) at age 55 is <b>below</b> the required Minimum <b>Enhanced</b> Retirement Sum.
+                  </div>
+                  <div ng-if="minErsInflationAdjustedAnalysis === 'healthy'">
+                    {{minErsInflationAdjusted | currency}}&nbsp;<i class="fa fa-smile-o" style="color:green"></i> <br>
+                    Your planned retirement savings (inflation adjusted) at age 55 is <b>above</b> the required Minimum <b>Enhanced</b> Retirement Sum.
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  Minimum <b>Enhanced</b> Retirement Sum required at age <b>55</b> (adjusted for real returns)
+                </td>
+                <td>
+                  
+                  <div ng-if="minErsRealReturnsAdjustedAnalysis === 'unhealthy'">
+                    {{minErsRealReturnsAdjusted | currency}}&nbsp;<i class="fa fa-frown-o" style="color:red"></i><br>
+                    Your planned retirement savings (real returns adjusted) at age 55 is <b>below</b> the required Minimum <b>Enhanced</b> Retirement Sum.
+                  </div>
+                  <div ng-if="minErsRealReturnsAdjustedAnalysis === 'healthy'">
+                    {{minErsRealReturnsAdjusted | currency}}&nbsp;<i class="fa fa-smile-o" style="color:green"></i><br>
+                    Your planned retirement savings (real returns adjusted) at age 55 is <b>above</b> the required Minimum <b>Enhanced</b> Retirement Sum.
                   </div>
                 </td>
               </tr>
