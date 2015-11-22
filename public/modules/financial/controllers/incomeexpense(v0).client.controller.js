@@ -213,9 +213,9 @@ angular.module('financial').controller('IncomeExpenseController', ['$scope', '$r
                 var fixedExpenseArr = $scope.displayIncomeExpenseRecords.monthlyExpense.fixedExpense;
                 var fixedExpenseTotal = 0;
                 angular.forEach(fixedExpenseArr, function(value, key){ 
-                    if (value.value<(value.recordsTotal+value.minValue)) {
-                        value.value = (value.recordsTotal+value.minValue);
-                        alert('Minimum Expense for '+value.description+' is: $'+(value.value));
+                    if (value.value<value.recordsTotal) {
+                        value.value = value.recordsTotal;
+                        alert('Minimum Expense for '+value.description+' is: $'+value.value);
                         errorCheck += 1;
                     }
                     fixedExpenseTotal = fixedExpenseTotal + Number(value.value);
@@ -224,9 +224,9 @@ angular.module('financial').controller('IncomeExpenseController', ['$scope', '$r
                 var transportArr = $scope.displayIncomeExpenseRecords.monthlyExpense.transport;
                 var transportTotal = 0;
                 angular.forEach(transportArr, function(value, key){
-                    if (value.value<(value.recordsTotal+value.minValue)) {
-                        value.value = (value.recordsTotal+value.minValue);
-                        alert('Minimum Expense for '+value.description+' is: $'+(value.value));
+                    if (value.value<value.recordsTotal) {
+                        value.value = value.recordsTotal;
+                        alert('Minimum Expense for '+value.description+' is: $'+value.value);
                         errorCheck += 1;
                     }
                     transportTotal = transportTotal + Number(value.value);

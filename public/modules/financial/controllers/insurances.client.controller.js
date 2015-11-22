@@ -148,10 +148,12 @@ angular.module('financial').controller('InsurancesController', ['$scope', '$root
                     hospitalIncome = $scope.insurance.coverage.hospitalIncome;
                     var total = critical+death+accident+hospitalization+reimbursement+disability+hospitalIncome;
                     console.log('total is: '+total);
+                    specAsset.value = Number(specAsset.value);
                     specAsset.value += total;
                     specAsset.minValue += total;
                     $scope.insurance.totalTracker = total;
                     console.log(assetRecord.investedAssets.lifeInsurance);
+                    specAsset.value = specAsset.value.toFixed(2);
                     /*
                     for (var get in thisMonthSpecExpense) {                        
                         var obj = thisMonthSpecExpense[get];
@@ -264,9 +266,10 @@ angular.module('financial').controller('InsurancesController', ['$scope', '$root
                         
 
                         //var total = critical+death+accident+hospitalization+reimbursement+disability+hospitalIncome;
+                        specAssetOriginal.value = Number(specAssetOriginal.value);
                         specAssetOriginal.value -= original.totalTracker;
                         specAssetOriginal.minValue -= original.totalTracker;
-                        console.log('What? '+specAssetOriginal.value);
+                        console.log('What? '+specAssetOriginal.value);                        
                         //$scope.insurance.totalTracker = total;
 
                         //Add
@@ -313,6 +316,7 @@ angular.module('financial').controller('InsurancesController', ['$scope', '$root
                         }
 
                         var total = critical+death+accident+hospitalization+reimbursement+disability+hospitalIncome;
+                        specAsset.value = Number(specAsset.value);
                         specAsset.value += total;
                         specAsset.minValue += total;
                         $scope.insurance.totalTracker = total;
@@ -329,6 +333,8 @@ angular.module('financial').controller('InsurancesController', ['$scope', '$root
                             }
                         }
                         */
+                        specAssetOriginal.value = specAssetOriginal.value.toFixed(2);
+                        specAsset.value = specAsset.value.toFixed(2);
                     }
                 }
                 var cashEquivalentsArr = assetRecord.cashEquivalents;
@@ -406,6 +412,7 @@ angular.module('financial').controller('InsurancesController', ['$scope', '$root
                 $scope.toBeUpdatedAssets = $scope.user.assetsRecords[i];
                 if (assetRecord.month===$scope.month&&assetRecord.year===$scope.year) {
                     var specAsset;
+                    specAsset.value = Number(specAsset.value);
                     if ($scope.insurance.term==='Life') {
                         specAsset = assetRecord.investedAssets.lifeInsurance;
                     }
@@ -416,7 +423,8 @@ angular.module('financial').controller('InsurancesController', ['$scope', '$root
                     }
 
                     specAsset.value -= $scope.insurance.totalTracker;
-                    specAsset.minValue -= $scope.insurance.totalTracker;                                        
+                    specAsset.minValue -= $scope.insurance.totalTracker;  
+                    specAsset.value = specAsset.value.toFixed(2);                                    
                 }
             }
             var index = $scope.user.insurancesInfoArr.indexOf($scope.insurance);

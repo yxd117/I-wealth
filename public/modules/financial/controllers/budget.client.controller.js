@@ -603,11 +603,12 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
                         //console.log(obj.description);
                         console.log('next');
                         if($scope.type=== obj.description) {
-                            console.log('SUCCESS');
+                            console.log('SUCCESS');                            
                             obj.recordsTotal += $scope.expenseAmt;
                             obj.records.push(record);
+                            obj.value = Number(obj.value);
                             if (obj.recordsTotal>=obj.value) {
-                                obj.value = obj.recordsTotal;
+                                obj.value = obj.recordsTotal.toFixed(2);
                             }
                         }
                     }
@@ -618,58 +619,58 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
                 var fixedExpenseTotal = 0;
                 for (var rt in fixedExpenseArr) {
                     var obj1 = fixedExpenseArr[rt];
-                    fixedExpenseTotal += obj1.value;
+                    fixedExpenseTotal += Number(obj1.value);
                 }
-                expenseRecord.fixedExpenseAmt = fixedExpenseTotal;
+                expenseRecord.fixedExpenseAmt = fixedExpenseTotal.toFixed(2);
 
                 var transportArr = expenseRecord.monthlyExpense.transport;
                 var transportTotal = 0;
                 for (var rt1 in transportArr) {
                     var obj2 = transportArr[rt1];
-                    transportTotal += obj2.value;
+                    transportTotal += Number(obj2.value);
                 }
-                expenseRecord.transportAmt = transportTotal;
+                expenseRecord.transportAmt = transportTotal.toFixed(2);
 
                 var utilityHouseholdArr = expenseRecord.monthlyExpense.utilityHousehold;
                 var utilityHouseholdTotal = 0;
                 for (var rt2 in utilityHouseholdArr) {
                     var obj3 = utilityHouseholdArr[rt2];
-                    utilityHouseholdTotal += obj3.value;
+                    utilityHouseholdTotal += Number(obj3.value);
                 }
-                expenseRecord.utilityHouseholdAmt = utilityHouseholdTotal;
+                expenseRecord.utilityHouseholdAmt = utilityHouseholdTotal.toFixed(2);
 
                 var foodNecessitiesArr = expenseRecord.monthlyExpense.foodNecessities;
                 var foodNecessitiesTotal = 0;
                 for (var rt3 in foodNecessitiesArr) {
                     var obj4 = foodNecessitiesArr[rt3];
-                    foodNecessitiesTotal += obj4.value;
+                    foodNecessitiesTotal += Number(obj4.value);
                 }
-                expenseRecord.foodNecessitiesAmt = foodNecessitiesTotal;
+                expenseRecord.foodNecessitiesAmt = foodNecessitiesTotal.toFixed(2);
 
                 var miscArr = expenseRecord.monthlyExpense.misc;
                 var miscTotal = 0;
                 for (var rt4 in miscArr) {
                     var obj5 = miscArr[rt4];
-                    miscTotal += obj5.value;
+                    miscTotal += Number(obj5.value);
                 }
-                expenseRecord.miscAmt = miscTotal;
+                expenseRecord.miscAmt = miscTotal.toFixed(2);
 
                 var optionalArr = expenseRecord.monthlyExpense.optionalSavings;
                 var optionalTotal = 0;
                 for (var rt5 in optionalArr) {
                     var obj6 = optionalArr[rt5];
-                    optionalTotal += obj6.value;
+                    optionalTotal += Number(obj6.value);
                 }
-                expenseRecord.optionalSavingsAmt = optionalTotal;
+                expenseRecord.optionalSavingsAmt = optionalTotal.toFixed(2);
 
 
 
-                var monthlyIncomeAmt = expenseRecord.monthlyIncomeAmt;                
+                var monthlyIncomeAmt = Number(expenseRecord.monthlyIncomeAmt);                
                 var monthlyExpenseAmt = fixedExpenseTotal + transportTotal + utilityHouseholdTotal + foodNecessitiesTotal + miscTotal + optionalTotal;
                 var netCashFlow = monthlyIncomeAmt - monthlyExpenseAmt;                
-                expenseRecord.monthlyIncomeAmt = monthlyIncomeAmt;                
-                expenseRecord.monthlyExpenseAmt = monthlyExpenseAmt;
-                expenseRecord.netCashFlow = netCashFlow;  
+                expenseRecord.monthlyIncomeAmt = monthlyIncomeAmt.toFixed(2);                
+                expenseRecord.monthlyExpenseAmt = monthlyExpenseAmt.toFixed(2);
+                expenseRecord.netCashFlow = netCashFlow.toFixed(2);  
             }
 
             var userNow = new Users($scope.user);
@@ -919,8 +920,9 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
                                 var specRec = obj.records[a];
                                 var itemNo = Number($scope.item.amount);
                                 if (specRec.detail===$scope.item.detail&&specRec.amount===itemNo){
-                                    obj.recordsTotal -= itemNo;
-                                    obj.value -= itemNo;
+                                    obj.recordsTotal -= itemNo;                                    
+                                    obj.value = Number(obj.value) -itemNo;
+                                    obj.value = obj.value.toFixed(2);
                                     obj.records.splice(a,1);
                                     console.log('Make it?');
                                     //MORE DETAILED CHECK REQUIRED
@@ -929,60 +931,63 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
                             }
                         }
                     }
+
                     var fixedExpenseArr = expenseRecord.monthlyExpense.fixedExpense;
                     var fixedExpenseTotal = 0;
                     for (var rt in fixedExpenseArr) {
                         var obj1 = fixedExpenseArr[rt];
-                        fixedExpenseTotal += obj1.value;
+                        fixedExpenseTotal += Number(obj1.value);
                     }
-                    expenseRecord.fixedExpenseAmt = fixedExpenseTotal;
+                    expenseRecord.fixedExpenseAmt = fixedExpenseTotal.toFixed(2);
 
                     var transportArr = expenseRecord.monthlyExpense.transport;
                     var transportTotal = 0;
                     for (var rt1 in transportArr) {
                         var obj2 = transportArr[rt1];
-                        transportTotal += obj2.value;
+                        transportTotal += Number(obj2.value);
                     }
-                    expenseRecord.transportAmt = transportTotal;
+                    expenseRecord.transportAmt = transportTotal.toFixed(2);
 
                     var utilityHouseholdArr = expenseRecord.monthlyExpense.utilityHousehold;
                     var utilityHouseholdTotal = 0;
                     for (var rt2 in utilityHouseholdArr) {
                         var obj3 = utilityHouseholdArr[rt2];
-                        utilityHouseholdTotal += obj3.value;
+                        utilityHouseholdTotal += Number(obj3.value);
                     }
-                    expenseRecord.utilityHouseholdAmt = utilityHouseholdTotal;
+                    expenseRecord.utilityHouseholdAmt = utilityHouseholdTotal.toFixed(2);
 
                     var foodNecessitiesArr = expenseRecord.monthlyExpense.foodNecessities;
                     var foodNecessitiesTotal = 0;
                     for (var rt3 in foodNecessitiesArr) {
                         var obj4 = foodNecessitiesArr[rt3];
-                        foodNecessitiesTotal += obj4.value;
+                        foodNecessitiesTotal += Number(obj4.value);
                     }
-                    expenseRecord.foodNecessitiesAmt = foodNecessitiesTotal;
+                    expenseRecord.foodNecessitiesAmt = foodNecessitiesTotal.toFixed(2);
 
                     var miscArr = expenseRecord.monthlyExpense.misc;
                     var miscTotal = 0;
                     for (var rt4 in miscArr) {
                         var obj5 = miscArr[rt4];
-                        miscTotal += obj5.value;
+                        miscTotal += Number(obj5.value);
                     }
-                    expenseRecord.miscAmt = miscTotal;
+                    expenseRecord.miscAmt = miscTotal.toFixed(2);
 
                     var optionalArr = expenseRecord.monthlyExpense.optionalSavings;
                     var optionalTotal = 0;
                     for (var rt5 in optionalArr) {
                         var obj6 = optionalArr[rt5];
-                        optionalTotal += obj6.value;
+                        optionalTotal += Number(obj6.value);
                     }
-                    expenseRecord.optionalSavingsAmt = optionalTotal;                    
+                    expenseRecord.optionalSavingsAmt = optionalTotal.toFixed(2);
 
-                    var monthlyIncomeAmt = expenseRecord.monthlyIncomeAmt;  
-                    var monthlyExpenseAmt = fixedExpenseTotal + transportTotal + utilityHouseholdTotal + foodNecessitiesTotal + miscTotal +optionalTotal;
+
+
+                    var monthlyIncomeAmt = Number(expenseRecord.monthlyIncomeAmt);                
+                    var monthlyExpenseAmt = fixedExpenseTotal + transportTotal + utilityHouseholdTotal + foodNecessitiesTotal + miscTotal + optionalTotal;
                     var netCashFlow = monthlyIncomeAmt - monthlyExpenseAmt;                
-                    expenseRecord.monthlyIncomeAmt = monthlyIncomeAmt;                
-                    expenseRecord.monthlyExpenseAmt = monthlyExpenseAmt;
-                    expenseRecord.netCashFlow = netCashFlow; 
+                    expenseRecord.monthlyIncomeAmt = monthlyIncomeAmt.toFixed(2);                
+                    expenseRecord.monthlyExpenseAmt = monthlyExpenseAmt.toFixed(2);
+                    expenseRecord.netCashFlow = netCashFlow.toFixed(2);
                 }
             }
             var userNow = new Users($scope.user);

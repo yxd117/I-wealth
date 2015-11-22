@@ -29,8 +29,8 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
         $scope.mth[10] = 'November';
         $scope.mth[11] = 'December';
 
-  		var dt = new Date();
-      	// var dt = new Date(2016,1,25);
+  		//var dt = new Date();
+      	var dt = new Date(2016,3,1);
         
 		var month = dt.getMonth();
 		$scope.month = dt.getMonth();
@@ -126,7 +126,7 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 		var noOfMonths = function (date1, date2) {
 		    var Nomonths;
 		    Nomonths= (date2.getFullYear() - date1.getFullYear()) * 12;
-		    Nomonths-= date1.getMonth() + 1;
+		    Nomonths-= date1.getMonth();
 		    Nomonths+= date2.getMonth();
 		    return Nomonths <= 0 ? 0 : Nomonths;
 		};
@@ -134,98 +134,20 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 		var jan312009 = new Date(2015,9,4);
 		var eightMonthsFromJan312009 = new Date(new Date(jan312009).setMonth(jan312009.getMonth()+3));
 		
-		
+		var test1 = new Date(2015,10,11);
+		var test2 = new Date(2015,11,1);
+		var test3 = new Date(2015,10,11);
+		var test4 = new Date(2015,10,22);
+		var testresult = noOfMonths(test1,test2);
+		var testresult2 = noOfMonths(test3,test4);
+		console.log('test : '+testresult);
+		console.log('test : '+testresult2);
 		
 
         $scope.updateRecordsForNewMonth = function () {        	
         	
         	var needToUpdate = false;
-        	//contribution status
-        	/*
-        	for(var bno = 0; bno<$scope.user.debtsInfoArr.length; bno++){
-        		
-        		var debtRe = $scope.user.debtsInfoArr[bno];
-				if(debtRe.status==='In Progress') {    					    				    			
-	        		var counterCheck = 0;
-	    			for(var c=0; c<debtRe.records.length;c++) {
-	    				var recordDebt = debtRe.records[c];	    				
-	    				if (recordDebt.year===year&&recordDebt.month===month) {
-	    					
-							counterCheck++;
-	    				}
-	    			}
 
-	    			//IF COUNTERCHECK IS 0, NEED TO UPDATE
-	    			if(counterCheck===0) {
-
-	    				needToUpdate = true;
-						var monthCounter = noOfMonths(new Date($scope.user.lastUpdateDebts),dt)+1;
-						
-
-						for (var m = 1; m<=monthCounter; m++) {	 
-							displayLiabilitiesRecords = angular.copy(LiabilitiesService.liabilitiesRecords);   					
-	    					var fromDate = new Date($scope.user.lastUpdateDebts);
-							var currentDate = new Date(fromDate.setMonth(fromDate.getMonth()+m));
-		    				var thisMonth = currentDate.getMonth();
-		    				var thisYear = currentDate.getFullYear();		    				
-
-		    				
-		    				
-		    				
-		    				var record = {
-		    					id: debtRe.records.length+1,
-				        		month: thisMonth,
-				        		year: thisYear,
-				        		loanBalance: debtRe.loanBalance,
-				        		monthly: 0,
-				        		monthlyPayStatus: false,
-				        		repaymentNo: debtRe.repaymentNo,
-				        		liabilitiesRecordsCreated: true,
-				        		IERecordsCreated: false
-				        	};        				        	        	
-				        	debtRe.records.push(record);
-
-				        	if (($scope.user.liabilitiesRecordsPeriod.maxMonth <= thisMonth && $scope.user.liabilitiesRecordsPeriod.maxYear <= thisYear) || ($scope.user.liabilitiesRecordsPeriod.maxMonth > thisMonth && $scope.user.liabilitiesRecordsPeriod.maxYear < thisYear)) {
-
-				        		$scope.user.liabilitiesRecordsPeriod.maxMonth = thisMonth;
-				                $scope.user.liabilitiesRecordsPeriod.maxYear = thisYear;
-				        	} 
-
-			        	 	//Existing record but no record of that month
-			                var existenceCheck = 0;
-			                for (var j=0;j<$scope.user.liabilitiesRecords.length; j++) {   
-			                    var recordChecker = $scope.user.liabilitiesRecords[j];                                                         
-			                    if (recordChecker.month===thisMonth&&recordChecker.year===thisYear) {
-			                        existenceCheck++;
-			                        
-			                    }
-			                }
-			                if (existenceCheck===0) {
-			                    displayLiabilitiesRecords.year = thisYear;
-			                    displayLiabilitiesRecords.month = thisMonth;                                
-			                    $scope.user.liabilitiesRecords.push(displayLiabilitiesRecords);  
-			                    
-			                    
-				            	
-			                }
-				        }
-	    			}
-	    		}
-        	}
-        	if (needToUpdate) {        		
-        		$scope.user.lastUpdateDebts = dt.getFullYear()+'-'+(dt.getMonth()+1)+'-'+dt.getDate();
-				var userNow = new Users($scope.user);
-	            userNow.$update(function(response) {
-	                $scope.success = true;
-	                Authentication.user = response;
-	                $scope.user = Authentication.user;
-	            }, function(response) {
-	                $scope.error = response.data.message;
-	            });
-	            
-			}
-
-			*/
         	for (var b = 0; b<$scope.user.debtsInfoArr.length; b++) {
         		var debtRe = $scope.user.debtsInfoArr[b];
         		debtRe.id = $scope.user.debtsInfoArr.indexOf(debtRe)+1;
@@ -249,7 +171,7 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 
 	    				needToUpdate = true;
 
-						var monthCounter = noOfMonths(new Date($scope.user.lastUpdateDebts),dt)+1;
+						var monthCounter = noOfMonths(new Date($scope.user.lastUpdateDebts),dt);
 						
 
 	    				//var jan312009 = new Date(2009, 1-1, 31);
@@ -314,9 +236,11 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 				            		//update new loan balance
 				            		for (var get in loansMortgagesRec) {                        
 				                        var obj = loansMortgagesRec[get];
+				                        obj.value = Number(obj.value);
 				                        if(debtRe.type=== obj.description) {
 				                        	obj.value += debtRe.loanBalance;
 				                        	obj.minValue += debtRe.loanBalance;
+				                        	obj.value = obj.value.toFixed(2);
 				                        }
 				                    }
 				                	
@@ -325,21 +249,21 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 					                var shortTermCreditTotal = 0;
 					                for (var rt in shortTermCreditArr) {
 					                    var obj1 = shortTermCreditArr[rt];
-					                    shortTermCreditTotal += obj1.value;
+					                    shortTermCreditTotal += Number(obj1.value);
 					                }
 					                
 					                var loansMortgagesArr = liabilityRecord.loansMortgages;
 					                var loansMortgagesTotal = 0;
 					                for (var rt1 in loansMortgagesArr) {
 					                    var obj2 = loansMortgagesArr[rt1];
-					                    loansMortgagesTotal += obj2.value;
+					                    loansMortgagesTotal += Number(obj2.value);
 					                }
 					                
 					                var otherLiabilitiesArr = liabilityRecord.otherLiabilities;
 					                var otherLiabilitiesTotal = 0;
 					                for (var rt2 in otherLiabilitiesArr) {
 					                    var obj3 = otherLiabilitiesArr[rt2];
-					                    otherLiabilitiesTotal += obj3.value;
+					                    otherLiabilitiesTotal += Number(obj3.value);
 					                }
 					                
 					                var liabilitiesTotal = shortTermCreditTotal + loansMortgagesTotal + otherLiabilitiesTotal;
@@ -456,10 +380,10 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 
             for(var a=0;a<$scope.user.incomeExpenseRecords.length; a++) {            
                 var expenseRecord = $scope.user.incomeExpenseRecords[a];  
-
+                var thisMonthSpecExpense = {};
                 if (expenseRecord.month===$scope.item.month&&expenseRecord.year===$scope.item.year) {
                     
-                    var thisMonthSpecExpense = {};
+                    
                     
                     if($scope.debt.type!=='Car Loan') {                        
                     	thisMonthSpecExpense = expenseRecord.monthlyExpense.fixedExpense;
@@ -471,14 +395,23 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 	                            //need validation
 	                            console.log(expenseRecord.month);
 	                            console.log(expenseRecord.year);
+	                            console.log(expenseRecord);
 	                            console.log('pre-value:' +obj10.value);
+	                            console.log($scope.debt);
+	                            obj10.value = Number(obj10.value);
+	                            console.log('scope debt monthly: '+$scope.debt.monthly);
 	                            obj10.value += $scope.debt.monthly;
+	                            obj10.value = obj10.value.toFixed(2);	                            
+	                            obj10.minValue += $scope.debt.monthly;
 	                            
 	                            console.log('amt added:' +$scope.debt.monthly);
 	                            console.log('post-value:' +obj10.value);
 	                            expenseChecker = obj10.description;                            
 	                        } else if($scope.debt.type !== 'Mortgage Loan' && obj10.description==='Other Loan Repayments') {
+	                        	obj10.value = Number(obj10.value);
 	                        	obj10.value += $scope.debt.monthly;
+	                        	obj10.value = obj10.value.toFixed(2);
+	                        	obj10.minValue += $scope.debt.monthly;
 	                        	expenseChecker = obj10.description;
                     		}
                     	}	
@@ -490,7 +423,10 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 	                        if(obj11.description==='Car Loan Repayments') {        	
 	                            
 	                            //need validation
+	                            obj11.value = Number(obj11.value);
 	                            obj11.value += $scope.debt.monthly;
+	                            obj11.minValue += $scope.debt.monthly;
+	                            obj11.value = obj11.value.toFixed(2);
 	                            expenseChecker = obj11.description;	                            
 	                        } 
                     	}
@@ -499,7 +435,7 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 	                var fixedExpenseTotal = 0;
 	                for (var at in fixedExpenseArr) {
 	                    var abj1 = fixedExpenseArr[at];
-	                    fixedExpenseTotal += abj1.value;
+	                    fixedExpenseTotal += Number(abj1.value);
 	                }
 	                expenseRecord.fixedExpenseAmt = fixedExpenseTotal.toFixed(2);
 
@@ -507,7 +443,7 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 	                var transportTotal = 0;
 	                for (var at1 in transportArr) {
 	                    var abj2 = transportArr[at1];
-	                    transportTotal += abj2.value;
+	                    transportTotal += Number(abj2.value);
 	                }
 	                expenseRecord.transportAmt = transportTotal.toFixed(2);
 
@@ -515,7 +451,7 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 	                var utilityHouseholdTotal = 0;
 	                for (var at2 in utilityHouseholdArr) {
 	                    var abj3 = utilityHouseholdArr[at2];
-	                    utilityHouseholdTotal += abj3.value;
+	                    utilityHouseholdTotal += Number(abj3.value);
 	                }
 	                expenseRecord.utilityHouseholdAmt = utilityHouseholdTotal.toFixed(2);
 
@@ -523,7 +459,7 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 	                var foodNecessitiesTotal = 0;
 	                for (var at3 in foodNecessitiesArr) {
 	                    var abj4 = foodNecessitiesArr[at3];
-	                    foodNecessitiesTotal += abj4.value;
+	                    foodNecessitiesTotal += Number(abj4.value);
 	                }
 	                expenseRecord.foodNecessitiesAmt = foodNecessitiesTotal.toFixed(2);
 
@@ -531,7 +467,7 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 	                var miscTotal = 0;
 	                for (var at4 in miscArr) {
 	                    var abj5 = miscArr[at4];
-	                    miscTotal += abj5.value;
+	                    miscTotal += Number(abj5.value);
 	                }
 	                expenseRecord.miscAmt = miscTotal.toFixed(2);
 
@@ -547,7 +483,7 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 
 			//find months to that date and update
         	var dateItemStart = new Date($scope.item.year,$scope.item.month,1);
-        	var monthCounter = noOfMonths(dateItemStart,new Date($scope.user.lastUpdateDebts))+1;
+        	var monthCounter = noOfMonths(dateItemStart,new Date($scope.user.lastUpdateDebts));
         	
         	
 			
@@ -668,7 +604,7 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 			                        if($scope.debt.type=== obj.description) {
 			                        	
 			                        	
-
+			                        	obj.value = Number(obj.value);
 			                        	obj.value -= $scope.debt.monthly;
 			                        	obj.minValue -= $scope.debt.monthly;
 			                        	
@@ -678,6 +614,7 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 			                        	if (obj.minValue<0) {
 			                        		obj.minValue = 0;
 			                        	}
+			                     		obj.value = obj.value.toFixed(2);
 			                        }
 			                    }
 			                	
@@ -686,21 +623,21 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 				                var shortTermCreditTotal = 0;
 				                for (var rt in shortTermCreditArr) {
 				                    var obj1 = shortTermCreditArr[rt];
-				                    shortTermCreditTotal += obj1.value;
+				                    shortTermCreditTotal += Number(obj1.value);
 				                }
 				                
 				                var loansMortgagesArr = liabilityRecord.loansMortgages;
 				                var loansMortgagesTotal = 0;
 				                for (var rt1 in loansMortgagesArr) {
 				                    var obj2 = loansMortgagesArr[rt1];
-				                    loansMortgagesTotal += obj2.value;
+				                    loansMortgagesTotal += Number(obj2.value);
 				                }
 				                
 				                var otherLiabilitiesArr = liabilityRecord.otherLiabilities;
 				                var otherLiabilitiesTotal = 0;
 				                for (var rt2 in otherLiabilitiesArr) {
 				                    var obj3 = otherLiabilitiesArr[rt2];
-				                    otherLiabilitiesTotal += obj3.value;
+				                    otherLiabilitiesTotal += Number(obj3.value);
 				                }
 				                
 				                var liabilitiesTotal = shortTermCreditTotal + loansMortgagesTotal + otherLiabilitiesTotal;
@@ -887,8 +824,10 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 	            		for (var get in loansMortgagesRec) {                        
 	                        var obj = loansMortgagesRec[get];
 	                        if($scope.newDebt.type=== obj.description) {
+	                        	obj.value = Number(obj.value);
 	                        	obj.value += $scope.newDebt.loanBalance;
 	                        	obj.minValue += $scope.newDebt.loanBalance;
+	                        	obj.value = obj.value.toFixed(2);
 	                        }
 	                    }
 	                	
@@ -897,21 +836,21 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 		                var shortTermCreditTotal = 0;
 		                for (var rt in shortTermCreditArr) {
 		                    var obj1 = shortTermCreditArr[rt];
-		                    shortTermCreditTotal += obj1.value;
+		                    shortTermCreditTotal += Number(obj1.value);
 		                }
 		                
 		                var loansMortgagesArr = liabilityRecord.loansMortgages;
 		                var loansMortgagesTotal = 0;
 		                for (var rt1 in loansMortgagesArr) {
 		                    var obj2 = loansMortgagesArr[rt1];
-		                    loansMortgagesTotal += obj2.value;
+		                    loansMortgagesTotal += Number(obj2.value);
 		                }
 		                
 		                var otherLiabilitiesArr = liabilityRecord.otherLiabilities;
 		                var otherLiabilitiesTotal = 0;
 		                for (var rt2 in otherLiabilitiesArr) {
 		                    var obj3 = otherLiabilitiesArr[rt2];
-		                    otherLiabilitiesTotal += obj3.value;
+		                    otherLiabilitiesTotal += Number(obj3.value);
 		                }
 		                
 		                var liabilitiesTotal = shortTermCreditTotal + loansMortgagesTotal + otherLiabilitiesTotal;
@@ -971,11 +910,12 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 				$scope.debt.actualEndDate = new Date();
 			}
 			var dateItemStart = new Date($scope.debt.startDate);
-        	var monthCounter = noOfMonths(dateItemStart,new Date($scope.debt.actualEndDate))+1;
+        	var monthCounter = noOfMonths(dateItemStart,new Date($scope.debt.actualEndDate));
         	
         	//
 			
 			//
+			console.log('number of months: '+monthCounter);
 		 	for (var m = 0; m<=monthCounter; m++) {	
 				
 				
@@ -985,38 +925,15 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 				var thisYear = currentDate.getFullYear();
 				var recordDebt;
 				
-				
-				
-				
-					/*
-					debtRe.loanBalance -= $scope.debt.monthly;
-        			debtRe.repaymentNo += 1;
-        			debtRe.monthly = $scope.debt.monthly;
-        		
-        			if(debtRe.loanBalance===0) {
-    					debtRe.status = 'Completed';
-    					debtRe.statusBoolean = true;
-    					debtRe.actualEndDate = dt.getFullYear()+'-'+dt.getMonth()+'-'+dt.getDate();
-    				}        		
-        			*/
+
     			for(var c=0; c<$scope.debt.records.length;c++) {
     				var currentDebtRecord = $scope.debt.records[c];
     				if (currentDebtRecord.year===thisYear&&currentDebtRecord.month===thisMonth) {
     					recordDebt = currentDebtRecord;
-    					/*
-    					
-    					recordDebt.monthly = $scope.debt.monthly;
-    					recordDebt.expenseType = expenseChecker;
-    					recordDebt.loanBalance -= $scope.debt.monthly;
-    					recordDebt.monthlyPayStatus = true;
-    					recordDebt.repaymentNo = debtRe.repaymentNo;
-    					recordDebt.date = dt;
-    					recordDebt.IERecordsCreated = true;
-    					*/
     				}
     			}
     		
-
+    			
         		for(var j=0;j<$scope.user.liabilitiesRecords.length; j++) {            
             		var liabilityRecord = $scope.user.liabilitiesRecords[j];  
 
@@ -1026,14 +943,19 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 	            		//update new loan balance
 	            		for (var get in loansMortgagesRec) {                        
 	                        var obj = loansMortgagesRec[get];
+	                        
 	                        if($scope.debt.type=== obj.description) {
-	                        	
+	                        	console.log(liabilityRecord.month);
+	                        	console.log(liabilityRecord.year);
+	                        	console.log(obj);
 	                        	console.log($scope.debt.type);
 	                        	console.log('pre-value: ' +obj.value);
+	                        	obj.value = Number(obj.value);
 	                        	obj.value -= recordDebt.loanBalance;                        	                        		
 	                        	obj.minValue -= recordDebt.loanBalance;
 	                        	console.log('amt deducted: ' +recordDebt.loanBalance);
 	                        	console.log('post-value: '+obj.value);
+	                        	obj.value = obj.value.toFixed(2);
 	                        	
 	                        }
 	                    }
@@ -1043,21 +965,21 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 		                var shortTermCreditTotal = 0;
 		                for (var rt in shortTermCreditArr) {
 		                    var obj1 = shortTermCreditArr[rt];
-		                    shortTermCreditTotal += obj1.value;
+		                    shortTermCreditTotal += Number(obj1.value);
 		                }
 		                
 		                var loansMortgagesArr = liabilityRecord.loansMortgages;
 		                var loansMortgagesTotal = 0;
 		                for (var rt1 in loansMortgagesArr) {
 		                    var obj2 = loansMortgagesArr[rt1];
-		                    loansMortgagesTotal += obj2.value;
+		                    loansMortgagesTotal += Number(obj2.value);
 		                }
 		                
 		                var otherLiabilitiesArr = liabilityRecord.otherLiabilities;
 		                var otherLiabilitiesTotal = 0;
 		                for (var rt2 in otherLiabilitiesArr) {
 		                    var obj3 = otherLiabilitiesArr[rt2];
-		                    otherLiabilitiesTotal += obj3.value;
+		                    otherLiabilitiesTotal += Number(obj3.value);
 		                }
 		                
 		                var liabilitiesTotal = shortTermCreditTotal + loansMortgagesTotal + otherLiabilitiesTotal;
@@ -1083,31 +1005,41 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 	                   
 		                    for (var get10 in thisMonthSpecExpense) {                        
 		                        var obj10 = thisMonthSpecExpense[get10];
+		                        obj10.value = Number(obj10.value);
 		                        if($scope.debt.type === 'Mortgage Loan' && obj10.description==='Mortgage Repayments') {        	
 		                            
 		                            //need validation
-		                            obj10.value -= recordDebt.monthly;	
+		                            obj10.value -= recordDebt.monthly;
+		                            obj10.minValue -= recordDebt.monthly;	
+		                            console.log('passing through');
 		                        } else if($scope.debt.type !== 'Mortgage Loan' && obj10.description==='Other Loan Repayments') {
 		                        	obj10.value -= recordDebt.monthly;
+		                        	obj10.minValue -= recordDebt.monthly;
+		                        	console.log('passing through');
 	                    		}
+	                    		obj10.value = obj10.value.toFixed(2);
 	                    	}	
 
 	                	} else {
 	                        thisMonthSpecExpense = expenseRecord.monthlyExpense.transport;
 	                        for (var get11 in thisMonthSpecExpense) {                        
 		                        var obj11 = thisMonthSpecExpense[get11];
+		                        obj11.value = Number(obj11.value);
 		                        if(obj11.description==='Car Loan Repayments') {        	
 		                            
 		                            //need validation
 		                            obj11.value -= recordDebt.monthly;
+		                            obj11.minValue -= recordDebt.monthly;
+		                            console.log('passing through');
 		                        } 
+		                        obj11.value = obj11.value.toFixed(2);
 	                    	}
 	                    }
 	                    var fixedExpenseArr = expenseRecord.monthlyExpense.fixedExpense;
 		                var fixedExpenseTotal = 0;
 		                for (var at in fixedExpenseArr) {
 		                    var abj1 = fixedExpenseArr[at];
-		                    fixedExpenseTotal += abj1.value;
+		                    fixedExpenseTotal += Number(abj1.value);
 		                }
 		                expenseRecord.fixedExpenseAmt = fixedExpenseTotal.toFixed(2);
 
@@ -1115,7 +1047,7 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 		                var transportTotal = 0;
 		                for (var at1 in transportArr) {
 		                    var abj2 = transportArr[at1];
-		                    transportTotal += abj2.value;
+		                    transportTotal += Number(abj2.value);
 		                }
 		                expenseRecord.transportAmt = transportTotal.toFixed(2);
 
@@ -1123,7 +1055,7 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 		                var utilityHouseholdTotal = 0;
 		                for (var at2 in utilityHouseholdArr) {
 		                    var abj3 = utilityHouseholdArr[at2];
-		                    utilityHouseholdTotal += abj3.value;
+		                    utilityHouseholdTotal += Number(abj3.value);
 		                }
 		                expenseRecord.utilityHouseholdAmt = utilityHouseholdTotal.toFixed(2);
 
@@ -1131,7 +1063,7 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 		                var foodNecessitiesTotal = 0;
 		                for (var at3 in foodNecessitiesArr) {
 		                    var abj4 = foodNecessitiesArr[at3];
-		                    foodNecessitiesTotal += abj4.value;
+		                    foodNecessitiesTotal += Number(abj4.value);
 		                }
 		                expenseRecord.foodNecessitiesAmt = foodNecessitiesTotal.toFixed(2);
 
@@ -1139,7 +1071,7 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 		                var miscTotal = 0;
 		                for (var at4 in miscArr) {
 		                    var abj5 = miscArr[at4];
-		                    miscTotal += abj5.value;
+		                    miscTotal += Number(abj5.value);
 		                }
 		                expenseRecord.miscAmt = miscTotal.toFixed(2);
 
@@ -1199,152 +1131,11 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 
 		$scope.updateLoanBalance = function() {
 			var expenseChecker;
-        	/*
-            if (!$scope.user.incomeExpenseRecordsPeriod) {
-            	//If there is no existing record
-                
-                $scope.user.incomeExpenseRecordsPeriod = {};
-                $scope.user.incomeExpenseRecordsPeriod.minMonth = $scope.item.month;
-                $scope.user.incomeExpenseRecordsPeriod.minYear = $scope.item.year;
-                $scope.user.incomeExpenseRecordsPeriod.maxMonth = $scope.item.month;
-                $scope.user.incomeExpenseRecordsPeriod.maxYear = $scope.item.year;                
 
-            } else if (($scope.user.incomeExpenseRecordsPeriod.maxMonth <= $scope.item.month && $scope.user.incomeExpenseRecordsPeriod.maxYear <= $scope.item.year) || ($scope.user.incomeExpenseRecordsPeriod.maxMonth > $scope.item.month && $scope.user.incomeExpenseRecordsPeriod.maxYear < $scope.item.year)) {
-
-                
-                //ASSUMING THAT THE USER NEVER INSERTS DATA FOR THE FUTURE (HE CANT POSSIBLY DO SO ALSO)
-                //SETS RECORDS MAX PERIOD TO PRESENT MONTH & YEAR
-                //I ALSO CURRENTLY DONT ALLOW USERS TO SET BUDGET FOR THE FUTURE (ONLY FOR PRESENT MONTH)
-                $scope.user.incomeExpenseRecordsPeriod.maxMonth = $scope.item.month;
-                $scope.user.incomeExpenseRecordsPeriod.maxYear = $scope.item.year;
-            }
-
-             
-            
-            if($scope.user.incomeExpenseRecords.length===0) { //in the event of an empty record (FIRSTTIME)                
-                
-                $scope.displayIncomeExpenseRecords.year = $scope.item.year;
-                $scope.displayIncomeExpenseRecords.month = $scope.item.month;                                
-                $scope.user.incomeExpenseRecords.push($scope.displayIncomeExpenseRecords); 
-            } else { //Existing record but no record of that month
-                var existenceCheck = 0;
-                for (var k=0;k<$scope.user.incomeExpenseRecords.length; k++) {   
-                    var recordChecker = $scope.user.incomeExpenseRecords[k];                                                         
-                    if (recordChecker.month===$scope.item.month&&recordChecker.year===$scope.item.year) {
-                        existenceCheck++;
-                        
-                    }
-                }
-                if (existenceCheck===0) {
-                    $scope.displayIncomeExpenseRecords.year = $scope.item.year;
-                    $scope.displayIncomeExpenseRecords.month = $scope.item.month;                                
-                    $scope.user.incomeExpenseRecords.push($scope.displayIncomeExpenseRecords);  
-                    
-                }
-            }
-
-            for(var a=0;a<$scope.user.incomeExpenseRecords.length; a++) {            
-                var expenseRecord = $scope.user.incomeExpenseRecords[a];  
-
-                if (expenseRecord.month===$scope.item.month&&expenseRecord.year===$scope.item.year) {
-                    
-                    var thisMonthSpecExpense = {};
-                    
-                    if($scope.debt.type!=='Car Loan') {                        
-                    	thisMonthSpecExpense = expenseRecord.monthlyExpense.fixedExpense;
-                   
-	                    for (var get10 in thisMonthSpecExpense) {                        
-	                        var obj10 = thisMonthSpecExpense[get10];
-	                        if($scope.debt.type === 'Mortgage Loan' && obj10.description==='Mortgage Repayments') {        	
-	                            
-	                            //need validation
-	                            obj10.value += $scope.debt.monthly;	
-	                            expenseChecker = obj10.description;                            
-	                        } else if($scope.debt.type !== 'Mortgage Loan' && obj10.description==='Other Loan Repayments') {
-	                        	obj10.value += $scope.debt.monthly;
-	                        	expenseChecker = obj10.description;
-                    		}
-                    	}	
-
-                	} else {
-                        thisMonthSpecExpense = expenseRecord.monthlyExpense.transport;
-                        for (var get11 in thisMonthSpecExpense) {                        
-	                        var obj11 = thisMonthSpecExpense[get11];
-	                        if(obj11.description==='Car Loan Repayments') {        	
-	                            
-	                            //need validation
-	                            obj11.value += $scope.debt.monthly;
-	                            expenseChecker = obj11.description;	                            
-	                        } 
-                    	}
-                    }
-                    var fixedExpenseArr = expenseRecord.monthlyExpense.fixedExpense;
-	                var fixedExpenseTotal = 0;
-	                for (var at in fixedExpenseArr) {
-	                    var abj1 = fixedExpenseArr[at];
-	                    fixedExpenseTotal += abj1.value;
-	                }
-	                expenseRecord.fixedExpenseAmt = fixedExpenseTotal.toFixed(2);
-
-	                var transportArr = expenseRecord.monthlyExpense.transport;
-	                var transportTotal = 0;
-	                for (var at1 in transportArr) {
-	                    var abj2 = transportArr[at1];
-	                    transportTotal += abj2.value;
-	                }
-	                expenseRecord.transportAmt = transportTotal.toFixed(2);
-
-	                var utilityHouseholdArr = expenseRecord.monthlyExpense.utilityHousehold;
-	                var utilityHouseholdTotal = 0;
-	                for (var at2 in utilityHouseholdArr) {
-	                    var abj3 = utilityHouseholdArr[at2];
-	                    utilityHouseholdTotal += abj3.value;
-	                }
-	                expenseRecord.utilityHouseholdAmt = utilityHouseholdTotal.toFixed(2);
-
-	                var foodNecessitiesArr = expenseRecord.monthlyExpense.foodNecessities;
-	                var foodNecessitiesTotal = 0;
-	                for (var at3 in foodNecessitiesArr) {
-	                    var abj4 = foodNecessitiesArr[at3];
-	                    foodNecessitiesTotal += abj4.value;
-	                }
-	                expenseRecord.foodNecessitiesAmt = foodNecessitiesTotal.toFixed(2);
-
-	                var miscArr = expenseRecord.monthlyExpense.misc;
-	                var miscTotal = 0;
-	                for (var at4 in miscArr) {
-	                    var abj5 = miscArr[at4];
-	                    miscTotal += abj5.value;
-	                }
-	                expenseRecord.miscAmt = miscTotal.toFixed(2);
-
-	                var monthlyIncomeAmt = Number(expenseRecord.monthlyIncomeAmt);                
-	                var monthlyExpenseAmt = fixedExpenseTotal + transportTotal + utilityHouseholdTotal + foodNecessitiesTotal + miscTotal;
-	                var netCashFlow = monthlyIncomeAmt - monthlyExpenseAmt;                
-	                expenseRecord.monthlyIncomeAmt = monthlyIncomeAmt.toFixed(2);                
-	                expenseRecord.monthlyExpenseAmt = monthlyExpenseAmt.toFixed(2);
-	                expenseRecord.netCashFlow = netCashFlow.toFixed(2);
-                
-				}
-			}      
-			*/
 			//find months to that date and update
         	var dateItemStart = new Date($scope.itemSelected.year,$scope.itemSelected.month,1);
-        	var monthCounter = noOfMonths(dateItemStart,new Date($scope.user.lastUpdateDebts))+1;
-        	
-        	
-			
-			
-
-
-			//var currentDate1 = new Date(dateItemStart.setMonth(dateItemStart.getMonth()+1));
-			//var currentDate2 = new Date(dateItemStart.setMonth(dateItemStart.getMonth()+2));
-
-			//
-			//
-
-			//var fromDate = new Date($scope.user.lastUpdateDebts);
-			
+        	var monthCounter = noOfMonths(dateItemStart,new Date($scope.user.lastUpdateDebts));
+        				
 
 			for (var i = 0; i<$scope.user.debtsInfoArr.length; i++) {
         		var debtRe = $scope.user.debtsInfoArr[i];
@@ -1470,6 +1261,7 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 			            		//update new loan balance
 			            		for (var get in loansMortgagesRec) {                        
 			                        var obj = loansMortgagesRec[get];
+			                        obj.value = Number(obj.value);
 			                        if($scope.debt.type=== obj.description) {
 			                        	
 			                        	
@@ -1486,6 +1278,7 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 			                        		obj.minValue = 0;
 			                        	}
 			                        }
+			                        obj.value = obj.value.toFixed(2);
 			                    }
 			                	
 			                	//update totals
@@ -1493,21 +1286,21 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 				                var shortTermCreditTotal = 0;
 				                for (var rt in shortTermCreditArr) {
 				                    var obj1 = shortTermCreditArr[rt];
-				                    shortTermCreditTotal += obj1.value;
+				                    shortTermCreditTotal += Number(obj1.value);
 				                }
 				                
 				                var loansMortgagesArr = liabilityRecord.loansMortgages;
 				                var loansMortgagesTotal = 0;
 				                for (var rt1 in loansMortgagesArr) {
 				                    var obj2 = loansMortgagesArr[rt1];
-				                    loansMortgagesTotal += obj2.value;
+				                    loansMortgagesTotal += Number(obj2.value);
 				                }
 				                
 				                var otherLiabilitiesArr = liabilityRecord.otherLiabilities;
 				                var otherLiabilitiesTotal = 0;
 				                for (var rt2 in otherLiabilitiesArr) {
 				                    var obj3 = otherLiabilitiesArr[rt2];
-				                    otherLiabilitiesTotal += obj3.value;
+				                    otherLiabilitiesTotal += Number(obj3.value);
 				                }
 				                
 				                var liabilitiesTotal = shortTermCreditTotal + loansMortgagesTotal + otherLiabilitiesTotal;

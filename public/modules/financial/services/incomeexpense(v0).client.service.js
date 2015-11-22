@@ -63,8 +63,7 @@ angular.module('financial').factory('IncomeExpenseService', ['$resource', functi
 			order: 1,
 			value: 0,
 			recordsTotal: 0,
-			records: [],
-			minValue: 0
+			records: []
 		},
 		rentalRepayments: {
 			description: 'Rental Repayments',
@@ -78,8 +77,7 @@ angular.module('financial').factory('IncomeExpenseService', ['$resource', functi
 			order: 3,
 			value: 0,
 			recordsTotal: 0,
-			records: [],
-			minValue: 0
+			records: []
 		},
 		conservancyPropertyTaxes: {
 			description: 'Conservancy and Property Taxes',
@@ -131,8 +129,7 @@ angular.module('financial').factory('IncomeExpenseService', ['$resource', functi
 			order: 0,
 			value: 0,
 			recordsTotal: 0,
-			records: [],
-			minValue: 0
+			records: []
 		},
 		motorInsurances: {
 			description: 'Motor Insurances',

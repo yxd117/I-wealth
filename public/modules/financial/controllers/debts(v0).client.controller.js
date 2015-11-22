@@ -30,8 +30,8 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
         $scope.mth[11] = 'December';
 
   		var dt = new Date();
-      	//var dt = new Date(2015,6,25);
-        console.log(dt);
+      	// var dt = new Date(2016,1,25);
+        
 		var month = dt.getMonth();
 		$scope.month = dt.getMonth();
         $scope.monthDisplay = $scope.mth[month];
@@ -66,7 +66,7 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
         	
         	$scope.selectedMonthNo = $scope.mth.indexOf($scope.selectedMonth);
         	setDebtRecord();
-        	console.log($scope.selectedMonthNo);
+        	
         });
         $scope.$watch('selectedYear',function() {
         	setDebtRecord();
@@ -96,7 +96,7 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 		var setDebtRecord = function () {
 			var debtRe = $scope.debt;
 			
-			//console.log(debtRe);
+			//
 			var counterCheckAgn =0;
 			if (typeof debtRe !== 'undefined') {
 				for(var c=0; c<debtRe.records.length;c++) {
@@ -104,11 +104,11 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 					if (recordDebt.year===$scope.selectedYear&&recordDebt.month===$scope.selectedMonthNo) {
 						$scope.recordReq = recordDebt;
 						counterCheckAgn++;
-						console.log('exist?');
+						
 						$scope.noRecordsToDisplay = false;
 						if ($scope.selectedYear===year&&$scope.selectedMonthNo===month) {
 							$scope.presentMonthCheck = true;
-							console.log('Tester');
+							
 						} else {
 							$scope.presentMonthCheck = false;
 						}
@@ -116,7 +116,7 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 				}
 			} 
 			if(counterCheckAgn===0){
-				console.log('No Records');
+				
 				$scope.noRecordsToDisplay = true;
 			}
 		};
@@ -133,9 +133,9 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 		
 		var jan312009 = new Date(2015,9,4);
 		var eightMonthsFromJan312009 = new Date(new Date(jan312009).setMonth(jan312009.getMonth()+3));
-		console.log('TESTER');
-		console.log(jan312009);
-		console.log(eightMonthsFromJan312009);
+		
+		
+		
 
         $scope.updateRecordsForNewMonth = function () {        	
         	
@@ -150,7 +150,7 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 	    			for(var c=0; c<debtRe.records.length;c++) {
 	    				var recordDebt = debtRe.records[c];	    				
 	    				if (recordDebt.year===year&&recordDebt.month===month) {
-	    					console.log('enter or not?');
+	    					
 							counterCheck++;
 	    				}
 	    			}
@@ -160,7 +160,7 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 
 	    				needToUpdate = true;
 						var monthCounter = noOfMonths(new Date($scope.user.lastUpdateDebts),dt)+1;
-						console.log('no of months is: '+monthCounter);
+						
 
 						for (var m = 1; m<=monthCounter; m++) {	 
 							displayLiabilitiesRecords = angular.copy(LiabilitiesService.liabilitiesRecords);   					
@@ -169,9 +169,9 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 		    				var thisMonth = currentDate.getMonth();
 		    				var thisYear = currentDate.getFullYear();		    				
 
-		    				console.log('what is this month?:'+ thisMonth);
-		    				console.log('what is this year?:'+ thisYear);
-		    				console.log('CREATING NEW RECORDS');
+		    				
+		    				
+		    				
 		    				var record = {
 		    					id: debtRe.records.length+1,
 				        		month: thisMonth,
@@ -197,16 +197,16 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 			                    var recordChecker = $scope.user.liabilitiesRecords[j];                                                         
 			                    if (recordChecker.month===thisMonth&&recordChecker.year===thisYear) {
 			                        existenceCheck++;
-			                        console.log('2nd');
+			                        
 			                    }
 			                }
 			                if (existenceCheck===0) {
 			                    displayLiabilitiesRecords.year = thisYear;
 			                    displayLiabilitiesRecords.month = thisMonth;                                
 			                    $scope.user.liabilitiesRecords.push(displayLiabilitiesRecords);  
-			                    console.log('3rd');
-			                    console.log('Test 1 '+ thisMonth);
-				            	console.log('Test 1'+ thisYear);
+			                    
+			                    
+				            	
 			                }
 				        }
 	    			}
@@ -222,7 +222,7 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 	            }, function(response) {
 	                $scope.error = response.data.message;
 	            });
-	            console.log('logic works');
+	            
 			}
 
 			*/
@@ -238,7 +238,7 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 	    			for(var c=0; c<debtRe.records.length;c++) {
 	    				var recordDebt = debtRe.records[c];	    				
 	    				if (recordDebt.year===year&&recordDebt.month===month) {
-	    					console.log('enter or not?');
+	    					
 							counterCheck++;
 	    				}
 	    			}
@@ -250,7 +250,7 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 	    				needToUpdate = true;
 
 						var monthCounter = noOfMonths(new Date($scope.user.lastUpdateDebts),dt)+1;
-						console.log('no of months is: '+monthCounter);
+						
 
 	    				//var jan312009 = new Date(2009, 1-1, 31);
 	    				for (var m = 1; m<=monthCounter; m++) {
@@ -260,9 +260,9 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 		    				var thisMonth = currentDate.getMonth();
 		    				var thisYear = currentDate.getFullYear();		    				
 
-		    				console.log('what is this month?:'+ thisMonth);
-		    				console.log('what is this year?:'+ thisYear);
-		    				console.log('CREATING NEW RECORDS');
+		    				
+		    				
+		    				
 		    				var record = {
 		    					id: debtRe.records.length+1,
 				        		month: thisMonth,
@@ -290,16 +290,16 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 			                    var recordChecker = $scope.user.liabilitiesRecords[j];                                                         
 			                    if (recordChecker.month===thisMonth&&recordChecker.year===thisYear) {
 			                        existenceCheck++;
-			                        console.log('2nd');
+			                        
 			                    }
 			                }
 			                if (existenceCheck===0) {
 			                    displayLiabilitiesRecords.year = thisYear;
 			                    displayLiabilitiesRecords.month = thisMonth;                                
 			                    $scope.user.liabilitiesRecords.push(displayLiabilitiesRecords);  
-			                    console.log('3rd');
-			                    console.log('Test 1 '+ thisMonth);
-				            	console.log('Test 1'+ thisYear);
+			                    
+			                    
+				            	
 			                }
 				            
 
@@ -309,8 +309,8 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 				            	if (liabilityRecord.month===thisMonth&&liabilityRecord.year===thisYear) {
 
 				            		var loansMortgagesRec = liabilityRecord.loansMortgages;
-				            		console.log('Test 2 '+ thisMonth);
-				            		console.log('Test 2 '+ thisYear);
+				            		
+				            		
 				            		//update new loan balance
 				            		for (var get in loansMortgagesRec) {                        
 				                        var obj = loansMortgagesRec[get];
@@ -354,7 +354,7 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 	    			}
 	    		}    			
         	}
-        	console.log(needToUpdate);
+        	
         	if (needToUpdate) {        		
         		$scope.user.lastUpdateDebts = dt.getFullYear()+'-'+(dt.getMonth()+1)+'-'+dt.getDate();
 				var userNow = new Users($scope.user);
@@ -365,7 +365,7 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 	            }, function(response) {
 	                $scope.error = response.data.message;
 	            });
-	            console.log('logic works');
+	            
 			}
 			
         };
@@ -381,14 +381,14 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
         	$scope.displayEndDate = dateFormatter(new Date($scope.debt.endDate));
 
         	var debtRe = $scope.debt;
-			//console.log(debtRe);
-			console.log($scope.selectedYear);
-			console.log($scope.selectedMonth);
+			//
+			
+			
 			for(var c=0; c<debtRe.records.length;c++) {
 				var recordDebt = debtRe.records[c];
 				if (recordDebt.year===$scope.selectedYear&&recordDebt.month===$scope.selectedMonthNo) {
 					$scope.recordReq = recordDebt;
-					console.log($scope.recordReq);
+					
 					$scope.noRecordsToDisplay = false;
 					$scope.presentMonthCheck = true;
 					
@@ -413,7 +413,7 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
             //Update INCOME&EXPENSE
             if (!$scope.user.incomeExpenseRecordsPeriod) {
             	//If there is no existing record
-                console.log('do you enter?');
+                
                 $scope.user.incomeExpenseRecordsPeriod = {};
                 $scope.user.incomeExpenseRecordsPeriod.minMonth = $scope.item.month;
                 $scope.user.incomeExpenseRecordsPeriod.minYear = $scope.item.year;
@@ -422,7 +422,7 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 
             } else if (($scope.user.incomeExpenseRecordsPeriod.maxMonth <= $scope.item.month && $scope.user.incomeExpenseRecordsPeriod.maxYear <= $scope.item.year) || ($scope.user.incomeExpenseRecordsPeriod.maxMonth > $scope.item.month && $scope.user.incomeExpenseRecordsPeriod.maxYear < $scope.item.year)) {
 
-                console.log('do you enter2?');
+                
                 //ASSUMING THAT THE USER NEVER INSERTS DATA FOR THE FUTURE (HE CANT POSSIBLY DO SO ALSO)
                 //SETS RECORDS MAX PERIOD TO PRESENT MONTH & YEAR
                 //I ALSO CURRENTLY DONT ALLOW USERS TO SET BUDGET FOR THE FUTURE (ONLY FOR PRESENT MONTH)
@@ -433,7 +433,7 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
              
             
             if($scope.user.incomeExpenseRecords.length===0) { //in the event of an empty record (FIRSTTIME)                
-                console.log('1st');
+                
                 $scope.displayIncomeExpenseRecords.year = $scope.item.year;
                 $scope.displayIncomeExpenseRecords.month = $scope.item.month;                                
                 $scope.user.incomeExpenseRecords.push($scope.displayIncomeExpenseRecords); 
@@ -443,14 +443,14 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
                     var recordChecker = $scope.user.incomeExpenseRecords[k];                                                         
                     if (recordChecker.month===$scope.item.month&&recordChecker.year===$scope.item.year) {
                         existenceCheck++;
-                        console.log('2nd');
+                        
                     }
                 }
                 if (existenceCheck===0) {
                     $scope.displayIncomeExpenseRecords.year = $scope.item.year;
                     $scope.displayIncomeExpenseRecords.month = $scope.item.month;                                
                     $scope.user.incomeExpenseRecords.push($scope.displayIncomeExpenseRecords);  
-                    console.log('3rd');
+                    
                 }
             }
 
@@ -460,16 +460,22 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
                 if (expenseRecord.month===$scope.item.month&&expenseRecord.year===$scope.item.year) {
                     
                     var thisMonthSpecExpense = {};
-                    console.log('DIE HERE');
+                    
                     if($scope.debt.type!=='Car Loan') {                        
                     	thisMonthSpecExpense = expenseRecord.monthlyExpense.fixedExpense;
                    
 	                    for (var get10 in thisMonthSpecExpense) {                        
 	                        var obj10 = thisMonthSpecExpense[get10];
 	                        if($scope.debt.type === 'Mortgage Loan' && obj10.description==='Mortgage Repayments') {        	
-	                            console.log('SUCCESS');
+	                            
 	                            //need validation
-	                            obj10.value += $scope.debt.monthly;	
+	                            console.log(expenseRecord.month);
+	                            console.log(expenseRecord.year);
+	                            console.log('pre-value:' +obj10.value);
+	                            obj10.value += $scope.debt.monthly;
+	                            
+	                            console.log('amt added:' +$scope.debt.monthly);
+	                            console.log('post-value:' +obj10.value);
 	                            expenseChecker = obj10.description;                            
 	                        } else if($scope.debt.type !== 'Mortgage Loan' && obj10.description==='Other Loan Repayments') {
 	                        	obj10.value += $scope.debt.monthly;
@@ -482,7 +488,7 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
                         for (var get11 in thisMonthSpecExpense) {                        
 	                        var obj11 = thisMonthSpecExpense[get11];
 	                        if(obj11.description==='Car Loan Repayments') {        	
-	                            console.log('SUCCESS');
+	                            
 	                            //need validation
 	                            obj11.value += $scope.debt.monthly;
 	                            expenseChecker = obj11.description;	                            
@@ -542,17 +548,16 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 			//find months to that date and update
         	var dateItemStart = new Date($scope.item.year,$scope.item.month,1);
         	var monthCounter = noOfMonths(dateItemStart,new Date($scope.user.lastUpdateDebts))+1;
-        	console.log(dateItemStart);
-        	console.log(new Date($scope.user.lastUpdateDebts));
-			console.log('no of months is: '+monthCounter);
-			console.log('Month Zero update');
-
+        	
+        	
+			
+			
 
 			//var currentDate1 = new Date(dateItemStart.setMonth(dateItemStart.getMonth()+1));
 			//var currentDate2 = new Date(dateItemStart.setMonth(dateItemStart.getMonth()+2));
 
-			//console.log(currentDate1);
-			//console.log(currentDate2);
+			//
+			//
 
 			//var fromDate = new Date($scope.user.lastUpdateDebts);
 			
@@ -563,17 +568,18 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 				if(debtRe.id===$scope.debt.id) {	
 					
 					for (var m = 0; m<=monthCounter; m++) {	
-						console.log('m is: '+m);
+						
 						dateItemStart = new Date($scope.item.year,$scope.item.month,1);
 						var currentDate = new Date(dateItemStart.setMonth(dateItemStart.getMonth()+m));
 						var thisMonth = currentDate.getMonth();
 						var thisYear = currentDate.getFullYear();
 						var recordDebt;
-						console.log('STARTING OF DEBUG');
-						console.log(currentDate);
+						
+						
 						
 						if (m===0) {
 							debtRe.loanBalance -= $scope.debt.monthly;
+							
 							if (debtRe.loanBalance < 0) {
 								debtRe.loanBalance = 0;
 							}
@@ -599,7 +605,7 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 		        			for(var c=0; c<debtRe.records.length;c++) {
 		        				recordDebt = debtRe.records[c];
 		        				if (recordDebt.year===thisYear&&recordDebt.month===thisMonth) {
-			    					console.log('Month Zero update');
+			    					
 			    					recordDebt.monthly = $scope.debt.monthly;
 			    					recordDebt.expenseType = expenseChecker;
 			    					recordDebt.loanBalance -= $scope.debt.monthly;
@@ -617,7 +623,7 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 		        			for(var d=0; d<debtRe.records.length;d++) {
 		        				recordDebt = debtRe.records[d];
 		        				if (recordDebt.year===thisYear&&recordDebt.month===thisMonth) {
-			    					console.log('Month update');
+			    					
 			    					//recordDebt.monthly = $scope.debt.monthly;
 			    					//recordDebt.expenseType = expenseChecker;
 			    					recordDebt.loanBalance -=$scope.debt.monthly;
@@ -628,6 +634,22 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 			    					recordDebt.repaymentNo = debtRe.repaymentNo;
 			    					//recordDebt.date = dt;
 			    					recordDebt.IERecordsCreated = false;
+
+			    					if(debtRe.loanBalance===0) {
+				    					debtRe.status = 'Completed';
+				    					debtRe.statusBoolean = true;		    					
+								        if (((dt.getMonth()+1).toString()).length===1) {
+								            monthPartString = '-0'+(dt.getMonth()+1);
+								        } else {
+								            monthPartString = '-'+(dt.getMonth()+1);
+								        }
+								        if ((dt.getDate().toString()).length===1) {
+								            datePartString = '-0'+dt.getDate();
+								        } else {
+								            datePartString = '-'+dt.getDate();
+								        }
+				    					debtRe.actualEndDate = dt.getFullYear()+monthPartString+datePartString;
+				    				}
 			    				}
 		        			}
 		        		}
@@ -635,11 +657,11 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 
 		        		for(var j=0;j<$scope.user.liabilitiesRecords.length; j++) {            
 	                		var liabilityRecord = $scope.user.liabilitiesRecords[j];  
-	                		console.log('Is every month running? '+ m);
+	                		
 			            	if (liabilityRecord.month===thisMonth&&liabilityRecord.year===thisYear) {
 			            		var loansMortgagesRec = liabilityRecord.loansMortgages;
-			            		console.log('WHAT THE FUCK IS M: '+m);
-			            		console.log('this month: '+thisMonth);
+			            		
+			            		
 			            		//update new loan balance
 			            		for (var get in loansMortgagesRec) {                        
 			                        var obj = loansMortgagesRec[get];
@@ -649,7 +671,7 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 
 			                        	obj.value -= $scope.debt.monthly;
 			                        	obj.minValue -= $scope.debt.monthly;
-			                        	console.log('obj value'+obj.value);
+			                        	
 			                        	if (obj.value<0) {
 			                        		obj.value = 0;
 			                        	}
@@ -709,17 +731,14 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
         };
         $scope.markAsComplete = function(debt) {
         	var completedObj = debt;
-			completedObj.id = $scope.user.completedMilestones.length+1;			
-			console.log(completedObj);
-
+        	completedObj.completeTable = true;
+			completedObj.id = $scope.user.debtsCompletedArr.length+1;			
 
 			$scope.user.debtsCompletedArr.push(completedObj);
 
 			for (var i = 0;  i<$scope.user.debtsInfoArr.length; i++) {
-    			var debtSelected = $scope.user.debtsInfoArr[i];
-    			
-    			if (debtSelected.id===debt.id) {
-    			   				
+    			var debtSelected = $scope.user.debtsInfoArr[i];    			
+    			if (debtSelected.id===debt.id) {    			   				
     				$scope.user.debtsInfoArr.splice(i,1);
     			}
 			}
@@ -749,7 +768,7 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
         	else { 
 	        	$scope.displayLoanBalance = $scope.loanBalance.toFixed(2);
 	        	$scope.newDebt.loanBalance = $scope.loanBalance;
-	        	console.log($scope.newDebt);
+	        	
 	        	$scope.add1show = false;
 	        	$scope.add2show = true;
         	}
@@ -757,7 +776,7 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 
         $scope.setNewLoanBalance = function() {
         	$scope.loanBalance = $scope.newLoanBalance;
-			console.log('TESTER');
+			
         	$scope.displayLoanBalance = $scope.loanBalance.toFixed(2);
 	        $scope.newDebt.loanBalance = $scope.loanBalance;
         };
@@ -765,14 +784,16 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 
         $scope.getItem = function(item) {
         	$scope.item = item;
-        	console.log($scope.item);
-        	console.log($scope.debt);
+        	
+        	
         };
 
         $scope.createLinkedDebt = function () {        
-        	console.log($scope.newDebt.loanBalance);
-        	console.log(typeof $scope.newDebt.startDate);
+        	
+        	
+        	$scope.user.updatedManageDebt = true;
         	$scope.newDebt.status = 'In Progress';
+        	$scope.newDebt.completeTable = false;
         	$scope.newDebt.statusBoolean = false;
         	//validate if the loan has already been completed
         	var startDate = new Date($scope.newDebt.startDate);
@@ -818,8 +839,8 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 	        	
 	        	$scope.user.debtsInfoArr.push($scope.newDebt);
 
-	        	console.log(month);
-	        	console.log(year);
+	        	
+	        	
 	        	//creating new liabilities record period
 	        	if(!$scope.user.liabilitiesRecordsPeriod) {
 	        		$scope.user.liabilitiesRecordsPeriod = {};
@@ -835,7 +856,7 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 	        	} 
 
 	        	if($scope.user.liabilitiesRecords.length===0) { //in the event of an empty record (FIRSTTIME)                
-	                console.log('1st');
+	                
 	                displayLiabilitiesRecords.year = year;
 	                displayLiabilitiesRecords.month = month;                                                
 	                $scope.user.liabilitiesRecords.push(displayLiabilitiesRecords); 
@@ -845,14 +866,14 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 	                    var recordChecker = $scope.user.liabilitiesRecords[j];                                                         
 	                    if (recordChecker.month===month&&recordChecker.year===year) {
 	                        existenceCheck++;
-	                        console.log('2nd');
+	                        
 	                    }
 	                }
 	                if (existenceCheck===0) {
 	                    displayLiabilitiesRecords.year = year;
 	                    displayLiabilitiesRecords.month = month;                                
 	                    $scope.user.liabilitiesRecords.push(displayLiabilitiesRecords);  
-	                    console.log('3rd');
+	                    
 	                }
 	            }
 
@@ -929,7 +950,7 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 	        } else {
 	            $scope.newDebt.startDate = dt.getFullYear()+'-'+(dt.getMonth()+1)+'-0'+dt.getDate();
 	        }
-	        console.log($scope.newDebt.startDate);
+	        
         };
 
         $scope.previousModal1 = function() {
@@ -944,27 +965,27 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 		$scope.deleteRecord = function(type) {
 			
 			var deleteType = type; 
-			console.log(deleteType);
-			console.log($scope.debt);
+			
+			
 			if (!$scope.debt.actualEndDate) {
 				$scope.debt.actualEndDate = new Date();
 			}
 			var dateItemStart = new Date($scope.debt.startDate);
         	var monthCounter = noOfMonths(dateItemStart,new Date($scope.debt.actualEndDate))+1;
-        	console.log(dateItemStart);
-        	//console.log(new Date($scope.user.lastUpdateDebts));
-			console.log('no of months is: '+monthCounter);
-			//console.log('Month Zero update');
+        	
+        	//
+			
+			//
 		 	for (var m = 0; m<=monthCounter; m++) {	
 				
-				console.log('m is: '+m);
+				
 				dateItemStart = new Date($scope.debt.startDate);
 				var currentDate = new Date(dateItemStart.setMonth(dateItemStart.getMonth()+m));
 				var thisMonth = currentDate.getMonth();
 				var thisYear = currentDate.getFullYear();
 				var recordDebt;
-				console.log('STARTING OF DEBUG');
-				console.log(currentDate);
+				
+				
 				
 				
 					/*
@@ -983,7 +1004,7 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
     				if (currentDebtRecord.year===thisYear&&currentDebtRecord.month===thisMonth) {
     					recordDebt = currentDebtRecord;
     					/*
-    					console.log('Month Zero update');
+    					
     					recordDebt.monthly = $scope.debt.monthly;
     					recordDebt.expenseType = expenseChecker;
     					recordDebt.loanBalance -= $scope.debt.monthly;
@@ -1001,14 +1022,18 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 
 	            	if (liabilityRecord.month===thisMonth&&liabilityRecord.year===thisYear) {
 	            		var loansMortgagesRec = liabilityRecord.loansMortgages;
-	            		console.log('Deleting');
+	            		
 	            		//update new loan balance
 	            		for (var get in loansMortgagesRec) {                        
 	                        var obj = loansMortgagesRec[get];
 	                        if($scope.debt.type=== obj.description) {
-	                        	console.log('Got Minus?');
+	                        	
+	                        	console.log($scope.debt.type);
+	                        	console.log('pre-value: ' +obj.value);
 	                        	obj.value -= recordDebt.loanBalance;                        	                        		
 	                        	obj.minValue -= recordDebt.loanBalance;
+	                        	console.log('amt deducted: ' +recordDebt.loanBalance);
+	                        	console.log('post-value: '+obj.value);
 	                        	
 	                        }
 	                    }
@@ -1052,14 +1077,14 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 	                if (expenseRecord.month===thisMonth&&expenseRecord.year===thisYear) {
 	                    
 	                    var thisMonthSpecExpense = {};
-	                    console.log('DIE HERE');
+	                    
 	                    if($scope.debt.type!=='Car Loan') {                        
 	                    	thisMonthSpecExpense = expenseRecord.monthlyExpense.fixedExpense;
 	                   
 		                    for (var get10 in thisMonthSpecExpense) {                        
 		                        var obj10 = thisMonthSpecExpense[get10];
 		                        if($scope.debt.type === 'Mortgage Loan' && obj10.description==='Mortgage Repayments') {        	
-		                            console.log('SUCCESS');
+		                            
 		                            //need validation
 		                            obj10.value -= recordDebt.monthly;	
 		                        } else if($scope.debt.type !== 'Mortgage Loan' && obj10.description==='Other Loan Repayments') {
@@ -1072,7 +1097,7 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 	                        for (var get11 in thisMonthSpecExpense) {                        
 		                        var obj11 = thisMonthSpecExpense[get11];
 		                        if(obj11.description==='Car Loan Repayments') {        	
-		                            console.log('SUCCESS');
+		                            
 		                            //need validation
 		                            obj11.value -= recordDebt.monthly;
 		                        } 
@@ -1166,6 +1191,352 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 		  	$scope.selectedDebtRecord = null;
 		 	
 		};
+
+		$scope.setLoanBalance = function(item) {
+			$scope.itemSelected = item;
+			$scope.changeLoanBalance = $scope.itemSelected.loanBalance; 
+		};
+
+		$scope.updateLoanBalance = function() {
+			var expenseChecker;
+        	/*
+            if (!$scope.user.incomeExpenseRecordsPeriod) {
+            	//If there is no existing record
+                
+                $scope.user.incomeExpenseRecordsPeriod = {};
+                $scope.user.incomeExpenseRecordsPeriod.minMonth = $scope.item.month;
+                $scope.user.incomeExpenseRecordsPeriod.minYear = $scope.item.year;
+                $scope.user.incomeExpenseRecordsPeriod.maxMonth = $scope.item.month;
+                $scope.user.incomeExpenseRecordsPeriod.maxYear = $scope.item.year;                
+
+            } else if (($scope.user.incomeExpenseRecordsPeriod.maxMonth <= $scope.item.month && $scope.user.incomeExpenseRecordsPeriod.maxYear <= $scope.item.year) || ($scope.user.incomeExpenseRecordsPeriod.maxMonth > $scope.item.month && $scope.user.incomeExpenseRecordsPeriod.maxYear < $scope.item.year)) {
+
+                
+                //ASSUMING THAT THE USER NEVER INSERTS DATA FOR THE FUTURE (HE CANT POSSIBLY DO SO ALSO)
+                //SETS RECORDS MAX PERIOD TO PRESENT MONTH & YEAR
+                //I ALSO CURRENTLY DONT ALLOW USERS TO SET BUDGET FOR THE FUTURE (ONLY FOR PRESENT MONTH)
+                $scope.user.incomeExpenseRecordsPeriod.maxMonth = $scope.item.month;
+                $scope.user.incomeExpenseRecordsPeriod.maxYear = $scope.item.year;
+            }
+
+             
+            
+            if($scope.user.incomeExpenseRecords.length===0) { //in the event of an empty record (FIRSTTIME)                
+                
+                $scope.displayIncomeExpenseRecords.year = $scope.item.year;
+                $scope.displayIncomeExpenseRecords.month = $scope.item.month;                                
+                $scope.user.incomeExpenseRecords.push($scope.displayIncomeExpenseRecords); 
+            } else { //Existing record but no record of that month
+                var existenceCheck = 0;
+                for (var k=0;k<$scope.user.incomeExpenseRecords.length; k++) {   
+                    var recordChecker = $scope.user.incomeExpenseRecords[k];                                                         
+                    if (recordChecker.month===$scope.item.month&&recordChecker.year===$scope.item.year) {
+                        existenceCheck++;
+                        
+                    }
+                }
+                if (existenceCheck===0) {
+                    $scope.displayIncomeExpenseRecords.year = $scope.item.year;
+                    $scope.displayIncomeExpenseRecords.month = $scope.item.month;                                
+                    $scope.user.incomeExpenseRecords.push($scope.displayIncomeExpenseRecords);  
+                    
+                }
+            }
+
+            for(var a=0;a<$scope.user.incomeExpenseRecords.length; a++) {            
+                var expenseRecord = $scope.user.incomeExpenseRecords[a];  
+
+                if (expenseRecord.month===$scope.item.month&&expenseRecord.year===$scope.item.year) {
+                    
+                    var thisMonthSpecExpense = {};
+                    
+                    if($scope.debt.type!=='Car Loan') {                        
+                    	thisMonthSpecExpense = expenseRecord.monthlyExpense.fixedExpense;
+                   
+	                    for (var get10 in thisMonthSpecExpense) {                        
+	                        var obj10 = thisMonthSpecExpense[get10];
+	                        if($scope.debt.type === 'Mortgage Loan' && obj10.description==='Mortgage Repayments') {        	
+	                            
+	                            //need validation
+	                            obj10.value += $scope.debt.monthly;	
+	                            expenseChecker = obj10.description;                            
+	                        } else if($scope.debt.type !== 'Mortgage Loan' && obj10.description==='Other Loan Repayments') {
+	                        	obj10.value += $scope.debt.monthly;
+	                        	expenseChecker = obj10.description;
+                    		}
+                    	}	
+
+                	} else {
+                        thisMonthSpecExpense = expenseRecord.monthlyExpense.transport;
+                        for (var get11 in thisMonthSpecExpense) {                        
+	                        var obj11 = thisMonthSpecExpense[get11];
+	                        if(obj11.description==='Car Loan Repayments') {        	
+	                            
+	                            //need validation
+	                            obj11.value += $scope.debt.monthly;
+	                            expenseChecker = obj11.description;	                            
+	                        } 
+                    	}
+                    }
+                    var fixedExpenseArr = expenseRecord.monthlyExpense.fixedExpense;
+	                var fixedExpenseTotal = 0;
+	                for (var at in fixedExpenseArr) {
+	                    var abj1 = fixedExpenseArr[at];
+	                    fixedExpenseTotal += abj1.value;
+	                }
+	                expenseRecord.fixedExpenseAmt = fixedExpenseTotal.toFixed(2);
+
+	                var transportArr = expenseRecord.monthlyExpense.transport;
+	                var transportTotal = 0;
+	                for (var at1 in transportArr) {
+	                    var abj2 = transportArr[at1];
+	                    transportTotal += abj2.value;
+	                }
+	                expenseRecord.transportAmt = transportTotal.toFixed(2);
+
+	                var utilityHouseholdArr = expenseRecord.monthlyExpense.utilityHousehold;
+	                var utilityHouseholdTotal = 0;
+	                for (var at2 in utilityHouseholdArr) {
+	                    var abj3 = utilityHouseholdArr[at2];
+	                    utilityHouseholdTotal += abj3.value;
+	                }
+	                expenseRecord.utilityHouseholdAmt = utilityHouseholdTotal.toFixed(2);
+
+	                var foodNecessitiesArr = expenseRecord.monthlyExpense.foodNecessities;
+	                var foodNecessitiesTotal = 0;
+	                for (var at3 in foodNecessitiesArr) {
+	                    var abj4 = foodNecessitiesArr[at3];
+	                    foodNecessitiesTotal += abj4.value;
+	                }
+	                expenseRecord.foodNecessitiesAmt = foodNecessitiesTotal.toFixed(2);
+
+	                var miscArr = expenseRecord.monthlyExpense.misc;
+	                var miscTotal = 0;
+	                for (var at4 in miscArr) {
+	                    var abj5 = miscArr[at4];
+	                    miscTotal += abj5.value;
+	                }
+	                expenseRecord.miscAmt = miscTotal.toFixed(2);
+
+	                var monthlyIncomeAmt = Number(expenseRecord.monthlyIncomeAmt);                
+	                var monthlyExpenseAmt = fixedExpenseTotal + transportTotal + utilityHouseholdTotal + foodNecessitiesTotal + miscTotal;
+	                var netCashFlow = monthlyIncomeAmt - monthlyExpenseAmt;                
+	                expenseRecord.monthlyIncomeAmt = monthlyIncomeAmt.toFixed(2);                
+	                expenseRecord.monthlyExpenseAmt = monthlyExpenseAmt.toFixed(2);
+	                expenseRecord.netCashFlow = netCashFlow.toFixed(2);
+                
+				}
+			}      
+			*/
+			//find months to that date and update
+        	var dateItemStart = new Date($scope.itemSelected.year,$scope.itemSelected.month,1);
+        	var monthCounter = noOfMonths(dateItemStart,new Date($scope.user.lastUpdateDebts))+1;
+        	
+        	
+			
+			
+
+
+			//var currentDate1 = new Date(dateItemStart.setMonth(dateItemStart.getMonth()+1));
+			//var currentDate2 = new Date(dateItemStart.setMonth(dateItemStart.getMonth()+2));
+
+			//
+			//
+
+			//var fromDate = new Date($scope.user.lastUpdateDebts);
+			
+
+			for (var i = 0; i<$scope.user.debtsInfoArr.length; i++) {
+        		var debtRe = $scope.user.debtsInfoArr[i];
+        		
+				if(debtRe.id===$scope.debt.id) {	
+					
+					for (var m = 0; m<=monthCounter; m++) {	
+						
+						dateItemStart = new Date($scope.itemSelected.year,$scope.itemSelected.month,1);
+						var currentDate = new Date(dateItemStart.setMonth(dateItemStart.getMonth()+m));
+						var thisMonth = currentDate.getMonth();
+						var thisYear = currentDate.getFullYear();
+						var recordDebt;
+						var originalLoanBalance; 
+						
+						
+						
+						if (m===0) {
+							//originalLoanBalance = debtRe.loanBalance;
+							debtRe.loanBalance = $scope.changeLoanBalance;
+							if (debtRe.loanBalance < 0) {
+								debtRe.loanBalance = 0;
+							}
+		        			//debtRe.repaymentNo += 1;
+		        			//debtRe.monthly = $scope.debt.monthly;
+		        			debtRe.status ='In Progress';
+		        			if(debtRe.loanBalance===0) {
+		    					debtRe.status = 'Completed';
+		    					debtRe.statusBoolean = true;		    					
+						        if (((dt.getMonth()+1).toString()).length===1) {
+						            monthPartString = '-0'+(dt.getMonth()+1);
+						        } else {
+						            monthPartString = '-'+(dt.getMonth()+1);
+						        }
+						        if ((dt.getDate().toString()).length===1) {
+						            datePartString = '-0'+dt.getDate();
+						        } else {
+						            datePartString = '-'+dt.getDate();
+						        }
+		    					debtRe.actualEndDate = dt.getFullYear()+monthPartString+datePartString;
+		    				}        		
+		        			
+		        			for(var c=0; c<debtRe.records.length;c++) {
+		        				recordDebt = debtRe.records[c];
+		        				if (recordDebt.year===thisYear&&recordDebt.month===thisMonth) {
+			    					
+			    					//recordDebt.monthly = $scope.debt.monthly;
+			    					//recordDebt.expenseType = expenseChecker;
+			    					originalLoanBalance = recordDebt.loanBalance; 
+			    					recordDebt.loanBalance = $scope.changeLoanBalance;
+			    					if (recordDebt.loanBalance <0) {
+			    						recordDebt.loanBalance =0;
+			    					}
+			    					//recordDebt.monthlyPayStatus = true;
+			    					//recordDebt.repaymentNo = debtRe.repaymentNo;
+			    					//recordDebt.date = dt;
+			    					//recordDebt.IERecordsCreated = true;
+			    					debtRe.status = 'In Progress';
+			    					if(debtRe.loanBalance===0) {
+				    					debtRe.status = 'Completed';
+				    					debtRe.statusBoolean = true;		    					
+								        if (((dt.getMonth()+1).toString()).length===1) {
+								            monthPartString = '-0'+(dt.getMonth()+1);
+								        } else {
+								            monthPartString = '-'+(dt.getMonth()+1);
+								        }
+								        if ((dt.getDate().toString()).length===1) {
+								            datePartString = '-0'+dt.getDate();
+								        } else {
+								            datePartString = '-'+dt.getDate();
+								        }
+				    					debtRe.actualEndDate = dt.getFullYear()+monthPartString+datePartString;
+				    				} 
+			    				}
+		        			}
+		        		} else {
+
+		        			for(var d=0; d<debtRe.records.length;d++) {
+		        				recordDebt = debtRe.records[d];
+		        				if (recordDebt.year===thisYear&&recordDebt.month===thisMonth) {
+			    					
+			    					//recordDebt.monthly = $scope.debt.monthly;
+			    					//recordDebt.expenseType = expenseChecker;
+			    					originalLoanBalance = recordDebt.loanBalance;			    				
+		    						debtRe.loanBalance -= recordDebt.monthly;
+		    						recordDebt.loanBalance = debtRe.loanBalance; 			    																	    					
+			    					if (recordDebt.loanBalance<0) {
+			    						recordDebt.loanBalance = 0;
+			    					}
+			    					//recordDebt.monthlyPayStatus = true;
+			    					//recordDebt.repaymentNo = debtRe.repaymentNo;
+			    					//recordDebt.date = dt;
+			    					//recordDebt.IERecordsCreated = false;
+
+			    					debtRe.status ='In Progress';
+				        			if(debtRe.loanBalance===0) {
+				    					debtRe.status = 'Completed';
+				    					debtRe.statusBoolean = true;		    					
+								        if (((dt.getMonth()+1).toString()).length===1) {
+								            monthPartString = '-0'+(dt.getMonth()+1);
+								        } else {
+								            monthPartString = '-'+(dt.getMonth()+1);
+								        }
+								        if ((dt.getDate().toString()).length===1) {
+								            datePartString = '-0'+dt.getDate();
+								        } else {
+								            datePartString = '-'+dt.getDate();
+								        }
+				    					debtRe.actualEndDate = dt.getFullYear()+monthPartString+datePartString;
+				    				}
+			    				}
+		        			}
+		        		}
+
+
+		        		for(var j=0;j<$scope.user.liabilitiesRecords.length; j++) {            
+	                		var liabilityRecord = $scope.user.liabilitiesRecords[j];  
+	                		
+			            	if (liabilityRecord.month===thisMonth&&liabilityRecord.year===thisYear) {
+			            		var loansMortgagesRec = liabilityRecord.loansMortgages;
+			            		
+			            		
+			            		//update new loan balance
+			            		for (var get in loansMortgagesRec) {                        
+			                        var obj = loansMortgagesRec[get];
+			                        if($scope.debt.type=== obj.description) {
+			                        	
+			                        	
+
+			                        	obj.value -= originalLoanBalance;
+			                        	obj.minValue -= originalLoanBalance;
+			                        	obj.value += debtRe.loanBalance;
+			                        	obj.minValue += debtRe.loanBalance;
+			                        	
+			                        	if (obj.value<0) {
+			                        		obj.value = 0;
+			                        	}
+			                        	if (obj.minValue<0) {
+			                        		obj.minValue = 0;
+			                        	}
+			                        }
+			                    }
+			                	
+			                	//update totals
+			            	    var shortTermCreditArr = liabilityRecord.shortTermCredit;
+				                var shortTermCreditTotal = 0;
+				                for (var rt in shortTermCreditArr) {
+				                    var obj1 = shortTermCreditArr[rt];
+				                    shortTermCreditTotal += obj1.value;
+				                }
+				                
+				                var loansMortgagesArr = liabilityRecord.loansMortgages;
+				                var loansMortgagesTotal = 0;
+				                for (var rt1 in loansMortgagesArr) {
+				                    var obj2 = loansMortgagesArr[rt1];
+				                    loansMortgagesTotal += obj2.value;
+				                }
+				                
+				                var otherLiabilitiesArr = liabilityRecord.otherLiabilities;
+				                var otherLiabilitiesTotal = 0;
+				                for (var rt2 in otherLiabilitiesArr) {
+				                    var obj3 = otherLiabilitiesArr[rt2];
+				                    otherLiabilitiesTotal += obj3.value;
+				                }
+				                
+				                var liabilitiesTotal = shortTermCreditTotal + loansMortgagesTotal + otherLiabilitiesTotal;
+
+				                liabilityRecord.shortTermCreditAmt = shortTermCreditTotal.toFixed(2);
+				                
+				                liabilityRecord.loansMortgagesAmt = loansMortgagesTotal.toFixed(2);
+				                liabilityRecord.otherLiabilitiesAmt = otherLiabilitiesTotal.toFixed(2);
+				                liabilityRecord.totalAmt = liabilitiesTotal.toFixed(2);
+
+				                
+			            	}
+	            		}
+    				}
+        		}	    	         
+   			}
+
+        	//$scope.debt.monthlyPayStatus = true;
+
+			var userNow = new Users($scope.user);
+            userNow.$update(function(response) {
+                $scope.success = true;
+                Authentication.user = response;
+                $scope.user = Authentication.user;
+            }, function(response) {
+                $scope.error = response.data.message;
+            });           
+
+		}; 
 
     }
 ]);
