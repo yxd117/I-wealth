@@ -140,9 +140,6 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 		var test4 = new Date(2015,10,22);
 		var testresult = noOfMonths(test1,test2);
 		var testresult2 = noOfMonths(test3,test4);
-		console.log('test : '+testresult);
-		console.log('test : '+testresult2);
-		
 
         $scope.updateRecordsForNewMonth = function () {        	
         	
@@ -393,19 +390,11 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 	                        if($scope.debt.type === 'Mortgage Loan' && obj10.description==='Mortgage Repayments') {        	
 	                            
 	                            //need validation
-	                            console.log(expenseRecord.month);
-	                            console.log(expenseRecord.year);
-	                            console.log(expenseRecord);
-	                            console.log('pre-value:' +obj10.value);
-	                            console.log($scope.debt);
 	                            obj10.value = Number(obj10.value);
-	                            console.log('scope debt monthly: '+$scope.debt.monthly);
 	                            obj10.value += $scope.debt.monthly;
 	                            obj10.value = obj10.value.toFixed(2);	                            
 	                            obj10.minValue += $scope.debt.monthly;
-	                            
-	                            console.log('amt added:' +$scope.debt.monthly);
-	                            console.log('post-value:' +obj10.value);
+	                           
 	                            expenseChecker = obj10.description;                            
 	                        } else if($scope.debt.type !== 'Mortgage Loan' && obj10.description==='Other Loan Repayments') {
 	                        	obj10.value = Number(obj10.value);
@@ -915,7 +904,6 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
         	//
 			
 			//
-			console.log('number of months: '+monthCounter);
 		 	for (var m = 0; m<=monthCounter; m++) {	
 				
 				
@@ -945,16 +933,9 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 	                        var obj = loansMortgagesRec[get];
 	                        
 	                        if($scope.debt.type=== obj.description) {
-	                        	console.log(liabilityRecord.month);
-	                        	console.log(liabilityRecord.year);
-	                        	console.log(obj);
-	                        	console.log($scope.debt.type);
-	                        	console.log('pre-value: ' +obj.value);
 	                        	obj.value = Number(obj.value);
 	                        	obj.value -= recordDebt.loanBalance;                        	                        		
 	                        	obj.minValue -= recordDebt.loanBalance;
-	                        	console.log('amt deducted: ' +recordDebt.loanBalance);
-	                        	console.log('post-value: '+obj.value);
 	                        	obj.value = obj.value.toFixed(2);
 	                        	
 	                        }
@@ -1011,11 +992,9 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 		                            //need validation
 		                            obj10.value -= recordDebt.monthly;
 		                            obj10.minValue -= recordDebt.monthly;	
-		                            console.log('passing through');
 		                        } else if($scope.debt.type !== 'Mortgage Loan' && obj10.description==='Other Loan Repayments') {
 		                        	obj10.value -= recordDebt.monthly;
 		                        	obj10.minValue -= recordDebt.monthly;
-		                        	console.log('passing through');
 	                    		}
 	                    		obj10.value = obj10.value.toFixed(2);
 	                    	}	
@@ -1030,7 +1009,6 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 		                            //need validation
 		                            obj11.value -= recordDebt.monthly;
 		                            obj11.minValue -= recordDebt.monthly;
-		                            console.log('passing through');
 		                        } 
 		                        obj11.value = obj11.value.toFixed(2);
 	                    	}

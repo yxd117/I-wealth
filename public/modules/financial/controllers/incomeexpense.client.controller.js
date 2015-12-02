@@ -26,8 +26,6 @@ angular.module('financial').controller('IncomeExpenseController', ['$scope', '$r
             $scope.month = $scope.dt.getMonth();
             $scope.year = Number($scope.dt.getFullYear());
             $scope.monthDisplay = $scope.selectedMonth;
-            console.log($scope.month);
-            console.log($scope.year);        
         };
 
         current();
@@ -139,7 +137,6 @@ angular.module('financial').controller('IncomeExpenseController', ['$scope', '$r
                        $scope.expenseDoughnutLabels = ['No Data'];
 
                     }
-                    console.log($scope.incomeDoughnutData);
                 }
                 if($scope.displayIncomeExpenseRecords.year !== $scope.selectedYear || $scope.monthArr[$scope.displayIncomeExpenseRecords.month] !== $scope.selectedMonth){
                     $scope.recordFound = 'No record exists for selected month/year. Displaying records for ' + $scope.monthArr[$scope.displayIncomeExpenseRecords.month] + ', ' + $scope.displayIncomeExpenseRecords.year;
@@ -153,7 +150,6 @@ angular.module('financial').controller('IncomeExpenseController', ['$scope', '$r
                 $scope.success = $scope.error = null;
                 //ONLY when they update
                 if (!$scope.user.incomeExpenseRecordsPeriod) {
-                    console.log('Hello??');
                     //If there is no existing record
                     $scope.user.incomeExpenseRecordsPeriod = {};
                     $scope.user.incomeExpenseRecordsPeriod.minMonth = $scope.month;
@@ -208,7 +204,6 @@ angular.module('financial').controller('IncomeExpenseController', ['$scope', '$r
                 angular.forEach(otherIncomeArr, function(value, key){
                     otherIncomeTotal = otherIncomeTotal + Number(value.value);
                 });
-                console.log(otherIncomeTotal);
                 //Expense
                 var fixedExpenseArr = $scope.displayIncomeExpenseRecords.monthlyExpense.fixedExpense;
                 var fixedExpenseTotal = 0;
@@ -308,9 +303,6 @@ angular.module('financial').controller('IncomeExpenseController', ['$scope', '$r
                         }
                     }
                     //else insert
-                    console.log(recordExist);
-                    console.log($scope.displayIncomeExpenseRecords);
-                    console.log($scope.user.incomeExpenseRecords);
                     if (recordExist === false) {
                         var toInsertArr = angular.copy($scope.displayIncomeExpenseRecords);
                         toInsertArr.year = angular.copy($scope.year);

@@ -38,7 +38,6 @@ angular.module('core').controller('ReportGenerationController', ['$rootScope', '
             $scope.selectedMonthReport = $scope.monthArr[$scope.month];
 
             $scope.selectedYearReport = $scope.year;
-            console.log('fk');
         };
 
 
@@ -1643,9 +1642,6 @@ angular.module('core').controller('ReportGenerationController', ['$rootScope', '
 			}else if($scope.selectedReportOption === '2'){
 				$scope.periodNum = 12;
 			}
-			console.log($scope.selectedReportOption);
-			console.log($scope.selectedMonthReport);
-			console.log($scope.selectedYearReport);
 			retrieveLatestRecords();
             updateChart();
 
@@ -1665,9 +1661,6 @@ angular.module('core').controller('ReportGenerationController', ['$rootScope', '
         	$rootScope.selectedMonthReport = $scope.selectedMonthReport;
         	$rootScope.selectedYearReport = $scope.selectedYearReport;
         	$rootScope.selectedReportOption = $scope.selectedReportOption;
-        	console.log($scope.selectedReportOption);
-        	console.log($scope.selectedMonthReport);
-        	console.log($scope.selectedYearReport);
         	retrieveLatestRecords();
             updateChart();
             

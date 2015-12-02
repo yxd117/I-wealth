@@ -30,7 +30,6 @@ angular.module('core').controller('NotificationController', ['$rootScope', '$sco
 							title: 'No new notification'
 						};
 					}
-					console.log($scope.listAll);
 				});					
 			}
 		
@@ -47,7 +46,6 @@ angular.module('core').controller('NotificationController', ['$rootScope', '$sco
 						title: 'No new notification'
 					};
 				}
-				console.log($scope.listAll);
 			});
 		};
 

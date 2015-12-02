@@ -29,7 +29,6 @@ angular.module('social').controller('PostsController', ['$scope', '$stateParams'
 		        content: this.content,
 		        privacy: this.privacy
 		    });
-	    	console.log(post);
 			$http.post('/api/posts', post).success(function(response){
 		        // $location.path('/post/' + response._id);
 		  		$window.location.reload();
@@ -44,18 +43,15 @@ angular.module('social').controller('PostsController', ['$scope', '$stateParams'
 		$scope.editPost = function () {
 			var postURL = '/api/posts/' + $stateParams.postId;
 			var viewPostURL = '/post/' + $stateParams.postId;
-			console.log($scope.post.content);
 	    	// Create new Article object
 	    	var post = new Post({
 		    	title: $scope.post.title,
 		        content: $scope.post.content,
 		        privacy: $scope.post.privacy
 		    });
-	    	console.log('before');
 			$http.put(postURL, post).success(function(response){
 		        // $location.path('/post/' + response._id);
 		        $location.path(viewPostURL);
-		      	console.log(response);
 
 		        // Clear form fields
 		        $scope.title = '';
@@ -99,10 +95,7 @@ angular.module('social').controller('PostsController', ['$scope', '$stateParams'
 	    };
 
 	    $scope.addComment = function(){
-	    	console.log($scope.comment);
-	    	console.log($stateParams.postId);
 	    	$http.put('/api/commentPost', {postId: $stateParams.postId, comment: $scope.comment}).success(function(response){
-	    		console.log(response);
 	    		$scope.post = response;
 	    		// $window.location.reload();
 	    		$scope.comment = '';
@@ -112,13 +105,8 @@ angular.module('social').controller('PostsController', ['$scope', '$stateParams'
 	    };
 
 	    $scope.editComment = function(commentContent, comment) {
-	    	console.log('here');
-	    	console.log(commentContent);
-	    	console.log($stateParams.postId);
-	    	console.log(comment);
 	    	$scope.editCmt = !$scope.editCmt;
 	    	$http.put('/api/editComment', {postId: $stateParams.postId, comment: commentContent, commentId : comment._id}).success(function(response){
-	    		console.log(response);
 	    		$scope.post = response;
 	    		// $window.location.reload();
 	    	}).error(function(){
@@ -126,9 +114,7 @@ angular.module('social').controller('PostsController', ['$scope', '$stateParams'
 	    	});    	
 	    };
 	    $scope.removeComment = function(comment){
-	    	console.log(comment);
 	    	$http.put('/api/removeComment', {postId: $stateParams.postId, commentId: comment._id}).success(function(response){
-	    		console.log(response);
 	    		$scope.post = response;
 	    	}).error(function(){
 	    		console.log('There is an error deleting comment');

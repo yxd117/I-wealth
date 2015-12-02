@@ -148,7 +148,6 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
 
 
             var exist =0;
-            console.log($scope.user.budgetLimits);
             for (var ab=0; ab<$scope.user.budgetLimits.length; ab++) {
 
                 var budgetLimit = $scope.user.budgetLimits[ab];
@@ -523,11 +522,9 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
 
 
             $scope.type = $scope.type.trim(); 
-            console.log('What is Type:'+$scope.type);
 
             if (!$scope.user.incomeExpenseRecordsPeriod) {
                 //If there is no existing record
-                console.log('do you enter?');
                 $scope.user.incomeExpenseRecordsPeriod = {};
                 $scope.user.incomeExpenseRecordsPeriod.minMonth = presentMonth;
                 $scope.user.incomeExpenseRecordsPeriod.minYear = presentYear;
@@ -536,7 +533,6 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
 
             } else if (($scope.user.incomeExpenseRecordsPeriod.maxMonth <= presentMonth && $scope.user.incomeExpenseRecordsPeriod.maxYear <= presentYear) || ($scope.user.incomeExpenseRecordsPeriod.maxMonth > presentMonth && $scope.user.incomeExpenseRecordsPeriod.maxYear < presentYear)) {
 
-                console.log('do you enter2?');
                 //ASSUMING THAT THE USER NEVER INSERTS DATA FOR THE FUTURE (HE CANT POSSIBLY DO SO ALSO)
                 //SETS RECORDS MAX PERIOD TO PRESENT MONTH & YEAR
                 //I ALSO CURRENTLY DONT ALLOW USERS TO SET BUDGET FOR THE FUTURE (ONLY FOR PRESENT MONTH)
@@ -547,7 +543,6 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
              
             
             if($scope.user.incomeExpenseRecords.length===0) { //in the event of an empty record (FIRSTTIME)                
-                console.log('1st');
                 $scope.displayIncomeExpenseRecords.year = presentYear;
                 $scope.displayIncomeExpenseRecords.month = presentMonth;                                
                 $scope.user.incomeExpenseRecords.push($scope.displayIncomeExpenseRecords); 
@@ -557,14 +552,12 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
                     var recordChecker = $scope.user.incomeExpenseRecords[j];                                                         
                     if (recordChecker.month===presentMonth&&recordChecker.year===presentYear) {
                         existenceCheck++;
-                        console.log('2nd');
                     }
                 }
                 if (existenceCheck===0) {
                     $scope.displayIncomeExpenseRecords.year = presentYear;
                     $scope.displayIncomeExpenseRecords.month = presentMonth;                                
                     $scope.user.incomeExpenseRecords.push($scope.displayIncomeExpenseRecords);  
-                    console.log('3rd');
                 }
             }
             
@@ -594,16 +587,12 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
                         date: $scope.date,
                         amount: $scope.expenseAmt
                     };
-
-                    console.log('Almost THERE');
                     
                     for (var get in thisMonthSpecExpense) {                        
                         var obj = thisMonthSpecExpense[get];
                         //console.log($scope.type);
                         //console.log(obj.description);
-                        console.log('next');
-                        if($scope.type=== obj.description) {
-                            console.log('SUCCESS');                            
+                        if($scope.type=== obj.description) {                        
                             obj.recordsTotal += $scope.expenseAmt;
                             obj.records.push(record);
                             obj.value = Number(obj.value);
@@ -888,27 +877,20 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
             for(var i=0;i<$scope.user.incomeExpenseRecords.length; i++) {            
                 var expenseRecord = $scope.user.incomeExpenseRecords[i];  
                 if (expenseRecord.month===presentMonth&&expenseRecord.year===presentYear) {
-                    console.log('level1');
                     var expenseSelected;
                     
                     if($scope.expenseType==='fixedExpense') {
-                        expenseSelected = expenseRecord.monthlyExpense.fixedExpense;
-                        console.log('level2.1');                                                
+                        expenseSelected = expenseRecord.monthlyExpense.fixedExpense;                                         
                     } else if($scope.expenseType==='transport') {
                         expenseSelected = expenseRecord.monthlyExpense.transport;
-                        console.log('level2.2');
                     } else if($scope.expenseType==='utility') {
                         expenseSelected = expenseRecord.monthlyExpense.utilityHousehold;
-                        console.log('level2.3');
                     } else if($scope.expenseType==='food') {
                         expenseSelected = expenseRecord.monthlyExpense.foodNecessities;
-                        console.log('level2.4');
                     } else if($scope.expenseType==='misc') {
                         expenseSelected = expenseRecord.monthlyExpense.misc;
-                        console.log('level2.5');
                     } else if($scope.expenseType==='optionalSavings') {
                         expenseSelected = expenseRecord.monthlyExpense.optionalSavings;
-                        console.log('level2.6');
                     }
 
                     for (var get in expenseSelected) {                        
@@ -924,7 +906,6 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
                                     obj.value = Number(obj.value) -itemNo;
                                     obj.value = obj.value.toFixed(2);
                                     obj.records.splice(a,1);
-                                    console.log('Make it?');
                                     //MORE DETAILED CHECK REQUIRED
                                     //CHANGE RECORDS TOTAL                                        
                                 }
@@ -1051,7 +1032,6 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
             }
         };
         $scope.$watch('category',function() {
-            console.log('mati');
             if($scope.category==='Fixed Expense') {                
                 $scope.selectedExpense = $scope.fixedExpense;
                 $scope.formRef = 'fixedExpense';

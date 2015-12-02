@@ -177,19 +177,15 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', '$loca
 				$scope.userRecord = angular.toJson(response, true);
 				$scope.success = true;
 			}).error(function(response){
-				console.log(response.data.message);
 				$scope.error = response.data.message;
 			});
 		};
 
 		$scope.deleteRecord = function(){
-			console.log($scope.emailSelected);
 			if(!$scope.emailSelected){
-				console.log('lol');
 				$scope.errorDelete = 'User not selected';
 			}else{
 				$http.put('/admin/deleteUser', {userEmail: $scope.emailSelected, userRecord: $scope.userRecord}).success(function(response){
-					console.log(response);
 					$scope.userList = response;
 					$scope.successDelete = true;
 					$scope.userRecord = null;
@@ -212,7 +208,6 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', '$loca
 		$scope.createNewUser = function(){
 			$http.post('/admin/createUser', $scope.credentials).success(function(response) {
 				// If successful we assign the response to the global user model
-				console.log(response);
 				$scope.userList = response;
 				$scope.successCreate = true;
 			}).error(function(response) {
@@ -262,11 +257,9 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', '$loca
 
 	    $scope.addNewAsset = function(file){
 	    	upload(file);
-	    	console.log($scope.assetDetails.name);
 	    	$scope.assetDetails.image = $scope.assetDetails.name;
 	    	$http.post('/admin/addNewAsset', $scope.assetDetails).success(function(response) {
 				// If successful we assign the response to the global user model
-				console.log(response);
 				$scope.assets = response;
 				$scope.successAddAsset = true;
 				$scope.successUpdateRecords = $scope.errorUpdateRecords = null;
@@ -329,14 +322,12 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', '$loca
 				$scope.assetRecord = response;
 				$scope.successUpdateAssets = true;
 			}).error(function(response){
-				console.log(response.data.message);
 				$scope.errorUpdateAssets = response.data.message;
 			});
 		};
 
 		$scope.deleteAssetRecord = function(){
 			$http.put('/admin/deleteAsset', {assetName: $scope.assetSelected, assetRecord: $scope.assetRecord}).success(function(response){
-				console.log(response);
 				$scope.assetList = response;
 				$scope.successAssetDelete = true;
 				$scope.assetRecord = null;
@@ -549,7 +540,6 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', '$loca
 		var retrieveFinancialHealth = function(){
 			$http.put('/admin/retrieveFinancialHealth', {month:$scope.month, year: $scope.selectedYear}).success(function(response){
 				$scope.userFinancialHealth = response;
-				console.log($scope.userFinancialHealth);
 				
 				$scope.labelsFinancialHealth = ['Healthy', 'Unhealthy', 'N/A'];
 				displayFinancialHealth();
@@ -631,7 +621,6 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', '$loca
 		retrieveFinancialUsage();
 
 		$scope.reloadFinancialUsage = function(){
-			console.log('reload');
 			var yearFrom = angular.copy($scope.selectedYearFrom);
 			for(var i = 0; i < $scope.monthArr.length; i++){
 				if($scope.monthArr[i] === $scope.selectedMonthFrom){
@@ -715,7 +704,6 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', '$loca
 		retrieveSocialActivity();
 
 		$scope.reloadSocialActivity = function(){
-			console.log('reload');
 			var yearFrom = angular.copy($scope.selectedYearFrom);
 			for(var i = 0; i < $scope.monthArr.length; i++){
 				if($scope.monthArr[i] === $scope.selectedMonthFrom){
@@ -929,7 +917,6 @@ angular.module('core').controller('HeaderController', ['$rootScope', '$scope', '
 			$scope.user = Authentication.user;
 			if($scope.user){
 				$scope.imageUrl = 'https://hexapic.s3.amazonaws.com/' + $scope.user.profilePic + '?decache=' + Math.random();
-				console.log($scope.user.profilePic);
 				$http.get($scope.imageUrl).then(function(response){
 					$scope.imageReady = true;
 				}, function(response){
@@ -1086,11 +1073,9 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
         $scope.displayThisMonthMiscTotal = 0;
 
 
-        console.log($scope.budgetLimit);
         if (typeof $scope.budgetLimit !== 'undefined') {
         	if ($scope.budgetLimit.fixedExpenseB!==0 ) {
                 $scope.feBudgetSet = true;
-                console.log('Entered');
             }
             if ($scope.budgetLimit.transportB!==0) {
                 $scope.tBudgetSet = true;   
@@ -1119,8 +1104,7 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
                     var typeE = progressInfo(valueE);                   
                     $scope.dynamicE = Math.floor(valueE);
                     $scope.typeE = typeE;
-                    $scope.feStatus = standingCheck($scope.thisMonthFixedExpenseTotal,$scope.budgetLimit.fixedExpenseB);
-                    console.log('hello'+$scope.feStatus);                   
+                    $scope.feStatus = standingCheck($scope.thisMonthFixedExpenseTotal,$scope.budgetLimit.fixedExpenseB);                 
                     $scope.displayFeExceed = ($scope.displayThisMonthFixedExpenseTotal-$scope.budgetLimit.fixedExpenseB);
                     
                     //Load Transport Expense Table
@@ -1179,7 +1163,6 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
             var advImageUrl = 'https://hexapic.s3.amazonaws.com/assets/';
             
 			$http.get('/admin/retrieveCurrentAd').success(function(response){
-				console.log(response);
                 if(response.length === 0) $scope.adHidden = false;
                 $scope.decachedImageUrl = advImageUrl + response.name + '?decache=' + Math.random();
 
@@ -1233,7 +1216,6 @@ angular.module('core').controller('NotificationController', ['$rootScope', '$sco
 							title: 'No new notification'
 						};
 					}
-					console.log($scope.listAll);
 				});					
 			}
 		
@@ -1250,7 +1232,6 @@ angular.module('core').controller('NotificationController', ['$rootScope', '$sco
 						title: 'No new notification'
 					};
 				}
-				console.log($scope.listAll);
 			});
 		};
 
@@ -1308,7 +1289,6 @@ angular.module('core').controller('ReportGenerationController', ['$rootScope', '
             $scope.selectedMonthReport = $scope.monthArr[$scope.month];
 
             $scope.selectedYearReport = $scope.year;
-            console.log('fk');
         };
 
 
@@ -2913,9 +2893,6 @@ angular.module('core').controller('ReportGenerationController', ['$rootScope', '
 			}else if($scope.selectedReportOption === '2'){
 				$scope.periodNum = 12;
 			}
-			console.log($scope.selectedReportOption);
-			console.log($scope.selectedMonthReport);
-			console.log($scope.selectedYearReport);
 			retrieveLatestRecords();
             updateChart();
 
@@ -2935,9 +2912,6 @@ angular.module('core').controller('ReportGenerationController', ['$rootScope', '
         	$rootScope.selectedMonthReport = $scope.selectedMonthReport;
         	$rootScope.selectedYearReport = $scope.selectedYearReport;
         	$rootScope.selectedReportOption = $scope.selectedReportOption;
-        	console.log($scope.selectedReportOption);
-        	console.log($scope.selectedMonthReport);
-        	console.log($scope.selectedYearReport);
         	retrieveLatestRecords();
             updateChart();
             
@@ -3299,9 +3273,6 @@ angular.module('financial').controller('AssetsController', ['$scope', '$rootScop
                         }
                     }
                     //else insert
-                    console.log(recordExist);
-                    console.log($scope.displayAssetsRecords);
-                    console.log($scope.user.assetsRecords);
                     if (recordExist === false) {
                         var toInsertArr = angular.copy($scope.displayAssetsRecords);
                         toInsertArr.year = angular.copy($scope.year);
@@ -3312,7 +3283,6 @@ angular.module('financial').controller('AssetsController', ['$scope', '$rootScop
 
                 $scope.user.updatedAssets = true;
                 var user = new Users($scope.user);
-                console.log(user);
                 user.$update(function(response) {
                     $scope.success = true;
                     Authentication.user = response;
@@ -3320,7 +3290,6 @@ angular.module('financial').controller('AssetsController', ['$scope', '$rootScop
                     $scope.recordFound = null;
 
                 }, function(response) {
-                    console.log(response);
                     $scope.error = response.data.message;
                 });
             } else {
@@ -3337,8 +3306,6 @@ angular.module('financial').controller('AssetsController', ['$scope', '$rootScop
             $scope.monthDisplay = $scope.selectedMonth;
             $scope.selectedYear = $scope.year;
             // ng-init="selectedYear = year"
-            console.log($scope.month);
-            console.log($scope.year);
         };
 
         current();
@@ -3424,7 +3391,6 @@ angular.module('financial').controller('AssetsController', ['$scope', '$rootScop
                 $scope.assetsDoughnutLabels = ['Cash & Cash Equivalents', 'Personal Use Assets', 'Invested Assets', 'CPF Savings', 'Other Assets'];
             }
 
-            console.log($scope.selectedMonth);
             if($scope.displayAssetsRecords.year !== $scope.selectedYear || $scope.monthArr[$scope.displayAssetsRecords.month] !== $scope.selectedMonth){
                 $scope.recordFound = 'No record exists for selected month/year. Displaying records for ' + $scope.monthArr[$scope.displayAssetsRecords.month] + ', ' + $scope.displayAssetsRecords.year;
             }
@@ -3459,8 +3425,6 @@ angular.module('financial').controller('AssetsController', ['$scope', '$rootScop
             $scope.month = $scope.monthArr.indexOf($scope.selectedMonth);
             $scope.monthDisplay = $scope.selectedMonth;
             $scope.year = $scope.selectedYear;
-
-            console.log($scope.user.assetsRecords);
 
             reloadData();
         });
@@ -4701,7 +4665,6 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
 
 
             var exist =0;
-            console.log($scope.user.budgetLimits);
             for (var ab=0; ab<$scope.user.budgetLimits.length; ab++) {
 
                 var budgetLimit = $scope.user.budgetLimits[ab];
@@ -5076,11 +5039,9 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
 
 
             $scope.type = $scope.type.trim(); 
-            console.log('What is Type:'+$scope.type);
 
             if (!$scope.user.incomeExpenseRecordsPeriod) {
                 //If there is no existing record
-                console.log('do you enter?');
                 $scope.user.incomeExpenseRecordsPeriod = {};
                 $scope.user.incomeExpenseRecordsPeriod.minMonth = presentMonth;
                 $scope.user.incomeExpenseRecordsPeriod.minYear = presentYear;
@@ -5089,7 +5050,6 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
 
             } else if (($scope.user.incomeExpenseRecordsPeriod.maxMonth <= presentMonth && $scope.user.incomeExpenseRecordsPeriod.maxYear <= presentYear) || ($scope.user.incomeExpenseRecordsPeriod.maxMonth > presentMonth && $scope.user.incomeExpenseRecordsPeriod.maxYear < presentYear)) {
 
-                console.log('do you enter2?');
                 //ASSUMING THAT THE USER NEVER INSERTS DATA FOR THE FUTURE (HE CANT POSSIBLY DO SO ALSO)
                 //SETS RECORDS MAX PERIOD TO PRESENT MONTH & YEAR
                 //I ALSO CURRENTLY DONT ALLOW USERS TO SET BUDGET FOR THE FUTURE (ONLY FOR PRESENT MONTH)
@@ -5100,7 +5060,6 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
              
             
             if($scope.user.incomeExpenseRecords.length===0) { //in the event of an empty record (FIRSTTIME)                
-                console.log('1st');
                 $scope.displayIncomeExpenseRecords.year = presentYear;
                 $scope.displayIncomeExpenseRecords.month = presentMonth;                                
                 $scope.user.incomeExpenseRecords.push($scope.displayIncomeExpenseRecords); 
@@ -5110,14 +5069,12 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
                     var recordChecker = $scope.user.incomeExpenseRecords[j];                                                         
                     if (recordChecker.month===presentMonth&&recordChecker.year===presentYear) {
                         existenceCheck++;
-                        console.log('2nd');
                     }
                 }
                 if (existenceCheck===0) {
                     $scope.displayIncomeExpenseRecords.year = presentYear;
                     $scope.displayIncomeExpenseRecords.month = presentMonth;                                
                     $scope.user.incomeExpenseRecords.push($scope.displayIncomeExpenseRecords);  
-                    console.log('3rd');
                 }
             }
             
@@ -5147,16 +5104,12 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
                         date: $scope.date,
                         amount: $scope.expenseAmt
                     };
-
-                    console.log('Almost THERE');
                     
                     for (var get in thisMonthSpecExpense) {                        
                         var obj = thisMonthSpecExpense[get];
                         //console.log($scope.type);
                         //console.log(obj.description);
-                        console.log('next');
-                        if($scope.type=== obj.description) {
-                            console.log('SUCCESS');                            
+                        if($scope.type=== obj.description) {                        
                             obj.recordsTotal += $scope.expenseAmt;
                             obj.records.push(record);
                             obj.value = Number(obj.value);
@@ -5441,27 +5394,20 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
             for(var i=0;i<$scope.user.incomeExpenseRecords.length; i++) {            
                 var expenseRecord = $scope.user.incomeExpenseRecords[i];  
                 if (expenseRecord.month===presentMonth&&expenseRecord.year===presentYear) {
-                    console.log('level1');
                     var expenseSelected;
                     
                     if($scope.expenseType==='fixedExpense') {
-                        expenseSelected = expenseRecord.monthlyExpense.fixedExpense;
-                        console.log('level2.1');                                                
+                        expenseSelected = expenseRecord.monthlyExpense.fixedExpense;                                         
                     } else if($scope.expenseType==='transport') {
                         expenseSelected = expenseRecord.monthlyExpense.transport;
-                        console.log('level2.2');
                     } else if($scope.expenseType==='utility') {
                         expenseSelected = expenseRecord.monthlyExpense.utilityHousehold;
-                        console.log('level2.3');
                     } else if($scope.expenseType==='food') {
                         expenseSelected = expenseRecord.monthlyExpense.foodNecessities;
-                        console.log('level2.4');
                     } else if($scope.expenseType==='misc') {
                         expenseSelected = expenseRecord.monthlyExpense.misc;
-                        console.log('level2.5');
                     } else if($scope.expenseType==='optionalSavings') {
                         expenseSelected = expenseRecord.monthlyExpense.optionalSavings;
-                        console.log('level2.6');
                     }
 
                     for (var get in expenseSelected) {                        
@@ -5477,7 +5423,6 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
                                     obj.value = Number(obj.value) -itemNo;
                                     obj.value = obj.value.toFixed(2);
                                     obj.records.splice(a,1);
-                                    console.log('Make it?');
                                     //MORE DETAILED CHECK REQUIRED
                                     //CHANGE RECORDS TOTAL                                        
                                 }
@@ -5604,7 +5549,6 @@ angular.module('financial').controller('BudgetController', ['$scope', '$rootScop
             }
         };
         $scope.$watch('category',function() {
-            console.log('mati');
             if($scope.category==='Fixed Expense') {                
                 $scope.selectedExpense = $scope.fixedExpense;
                 $scope.formRef = 'fixedExpense';
@@ -7318,9 +7262,6 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 		var test4 = new Date(2015,10,22);
 		var testresult = noOfMonths(test1,test2);
 		var testresult2 = noOfMonths(test3,test4);
-		console.log('test : '+testresult);
-		console.log('test : '+testresult2);
-		
 
         $scope.updateRecordsForNewMonth = function () {        	
         	
@@ -7571,19 +7512,11 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 	                        if($scope.debt.type === 'Mortgage Loan' && obj10.description==='Mortgage Repayments') {        	
 	                            
 	                            //need validation
-	                            console.log(expenseRecord.month);
-	                            console.log(expenseRecord.year);
-	                            console.log(expenseRecord);
-	                            console.log('pre-value:' +obj10.value);
-	                            console.log($scope.debt);
 	                            obj10.value = Number(obj10.value);
-	                            console.log('scope debt monthly: '+$scope.debt.monthly);
 	                            obj10.value += $scope.debt.monthly;
 	                            obj10.value = obj10.value.toFixed(2);	                            
 	                            obj10.minValue += $scope.debt.monthly;
-	                            
-	                            console.log('amt added:' +$scope.debt.monthly);
-	                            console.log('post-value:' +obj10.value);
+	                           
 	                            expenseChecker = obj10.description;                            
 	                        } else if($scope.debt.type !== 'Mortgage Loan' && obj10.description==='Other Loan Repayments') {
 	                        	obj10.value = Number(obj10.value);
@@ -8093,7 +8026,6 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
         	//
 			
 			//
-			console.log('number of months: '+monthCounter);
 		 	for (var m = 0; m<=monthCounter; m++) {	
 				
 				
@@ -8123,16 +8055,9 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 	                        var obj = loansMortgagesRec[get];
 	                        
 	                        if($scope.debt.type=== obj.description) {
-	                        	console.log(liabilityRecord.month);
-	                        	console.log(liabilityRecord.year);
-	                        	console.log(obj);
-	                        	console.log($scope.debt.type);
-	                        	console.log('pre-value: ' +obj.value);
 	                        	obj.value = Number(obj.value);
 	                        	obj.value -= recordDebt.loanBalance;                        	                        		
 	                        	obj.minValue -= recordDebt.loanBalance;
-	                        	console.log('amt deducted: ' +recordDebt.loanBalance);
-	                        	console.log('post-value: '+obj.value);
 	                        	obj.value = obj.value.toFixed(2);
 	                        	
 	                        }
@@ -8189,11 +8114,9 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 		                            //need validation
 		                            obj10.value -= recordDebt.monthly;
 		                            obj10.minValue -= recordDebt.monthly;	
-		                            console.log('passing through');
 		                        } else if($scope.debt.type !== 'Mortgage Loan' && obj10.description==='Other Loan Repayments') {
 		                        	obj10.value -= recordDebt.monthly;
 		                        	obj10.minValue -= recordDebt.monthly;
-		                        	console.log('passing through');
 	                    		}
 	                    		obj10.value = obj10.value.toFixed(2);
 	                    	}	
@@ -8208,7 +8131,6 @@ angular.module('financial').controller('DebtsController', ['$scope', '$rootScope
 		                            //need validation
 		                            obj11.value -= recordDebt.monthly;
 		                            obj11.minValue -= recordDebt.monthly;
-		                            console.log('passing through');
 		                        } 
 		                        obj11.value = obj11.value.toFixed(2);
 	                    	}
@@ -8626,11 +8548,8 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
             $scope.month = $scope.dt.getMonth();
             $scope.year = Number($scope.dt.getFullYear());
             $scope.monthDisplay = $scope.selectedMonth;
-            console.log($scope.month);
-            console.log($scope.year);
 
             $scope.selectedMonth = $scope.monthArr[$scope.month];
-            console.log($scope.selectedMonth);
             $scope.selectedYear = $scope.year;
         };
 
@@ -9999,7 +9918,6 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
             ratioIdealInvestmentMinArr[ratioMthNum] = 0.2;
 
         };
-        console.log($scope.homeHealth);
 	}
 ]);
 'use strict';
@@ -12015,8 +11933,6 @@ angular.module('financial').controller('IncomeExpenseController', ['$scope', '$r
             $scope.month = $scope.dt.getMonth();
             $scope.year = Number($scope.dt.getFullYear());
             $scope.monthDisplay = $scope.selectedMonth;
-            console.log($scope.month);
-            console.log($scope.year);        
         };
 
         current();
@@ -12128,7 +12044,6 @@ angular.module('financial').controller('IncomeExpenseController', ['$scope', '$r
                        $scope.expenseDoughnutLabels = ['No Data'];
 
                     }
-                    console.log($scope.incomeDoughnutData);
                 }
                 if($scope.displayIncomeExpenseRecords.year !== $scope.selectedYear || $scope.monthArr[$scope.displayIncomeExpenseRecords.month] !== $scope.selectedMonth){
                     $scope.recordFound = 'No record exists for selected month/year. Displaying records for ' + $scope.monthArr[$scope.displayIncomeExpenseRecords.month] + ', ' + $scope.displayIncomeExpenseRecords.year;
@@ -12142,7 +12057,6 @@ angular.module('financial').controller('IncomeExpenseController', ['$scope', '$r
                 $scope.success = $scope.error = null;
                 //ONLY when they update
                 if (!$scope.user.incomeExpenseRecordsPeriod) {
-                    console.log('Hello??');
                     //If there is no existing record
                     $scope.user.incomeExpenseRecordsPeriod = {};
                     $scope.user.incomeExpenseRecordsPeriod.minMonth = $scope.month;
@@ -12197,7 +12111,6 @@ angular.module('financial').controller('IncomeExpenseController', ['$scope', '$r
                 angular.forEach(otherIncomeArr, function(value, key){
                     otherIncomeTotal = otherIncomeTotal + Number(value.value);
                 });
-                console.log(otherIncomeTotal);
                 //Expense
                 var fixedExpenseArr = $scope.displayIncomeExpenseRecords.monthlyExpense.fixedExpense;
                 var fixedExpenseTotal = 0;
@@ -12297,9 +12210,6 @@ angular.module('financial').controller('IncomeExpenseController', ['$scope', '$r
                         }
                     }
                     //else insert
-                    console.log(recordExist);
-                    console.log($scope.displayIncomeExpenseRecords);
-                    console.log($scope.user.incomeExpenseRecords);
                     if (recordExist === false) {
                         var toInsertArr = angular.copy($scope.displayIncomeExpenseRecords);
                         toInsertArr.year = angular.copy($scope.year);
@@ -12917,21 +12827,18 @@ angular.module('financial').controller('InsurancesController', ['$scope', '$root
                     var recordChecker = $scope.user.assetsRecords[j];                                                         
                     if (recordChecker.month===$scope.month&&recordChecker.year===$scope.year) {
                         existenceCheck++;
-                        console.log('2nd');
                     }
                 }
                 if (existenceCheck===0) {
                     $scope.displayAssetsRecords.year = $scope.year;
                     $scope.displayAssetsRecords.month = $scope.month;                                
                     $scope.user.assetsRecords.push($scope.displayAssetsRecords);  
-                    console.log('3rd');
                 }
             }
 
             for(var i=0;i<$scope.user.assetsRecords.length; i++) {            
                 var assetRecord = $scope.user.assetsRecords[i];  
                 $scope.toBeUpdatedAssets = $scope.user.assetsRecords[i];
-                console.log('hello');
                 if (assetRecord.month===$scope.month&&assetRecord.year===$scope.year) {
                     var specAsset;
                     if ($scope.insurance.term==='Life') {
@@ -12981,12 +12888,10 @@ angular.module('financial').controller('InsurancesController', ['$scope', '$root
                     disability = $scope.insurance.coverage.disability;
                     hospitalIncome = $scope.insurance.coverage.hospitalIncome;
                     var total = critical+death+accident+hospitalization+reimbursement+disability+hospitalIncome;
-                    console.log('total is: '+total);
                     specAsset.value = Number(specAsset.value);
                     specAsset.value += total;
                     specAsset.minValue += total;
                     $scope.insurance.totalTracker = total;
-                    console.log(assetRecord.investedAssets.lifeInsurance);
                     specAsset.value = specAsset.value.toFixed(2);
                     /*
                     for (var get in thisMonthSpecExpense) {                        
@@ -13078,16 +12983,13 @@ angular.module('financial').controller('InsurancesController', ['$scope', '$root
                 for(var i=0;i<$scope.user.assetsRecords.length; i++) {
 
                     assetRecord = $scope.user.assetsRecords[i];  
-                    console.log('hello');
 
                     if (assetRecord.month===$scope.month&&assetRecord.year===$scope.year) {
                         
                         //Remove first
                         var specAssetOriginal;
-                        console.log(original.term);
                         if (original.term==='Life') {
                             specAssetOriginal = assetRecord.investedAssets.lifeInsurance;
-                            console.log('should enter right');
 
                         }
                         else if (original.term==='Investment') {
@@ -13102,8 +13004,7 @@ angular.module('financial').controller('InsurancesController', ['$scope', '$root
                         //var total = critical+death+accident+hospitalization+reimbursement+disability+hospitalIncome;
                         specAssetOriginal.value = Number(specAssetOriginal.value);
                         specAssetOriginal.value -= original.totalTracker;
-                        specAssetOriginal.minValue -= original.totalTracker;
-                        console.log('What? '+specAssetOriginal.value);                        
+                        specAssetOriginal.minValue -= original.totalTracker;                    
                         //$scope.insurance.totalTracker = total;
 
                         //Add
@@ -13111,7 +13012,6 @@ angular.module('financial').controller('InsurancesController', ['$scope', '$root
                         var specAsset;
                         if ($scope.insurance.term==='Life') {
                             specAsset = assetRecord.investedAssets.lifeInsurance;
-                            console.log('Should enter 2');
                         }
                         else if ($scope.insurance.term==='Investment') {
                             specAsset = assetRecord.investedAssets.investmentInsurance;
@@ -13187,7 +13087,6 @@ angular.module('financial').controller('InsurancesController', ['$scope', '$root
                 var investedAssetsTotal = 0;
                 angular.forEach(investedAssetsArr, function(value, key){
                     investedAssetsTotal = investedAssetsTotal + Number(value.value);
-                    console.log(value.value);
                 });
 
                 var cpfSavingsArr = assetRecord.cpfSavings;
@@ -13285,7 +13184,6 @@ angular.module('financial').controller('InsurancesController', ['$scope', '$root
             var investedAssetsTotal = 0;
             angular.forEach(investedAssetsArr, function(value, key){
                 investedAssetsTotal = investedAssetsTotal + Number(value.value);
-                console.log(value.value);
             });
 
             var cpfSavingsArr = assetRecord.cpfSavings;
@@ -13326,7 +13224,6 @@ angular.module('financial').controller('InsurancesController', ['$scope', '$root
         $scope.cancel = function() {
             $scope.success = false;
             $scope.insurance = '';
-            console.log('RUN');
             $scope.error = '';
         };
 
@@ -13353,8 +13250,6 @@ angular.module('financial').controller('LiabilitiesController', ['$scope', '$roo
             $scope.month = $scope.dt.getMonth();
             $scope.year = Number($scope.dt.getFullYear());
             $scope.monthDisplay = $scope.selectedMonth;
-            console.log($scope.month);
-            console.log($scope.year);
         };
 
 
@@ -16296,7 +16191,6 @@ angular.module('milestones').controller('MilestonesController', ['$scope', '$sta
 					var progress = Math.floor((currentAmount/targetAmount)*100);
 
 					var startDate = $scope.startDate;
-					console.log('added start date'+startDate);
 					var startDateD = startDate.getDate();					
 					//var startDateMth = $scope.getMonthString(startDate.getMonth());
 					var startDateYr = startDate.getFullYear();
@@ -16353,11 +16247,8 @@ angular.module('milestones').controller('MilestonesController', ['$scope', '$sta
 		};
 
 		$scope.makeContribution = function() {
-			console.log('entered');
 			$scope.user.mileStones[$scope.user.updateMilestonePos].currentAmount += $scope.contribution;
 			
-			console.log('scope is'+$scope.contribution);
-
 			$scope.user.mileStones[$scope.user.updateMilestonePos].progress = Math.floor(($scope.user.mileStones[$scope.user.updateMilestonePos].currentAmount/$scope.user.mileStones[$scope.user.updateMilestonePos].targetAmount)*100);
 			
 			if ($scope.user.mileStones[$scope.user.updateMilestonePos].progress>100) {
@@ -16450,10 +16341,8 @@ angular.module('milestones').controller('MilestonesController', ['$scope', '$sta
 				var mileStone = $scope.user.mileStones[i];
 				if (mileStone.goalTitle===x.goalTitle) {
 					arrayPos = i;
-					console.log('Enter liao');
 				}
 			}
-			console.log('check'+arrayPos);
 				
 			
 			$scope.user.updateMilestonePos = arrayPos;
@@ -16473,7 +16362,6 @@ angular.module('milestones').controller('MilestonesController', ['$scope', '$sta
 		$scope.markComplete = function() {
 			var confirmComplete = confirm('Confirm Completion of: '+$scope.user.mileStones[$scope.user.updateMilestonePos].goalTitle +' goal?');
 			var completedObj = $scope.user.mileStones[$scope.user.updateMilestonePos];			
-			console.log(completedObj);
 			if(confirmComplete) {
 				$scope.user.completedMilestones.push(completedObj);
 
@@ -16499,8 +16387,6 @@ angular.module('milestones').controller('MilestonesController', ['$scope', '$sta
 		$scope.deleteMilestone = function(x) {
 
 			var position = 0;
-			
-			console.log(x.goalTitle);
 
 		  	var confirmDelete = confirm('Confirm delete milestone: '+x.goalTitle);
 			  	if (confirmDelete) {
@@ -16540,8 +16426,6 @@ angular.module('milestones').controller('MilestonesController', ['$scope', '$sta
   		$scope.deleteCompletedMilestone = function(x) {
 
 			var position = 0;
-			
-			console.log(x.goalTitle);
 
 		  	var confirmDelete = confirm('Confirm delete milestone: '+x.goalTitle);
 			  	if (confirmDelete) {
@@ -16753,7 +16637,6 @@ angular.module('milestones').controller('MilestonesController', ['$scope', '$sta
 						mileStone.daysLeftFromToday = Math.round(Math.abs((dateUsed.getTime() - endDate.getTime())/(oneDay))); //today till end date
 						mileStone.monthsLeft = Math.floor(mileStone.daysLeftFromToday/30);						
 						mileStone.dateProgress = 0;
-						console.log('A');
 					} else  if (today<endDate && mileStone.progress<100) {
 						dateUsed = today;
 						mileStone.status = 'In-Progress';
@@ -16761,7 +16644,6 @@ angular.module('milestones').controller('MilestonesController', ['$scope', '$sta
 						mileStone.daysLeftFromToday = Math.round(Math.abs((dateUsed.getTime() - endDate.getTime())/(oneDay))); //today till end date
 						mileStone.monthsLeft = Math.floor(mileStone.daysLeftFromToday/30);						
 						mileStone.dateProgress= Math.floor((((Math.abs(startDate.getTime()-today.getTime())/(oneDay))/mileStone.totalDurationDays)*100)); 
-						console.log('B');
 					} else if (today>=endDate||mileStone.progress===100) {						
 						mileStone.status = 'Completed';
 						mileStone.countDownToStart = 0;
@@ -16783,7 +16665,6 @@ angular.module('milestones').controller('MilestonesController', ['$scope', '$sta
 								mileStone.completionDate = today.getDate()+'-'+month+'-'+today.getFullYear();
 							}							
 						}
-						console.log('C');
 					}
 					//3. Monthly Payment Advice
 			    	if (mileStone.daysLeftFromToday>=30) {
@@ -16812,7 +16693,6 @@ angular.module('milestones').controller('MilestonesController', ['$scope', '$sta
 		updateMethod();	// END.
 
 		$scope.addNewMilestoneFnc = function() {
-			console.log($scope.goal);
 			var errorCheck = 0;	
 
 			$scope.goal.uniqueId = $scope.goal.name+$scope.goal.type;	
@@ -16942,16 +16822,13 @@ angular.module('milestones').controller('MilestonesController', ['$scope', '$sta
 					$scope.goal.daysLeftFromToday = Math.round(Math.abs((dateUsed.getTime() - endDate.getTime())/(oneDay))); //today till end date
 					$scope.goal.monthsLeft = Math.floor($scope.goal.daysLeftFromToday/30);						
 					$scope.goal.dateProgress = 0;
-					console.log('A');
 				} else  if (today<endDate && $scope.goal.progress<100) {
 					dateUsed = today;
 					$scope.goal.status = 'In-Progress';
 					$scope.goal.countDownToStart = 0;
 					$scope.goal.daysLeftFromToday = Math.round(Math.abs((dateUsed.getTime() - endDate.getTime())/(oneDay))); //today till end date
 					$scope.goal.monthsLeft = Math.floor($scope.goal.daysLeftFromToday/30);
-					console.log((startDate.getTime()-today.getTime())/(oneDay));
 					$scope.goal.dateProgress= Math.floor((((Math.abs(startDate.getTime()-today.getTime())/(oneDay))/$scope.goal.totalDurationDays)*100)); 
-					console.log('B');
 				} else if (today>=endDate||$scope.goal.progress===100) {						
 					$scope.goal.status = 'Completed';
 					$scope.goal.countDownToStart = 0;
@@ -16973,7 +16850,6 @@ angular.module('milestones').controller('MilestonesController', ['$scope', '$sta
 							$scope.goal.completionDate = today.getDate()+'-'+month+'-'+today.getFullYear();
 						}							
 					}
-					console.log('C');
 				}
 				//3. Monthly Payment Advice
 				if ($scope.goal.daysLeftFromToday>=30) {
@@ -17033,9 +16909,7 @@ angular.module('milestones').controller('MilestonesController', ['$scope', '$sta
 		};
 
 		$scope.makeContribution = function(x) {
-			
-			console.log(x);
-			console.log(x.contribution);
+
 			if (x.contribution!==0) {
 				for (var i = 0; i<$scope.user.mileStones.length; i++) {
 					if ($scope.user.mileStones[i].name===x.name && $scope.user.mileStones[i].startDate===x.startDate) {
@@ -17066,7 +16940,6 @@ angular.module('milestones').controller('MilestonesController', ['$scope', '$sta
 			
 			var completedObj = $scope.goal;
 			completedObj.id = $scope.user.completedMilestones.length+1;			
-			console.log(completedObj);
 
 			if (typeof completedObj.completionDate === 'undefined' || $scope.goal.completionDate ==='undefined') {
 				var month = $scope.getMonthString(today.getMonth());
@@ -17107,15 +16980,12 @@ angular.module('milestones').controller('MilestonesController', ['$scope', '$sta
 		
 		$scope.deleteMilestone = function() {			
 			
-			console.log($scope.goal);
-
 			for (var i = 0;  i<$scope.user.mileStones.length; i++) {
     			var mileStone = $scope.user.mileStones[i];
     			
     			if (mileStone.uniqueId===$scope.goal.uniqueId) {
     			   				
     				$scope.user.mileStones.splice(i,1);
-    				console.log('WHAAAATT!');
     			}
 			}
 			if ($scope.user.mileStones.length===0) {
@@ -17132,7 +17002,6 @@ angular.module('milestones').controller('MilestonesController', ['$scope', '$sta
 
 			}, function(response) {
 				$scope.error = response.data.message;
-				console.log($scope.error);
 				alert('Error Deleting. Try Delete Again');
 				location.reload();
 
@@ -17142,8 +17011,6 @@ angular.module('milestones').controller('MilestonesController', ['$scope', '$sta
 		};
 
 		$scope.deleteCompletedMilestone = function() {			
-			
-			console.log($scope.goal);
 
 			for (var i = 0;  i<$scope.user.completedMilestones.length; i++) {
     			var mileStone = $scope.user.completedMilestones[i];
@@ -17357,7 +17224,6 @@ angular.module('social').controller('PostsController', ['$scope', '$stateParams'
 		        content: this.content,
 		        privacy: this.privacy
 		    });
-	    	console.log(post);
 			$http.post('/api/posts', post).success(function(response){
 		        // $location.path('/post/' + response._id);
 		  		$window.location.reload();
@@ -17372,18 +17238,15 @@ angular.module('social').controller('PostsController', ['$scope', '$stateParams'
 		$scope.editPost = function () {
 			var postURL = '/api/posts/' + $stateParams.postId;
 			var viewPostURL = '/post/' + $stateParams.postId;
-			console.log($scope.post.content);
 	    	// Create new Article object
 	    	var post = new Post({
 		    	title: $scope.post.title,
 		        content: $scope.post.content,
 		        privacy: $scope.post.privacy
 		    });
-	    	console.log('before');
 			$http.put(postURL, post).success(function(response){
 		        // $location.path('/post/' + response._id);
 		        $location.path(viewPostURL);
-		      	console.log(response);
 
 		        // Clear form fields
 		        $scope.title = '';
@@ -17427,10 +17290,7 @@ angular.module('social').controller('PostsController', ['$scope', '$stateParams'
 	    };
 
 	    $scope.addComment = function(){
-	    	console.log($scope.comment);
-	    	console.log($stateParams.postId);
 	    	$http.put('/api/commentPost', {postId: $stateParams.postId, comment: $scope.comment}).success(function(response){
-	    		console.log(response);
 	    		$scope.post = response;
 	    		// $window.location.reload();
 	    		$scope.comment = '';
@@ -17440,13 +17300,8 @@ angular.module('social').controller('PostsController', ['$scope', '$stateParams'
 	    };
 
 	    $scope.editComment = function(commentContent, comment) {
-	    	console.log('here');
-	    	console.log(commentContent);
-	    	console.log($stateParams.postId);
-	    	console.log(comment);
 	    	$scope.editCmt = !$scope.editCmt;
 	    	$http.put('/api/editComment', {postId: $stateParams.postId, comment: commentContent, commentId : comment._id}).success(function(response){
-	    		console.log(response);
 	    		$scope.post = response;
 	    		// $window.location.reload();
 	    	}).error(function(){
@@ -17454,9 +17309,7 @@ angular.module('social').controller('PostsController', ['$scope', '$stateParams'
 	    	});    	
 	    };
 	    $scope.removeComment = function(comment){
-	    	console.log(comment);
 	    	$http.put('/api/removeComment', {postId: $stateParams.postId, commentId: comment._id}).success(function(response){
-	    		console.log(response);
 	    		$scope.post = response;
 	    	}).error(function(){
 	    		console.log('There is an error deleting comment');
@@ -17602,10 +17455,7 @@ angular.module('social').controller('SocialController', ['$scope', '$window','$s
 			});
 		};
 		$scope.addFriend = function(friendEmail, friendId){
-			console.log(friendEmail);
-			console.log('friends' + friendId);
 			$http.put('/friendship/addFriend', {friendEmail: friendEmail, friendId: friendId}).success(function(response){
-				console.log(response);
 				$scope.userList.forEach(function(user){
 					if(user.email === friendEmail) user.friendStatus = 1;
 				});
@@ -17619,7 +17469,6 @@ angular.module('social').controller('SocialController', ['$scope', '$window','$s
 
 		$scope.acceptFriend = function(friendEmail, friendId){
 			$http.put('/friendship/acceptFriend', {friendEmail: friendEmail, friendId: friendId}).success(function(response){
-				console.log(response);
 				$scope.userList.forEach(function(user){
 					if(user.email === friendEmail) user.friendStatus = 3;
 				});
@@ -17629,10 +17478,8 @@ angular.module('social').controller('SocialController', ['$scope', '$window','$s
 			});	
 		};
 		$scope.findOne = function(){
-			console.log( $stateParams.profileId);
 			var userURL = '/api/social/' + $stateParams.profileId;
 			$http.get(userURL).then(function(response){
-				console.log(response);
 				$scope.userProfile = response.data;
 
 				$scope.userProfile.friendList.num = 0;
@@ -17648,7 +17495,6 @@ angular.module('social').controller('SocialController', ['$scope', '$window','$s
 		var findProfilePosts = function(userProfile){
 	    	$anchorScroll();
 			$http.get('/api/postsByUser', {params: {_id: userProfile._id}}).then(function(response){
-				console.log(response);
 				$scope.posts = response.data;
 
 			});		
@@ -17663,7 +17509,6 @@ angular.module('social').controller('SocialController', ['$scope', '$window','$s
 		};
 
 	    $scope.upPost = function(postId, userProfile){
-	    	console.log('here');
 			$http.put('/api/upUserPoints', {_id: userProfile._id,postId: postId}).success(function(response){
 	  			$scope.posts = response;
 	  		}).error(function(){
@@ -18054,7 +17899,6 @@ angular.module('users').controller('QuestionnaireController', ['$scope', '$state
 
 			if(user.creditProfileScore.sLocativeType === null || user.creditProfileScore.sLocativeType === undefined) completePersonalQns = false;
 			else personalScore += Number(user.creditProfileScore.sLocativeType);
-			console.log(personalScore);
 
 			if(user.creditProfileScore.sNoOfDependents === null || user.creditProfileScore.sNoOfDependents === undefined) completePersonalQns = false;
 			else {
@@ -18210,7 +18054,7 @@ angular.module('users').controller('SettingsController', ['$rootScope','$scope',
 						$scope.user.age = currYear - birthYear - 1;
 					}					
 				}catch(e){
-					console.log('no change in date');
+					console.log(e);
 				}
 
 
@@ -18230,7 +18074,6 @@ angular.module('users').controller('SettingsController', ['$rootScope','$scope',
 				}, function(response) {
 					$scope.error = response.data.message;
 				});
-				console.log(user);
 			} else {
 				$scope.submitted = true;
 			}
@@ -18250,7 +18093,6 @@ angular.module('users').controller('SettingsController', ['$rootScope','$scope',
 				}, function(response) {
 					$scope.error = response.data.message;
 				});
-				console.log(user);
 			} else {
 				$scope.submitted = true;
 			}
@@ -18270,7 +18112,6 @@ angular.module('users').controller('SettingsController', ['$rootScope','$scope',
 				}, function(response) {
 					$scope.error = response.data.message;
 				});
-				console.log(user);
 			} else {
 				$scope.submitted = true;
 			}
@@ -18311,7 +18152,6 @@ angular.module('users').controller('SettingsController', ['$rootScope','$scope',
 		var get_signed_request = function(file){
 		    //var xhr = new XMLHttpRequest();
 		    var url = 'https://hexapic.s3.amazonaws.com/sign_s3?file_name='+$scope.user.profilePic+'&file_type='+file.type;
-		    console.log(file);
 		    $http.get('/signaws', file).success(function(response) {
 				// If successful 
 				upload_file(file, response.signed_request, response.url);
@@ -18333,7 +18173,6 @@ angular.module('users').controller('SettingsController', ['$rootScope','$scope',
 			}, function(response) {
 				$scope.error = response.data.message;
 			});
-			console.log(user);
 		};
 
 	    $scope.upload = function (file) {

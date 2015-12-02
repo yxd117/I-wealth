@@ -121,9 +121,6 @@ angular.module('financial').controller('AssetsController', ['$scope', '$rootScop
                         }
                     }
                     //else insert
-                    console.log(recordExist);
-                    console.log($scope.displayAssetsRecords);
-                    console.log($scope.user.assetsRecords);
                     if (recordExist === false) {
                         var toInsertArr = angular.copy($scope.displayAssetsRecords);
                         toInsertArr.year = angular.copy($scope.year);
@@ -134,7 +131,6 @@ angular.module('financial').controller('AssetsController', ['$scope', '$rootScop
 
                 $scope.user.updatedAssets = true;
                 var user = new Users($scope.user);
-                console.log(user);
                 user.$update(function(response) {
                     $scope.success = true;
                     Authentication.user = response;
@@ -142,7 +138,6 @@ angular.module('financial').controller('AssetsController', ['$scope', '$rootScop
                     $scope.recordFound = null;
 
                 }, function(response) {
-                    console.log(response);
                     $scope.error = response.data.message;
                 });
             } else {
@@ -159,8 +154,6 @@ angular.module('financial').controller('AssetsController', ['$scope', '$rootScop
             $scope.monthDisplay = $scope.selectedMonth;
             $scope.selectedYear = $scope.year;
             // ng-init="selectedYear = year"
-            console.log($scope.month);
-            console.log($scope.year);
         };
 
         current();
@@ -246,7 +239,6 @@ angular.module('financial').controller('AssetsController', ['$scope', '$rootScop
                 $scope.assetsDoughnutLabels = ['Cash & Cash Equivalents', 'Personal Use Assets', 'Invested Assets', 'CPF Savings', 'Other Assets'];
             }
 
-            console.log($scope.selectedMonth);
             if($scope.displayAssetsRecords.year !== $scope.selectedYear || $scope.monthArr[$scope.displayAssetsRecords.month] !== $scope.selectedMonth){
                 $scope.recordFound = 'No record exists for selected month/year. Displaying records for ' + $scope.monthArr[$scope.displayAssetsRecords.month] + ', ' + $scope.displayAssetsRecords.year;
             }
@@ -281,8 +273,6 @@ angular.module('financial').controller('AssetsController', ['$scope', '$rootScop
             $scope.month = $scope.monthArr.indexOf($scope.selectedMonth);
             $scope.monthDisplay = $scope.selectedMonth;
             $scope.year = $scope.selectedYear;
-
-            console.log($scope.user.assetsRecords);
 
             reloadData();
         });

@@ -110,7 +110,6 @@ angular.module('users').controller('QuestionnaireController', ['$scope', '$state
 
 			if(user.creditProfileScore.sLocativeType === null || user.creditProfileScore.sLocativeType === undefined) completePersonalQns = false;
 			else personalScore += Number(user.creditProfileScore.sLocativeType);
-			console.log(personalScore);
 
 			if(user.creditProfileScore.sNoOfDependents === null || user.creditProfileScore.sNoOfDependents === undefined) completePersonalQns = false;
 			else {

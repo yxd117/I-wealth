@@ -112,11 +112,8 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
             $scope.month = $scope.dt.getMonth();
             $scope.year = Number($scope.dt.getFullYear());
             $scope.monthDisplay = $scope.selectedMonth;
-            console.log($scope.month);
-            console.log($scope.year);
 
             $scope.selectedMonth = $scope.monthArr[$scope.month];
-            console.log($scope.selectedMonth);
             $scope.selectedYear = $scope.year;
         };
 
@@ -1485,6 +1482,5 @@ angular.module('financial').controller('FinancesController', ['$scope', '$rootSc
             ratioIdealInvestmentMinArr[ratioMthNum] = 0.2;
 
         };
-        console.log($scope.homeHealth);
 	}
 ]);

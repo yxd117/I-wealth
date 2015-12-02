@@ -78,7 +78,7 @@ angular.module('users').controller('SettingsController', ['$rootScope','$scope',
 						$scope.user.age = currYear - birthYear - 1;
 					}					
 				}catch(e){
-					console.log('no change in date');
+					console.log(e);
 				}
 
 
@@ -98,7 +98,6 @@ angular.module('users').controller('SettingsController', ['$rootScope','$scope',
 				}, function(response) {
 					$scope.error = response.data.message;
 				});
-				console.log(user);
 			} else {
 				$scope.submitted = true;
 			}
@@ -118,7 +117,6 @@ angular.module('users').controller('SettingsController', ['$rootScope','$scope',
 				}, function(response) {
 					$scope.error = response.data.message;
 				});
-				console.log(user);
 			} else {
 				$scope.submitted = true;
 			}
@@ -138,7 +136,6 @@ angular.module('users').controller('SettingsController', ['$rootScope','$scope',
 				}, function(response) {
 					$scope.error = response.data.message;
 				});
-				console.log(user);
 			} else {
 				$scope.submitted = true;
 			}
@@ -179,7 +176,6 @@ angular.module('users').controller('SettingsController', ['$rootScope','$scope',
 		var get_signed_request = function(file){
 		    //var xhr = new XMLHttpRequest();
 		    var url = 'https://hexapic.s3.amazonaws.com/sign_s3?file_name='+$scope.user.profilePic+'&file_type='+file.type;
-		    console.log(file);
 		    $http.get('/signaws', file).success(function(response) {
 				// If successful 
 				upload_file(file, response.signed_request, response.url);
@@ -201,7 +197,6 @@ angular.module('users').controller('SettingsController', ['$rootScope','$scope',
 			}, function(response) {
 				$scope.error = response.data.message;
 			});
-			console.log(user);
 		};
 
 	    $scope.upload = function (file) {

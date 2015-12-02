@@ -24,7 +24,6 @@ angular.module('core').controller('HeaderController', ['$rootScope', '$scope', '
 			$scope.user = Authentication.user;
 			if($scope.user){
 				$scope.imageUrl = 'https://hexapic.s3.amazonaws.com/' + $scope.user.profilePic + '?decache=' + Math.random();
-				console.log($scope.user.profilePic);
 				$http.get($scope.imageUrl).then(function(response){
 					$scope.imageReady = true;
 				}, function(response){

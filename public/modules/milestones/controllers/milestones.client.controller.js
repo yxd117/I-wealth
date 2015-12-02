@@ -94,7 +94,6 @@ angular.module('milestones').controller('MilestonesController', ['$scope', '$sta
 						mileStone.daysLeftFromToday = Math.round(Math.abs((dateUsed.getTime() - endDate.getTime())/(oneDay))); //today till end date
 						mileStone.monthsLeft = Math.floor(mileStone.daysLeftFromToday/30);						
 						mileStone.dateProgress = 0;
-						console.log('A');
 					} else  if (today<endDate && mileStone.progress<100) {
 						dateUsed = today;
 						mileStone.status = 'In-Progress';
@@ -102,7 +101,6 @@ angular.module('milestones').controller('MilestonesController', ['$scope', '$sta
 						mileStone.daysLeftFromToday = Math.round(Math.abs((dateUsed.getTime() - endDate.getTime())/(oneDay))); //today till end date
 						mileStone.monthsLeft = Math.floor(mileStone.daysLeftFromToday/30);						
 						mileStone.dateProgress= Math.floor((((Math.abs(startDate.getTime()-today.getTime())/(oneDay))/mileStone.totalDurationDays)*100)); 
-						console.log('B');
 					} else if (today>=endDate||mileStone.progress===100) {						
 						mileStone.status = 'Completed';
 						mileStone.countDownToStart = 0;
@@ -124,7 +122,6 @@ angular.module('milestones').controller('MilestonesController', ['$scope', '$sta
 								mileStone.completionDate = today.getDate()+'-'+month+'-'+today.getFullYear();
 							}							
 						}
-						console.log('C');
 					}
 					//3. Monthly Payment Advice
 			    	if (mileStone.daysLeftFromToday>=30) {
@@ -153,7 +150,6 @@ angular.module('milestones').controller('MilestonesController', ['$scope', '$sta
 		updateMethod();	// END.
 
 		$scope.addNewMilestoneFnc = function() {
-			console.log($scope.goal);
 			var errorCheck = 0;	
 
 			$scope.goal.uniqueId = $scope.goal.name+$scope.goal.type;	
@@ -283,16 +279,13 @@ angular.module('milestones').controller('MilestonesController', ['$scope', '$sta
 					$scope.goal.daysLeftFromToday = Math.round(Math.abs((dateUsed.getTime() - endDate.getTime())/(oneDay))); //today till end date
 					$scope.goal.monthsLeft = Math.floor($scope.goal.daysLeftFromToday/30);						
 					$scope.goal.dateProgress = 0;
-					console.log('A');
 				} else  if (today<endDate && $scope.goal.progress<100) {
 					dateUsed = today;
 					$scope.goal.status = 'In-Progress';
 					$scope.goal.countDownToStart = 0;
 					$scope.goal.daysLeftFromToday = Math.round(Math.abs((dateUsed.getTime() - endDate.getTime())/(oneDay))); //today till end date
 					$scope.goal.monthsLeft = Math.floor($scope.goal.daysLeftFromToday/30);
-					console.log((startDate.getTime()-today.getTime())/(oneDay));
 					$scope.goal.dateProgress= Math.floor((((Math.abs(startDate.getTime()-today.getTime())/(oneDay))/$scope.goal.totalDurationDays)*100)); 
-					console.log('B');
 				} else if (today>=endDate||$scope.goal.progress===100) {						
 					$scope.goal.status = 'Completed';
 					$scope.goal.countDownToStart = 0;
@@ -314,7 +307,6 @@ angular.module('milestones').controller('MilestonesController', ['$scope', '$sta
 							$scope.goal.completionDate = today.getDate()+'-'+month+'-'+today.getFullYear();
 						}							
 					}
-					console.log('C');
 				}
 				//3. Monthly Payment Advice
 				if ($scope.goal.daysLeftFromToday>=30) {
@@ -374,9 +366,7 @@ angular.module('milestones').controller('MilestonesController', ['$scope', '$sta
 		};
 
 		$scope.makeContribution = function(x) {
-			
-			console.log(x);
-			console.log(x.contribution);
+
 			if (x.contribution!==0) {
 				for (var i = 0; i<$scope.user.mileStones.length; i++) {
 					if ($scope.user.mileStones[i].name===x.name && $scope.user.mileStones[i].startDate===x.startDate) {
@@ -407,7 +397,6 @@ angular.module('milestones').controller('MilestonesController', ['$scope', '$sta
 			
 			var completedObj = $scope.goal;
 			completedObj.id = $scope.user.completedMilestones.length+1;			
-			console.log(completedObj);
 
 			if (typeof completedObj.completionDate === 'undefined' || $scope.goal.completionDate ==='undefined') {
 				var month = $scope.getMonthString(today.getMonth());
@@ -448,15 +437,12 @@ angular.module('milestones').controller('MilestonesController', ['$scope', '$sta
 		
 		$scope.deleteMilestone = function() {			
 			
-			console.log($scope.goal);
-
 			for (var i = 0;  i<$scope.user.mileStones.length; i++) {
     			var mileStone = $scope.user.mileStones[i];
     			
     			if (mileStone.uniqueId===$scope.goal.uniqueId) {
     			   				
     				$scope.user.mileStones.splice(i,1);
-    				console.log('WHAAAATT!');
     			}
 			}
 			if ($scope.user.mileStones.length===0) {
@@ -473,7 +459,6 @@ angular.module('milestones').controller('MilestonesController', ['$scope', '$sta
 
 			}, function(response) {
 				$scope.error = response.data.message;
-				console.log($scope.error);
 				alert('Error Deleting. Try Delete Again');
 				location.reload();
 
@@ -483,8 +468,6 @@ angular.module('milestones').controller('MilestonesController', ['$scope', '$sta
 		};
 
 		$scope.deleteCompletedMilestone = function() {			
-			
-			console.log($scope.goal);
 
 			for (var i = 0;  i<$scope.user.completedMilestones.length; i++) {
     			var mileStone = $scope.user.completedMilestones[i];

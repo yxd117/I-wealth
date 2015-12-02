@@ -126,11 +126,9 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
         $scope.displayThisMonthMiscTotal = 0;
 
 
-        console.log($scope.budgetLimit);
         if (typeof $scope.budgetLimit !== 'undefined') {
         	if ($scope.budgetLimit.fixedExpenseB!==0 ) {
                 $scope.feBudgetSet = true;
-                console.log('Entered');
             }
             if ($scope.budgetLimit.transportB!==0) {
                 $scope.tBudgetSet = true;   
@@ -159,8 +157,7 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
                     var typeE = progressInfo(valueE);                   
                     $scope.dynamicE = Math.floor(valueE);
                     $scope.typeE = typeE;
-                    $scope.feStatus = standingCheck($scope.thisMonthFixedExpenseTotal,$scope.budgetLimit.fixedExpenseB);
-                    console.log('hello'+$scope.feStatus);                   
+                    $scope.feStatus = standingCheck($scope.thisMonthFixedExpenseTotal,$scope.budgetLimit.fixedExpenseB);                 
                     $scope.displayFeExceed = ($scope.displayThisMonthFixedExpenseTotal-$scope.budgetLimit.fixedExpenseB);
                     
                     //Load Transport Expense Table
@@ -219,7 +216,6 @@ angular.module('core').controller('HomeController', ['$scope', 'Authentication',
             var advImageUrl = 'https://hexapic.s3.amazonaws.com/assets/';
             
 			$http.get('/admin/retrieveCurrentAd').success(function(response){
-				console.log(response);
                 if(response.length === 0) $scope.adHidden = false;
                 $scope.decachedImageUrl = advImageUrl + response.name + '?decache=' + Math.random();
 

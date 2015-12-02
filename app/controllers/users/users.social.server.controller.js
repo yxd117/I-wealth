@@ -12,10 +12,10 @@ var _ = require('lodash'),
 
 
 exports.viewProfileByEmail = function(req, res, next, profileId){
-	console.log(profileId);
+
 
 	var pid = mongoose.Types.ObjectId(profileId);
-	console.log(pid);
+
 	User.findOne({'_id': pid}).select('email firstName lastName profilePic friendList description age created socialRankPic industry jobPosition').populate({path:'friendList'}).exec(function(err, user){
 		var friendDetails = {
 			path:'friendList.id',
@@ -36,11 +36,7 @@ exports.viewProfileByEmail = function(req, res, next, profileId){
 			var friendStatus = 0;
 			
 			if(req.user.friendList){
-				console.log(req.user.friendList);
 				req.user.friendList.forEach(function(fr){
-						console.log(req.user.email);
-						console.log(fr.email);
-						console.log(userProfile.email);
 					if(fr.email === userProfile.email){
 
 						friendStatus = fr.friendStatus;
@@ -56,7 +52,7 @@ exports.viewProfileByEmail = function(req, res, next, profileId){
 			if(!userProfile.description) _.merge(cloneDetails._doc, {'description' : description});
 			if(!userProfile.socialRankPic) _.merge(cloneDetails._doc, {'socialRankPic': socialRankPic});
 			if(!userProfile.friendStatus) _.merge(cloneDetails._doc, {'friendStatus': friendStatus});
-			console.log('here' + cloneDetails._doc);
+
 
 
 			req.userProfile = cloneDetails._doc;		

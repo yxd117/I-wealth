@@ -165,7 +165,6 @@ angular.module('milestones').controller('MilestonesController', ['$scope', '$sta
 					var progress = Math.floor((currentAmount/targetAmount)*100);
 
 					var startDate = $scope.startDate;
-					console.log('added start date'+startDate);
 					var startDateD = startDate.getDate();					
 					//var startDateMth = $scope.getMonthString(startDate.getMonth());
 					var startDateYr = startDate.getFullYear();
@@ -222,11 +221,8 @@ angular.module('milestones').controller('MilestonesController', ['$scope', '$sta
 		};
 
 		$scope.makeContribution = function() {
-			console.log('entered');
 			$scope.user.mileStones[$scope.user.updateMilestonePos].currentAmount += $scope.contribution;
 			
-			console.log('scope is'+$scope.contribution);
-
 			$scope.user.mileStones[$scope.user.updateMilestonePos].progress = Math.floor(($scope.user.mileStones[$scope.user.updateMilestonePos].currentAmount/$scope.user.mileStones[$scope.user.updateMilestonePos].targetAmount)*100);
 			
 			if ($scope.user.mileStones[$scope.user.updateMilestonePos].progress>100) {
@@ -319,10 +315,8 @@ angular.module('milestones').controller('MilestonesController', ['$scope', '$sta
 				var mileStone = $scope.user.mileStones[i];
 				if (mileStone.goalTitle===x.goalTitle) {
 					arrayPos = i;
-					console.log('Enter liao');
 				}
 			}
-			console.log('check'+arrayPos);
 				
 			
 			$scope.user.updateMilestonePos = arrayPos;
@@ -342,7 +336,6 @@ angular.module('milestones').controller('MilestonesController', ['$scope', '$sta
 		$scope.markComplete = function() {
 			var confirmComplete = confirm('Confirm Completion of: '+$scope.user.mileStones[$scope.user.updateMilestonePos].goalTitle +' goal?');
 			var completedObj = $scope.user.mileStones[$scope.user.updateMilestonePos];			
-			console.log(completedObj);
 			if(confirmComplete) {
 				$scope.user.completedMilestones.push(completedObj);
 
@@ -368,8 +361,6 @@ angular.module('milestones').controller('MilestonesController', ['$scope', '$sta
 		$scope.deleteMilestone = function(x) {
 
 			var position = 0;
-			
-			console.log(x.goalTitle);
 
 		  	var confirmDelete = confirm('Confirm delete milestone: '+x.goalTitle);
 			  	if (confirmDelete) {
@@ -409,8 +400,6 @@ angular.module('milestones').controller('MilestonesController', ['$scope', '$sta
   		$scope.deleteCompletedMilestone = function(x) {
 
 			var position = 0;
-			
-			console.log(x.goalTitle);
 
 		  	var confirmDelete = confirm('Confirm delete milestone: '+x.goalTitle);
 			  	if (confirmDelete) {

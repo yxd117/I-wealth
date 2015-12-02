@@ -19,8 +19,6 @@ angular.module('financial').controller('LiabilitiesController', ['$scope', '$roo
             $scope.month = $scope.dt.getMonth();
             $scope.year = Number($scope.dt.getFullYear());
             $scope.monthDisplay = $scope.selectedMonth;
-            console.log($scope.month);
-            console.log($scope.year);
         };
 
 

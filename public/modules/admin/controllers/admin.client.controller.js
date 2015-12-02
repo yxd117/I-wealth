@@ -62,19 +62,15 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', '$loca
 				$scope.userRecord = angular.toJson(response, true);
 				$scope.success = true;
 			}).error(function(response){
-				console.log(response.data.message);
 				$scope.error = response.data.message;
 			});
 		};
 
 		$scope.deleteRecord = function(){
-			console.log($scope.emailSelected);
 			if(!$scope.emailSelected){
-				console.log('lol');
 				$scope.errorDelete = 'User not selected';
 			}else{
 				$http.put('/admin/deleteUser', {userEmail: $scope.emailSelected, userRecord: $scope.userRecord}).success(function(response){
-					console.log(response);
 					$scope.userList = response;
 					$scope.successDelete = true;
 					$scope.userRecord = null;
@@ -97,7 +93,6 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', '$loca
 		$scope.createNewUser = function(){
 			$http.post('/admin/createUser', $scope.credentials).success(function(response) {
 				// If successful we assign the response to the global user model
-				console.log(response);
 				$scope.userList = response;
 				$scope.successCreate = true;
 			}).error(function(response) {
@@ -147,11 +142,9 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', '$loca
 
 	    $scope.addNewAsset = function(file){
 	    	upload(file);
-	    	console.log($scope.assetDetails.name);
 	    	$scope.assetDetails.image = $scope.assetDetails.name;
 	    	$http.post('/admin/addNewAsset', $scope.assetDetails).success(function(response) {
 				// If successful we assign the response to the global user model
-				console.log(response);
 				$scope.assets = response;
 				$scope.successAddAsset = true;
 				$scope.successUpdateRecords = $scope.errorUpdateRecords = null;
@@ -214,14 +207,12 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', '$loca
 				$scope.assetRecord = response;
 				$scope.successUpdateAssets = true;
 			}).error(function(response){
-				console.log(response.data.message);
 				$scope.errorUpdateAssets = response.data.message;
 			});
 		};
 
 		$scope.deleteAssetRecord = function(){
 			$http.put('/admin/deleteAsset', {assetName: $scope.assetSelected, assetRecord: $scope.assetRecord}).success(function(response){
-				console.log(response);
 				$scope.assetList = response;
 				$scope.successAssetDelete = true;
 				$scope.assetRecord = null;
@@ -434,7 +425,6 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', '$loca
 		var retrieveFinancialHealth = function(){
 			$http.put('/admin/retrieveFinancialHealth', {month:$scope.month, year: $scope.selectedYear}).success(function(response){
 				$scope.userFinancialHealth = response;
-				console.log($scope.userFinancialHealth);
 				
 				$scope.labelsFinancialHealth = ['Healthy', 'Unhealthy', 'N/A'];
 				displayFinancialHealth();
@@ -516,7 +506,6 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', '$loca
 		retrieveFinancialUsage();
 
 		$scope.reloadFinancialUsage = function(){
-			console.log('reload');
 			var yearFrom = angular.copy($scope.selectedYearFrom);
 			for(var i = 0; i < $scope.monthArr.length; i++){
 				if($scope.monthArr[i] === $scope.selectedMonthFrom){
@@ -600,7 +589,6 @@ angular.module('admin').controller('AdminController', ['$scope', '$http', '$loca
 		retrieveSocialActivity();
 
 		$scope.reloadSocialActivity = function(){
-			console.log('reload');
 			var yearFrom = angular.copy($scope.selectedYearFrom);
 			for(var i = 0; i < $scope.monthArr.length; i++){
 				if($scope.monthArr[i] === $scope.selectedMonthFrom){

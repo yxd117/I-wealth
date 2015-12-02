@@ -60,10 +60,7 @@ angular.module('social').controller('SocialController', ['$scope', '$window','$s
 			});
 		};
 		$scope.addFriend = function(friendEmail, friendId){
-			console.log(friendEmail);
-			console.log('friends' + friendId);
 			$http.put('/friendship/addFriend', {friendEmail: friendEmail, friendId: friendId}).success(function(response){
-				console.log(response);
 				$scope.userList.forEach(function(user){
 					if(user.email === friendEmail) user.friendStatus = 1;
 				});
@@ -77,7 +74,6 @@ angular.module('social').controller('SocialController', ['$scope', '$window','$s
 
 		$scope.acceptFriend = function(friendEmail, friendId){
 			$http.put('/friendship/acceptFriend', {friendEmail: friendEmail, friendId: friendId}).success(function(response){
-				console.log(response);
 				$scope.userList.forEach(function(user){
 					if(user.email === friendEmail) user.friendStatus = 3;
 				});
@@ -87,10 +83,8 @@ angular.module('social').controller('SocialController', ['$scope', '$window','$s
 			});	
 		};
 		$scope.findOne = function(){
-			console.log( $stateParams.profileId);
 			var userURL = '/api/social/' + $stateParams.profileId;
 			$http.get(userURL).then(function(response){
-				console.log(response);
 				$scope.userProfile = response.data;
 
 				$scope.userProfile.friendList.num = 0;
@@ -106,7 +100,6 @@ angular.module('social').controller('SocialController', ['$scope', '$window','$s
 		var findProfilePosts = function(userProfile){
 	    	$anchorScroll();
 			$http.get('/api/postsByUser', {params: {_id: userProfile._id}}).then(function(response){
-				console.log(response);
 				$scope.posts = response.data;
 
 			});		
@@ -121,7 +114,6 @@ angular.module('social').controller('SocialController', ['$scope', '$window','$s
 		};
 
 	    $scope.upPost = function(postId, userProfile){
-	    	console.log('here');
 			$http.put('/api/upUserPoints', {_id: userProfile._id,postId: postId}).success(function(response){
 	  			$scope.posts = response;
 	  		}).error(function(){
