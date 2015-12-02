@@ -1,6 +1,6 @@
 {
-  "name": "meanjs",
-  "description": "Full-Stack JavaScript with MongoDB, Express, AngularJS, and Node.js.",
+  "name": "IWealth",
+  "description": "IWealth is a financial planning tool.",
   "version": "0.3.3",
   "private": false,
   "author": "https://github.com/meanjs/mean/graphs/contributors",

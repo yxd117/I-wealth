@@ -1,7 +1,7 @@
 {
-	"name": "meanjs",
+	"name": "IWealth",
 	"version": "0.3.2",
-	"description": "Fullstack JavaScript with MongoDB, Express, AngularJS, and Node.js.",
+	"description": "IWealth is a financial planning tool.",
 	"dependencies": {
 		"bootstrap": "~3",
 		"angular": "~1.2",
